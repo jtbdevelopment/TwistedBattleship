@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>TwistedBattleship</artifactId>
+        <groupId>com.jtbdevelopment</groupId>
+        <version>0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>game</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.jtbdevelopment.core-common</groupId>
+            <artifactId>core-spring-web-mongo</artifactId>
+            <version>${core.common.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jtbdevelopment.core-games</groupId>
+            <artifactId>games-mongo</artifactId>
+            <version>${core.games.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jtbdevelopment.core-games</groupId>
+            <artifactId>games-hazelcast</artifactId>
+            <version>${core.games.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jtbdevelopment.core-games</groupId>
+            <artifactId>games-web</artifactId>
+            <version>${core.games.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jtbdevelopment.core-games</groupId>
+            <artifactId>games-dictionaries</artifactId>
+            <version>${core.games.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jtbdevelopment.core-games</groupId>
+            <artifactId>games-events</artifactId>
+            <version>${core.games.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jtbdevelopment.core-games</groupId>
+            <artifactId>games-websocket</artifactId>
+            <version>${core.games.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jtbdevelopment.core-common</groupId>
+            <artifactId>core-spring-quartz</artifactId>
+            <version>${core.common.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.jtbdevelopment.core-games</groupId>
+            <artifactId>games-mongo</artifactId>
+            <version>${core.games.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.jtbdevelopment.core-games</groupId>
+            <artifactId>games-web</artifactId>
+            <version>${core.games.version}</version>
+            <scope>test</scope>
+            <type>test-jar</type>
+        </dependency>
+    </dependencies>
+
+</project>
