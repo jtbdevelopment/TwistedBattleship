@@ -54,6 +54,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>18.0</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.jtbdevelopment.core-games</groupId>
             <artifactId>games-mongo</artifactId>
             <version>${core.games.version}</version>
