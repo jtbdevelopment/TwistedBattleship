@@ -1,6 +1,6 @@
 package com.jtbdevelopment.TwistedBattleship.state.masked
 
-import com.jtbdevelopment.TwistedBattleship.state.GameFeatures
+import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.GamePhase
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.games.state.masking.AbstractMaskedMultiPlayerGame
@@ -11,7 +11,7 @@ import groovy.transform.CompileStatic
  * Time: 6:36 PM
  */
 @CompileStatic
-class TBMaskedGame extends AbstractMaskedMultiPlayerGame<GameFeatures> {
+class TBMaskedGame extends AbstractMaskedMultiPlayerGame<GameFeature> {
     Long rematchTimestamp
 
     GamePhase gamePhase

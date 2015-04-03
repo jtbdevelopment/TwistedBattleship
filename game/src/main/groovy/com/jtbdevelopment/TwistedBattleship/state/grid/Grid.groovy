@@ -1,4 +1,4 @@
-package com.jtbdevelopment.TwistedBattleship.state
+package com.jtbdevelopment.TwistedBattleship.state.grid
 
 import com.google.common.collect.HashBasedTable
 import com.google.common.collect.Table

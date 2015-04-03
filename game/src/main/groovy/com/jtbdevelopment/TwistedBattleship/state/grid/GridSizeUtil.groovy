@@ -1,5 +1,6 @@
-package com.jtbdevelopment.TwistedBattleship.state
+package com.jtbdevelopment.TwistedBattleship.state.grid
 
+import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import groovy.transform.CompileStatic
 import org.springframework.stereotype.Component
 
@@ -10,13 +11,13 @@ import org.springframework.stereotype.Component
 @CompileStatic
 @Component
 class GridSizeUtil {
-    int getSize(final GameFeatures gridSize) {
+    int getSize(final GameFeature gridSize) {
         switch (gridSize) {
-            case GameFeatures.Grid10x10:
+            case GameFeature.Grid10x10:
                 return 10
-            case GameFeatures.Grid15x15:
+            case GameFeature.Grid15x15:
                 return 15
-            case GameFeatures.Grid20x20:
+            case GameFeature.Grid20x20:
                 return 20
         }
         throw new IllegalArgumentException('Unhandled size ' + gridSize)

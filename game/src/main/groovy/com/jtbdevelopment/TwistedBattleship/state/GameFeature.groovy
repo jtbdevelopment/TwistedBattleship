@@ -7,7 +7,7 @@ import groovy.transform.CompileStatic
  * Time: 4:01 PM
  */
 @CompileStatic
-enum GameFeatures {
+enum GameFeature {
     GridSize(1, Grid10x10, 'Grid:', 'Playing grid size.'),
     Grid10x10(1, '10x10', '10x10 grid', GridSize),
     Grid15x15(2, '15x15', '15x15 grid', GridSize),
@@ -41,16 +41,16 @@ enum GameFeatures {
     CriticalEnabled(1, 'Enabled', 'Small chance a hit can damage an adjacent boat segment OR be a dud missile and do no damage.', Critical),
     CriticalDisabled(2, 'Disabled', 'No critical hits or duds.', Critical)
 
-    final GameFeatures group
+    final GameFeature group
     final String label
     final String description
-    final GameFeatures groupDefault
+    final GameFeature groupDefault
     final int order
 
     //  Constructor for groups
-    public GameFeatures(
+    public GameFeature(
             final int order,
-            final GameFeatures groupDefault,
+            final GameFeature groupDefault,
             final String label,
             final String description
     ) {
@@ -61,11 +61,11 @@ enum GameFeatures {
         this.groupDefault = groupDefault
     }
 
-    public GameFeatures(
+    public GameFeature(
             final int order,
             final String label,
             final String description,
-            final GameFeatures group = null
+            final GameFeature group = null
     ) {
         this.order = order
         this.description = description
@@ -74,27 +74,27 @@ enum GameFeatures {
         this.label = label
     }
 
-    static final Map<GameFeatures, List<GameFeatures>> groupedFeatures = [:]
+    static final Map<GameFeature, List<GameFeature>> groupedFeatures = [:]
     static {
         values().findAll {
-            GameFeatures it ->
+            GameFeature it ->
                 it.group == it
         }.each {
-            GameFeatures it ->
+            GameFeature it ->
                 groupedFeatures.put(it, [])
         }
 
         values().findAll {
-            GameFeatures it ->
+            GameFeature it ->
                 it.group != it
         }.each {
-            GameFeatures it ->
+            GameFeature it ->
                 groupedFeatures[it.group].add(it)
         }
 
         groupedFeatures.values().each {
-            List<GameFeatures> o ->
-                o.sort { GameFeatures a, GameFeatures b -> a.order.compareTo(b.order) }
+            List<GameFeature> o ->
+                o.sort { GameFeature a, GameFeature b -> a.order.compareTo(b.order) }
         }
     }
 }

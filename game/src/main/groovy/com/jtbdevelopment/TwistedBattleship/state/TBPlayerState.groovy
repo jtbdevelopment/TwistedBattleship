@@ -1,7 +1,8 @@
 package com.jtbdevelopment.TwistedBattleship.state
 
+import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
+import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import groovy.transform.CompileStatic
-import org.bson.types.ObjectId
 
 /**
  * Date: 4/2/15

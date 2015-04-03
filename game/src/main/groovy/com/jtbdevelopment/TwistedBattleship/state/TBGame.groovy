@@ -18,7 +18,7 @@ import java.time.ZonedDateTime
 @CompoundIndexes([
         @CompoundIndex(name = "player_phase", def = "{'players._id': 1, 'gamePhase': 1, 'lastUpdate': 1}"),
 ])
-class TBGame extends AbstractMongoMultiPlayerGame<GameFeatures> {
+class TBGame extends AbstractMongoMultiPlayerGame<GameFeature> {
     ZonedDateTime rematchTimestamp
 
     ObjectId previousId

@@ -1,6 +1,6 @@
 package com.jtbdevelopment.TwistedBattleship.state.masked
 
-import com.jtbdevelopment.TwistedBattleship.state.GameFeatures
+import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.games.players.Player
@@ -19,7 +19,7 @@ import java.time.ZonedDateTime
  */
 @CompileStatic
 @Component
-class TBGameMasker extends AbstractMultiPlayerGameMasker<ObjectId, GameFeatures, TBGame, TBMaskedGame> {
+class TBGameMasker extends AbstractMultiPlayerGameMasker<ObjectId, GameFeature, TBGame, TBMaskedGame> {
     @Override
     protected TBMaskedGame newMaskedGame() {
         return new TBMaskedGame()
@@ -32,9 +32,9 @@ class TBGameMasker extends AbstractMultiPlayerGameMasker<ObjectId, GameFeatures,
 
     @Override
     protected void copyMaskedData(
-            final MultiPlayerGame<ObjectId, ZonedDateTime, GameFeatures> mpGame,
+            final MultiPlayerGame<ObjectId, ZonedDateTime, GameFeature> mpGame,
             final Player<ObjectId> player,
-            final MaskedMultiPlayerGame<GameFeatures> playerMaskedGame, final Map<ObjectId, Player<ObjectId>> idMap) {
+            final MaskedMultiPlayerGame<GameFeature> playerMaskedGame, final Map<ObjectId, Player<ObjectId>> idMap) {
         super.copyMaskedData(mpGame, player, playerMaskedGame, idMap)
         TBMaskedGame masked = (TBMaskedGame) playerMaskedGame
         TBGame game = (TBGame) mpGame
@@ -48,8 +48,8 @@ class TBGameMasker extends AbstractMultiPlayerGameMasker<ObjectId, GameFeatures,
 
     @Override
     protected void copyUnmaskedData(
-            final MultiPlayerGame<ObjectId, ZonedDateTime, GameFeatures> mpGame,
-            final MaskedMultiPlayerGame<GameFeatures> playerMaskedGame) {
+            final MultiPlayerGame<ObjectId, ZonedDateTime, GameFeature> mpGame,
+            final MaskedMultiPlayerGame<GameFeature> playerMaskedGame) {
         super.copyUnmaskedData(mpGame, playerMaskedGame)
         TBMaskedGame masked = (TBMaskedGame) playerMaskedGame
         TBGame game = (TBGame) mpGame

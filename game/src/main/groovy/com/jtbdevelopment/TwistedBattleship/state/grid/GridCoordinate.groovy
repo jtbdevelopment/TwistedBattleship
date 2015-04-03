@@ -1,4 +1,4 @@
-package com.jtbdevelopment.TwistedBattleship.state
+package com.jtbdevelopment.TwistedBattleship.state.grid
 
 import groovy.transform.CompileStatic
 
