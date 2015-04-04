@@ -1,4 +1,4 @@
-package com.jtbdevelopment.TwistedBattleship.state
+package com.jtbdevelopment.TwistedBattleship.state.ships
 
 import groovy.transform.CompileStatic
 
@@ -7,7 +7,7 @@ import groovy.transform.CompileStatic
  * Time: 6:53 AM
  */
 @CompileStatic
-enum Ships {
+enum Ship {
     Carrier(5, 'Aircraft Carrier'),
     Battleship(4, 'Battleship'),
     Cruiser(3, 'Cruiser'),
@@ -17,7 +17,7 @@ enum Ships {
     final int gridSize
     final String description
 
-    private Ships(final int gridSize, final String description) {
+    private Ship(final int gridSize, final String description) {
         this.gridSize = gridSize
         this.description = description
     }

@@ -9,4 +9,9 @@ import groovy.transform.CompileStatic
 @CompileStatic
 class GridCoordinate {
     int x, y
+
+    GridCoordinate(final int x, final int y) {
+        this.x = x
+        this.y = y
+    }
 }

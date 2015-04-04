@@ -8,7 +8,7 @@ class TBPlayerStateTest extends GroovyTestCase {
     TBPlayerState state = new TBPlayerState()
 
     void testInitialSettings() {
-        assert [:] == state.shipHealthRemaining
+        assert [:] == state.opponentViews
         assert 0 == state.scoreFromLiving
         assert 0 == state.scoreFromSinks
         assert 0 == state.scoreFromHits
@@ -18,9 +18,8 @@ class TBPlayerStateTest extends GroovyTestCase {
         assert 0 == state.ecmsRemaining
         assert 0 == state.evasiveManeuversRemaining
         assert 0 == state.emergencyRepairsRemaining
-        assertNull state.playerGrid
         assert [:] == state.opponentGrids
-        assert [:] == state.shipPositions
+        assert [:] == state.shipStates
     }
 
     void testGetTotalScore() {
