@@ -39,6 +39,14 @@
     </option>
   </component>
   <component name="IdProvider" IDEtalkID="1755D618597C9AFE8C9688F086A576BC" />
+  <component name="IvyIDEA.ProjectSettings">
+    <option name="artifactTypeSettings">
+      <ArtifactTypeSettings />
+    </option>
+    <option name="propertiesSettings">
+      <PropertiesSettings />
+    </option>
+  </component>
   <component name="JsBowerSettings">
     <exe-path>/usr/local/bin/bower</exe-path>
     <config-path />
