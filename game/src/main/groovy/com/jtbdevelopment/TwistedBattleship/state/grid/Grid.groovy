@@ -13,6 +13,13 @@ class Grid {
     final Table<Integer, Integer, GridCellState> table
 
     public Grid(final int size) {
-        table = HashBasedTable.<Integer, Integer, GridCellState>create(size, size)
+        table = HashBasedTable.<Integer, Integer, GridCellState> create(size, size)
+        (1..size).each {
+            int row ->
+                (1..size).each {
+                    int col ->
+                        table.put(row - 1, col - 1, GridCellState.Unknown)
+                }
+        }
     }
 }
