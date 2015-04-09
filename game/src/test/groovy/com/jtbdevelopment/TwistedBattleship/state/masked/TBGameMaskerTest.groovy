@@ -1,9 +1,9 @@
 package com.jtbdevelopment.TwistedBattleship.state.masked
 
-import com.jtbdevelopment.TwistedBattleship.state.GamePhase
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
+import com.jtbdevelopment.games.state.GamePhase
 
 import java.time.ZonedDateTime
 
@@ -28,8 +28,6 @@ class TBGameMaskerTest extends MongoGameCoreTestCase {
         )
         TBMaskedGame maskedGame = masker.maskGameForPlayer(game, PONE)
         assert maskedGame
-        assert maskedGame.rematchTimestamp == game.rematchTimestamp.toInstant().toEpochMilli()
-        assert maskedGame.gamePhase == game.gamePhase
         assert maskedGame.maskedPlayersState.is(game.playerDetails[PONE.id])
         assert maskedGame.playersAlive == [(PONE.md5): true, (PTWO.md5): false, (PTHREE.md5): true]
         assert maskedGame.playersScore == [(PONE.md5): 10, (PTWO.md5): 40, (PTHREE.md5): 20]

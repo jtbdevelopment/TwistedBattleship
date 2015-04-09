@@ -45,15 +45,4 @@ class TBGameMasker extends AbstractMultiPlayerGameMasker<ObjectId, GameFeature, 
                 masked.playersScore[idMap[playerId].md5] = state.totalScore
         }
     }
-
-    @Override
-    protected void copyUnmaskedData(
-            final MultiPlayerGame<ObjectId, ZonedDateTime, GameFeature> mpGame,
-            final MaskedMultiPlayerGame<GameFeature> playerMaskedGame) {
-        super.copyUnmaskedData(mpGame, playerMaskedGame)
-        TBMaskedGame masked = (TBMaskedGame) playerMaskedGame
-        TBGame game = (TBGame) mpGame
-        masked.rematchTimestamp = convertTime(game.rematchTimestamp)
-        masked.gamePhase = game.gamePhase
-    }
 }
