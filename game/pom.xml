@@ -53,9 +53,9 @@
             <version>${core.games.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.jtbdevelopment.core-common</groupId>
-            <artifactId>core-spring-quartz</artifactId>
-            <version>${core.common.version}</version>
+            <groupId>com.jtbdevelopment.core-games</groupId>
+            <artifactId>games-std-tracker</artifactId>
+            <version>${core.games.version}</version>
         </dependency>
 
         <dependency>
