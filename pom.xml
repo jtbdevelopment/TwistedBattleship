@@ -13,7 +13,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <core.common.version>1.2</core.common.version>
+        <core.common.version>1.3-SNAPSHOT</core.common.version>
         <core.games.version>1.2-SNAPSHOT</core.games.version>
         <jersey.version>2.13</jersey.version>
         <spring.version>4.1.1.RELEASE</spring.version>
