@@ -6,7 +6,6 @@ import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridSizeUtil
-import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
 import com.jtbdevelopment.games.players.Player
 import org.bson.types.ObjectId
@@ -17,9 +16,10 @@ import org.bson.types.ObjectId
  */
 class PlayerStateInitializerTest extends MongoGameCoreTestCase {
     PlayerStateInitializer initializer = new PlayerStateInitializer()
+
     void testInitializeGame() {
         TBGame game = new TBGame(
-                features: [GameFeature.Grid15x15, GameFeature.CriticalEnabled , GameFeature.ECMEnabled, GameFeature.CriticalEnabled.EREnabled, GameFeature.SpyEnabled, GameFeature.CriticalEnabled.EMEnabled],
+                features: [GameFeature.Grid15x15, GameFeature.CriticalEnabled, GameFeature.ECMEnabled, GameFeature.CriticalEnabled.EREnabled, GameFeature.SpyEnabled, GameFeature.CriticalEnabled.EMEnabled],
                 players: [PONE, PTWO, PTHREE]
         )
 
@@ -64,12 +64,11 @@ class PlayerStateInitializerTest extends MongoGameCoreTestCase {
         }
     }
 
-    protected void validatePlayerStates(TBGame game , Player p, int expectedSpecials, int size) {
-        Set<ObjectId> opponentIds = game.players.collect{ it.id} as  Set
+    protected void validatePlayerStates(TBGame game, Player p, int expectedSpecials, int size) {
+        Set<ObjectId> opponentIds = game.players.collect { it.id } as Set
         opponentIds.remove(p.id)
         TBPlayerState playerState = game.playerDetails[p.id]
         assert playerState
-        assert playerState.activeShipsRemaining == Ship.values().size()
         assert playerState.ecmsRemaining == expectedSpecials
         assert playerState.evasiveManeuversRemaining == expectedSpecials
         assert playerState.emergencyRepairsRemaining == expectedSpecials

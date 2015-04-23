@@ -12,8 +12,11 @@ import org.bson.types.ObjectId
  */
 @CompileStatic
 class TBPlayerState {
+    private static int SHIP_COUNT = Ship.values().size()
+
+    boolean t
+
     Map<Ship, ShipState> shipStates = [:]
-    int activeShipsRemaining = 0
 
     int spysRemaining = 0
     int evasiveManeuversRemaining = 0
@@ -29,5 +32,33 @@ class TBPlayerState {
 
     int getTotalScore() {
         scoreFromHits + scoreFromSinks + scoreFromLiving
+    }
+
+    void setTotalScore(final int totalScore) {
+        //  ignore
+    }
+
+    boolean isSetup() {
+        return shipStates.size() == SHIP_COUNT
+    }
+
+    void setSetup(final boolean isSetup) {
+        // ignore
+    }
+
+    boolean isAlive() {
+        return activeShipsRemaining > 0
+    }
+
+    void setAlive(final boolean alive) {
+        // ignore
+    }
+
+    int getActiveShipsRemaining() {
+        return shipStates.values().findAll{ ShipState it -> it.healthRemaining > 0 }.size()
+    }
+
+    void setActiveShipsRemaining(final int remaining) {
+        //  ignore
     }
 }

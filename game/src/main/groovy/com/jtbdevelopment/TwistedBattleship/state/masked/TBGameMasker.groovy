@@ -3,6 +3,7 @@ package com.jtbdevelopment.TwistedBattleship.state.masked
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
+import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.games.players.Player
 import com.jtbdevelopment.games.state.MultiPlayerGame
 import com.jtbdevelopment.games.state.masking.AbstractMultiPlayerGameMasker
@@ -41,8 +42,9 @@ class TBGameMasker extends AbstractMultiPlayerGameMasker<ObjectId, GameFeature, 
         masked.maskedPlayersState = game.playerDetails[player.id]
         game.playerDetails.each {
             ObjectId playerId, TBPlayerState state ->
-                masked.playersAlive[idMap[playerId].md5] = state.activeShipsRemaining > 0
+                masked.playersAlive[idMap[playerId].md5] = state.alive
                 masked.playersScore[idMap[playerId].md5] = state.totalScore
+                masked.playersSetup[idMap[playerId].md5] = state.setup
         }
     }
 }

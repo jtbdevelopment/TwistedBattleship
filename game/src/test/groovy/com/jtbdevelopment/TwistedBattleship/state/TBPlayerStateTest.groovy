@@ -1,5 +1,8 @@
 package com.jtbdevelopment.TwistedBattleship.state
 
+import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
+import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
+
 /**
  * Date: 4/2/15
  * Time: 5:23 PM
@@ -20,6 +23,8 @@ class TBPlayerStateTest extends GroovyTestCase {
         assert 0 == state.emergencyRepairsRemaining
         assert [:] == state.opponentGrids
         assert [:] == state.shipStates
+        assertFalse state.setup
+        assertFalse state.alive
     }
 
     void testGetTotalScore() {
@@ -31,5 +36,58 @@ class TBPlayerStateTest extends GroovyTestCase {
         assert 35 == state.totalScore
         state.scoreFromLiving = 30
         assert 60 == state.totalScore
+    }
+
+    void testSetTotalScoreIgnoresSet() {
+        state.scoreFromLiving = 5
+        assert 5 == state.totalScore
+        state.setTotalScore(20)
+        assert 5 == state.totalScore
+    }
+
+    void testShipsRemainingAndAlive() {
+        state.shipStates = [
+                (Ship.Cruiser): new ShipState(Ship.Cruiser, null, []),
+                (Ship.Carrier): new ShipState(Ship.Battleship, null, [])
+        ]
+        assert state.alive
+        assert state.activeShipsRemaining == 2
+
+        state.shipStates[Ship.Carrier].healthRemaining = 1
+        assert state.alive
+        assert state.activeShipsRemaining == 2
+
+        state.shipStates[Ship.Carrier].healthRemaining = 0
+        assert state.alive
+        assert state.activeShipsRemaining == 1
+
+        state.shipStates[Ship.Cruiser].healthRemaining = 0
+        assertFalse state.alive
+        assert state.activeShipsRemaining == 0
+    }
+
+    void testIgnoresSetAliveAndActiveShips() {
+        state.setAlive(true)
+        state.setActiveShipsRemaining(10)
+        assertFalse state.alive
+        assert state.activeShipsRemaining == 0
+    }
+
+    void testIsSetup() {
+        assertFalse state.setup
+
+        Ship.values().findAll{ Ship it -> it!= Ship.Submarine}.each {
+            Ship it ->
+            state.shipStates += [(it): new ShipState(it, null, [])]
+                assertFalse state.setup
+        }
+        state.shipStates += [(Ship.Submarine): new ShipState(Ship.Submarine, null, [])]
+        assert state.setup
+    }
+
+    void testIgnoresSetSetup() {
+        assertFalse state.setup
+        state.setup = true
+        assertFalse state.setup
     }
 }

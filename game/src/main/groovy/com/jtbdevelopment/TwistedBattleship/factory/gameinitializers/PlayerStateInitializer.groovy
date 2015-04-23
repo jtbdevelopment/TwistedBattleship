@@ -30,7 +30,6 @@ class PlayerStateInitializer implements GameInitializer<TBGame> {
                 Set<Player> opponents = new HashSet<Player>(game.players)
                 opponents.remove(p)
                 game.playerDetails[p.id] = new TBPlayerState(
-                        activeShipsRemaining: Ship.values().size(),
                         ecmsRemaining: game.features.contains(GameFeature.ECMEnabled) ? players : 0,
                         emergencyRepairsRemaining: game.features.contains(GameFeature.EREnabled) ? players : 0,
                         evasiveManeuversRemaining: game.features.contains(GameFeature.EMEnabled) ? players : 0,
