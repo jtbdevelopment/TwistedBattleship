@@ -11,12 +11,14 @@ import com.jtbdevelopment.games.players.Player
 import groovy.transform.CompileStatic
 import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
 
 /**
  * Date: 4/6/15
  * Time: 6:34 PM
  */
 @CompileStatic
+@Component
 class PlayerStateInitializer implements GameInitializer<TBGame> {
     @Autowired
     GridSizeUtil util
