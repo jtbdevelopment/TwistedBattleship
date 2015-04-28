@@ -6,6 +6,7 @@ import com.jtbdevelopment.games.mongo.dao.AbstractMongoMultiPlayerGameRepository
 import com.jtbdevelopment.games.state.GamePhase
 import groovy.transform.CompileStatic
 import org.bson.types.ObjectId
+import org.springframework.context.annotation.Primary
 import org.springframework.data.domain.Pageable
 
 import java.time.ZonedDateTime
@@ -15,7 +16,7 @@ import java.time.ZonedDateTime
  * Time: 10:16 PM
  */
 @CompileStatic
-interface TBGameDao extends AbstractMongoMultiPlayerGameRepository<GameFeature, TBGame> {
+interface GameRepository extends AbstractMongoMultiPlayerGameRepository<GameFeature, TBGame> {
     //  TODO - move to core - see comment there
     //  TODO - also move PlayerGamesFinderHandler then
     List<TBGame> findByPlayersIdAndGamePhaseAndLastUpdateGreaterThan(

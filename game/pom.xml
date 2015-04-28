@@ -78,6 +78,12 @@
             <scope>test</scope>
             <type>test-jar</type>
         </dependency>
+        <dependency>
+            <groupId>com.jtbdevelopment.core-games</groupId>
+            <artifactId>games-dev-utilities</artifactId>
+            <version>${core.games.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>
