@@ -1,13 +1,18 @@
 package com.jtbdevelopment.TwistedBattleship
 
+import com.jtbdevelopment.TwistedBattleship.dao.GameRepository
 import com.jtbdevelopment.TwistedBattleship.rest.GameFeatureInfo
 import com.jtbdevelopment.TwistedBattleship.rest.services.PlayerServices
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
+import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.masked.TBMaskedGame
+import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
+import com.jtbdevelopment.core.hazelcast.caching.HazelcastCacheManager
 import com.jtbdevelopment.games.dev.utilities.integrationtesting.AbstractGameIntegration
+import org.bson.types.ObjectId
+import org.junit.BeforeClass
 import org.junit.Test
 
-import javax.ws.rs.client.Client
 import javax.ws.rs.client.Entity
 import javax.ws.rs.core.GenericType
 import javax.ws.rs.core.MediaType
@@ -17,6 +22,13 @@ import javax.ws.rs.core.MediaType
  * Time: 10:36 AM
  */
 class TwistedBattleshipIntegration extends AbstractGameIntegration {
+
+    static HazelcastCacheManager cacheManager
+
+    @BeforeClass
+    static void setup() {
+        cacheManager = context.getBean(HazelcastCacheManager.class)
+    }
 
     @Test
     void testGetFeatures() {
@@ -97,5 +109,24 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration {
                 .request(MediaType.APPLICATION_JSON)
                 .post(entity, TBMaskedGame.class)
         assert game != null
+        assert game.playersAlive == [
+                (TEST_PLAYER1.md5): false,
+                (TEST_PLAYER2.md5): false,
+                (TEST_PLAYER3.md5): false
+        ]
+        assert game.playersSetup == [
+                (TEST_PLAYER1.md5): false,
+                (TEST_PLAYER2.md5): false,
+                (TEST_PLAYER3.md5): false
+        ]
+        assert game.maskedPlayersState.activeShipsRemaining == 0
+
+        //  Clear cache and force a load from db to confirm loads
+        cacheManager.cacheNames.each {
+            cacheManager.getCache(it).clear()
+        }
+
+        TBGame dbGame = context.getBean(GameRepository.class).findOne(new ObjectId(game.id))
+        assert dbGame != null
     }
 }
