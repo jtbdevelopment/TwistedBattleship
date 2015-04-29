@@ -14,8 +14,8 @@ import org.bson.types.ObjectId
  * Date: 4/6/15
  * Time: 6:34 PM
  */
-class PlayerStateInitializerTest extends MongoGameCoreTestCase {
-    PlayerStateInitializer initializer = new PlayerStateInitializer()
+class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
+    PlayerGameStateInitializer initializer = new PlayerGameStateInitializer()
 
     void testInitializeGame() {
         TBGame game = new TBGame(

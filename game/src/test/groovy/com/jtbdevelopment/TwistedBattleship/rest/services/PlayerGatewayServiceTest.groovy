@@ -1,5 +1,6 @@
 package com.jtbdevelopment.TwistedBattleship.rest.services
 
+import com.jtbdevelopment.TwistedBattleship.rest.GameFeatureInfo
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import groovy.transform.TypeChecked
 
@@ -18,54 +19,47 @@ class PlayerGatewayServiceTest extends GroovyTestCase {
     void testGetFeatures() {
 
         assert playerGatewayService.featuresAndDescriptions() == [
-                (GameFeature.Critical)        :
-                        new PlayerGatewayService.GameFeatureGroupDetails(
-                                description: GameFeature.Critical.description,
-                                options: [GameFeature.CriticalEnabled, GameFeature.CriticalDisabled],
-                                optionDescriptions: [GameFeature.CriticalEnabled.description, GameFeature.CriticalDisabled.description]
-                        ),
-                (GameFeature.ActionsPerTurn)  :
-                        new PlayerGatewayService.GameFeatureGroupDetails(
-                                description: GameFeature.ActionsPerTurn.description,
-                                options: [GameFeature.PerShip, GameFeature.Single],
-                                optionDescriptions: [GameFeature.PerShip.description, GameFeature.Single.description]
-                        ),
-                (GameFeature.EmergencyRepairs):
-                        new PlayerGatewayService.GameFeatureGroupDetails(
-                                description: GameFeature.EmergencyRepairs.description,
-                                options: [GameFeature.EREnabled, GameFeature.ERDisabled],
-                                optionDescriptions: [GameFeature.EREnabled.description, GameFeature.ERDisabled.description]
-                        ),
-                (GameFeature.EvasiveManeuvers):
-                        new PlayerGatewayService.GameFeatureGroupDetails(
-                                description: GameFeature.EvasiveManeuvers.description,
-                                options: [GameFeature.EMEnabled, GameFeature.EMDisabled],
-                                optionDescriptions: [GameFeature.EMEnabled.description, GameFeature.EMDisabled.description]
-                        ),
-                (GameFeature.Spy)             :
-                        new PlayerGatewayService.GameFeatureGroupDetails(
-                                description: GameFeature.Spy.description,
-                                options: [GameFeature.SpyEnabled, GameFeature.SpyDisabled],
-                                optionDescriptions: [GameFeature.SpyEnabled.description, GameFeature.SpyDisabled.description]
-                        ),
-                (GameFeature.ECM)             :
-                        new PlayerGatewayService.GameFeatureGroupDetails(
-                                description: GameFeature.ECM.description,
-                                options: [GameFeature.ECMEnabled, GameFeature.ECMDisabled],
-                                optionDescriptions: [GameFeature.ECMEnabled.description, GameFeature.ECMDisabled.description]
-                        ),
-                (GameFeature.FogOfWar)        :
-                        new PlayerGatewayService.GameFeatureGroupDetails(
-                                description: GameFeature.FogOfWar.description,
-                                options: [GameFeature.SharedIntel, GameFeature.IsolatedIntel],
-                                optionDescriptions: [GameFeature.SharedIntel.description, GameFeature.IsolatedIntel.description]
-                        ),
-                (GameFeature.GridSize)        :
-                        new PlayerGatewayService.GameFeatureGroupDetails(
-                                description: GameFeature.GridSize.description,
-                                options: [GameFeature.Grid10x10, GameFeature.Grid15x15, GameFeature.Grid20x20],
-                                optionDescriptions: [GameFeature.Grid10x10.description, GameFeature.Grid15x15.description, GameFeature.Grid20x20.description]
-                        ),
+                new GameFeatureInfo(GameFeature.GridSize,
+                        [
+                                new GameFeatureInfo.Detail(GameFeature.Grid10x10),
+                                new GameFeatureInfo.Detail(GameFeature.Grid15x15),
+                                new GameFeatureInfo.Detail(GameFeature.Grid20x20),
+                        ]),
+                new GameFeatureInfo(GameFeature.FogOfWar,
+                        [
+                                new GameFeatureInfo.Detail(GameFeature.SharedIntel),
+                                new GameFeatureInfo.Detail(GameFeature.IsolatedIntel),
+                        ]),
+                new GameFeatureInfo(GameFeature.ECM,
+                        [
+                                new GameFeatureInfo.Detail(GameFeature.ECMEnabled),
+                                new GameFeatureInfo.Detail(GameFeature.ECMDisabled),
+                        ]),
+                new GameFeatureInfo(GameFeature.Spy,
+                        [
+                                new GameFeatureInfo.Detail(GameFeature.SpyEnabled),
+                                new GameFeatureInfo.Detail(GameFeature.SpyDisabled),
+                        ]),
+                new GameFeatureInfo(GameFeature.EvasiveManeuvers,
+                        [
+                                new GameFeatureInfo.Detail(GameFeature.EMEnabled),
+                                new GameFeatureInfo.Detail(GameFeature.EMDisabled),
+                        ]),
+                new GameFeatureInfo(GameFeature.EmergencyRepairs,
+                        [
+                                new GameFeatureInfo.Detail(GameFeature.EREnabled),
+                                new GameFeatureInfo.Detail(GameFeature.ERDisabled),
+                        ]),
+                new GameFeatureInfo(GameFeature.ActionsPerTurn,
+                        [
+                                new GameFeatureInfo.Detail(GameFeature.PerShip),
+                                new GameFeatureInfo.Detail(GameFeature.Single),
+                        ]),
+                new GameFeatureInfo(GameFeature.Critical,
+                        [
+                                new GameFeatureInfo.Detail(GameFeature.CriticalEnabled),
+                                new GameFeatureInfo.Detail(GameFeature.CriticalDisabled),
+                        ]),
         ]
     }
 

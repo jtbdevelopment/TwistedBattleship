@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component
  */
 @CompileStatic
 @Component
-class PlayerStateInitializer implements GameInitializer<TBGame> {
+class PlayerGameStateInitializer implements GameInitializer<TBGame> {
     @Autowired
     GridSizeUtil util
     @Override
