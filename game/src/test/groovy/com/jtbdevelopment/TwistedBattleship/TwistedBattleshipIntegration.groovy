@@ -1,10 +1,14 @@
 package com.jtbdevelopment.TwistedBattleship
 
 import com.jtbdevelopment.TwistedBattleship.rest.GameFeatureInfo
+import com.jtbdevelopment.TwistedBattleship.rest.services.PlayerServices
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
+import com.jtbdevelopment.TwistedBattleship.state.masked.TBMaskedGame
 import com.jtbdevelopment.games.dev.utilities.integrationtesting.AbstractGameIntegration
 import org.junit.Test
 
+import javax.ws.rs.client.Client
+import javax.ws.rs.client.Entity
 import javax.ws.rs.core.GenericType
 import javax.ws.rs.core.MediaType
 
@@ -66,5 +70,32 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration {
                                 new GameFeatureInfo.Detail(GameFeature.CriticalDisabled),
                         ]),
         ]
+    }
+
+    @Test
+    void testCreateNewGame() {
+        def P3 = createConnection(TEST_PLAYER3).target(PLAYER_API)
+        def entity = Entity.entity(
+                new PlayerServices.FeaturesAndPlayers(
+
+                        features: [
+                                GameFeature.Grid20x20,
+                                GameFeature.IsolatedIntel,
+                                GameFeature.ECMEnabled,
+                                GameFeature.EREnabled,
+                                GameFeature.EMDisabled,
+                                GameFeature.CriticalEnabled,
+                                GameFeature.SpyDisabled,
+                                GameFeature.PerShip
+                        ] as Set,
+                        players: [TEST_PLAYER2.md5, TEST_PLAYER3.md5, TEST_PLAYER1.md5]
+                ),
+                MediaType.APPLICATION_JSON)
+
+
+        TBMaskedGame game = P3.path("new")
+                .request(MediaType.APPLICATION_JSON)
+                .post(entity, TBMaskedGame.class)
+        assert game != null
     }
 }

@@ -7,12 +7,12 @@ package com.jtbdevelopment.TwistedBattleship.state.grid
 class GridTest extends GroovyTestCase {
     void testInitialization() {
         Grid grid = new Grid(5)
-        assert grid.table.size() == 25
+        assert grid.size == 5
         (0..4).each {
             int r->
             (0..4).each {
                 int c ->
-                    assert grid.table.get(r, c) == GridCellState.Unknown
+                    assert grid.table[r][c] == GridCellState.Unknown
             }
         }
     }

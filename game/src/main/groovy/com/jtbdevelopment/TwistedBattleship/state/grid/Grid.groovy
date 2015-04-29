@@ -1,7 +1,5 @@
 package com.jtbdevelopment.TwistedBattleship.state.grid
 
-import com.google.common.collect.HashBasedTable
-import com.google.common.collect.Table
 import groovy.transform.CompileStatic
 
 /**
@@ -9,16 +7,23 @@ import groovy.transform.CompileStatic
  * Time: 7:07 AM
  */
 @CompileStatic
-class Grid {
-    final Table<Integer, Integer, GridCellState> table
+class Grid implements Serializable {
+
+    final GridCellState[][] table;
+    final int size;
+
+    @SuppressWarnings("unused") // deserializer
+    private Grid() {
+    }
 
     public Grid(final int size) {
-        table = HashBasedTable.<Integer, Integer, GridCellState> create(size, size)
+        this.size = size;
+        table = new GridCellState[size][size]
         (1..size).each {
             int row ->
                 (1..size).each {
                     int col ->
-                        table.put(row - 1, col - 1, GridCellState.Unknown)
+                        table[row - 1][col - 1] = GridCellState.Unknown
                 }
         }
     }

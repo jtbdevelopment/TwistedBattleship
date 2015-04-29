@@ -76,19 +76,25 @@ class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
         assert playerState.opponentGrids.keySet() == opponentIds
         assert playerState.opponentGrids.values().each {
             Grid it ->
-                it.table.size() == size * size
-                it.table.values().each {
-                    GridCellState state ->
-                        assert state == GridCellState.Unknown
+                it.size == size
+                it.table.each {
+                    GridCellState[] row ->
+                        row.each {
+                            GridCellState state ->
+                                assert state == GridCellState.Unknown
+                        }
                 }
         }
         assert playerState.opponentViews.keySet() == opponentIds
         assert playerState.opponentViews.values().each {
             Grid it ->
-                it.table.size() == size * size
-                it.table.values().each {
-                    GridCellState state ->
-                        assert state == GridCellState.Unknown
+                it.size == size
+                it.table.each {
+                    GridCellState[] row ->
+                        row.each {
+                            GridCellState state ->
+                                assert state == GridCellState.Unknown
+                        }
                 }
         }
     }

@@ -9,7 +9,7 @@ import org.springframework.data.annotation.PersistenceConstructor
  * Time: 7:35 PM
  */
 @CompileStatic
-class ShipState {
+class ShipState implements Serializable {
     Ship ship
     ShipDirection shipDirection
     int healthRemaining
