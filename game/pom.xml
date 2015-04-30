@@ -39,11 +39,6 @@
         </dependency>
         <dependency>
             <groupId>com.jtbdevelopment.core-games</groupId>
-            <artifactId>games-dictionaries</artifactId>
-            <version>${core.games.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.jtbdevelopment.core-games</groupId>
             <artifactId>games-events</artifactId>
             <version>${core.games.version}</version>
         </dependency>
