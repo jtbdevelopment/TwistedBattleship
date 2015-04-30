@@ -5,8 +5,8 @@ import com.jtbdevelopment.TwistedBattleship.rest.GameFeatureInfo
 import com.jtbdevelopment.TwistedBattleship.rest.services.PlayerServices
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
+import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
 import com.jtbdevelopment.TwistedBattleship.state.masked.TBMaskedGame
-import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.core.hazelcast.caching.HazelcastCacheManager
 import com.jtbdevelopment.games.dev.utilities.integrationtesting.AbstractGameIntegration
 import org.bson.types.ObjectId
@@ -119,7 +119,20 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration {
                 (TEST_PLAYER2.md5): false,
                 (TEST_PLAYER3.md5): false
         ]
+        assert game.playersScore == [
+                (TEST_PLAYER1.md5): 0,
+                (TEST_PLAYER2.md5): 0,
+                (TEST_PLAYER3.md5): 0
+        ]
         assert game.maskedPlayersState.activeShipsRemaining == 0
+        assert game.maskedPlayersState.opponentGrids == [
+                (TEST_PLAYER1.md5): new Grid(20),
+                (TEST_PLAYER2.md5): new Grid(20)
+        ]
+        assert game.maskedPlayersState.opponentViews == [
+                (TEST_PLAYER1.md5): new Grid(20),
+                (TEST_PLAYER2.md5): new Grid(20)
+        ]
 
         //  Clear cache and force a load from db to confirm loads
         cacheManager.cacheNames.each {

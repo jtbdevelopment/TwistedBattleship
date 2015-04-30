@@ -9,12 +9,14 @@ import groovy.transform.CompileStatic
 @CompileStatic
 class Grid implements Serializable {
 
-    private final GridCellState[][] table;
+    final GridCellState[][] table;
     final int size;
 
+    // json deserializer
     @SuppressWarnings("unused")
-    // deserializer
-    private Grid() {
+    protected Grid() {
+        size = 0;
+        table = new GridCellState[0][0]
     }
 
     Grid(final int size) {
