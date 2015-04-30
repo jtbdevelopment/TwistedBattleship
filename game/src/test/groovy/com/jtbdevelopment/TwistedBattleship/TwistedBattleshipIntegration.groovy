@@ -2,7 +2,6 @@ package com.jtbdevelopment.TwistedBattleship
 
 import com.jtbdevelopment.TwistedBattleship.dao.GameRepository
 import com.jtbdevelopment.TwistedBattleship.rest.GameFeatureInfo
-import com.jtbdevelopment.TwistedBattleship.rest.services.PlayerServices
 import com.jtbdevelopment.TwistedBattleship.rest.services.messages.FeaturesAndPlayers
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
@@ -18,6 +17,7 @@ import org.junit.Test
 import javax.ws.rs.client.Entity
 import javax.ws.rs.core.GenericType
 import javax.ws.rs.core.MediaType
+import javax.ws.rs.core.Response
 
 /**
  * Date: 4/26/15
@@ -147,5 +147,53 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration {
 
         TBGame dbGame = context.getBean(GameRepository.class).findOne(new ObjectId(game.id))
         assert dbGame != null
+    }
+
+    @Test
+    void testCreatingInvalidGames() {
+        def P3 = createConnection(TEST_PLAYER3).target(PLAYER_API)
+        def entity = Entity.entity(
+                new FeaturesAndPlayers(
+                        features: [
+                                GameFeature.Grid20x20,
+                                GameFeature.IsolatedIntel,
+                                GameFeature.ECMEnabled,
+                                GameFeature.SpyDisabled,
+                                GameFeature.PerShip
+                        ] as Set,
+                        players: [TEST_PLAYER2.md5, TEST_PLAYER3.md5, TEST_PLAYER1.md5]
+                ),
+                MediaType.APPLICATION_JSON)
+
+
+        Response response = P3.path("new")
+                .request(MediaType.APPLICATION_JSON)
+                .post(entity)
+        assert response != null
+        assert response.statusInfo.statusCode == 400
+
+         entity = Entity.entity(
+                new FeaturesAndPlayers(
+                        features: [
+                                GameFeature.Grid20x20,
+                                GameFeature.IsolatedIntel,
+                                GameFeature.ECMEnabled,
+                                GameFeature.ECMDisabled,  // Double
+                                GameFeature.EREnabled,
+                                GameFeature.EMDisabled,
+                                GameFeature.CriticalEnabled,
+                                GameFeature.SpyDisabled,
+                                GameFeature.PerShip
+                        ] as Set,
+                        players: [TEST_PLAYER2.md5, TEST_PLAYER3.md5, TEST_PLAYER1.md5]
+                ),
+                MediaType.APPLICATION_JSON)
+
+
+         response = P3.path("new")
+                .request(MediaType.APPLICATION_JSON)
+                .post(entity)
+        assert response != null
+        assert response.statusInfo.statusCode == 400
     }
 }
