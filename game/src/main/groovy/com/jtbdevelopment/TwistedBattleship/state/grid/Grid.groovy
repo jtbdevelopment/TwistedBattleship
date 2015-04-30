@@ -9,14 +9,15 @@ import groovy.transform.CompileStatic
 @CompileStatic
 class Grid implements Serializable {
 
-    final GridCellState[][] table;
+    private final GridCellState[][] table;
     final int size;
 
-    @SuppressWarnings("unused") // deserializer
+    @SuppressWarnings("unused")
+    // deserializer
     private Grid() {
     }
 
-    public Grid(final int size) {
+    Grid(final int size) {
         this.size = size;
         table = new GridCellState[size][size]
         (1..size).each {
@@ -26,5 +27,34 @@ class Grid implements Serializable {
                         table[row - 1][col - 1] = GridCellState.Unknown
                 }
         }
+    }
+
+    GridCellState get(final int row, final int column) {
+        return table[row][column]
+    }
+
+    Grid set(final int row, final int column, final GridCellState state) {
+        table[row][column] = state
+        return this
+    }
+
+    boolean equals(final o) {
+        if (this.is(o)) return true
+        if (!(o instanceof Grid)) return false
+
+        final Grid grid = (Grid) o
+
+        if (size != grid.size) return false
+        for (int i = 0; i < grid.size; ++i) {
+            for (int j = 0; j < grid.size; ++j) {
+                if (this.table[i][j] != grid.table[i][j]) return false
+            }
+        }
+
+        return true
+    }
+
+    int hashCode() {
+        return size
     }
 }

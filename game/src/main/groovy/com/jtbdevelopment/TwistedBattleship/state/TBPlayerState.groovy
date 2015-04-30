@@ -14,8 +14,6 @@ import org.bson.types.ObjectId
 class TBPlayerState implements Serializable {
     private static int SHIP_COUNT = Ship.values().size()
 
-    boolean t
-
     Map<Ship, ShipState> shipStates = [:]
 
     int spysRemaining = 0
