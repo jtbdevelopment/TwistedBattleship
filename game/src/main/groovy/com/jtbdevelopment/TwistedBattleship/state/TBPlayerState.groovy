@@ -36,12 +36,20 @@ class TBPlayerState implements Serializable {
         //  ignore
     }
 
+    boolean getSetup() {
+        return isSetup()
+    }
+
     boolean isSetup() {
         return shipStates.size() == SHIP_COUNT
     }
 
     void setSetup(final boolean isSetup) {
         // ignore
+    }
+
+    boolean getAlive() {
+        return isAlive()
     }
 
     boolean isAlive() {
