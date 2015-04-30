@@ -3,12 +3,14 @@ package com.jtbdevelopment.TwistedBattleship
 import com.jtbdevelopment.TwistedBattleship.dao.GameRepository
 import com.jtbdevelopment.TwistedBattleship.rest.GameFeatureInfo
 import com.jtbdevelopment.TwistedBattleship.rest.services.PlayerServices
+import com.jtbdevelopment.TwistedBattleship.rest.services.messages.FeaturesAndPlayers
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
 import com.jtbdevelopment.TwistedBattleship.state.masked.TBMaskedGame
 import com.jtbdevelopment.core.hazelcast.caching.HazelcastCacheManager
 import com.jtbdevelopment.games.dev.utilities.integrationtesting.AbstractGameIntegration
+import com.jtbdevelopment.games.state.PlayerState
 import org.bson.types.ObjectId
 import org.junit.BeforeClass
 import org.junit.Test
@@ -88,8 +90,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration {
     void testCreateNewGame() {
         def P3 = createConnection(TEST_PLAYER3).target(PLAYER_API)
         def entity = Entity.entity(
-                new PlayerServices.FeaturesAndPlayers(
-
+                new FeaturesAndPlayers(
                         features: [
                                 GameFeature.Grid20x20,
                                 GameFeature.IsolatedIntel,
@@ -109,6 +110,11 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration {
                 .request(MediaType.APPLICATION_JSON)
                 .post(entity, TBMaskedGame.class)
         assert game != null
+        assert game.playerStates == [
+                (TEST_PLAYER1.md5): PlayerState.Pending,
+                (TEST_PLAYER2.md5): PlayerState.Pending,
+                (TEST_PLAYER3.md5): PlayerState.Accepted
+        ]
         assert game.playersAlive == [
                 (TEST_PLAYER1.md5): false,
                 (TEST_PLAYER2.md5): false,

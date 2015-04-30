@@ -17,25 +17,25 @@ class GamePhaseTransitionEngineTest extends MongoGameCoreTestCase {
         game.gamePhase = GamePhase.RoundOver.Setup
         game.playerDetails = [
                 (PONE.id): new TBPlayerState(shipStates: [
-                        (Ship.Battleship): new ShipState(Ship.Battleship, null, []),
-                        (Ship.Cruiser): new ShipState(Ship.Cruiser, null, []),
-                        (Ship.Carrier): new ShipState(Ship.Carrier, null, []),
-                        (Ship.Submarine): new ShipState(Ship.Submarine, null, []),
-                        (Ship.Destroyer): new ShipState(Ship.Destroyer, null, [])
+                        (Ship.Battleship): new ShipState(Ship.Battleship, []),
+                        (Ship.Cruiser): new ShipState(Ship.Cruiser, []),
+                        (Ship.Carrier): new ShipState(Ship.Carrier, []),
+                        (Ship.Submarine): new ShipState(Ship.Submarine, []),
+                        (Ship.Destroyer): new ShipState(Ship.Destroyer, [])
                 ]),
                 (PFOUR.id): new TBPlayerState(shipStates: [
-                        (Ship.Battleship): new ShipState(Ship.Battleship, null, []),
-                        (Ship.Cruiser): new ShipState(Ship.Cruiser, null, []),
-                        (Ship.Carrier): new ShipState(Ship.Carrier, null, []),
-                        (Ship.Submarine): new ShipState(Ship.Submarine, null, []),
-                        (Ship.Destroyer): new ShipState(Ship.Destroyer, null, [])
+                        (Ship.Battleship): new ShipState(Ship.Battleship, []),
+                        (Ship.Cruiser): new ShipState(Ship.Cruiser, []),
+                        (Ship.Carrier): new ShipState(Ship.Carrier, []),
+                        (Ship.Submarine): new ShipState(Ship.Submarine, []),
+                        (Ship.Destroyer): new ShipState(Ship.Destroyer, [])
                 ]),
                 (PTWO.id): new TBPlayerState(shipStates: [
-                        (Ship.Battleship): new ShipState(Ship.Battleship, null, []),
-                        (Ship.Cruiser): new ShipState(Ship.Cruiser, null, []),
-                        (Ship.Carrier): new ShipState(Ship.Carrier, null, []),
-                        (Ship.Submarine): new ShipState(Ship.Submarine, null, []),
-                        (Ship.Destroyer): new ShipState(Ship.Destroyer, null, [])
+                        (Ship.Battleship): new ShipState(Ship.Battleship, []),
+                        (Ship.Cruiser): new ShipState(Ship.Cruiser, []),
+                        (Ship.Carrier): new ShipState(Ship.Carrier, []),
+                        (Ship.Submarine): new ShipState(Ship.Submarine, []),
+                        (Ship.Destroyer): new ShipState(Ship.Destroyer, [])
                 ])
         ]
         TBGame result = engine.evaluateGame(game)
@@ -47,19 +47,19 @@ class GamePhaseTransitionEngineTest extends MongoGameCoreTestCase {
         game.gamePhase = GamePhase.RoundOver.Setup
         game.playerDetails = [
                 (PONE.id): new TBPlayerState(shipStates: [
-                        (Ship.Battleship): new ShipState(Ship.Battleship, null, []),
-                        (Ship.Cruiser): new ShipState(Ship.Cruiser, null, []),
-                        (Ship.Carrier): new ShipState(Ship.Carrier, null, []),
-                        (Ship.Submarine): new ShipState(Ship.Submarine, null, []),
-                        (Ship.Destroyer): new ShipState(Ship.Destroyer, null, [])
+                        (Ship.Battleship): new ShipState(Ship.Battleship, []),
+                        (Ship.Cruiser): new ShipState(Ship.Cruiser, []),
+                        (Ship.Carrier): new ShipState(Ship.Carrier, []),
+                        (Ship.Submarine): new ShipState(Ship.Submarine, []),
+                        (Ship.Destroyer): new ShipState(Ship.Destroyer, [])
                 ]),
                 (PFOUR.id): new TBPlayerState(shipStates: [:]),
                 (PTHREE.id): new TBPlayerState(shipStates: [
-                        (Ship.Battleship): new ShipState(Ship.Battleship, null, []),
-                        (Ship.Cruiser): new ShipState(Ship.Cruiser, null, []),
-                        (Ship.Carrier): new ShipState(Ship.Carrier, null, []),
-                        (Ship.Submarine): new ShipState(Ship.Submarine, null, []),
-                        (Ship.Destroyer): new ShipState(Ship.Destroyer, null, [])
+                        (Ship.Battleship): new ShipState(Ship.Battleship, []),
+                        (Ship.Cruiser): new ShipState(Ship.Cruiser, []),
+                        (Ship.Carrier): new ShipState(Ship.Carrier, []),
+                        (Ship.Submarine): new ShipState(Ship.Submarine, []),
+                        (Ship.Destroyer): new ShipState(Ship.Destroyer, [])
                 ]),
         ]
         TBGame result = engine.evaluateGame(game)
@@ -82,9 +82,9 @@ class GamePhaseTransitionEngineTest extends MongoGameCoreTestCase {
         TBGame game = new TBGame()
         game.gamePhase = GamePhase.RoundOver.Playing
         game.playerDetails = [
-                (PONE.id): new TBPlayerState(shipStates: [(Ship.Battleship): new ShipState(Ship.Battleship, null, 0, [], []) ]),
+                (PONE.id): new TBPlayerState(shipStates: [(Ship.Battleship): new ShipState(Ship.Battleship, 0, [], []) ]),
                 (PFOUR.id): new TBPlayerState(shipStates: [:]),
-                (PTWO.id): new TBPlayerState(shipStates: [(Ship.Submarine): new ShipState(Ship.Submarine, null, 1, [], []) ])
+                (PTWO.id): new TBPlayerState(shipStates: [(Ship.Submarine): new ShipState(Ship.Submarine, 1, [], []) ])
         ]
         TBGame result = engine.evaluateGame(game)
         assert result.gamePhase == GamePhase.RoundOver
@@ -94,9 +94,9 @@ class GamePhaseTransitionEngineTest extends MongoGameCoreTestCase {
         TBGame game = new TBGame()
         game.gamePhase = GamePhase.RoundOver.Playing
         game.playerDetails = [
-                (PONE.id): new TBPlayerState(shipStates: [(Ship.Battleship): new ShipState(Ship.Battleship, null, 2, [], []) ]),
+                (PONE.id): new TBPlayerState(shipStates: [(Ship.Battleship): new ShipState(Ship.Battleship, 2, [], []) ]),
                 (PFOUR.id): new TBPlayerState(shipStates: [:]),
-                (PTWO.id): new TBPlayerState(shipStates: [(Ship.Submarine): new ShipState(Ship.Submarine, null, 1, [], []) ])
+                (PTWO.id): new TBPlayerState(shipStates: [(Ship.Submarine): new ShipState(Ship.Submarine, 1, [], []) ])
         ]
         TBGame result = engine.evaluateGame(game)
         assert result.gamePhase == GamePhase.Playing

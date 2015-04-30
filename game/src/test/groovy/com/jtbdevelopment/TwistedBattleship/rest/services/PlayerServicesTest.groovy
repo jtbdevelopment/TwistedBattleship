@@ -1,6 +1,7 @@
 package com.jtbdevelopment.TwistedBattleship.rest.services
 
 import com.jtbdevelopment.TwistedBattleship.rest.handlers.PlayerGamesFinderHandler
+import com.jtbdevelopment.TwistedBattleship.rest.services.messages.FeaturesAndPlayers
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.masked.TBMaskedGame
@@ -27,7 +28,7 @@ class PlayerServicesTest extends GroovyTestCase {
         playerServices.playerID.set(APLAYER)
         def features = [GameFeature.EREnabled, GameFeature.PerShip] as Set
         def players = ["1", "2", "3"]
-        PlayerServices.FeaturesAndPlayers input = new PlayerServices.FeaturesAndPlayers(features: features, players: players)
+        FeaturesAndPlayers input = new FeaturesAndPlayers(features: features, players: players)
         TBMaskedGame game = new TBMaskedGame()
         playerServices.newGameHandler = [
                 handleCreateNewGame: {
@@ -42,7 +43,7 @@ class PlayerServicesTest extends GroovyTestCase {
     }
 
     void testCreateNewGameAnnotations() {
-        def gameServices = PlayerServices.getMethod("createNewGame", [PlayerServices.FeaturesAndPlayers.class] as Class[])
+        def gameServices = PlayerServices.getMethod("createNewGame", [FeaturesAndPlayers.class] as Class[])
         assert (gameServices.annotations.size() == 4 ||
                 (gameServices.isAnnotationPresent(TypeChecked.TypeCheckingInfo) && gameServices.annotations.size() == 5)
         )

@@ -1,6 +1,7 @@
 package com.jtbdevelopment.TwistedBattleship.rest.services
 
 import com.jtbdevelopment.TwistedBattleship.rest.handlers.PlayerGamesFinderHandler
+import com.jtbdevelopment.TwistedBattleship.rest.services.messages.FeaturesAndPlayers
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.games.rest.handlers.NewGameHandler
 import com.jtbdevelopment.games.rest.services.AbstractPlayerServices
@@ -26,11 +27,6 @@ class PlayerServices extends AbstractPlayerServices<ObjectId> {
     NewGameHandler newGameHandler
     @Autowired
     PlayerGamesFinderHandler playerGamesFinderHandler
-
-    static class FeaturesAndPlayers {
-        List<String> players    // md5 list
-        Set<GameFeature> features
-    }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)

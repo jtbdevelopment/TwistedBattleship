@@ -44,17 +44,17 @@ class TBGameMaskerTest extends MongoGameCoreTestCase {
                                         (PTHREE.id): new Grid(10)
                                 ],
                                 shipStates: [
-                                        (Ship.Battleship): new ShipState(Ship.Battleship, null, []),
-                                        (Ship.Destroyer) : new ShipState(Ship.Destroyer, null, []),
-                                        (Ship.Submarine) : new ShipState(Ship.Submarine, null, []),
-                                        (Ship.Carrier)   : new ShipState(Ship.Carrier, null, []),
-                                        (Ship.Cruiser)   : new ShipState(Ship.Cruiser, null, [])
+                                        (Ship.Battleship): new ShipState(Ship.Battleship, []),
+                                        (Ship.Destroyer) : new ShipState(Ship.Destroyer, []),
+                                        (Ship.Submarine) : new ShipState(Ship.Submarine, []),
+                                        (Ship.Carrier)   : new ShipState(Ship.Carrier, []),
+                                        (Ship.Cruiser)   : new ShipState(Ship.Cruiser, [])
                                 ]),
                         (PTWO.id)  : new TBPlayerState(
                                 scoreFromLiving: 30, scoreFromSinks: 10,
                                 shipStates: [
-                                        (Ship.Battleship): new ShipState(Ship.Battleship, null, 0, [], []),
-                                        (Ship.Cruiser)   : new ShipState(Ship.Cruiser, null, 0, [], [])
+                                        (Ship.Battleship): new ShipState(Ship.Battleship, 0, [], []),
+                                        (Ship.Cruiser)   : new ShipState(Ship.Cruiser, 0, [], [])
                                 ]),
                         (PTHREE.id): new TBPlayerState(scoreFromHits: 10, scoreFromSinks: 10),
                 ]

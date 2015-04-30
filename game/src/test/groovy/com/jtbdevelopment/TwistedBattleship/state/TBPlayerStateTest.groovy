@@ -47,8 +47,8 @@ class TBPlayerStateTest extends GroovyTestCase {
 
     void testShipsRemainingAndAlive() {
         state.shipStates = [
-                (Ship.Cruiser): new ShipState(Ship.Cruiser, null, []),
-                (Ship.Carrier): new ShipState(Ship.Battleship, null, [])
+                (Ship.Cruiser): new ShipState(Ship.Cruiser, []),
+                (Ship.Carrier): new ShipState(Ship.Battleship, [])
         ]
         assert state.alive
         assert state.activeShipsRemaining == 2
@@ -78,10 +78,10 @@ class TBPlayerStateTest extends GroovyTestCase {
 
         Ship.values().findAll{ Ship it -> it!= Ship.Submarine}.each {
             Ship it ->
-            state.shipStates += [(it): new ShipState(it, null, [])]
+            state.shipStates += [(it): new ShipState(it, [])]
                 assertFalse state.setup
         }
-        state.shipStates += [(Ship.Submarine): new ShipState(Ship.Submarine, null, [])]
+        state.shipStates += [(Ship.Submarine): new ShipState(Ship.Submarine, [])]
         assert state.setup
     }
 
