@@ -8,10 +8,10 @@ import groovy.transform.CompileStatic
  * Time: 8:48 PM
  */
 @CompileStatic
-class ShipsOutsideBoundsException extends GameInputException {
-    private final static String ERROR = "Ship(s) are placed outside of boundaries."
+class ShipPlacementsNotValidException extends GameInputException {
+    private final static String ERROR = "Ship(s) are placed validly."
 
-    ShipsOutsideBoundsException() {
+    ShipPlacementsNotValidException() {
         super(ERROR)
     }
 }
