@@ -25,6 +25,7 @@ class ShipStateValidator {
             throw new NotAllShipsSetupException()
         }
 
+        //  TODO - cleanup this code a bit
         int maxPosition = gridSizeUtil.getSize(game)
         Set<GridCoordinate> used = [] as Set
         shipState.each {
@@ -55,6 +56,8 @@ class ShipStateValidator {
                             throw new ShipPlacementsNotValidException()
                         }
                 }
+
+                //  TODO - possibly move out for evasive maneuvers/emergency repairs
                 List<Integer> rows = state.shipGridCells.collect { it.row }.sort()
                 List<Integer> cols = state.shipGridCells.collect { it.column }.sort()
                 if((rows as Set).size() == 1) {
