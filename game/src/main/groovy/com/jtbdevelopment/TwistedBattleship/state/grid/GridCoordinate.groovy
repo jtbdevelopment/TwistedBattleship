@@ -8,10 +8,30 @@ import groovy.transform.CompileStatic
  */
 @CompileStatic
 class GridCoordinate {
-    int x, y
+    int row, column
 
-    GridCoordinate(final int x, final int y) {
-        this.x = x
-        this.y = y
+    GridCoordinate(final int row, final int column) {
+        this.row = row
+        this.column = column
     }
+
+    boolean equals(final o) {
+        if (this.is(o)) return true
+        if (!(o instanceof GridCoordinate)) return false
+
+        final GridCoordinate that = (GridCoordinate) o
+
+        if (row != that.row) return false
+        if (column != that.column) return false
+
+        return true
+    }
+
+    int hashCode() {
+        int result
+        result = row
+        result = 31 * result + column
+        return result
+    }
+
 }

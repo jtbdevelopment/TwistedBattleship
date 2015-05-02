@@ -4,6 +4,7 @@ import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
+import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
 import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
@@ -44,17 +45,17 @@ class TBGameMaskerTest extends MongoGameCoreTestCase {
                                         (PTHREE.id): new Grid(10)
                                 ],
                                 shipStates: [
-                                        (Ship.Battleship): new ShipState(Ship.Battleship, []),
-                                        (Ship.Destroyer) : new ShipState(Ship.Destroyer, []),
-                                        (Ship.Submarine) : new ShipState(Ship.Submarine, []),
-                                        (Ship.Carrier)   : new ShipState(Ship.Carrier, []),
-                                        (Ship.Cruiser)   : new ShipState(Ship.Cruiser, [])
+                                        (Ship.Battleship): new ShipState(Ship.Battleship, new TreeSet<GridCoordinate>()),
+                                        (Ship.Destroyer) : new ShipState(Ship.Destroyer, new TreeSet<GridCoordinate>()),
+                                        (Ship.Submarine) : new ShipState(Ship.Submarine, new TreeSet<GridCoordinate>()),
+                                        (Ship.Carrier)   : new ShipState(Ship.Carrier, new TreeSet<GridCoordinate>()),
+                                        (Ship.Cruiser)   : new ShipState(Ship.Cruiser, new TreeSet<GridCoordinate>())
                                 ]),
                         (PTWO.id)  : new TBPlayerState(
                                 scoreFromLiving: 30, scoreFromSinks: 10,
                                 shipStates: [
-                                        (Ship.Battleship): new ShipState(Ship.Battleship, 0, [], []),
-                                        (Ship.Cruiser)   : new ShipState(Ship.Cruiser, 0, [], [])
+                                        (Ship.Battleship): new ShipState(Ship.Battleship, 0, new TreeSet<GridCoordinate>(), []),
+                                        (Ship.Cruiser)   : new ShipState(Ship.Cruiser, 0, new TreeSet<GridCoordinate>(), [])
                                 ]),
                         (PTHREE.id): new TBPlayerState(scoreFromHits: 10, scoreFromSinks: 10),
                 ]

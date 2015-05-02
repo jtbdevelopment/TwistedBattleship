@@ -1,5 +1,6 @@
 package com.jtbdevelopment.TwistedBattleship.state
 
+import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
 
@@ -47,8 +48,8 @@ class TBPlayerStateTest extends GroovyTestCase {
 
     void testShipsRemainingAndAlive() {
         state.shipStates = [
-                (Ship.Cruiser): new ShipState(Ship.Cruiser, []),
-                (Ship.Carrier): new ShipState(Ship.Battleship, [])
+                (Ship.Cruiser): new ShipState(Ship.Cruiser, new TreeSet<GridCoordinate>()),
+                (Ship.Carrier): new ShipState(Ship.Battleship, new TreeSet<GridCoordinate>())
         ]
         assert state.alive
         assert state.activeShipsRemaining == 2
@@ -78,10 +79,10 @@ class TBPlayerStateTest extends GroovyTestCase {
 
         Ship.values().findAll{ Ship it -> it!= Ship.Submarine}.each {
             Ship it ->
-            state.shipStates += [(it): new ShipState(it, [])]
+            state.shipStates += [(it): new ShipState(it, new TreeSet<GridCoordinate>())]
                 assertFalse state.setup
         }
-        state.shipStates += [(Ship.Submarine): new ShipState(Ship.Submarine, [])]
+        state.shipStates += [(Ship.Submarine): new ShipState(Ship.Submarine, new TreeSet<GridCoordinate>())]
         assert state.setup
     }
 

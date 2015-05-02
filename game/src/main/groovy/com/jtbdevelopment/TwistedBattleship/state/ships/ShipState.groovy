@@ -12,11 +12,11 @@ import org.springframework.data.annotation.PersistenceConstructor
 class ShipState implements Serializable {
     Ship ship
     int healthRemaining
-    List<GridCoordinate> shipGridCells // from front to back
+    SortedSet<GridCoordinate> shipGridCells // from front to back
     List<Boolean> shipSegmentHit
 
     ShipState(final Ship ship,
-              final List<GridCoordinate> shipGridCells) {
+              final SortedSet<GridCoordinate> shipGridCells) {
         this.ship = ship
         this.shipGridCells = shipGridCells
         this.healthRemaining = ship.gridSize
@@ -27,7 +27,7 @@ class ShipState implements Serializable {
     ShipState(
             final Ship ship,
             final int healthRemaining,
-            final List<GridCoordinate> shipGridCells,
+            final SortedSet<GridCoordinate> shipGridCells,
             final List<Boolean> shipSegmentHit) {
         this.ship = ship
         this.healthRemaining = healthRemaining

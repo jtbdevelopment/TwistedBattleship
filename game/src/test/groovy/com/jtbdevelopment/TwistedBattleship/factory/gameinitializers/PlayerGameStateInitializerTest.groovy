@@ -26,8 +26,8 @@ class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
         int size = 11
         initializer.util = [
                 getSize: {
-                    GameFeature feature ->
-                        assert feature == GameFeature.Grid15x15
+                    TBGame g ->
+                        assert game.is(g)
                         return size
                 }
         ] as GridSizeUtil
@@ -51,8 +51,8 @@ class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
         int size = 20
         initializer.util = [
                 getSize: {
-                    GameFeature feature ->
-                        assert feature == GameFeature.Grid20x20
+                    TBGame g ->
+                        assert game.is(g)
                         return size
                 }
         ] as GridSizeUtil
