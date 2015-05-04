@@ -77,9 +77,9 @@ class TBPlayerStateTest extends GroovyTestCase {
     void testIsSetup() {
         assertFalse state.setup
 
-        Ship.values().findAll{ Ship it -> it!= Ship.Submarine}.each {
+        Ship.values().findAll { Ship it -> it != Ship.Submarine }.each {
             Ship it ->
-            state.shipStates += [(it): new ShipState(it, new TreeSet<GridCoordinate>())]
+                state.shipStates += [(it): new ShipState(it, new TreeSet<GridCoordinate>())]
                 assertFalse state.setup
         }
         state.shipStates += [(Ship.Submarine): new ShipState(Ship.Submarine, new TreeSet<GridCoordinate>())]

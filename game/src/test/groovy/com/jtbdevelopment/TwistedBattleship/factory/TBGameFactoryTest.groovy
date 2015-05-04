@@ -10,8 +10,9 @@ import org.bson.types.ObjectId
  */
 class TBGameFactoryTest extends MongoGameCoreTestCase {
     TBGameFactory gameFactory = new TBGameFactory()
+
     void testNewGame() {
-        assert gameFactory.newGame() instanceof  TBGame
+        assert gameFactory.newGame() instanceof TBGame
     }
 
     void testCopyFromPreviousGame() {

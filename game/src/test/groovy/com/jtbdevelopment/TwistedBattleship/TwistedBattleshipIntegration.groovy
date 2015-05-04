@@ -172,7 +172,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration {
         assert response != null
         assert response.statusInfo.statusCode == 400
 
-         entity = Entity.entity(
+        entity = Entity.entity(
                 new FeaturesAndPlayers(
                         features: [
                                 GameFeature.Grid20x20,
@@ -190,7 +190,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration {
                 MediaType.APPLICATION_JSON)
 
 
-         response = P3.path("new")
+        response = P3.path("new")
                 .request(MediaType.APPLICATION_JSON)
                 .post(entity)
         assert response != null

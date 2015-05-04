@@ -6,6 +6,7 @@ package com.jtbdevelopment.TwistedBattleship.state.grid
  */
 class GridCoordinateComparatorTest extends GroovyTestCase {
     GridCoordinateComparator comparator = new GridCoordinateComparator()
+
     void testEqualCoordinates() {
         assert 0 == comparator.compare(new GridCoordinate(0, 0), new GridCoordinate(0, 0))
         assert 0 == comparator.compare(new GridCoordinate(5, 6), new GridCoordinate(5, 6))

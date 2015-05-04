@@ -69,12 +69,12 @@ class GridTest extends GroovyTestCase {
         assert g1 == g3
         assert g1 != g2
 
-        g1.set(1,4, GridCellState.KnownByHit)
+        g1.set(1, 4, GridCellState.KnownByHit)
         assert g1 != g3
-        g3.set(1,4, GridCellState.KnownByHit)
+        g3.set(1, 4, GridCellState.KnownByHit)
         assert g1 == g3
 
-        g3.set(3,0, GridCellState.KnownShip)
+        g3.set(3, 0, GridCellState.KnownShip)
         assert g1 != g3
     }
 }
