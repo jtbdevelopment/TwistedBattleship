@@ -2,7 +2,6 @@ package com.jtbdevelopment.TwistedBattleship.rest.services
 
 import com.jtbdevelopment.TwistedBattleship.rest.handlers.PlayerGamesFinderHandler
 import com.jtbdevelopment.TwistedBattleship.rest.services.messages.FeaturesAndPlayers
-import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.games.rest.handlers.NewGameHandler
 import com.jtbdevelopment.games.rest.services.AbstractPlayerServices
 import com.jtbdevelopment.games.state.masking.AbstractMaskedMultiPlayerGame

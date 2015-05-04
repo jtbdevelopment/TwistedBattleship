@@ -2,7 +2,6 @@ package com.jtbdevelopment.TwistedBattleship.state.grid
 
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
-import com.jtbdevelopment.games.state.Game
 import groovy.transform.CompileStatic
 import org.springframework.stereotype.Component
 
@@ -21,7 +20,7 @@ class GridSizeUtil {
 
     int getSize(final TBGame game) {
         GameFeature size = game.features.find { GameFeature it -> it.group == GameFeature.GridSize }
-        if(sizeMap.containsKey(size)) {
+        if (sizeMap.containsKey(size)) {
             return sizeMap[size]
         }
         throw new IllegalArgumentException('Unhandled size ' + size)

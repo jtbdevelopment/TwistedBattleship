@@ -30,10 +30,10 @@ class PlayerGatewayService extends AbstractPlayerGatewayService<ObjectId> {
                 return a.order - b.order
         }.collect {
             GameFeature group ->
-                 new GameFeatureInfo(group, GameFeature.groupedFeatures[group].collect {
-                     GameFeature option ->
-                         new GameFeatureInfo.Detail(option)
-                 })
+                new GameFeatureInfo(group, GameFeature.groupedFeatures[group].collect {
+                    GameFeature option ->
+                        new GameFeatureInfo.Detail(option)
+                })
         }
     }
 }

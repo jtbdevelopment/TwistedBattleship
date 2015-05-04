@@ -61,7 +61,7 @@ class TBPlayerState implements Serializable {
     }
 
     int getActiveShipsRemaining() {
-        return shipStates.values().findAll{ ShipState it -> it.healthRemaining > 0 }.size()
+        return shipStates.values().findAll { ShipState it -> it.healthRemaining > 0 }.size()
     }
 
     void setActiveShipsRemaining(final int remaining) {

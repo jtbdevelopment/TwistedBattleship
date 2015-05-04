@@ -19,7 +19,7 @@ class OptionsValidator implements GameValidator<TBGame> {
         if (invalidFeature) {
             return false
         }
-        Map<GameFeature, GameFeature> groupToFeature = game.features.collectEntries{ GameFeature it -> [(it.group): it] }
+        Map<GameFeature, GameFeature> groupToFeature = game.features.collectEntries { GameFeature it -> [(it.group): it] }
         return groupToFeature.size() == GameFeature.groupedFeatures.size() &&
                 groupToFeature.size() == game.features.size()
 

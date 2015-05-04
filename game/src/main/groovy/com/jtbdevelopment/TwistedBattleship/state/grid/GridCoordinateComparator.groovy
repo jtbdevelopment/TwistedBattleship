@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component
 class GridCoordinateComparator implements Comparator<GridCoordinate> {
     @Override
     int compare(final GridCoordinate o1, final GridCoordinate o2) {
-        if(o1.row == o2.row) {
-            if(o1.column == o2.column) {
+        if (o1.row == o2.row) {
+            if (o1.column == o2.column) {
                 return 0
             }
             return (o1.column - o2.column)

@@ -16,7 +16,7 @@ class GameFeatureInfo {
 
         Detail(final GameFeature feature) {
             this.feature = feature
-            this.description= feature.description
+            this.description = feature.description
         }
 
         boolean equals(final o) {

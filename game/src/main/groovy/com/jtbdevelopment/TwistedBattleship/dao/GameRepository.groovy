@@ -6,7 +6,6 @@ import com.jtbdevelopment.games.mongo.dao.AbstractMongoMultiPlayerGameRepository
 import com.jtbdevelopment.games.state.GamePhase
 import groovy.transform.CompileStatic
 import org.bson.types.ObjectId
-import org.springframework.context.annotation.Primary
 import org.springframework.data.domain.Pageable
 
 import java.time.ZonedDateTime
