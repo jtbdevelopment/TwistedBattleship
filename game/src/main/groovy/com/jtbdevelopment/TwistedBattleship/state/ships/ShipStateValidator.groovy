@@ -38,6 +38,7 @@ class ShipStateValidator {
                     throw new ShipNotInitializedCorrectlyException()
                 }
 
+                //  TODO - possibly move out for evasive maneuvers/emergency repairs
                 if (state.shipGridCells.size() != ship.gridSize) {
                     throw new ShipPlacementsNotValidException()
                 }
@@ -57,20 +58,19 @@ class ShipStateValidator {
                         }
                 }
 
-                //  TODO - possibly move out for evasive maneuvers/emergency repairs
                 List<Integer> rows = state.shipGridCells.collect { it.row }.sort()
                 List<Integer> cols = state.shipGridCells.collect { it.column }.sort()
-                if((rows as Set).size() == 1) {
+                if ((rows as Set).size() == 1) {
                     (0..ship.gridSize - 2).each {
                         int i ->
-                        if((cols[i +1] - cols[i]) != 1) {
-                            throw new ShipPlacementsNotValidException()
-                        }
+                            if ((cols[i + 1] - cols[i]) != 1) {
+                                throw new ShipPlacementsNotValidException()
+                            }
                     }
-                } else if((cols as Set).size() == 1) {
+                } else if ((cols as Set).size() == 1) {
                     (0..ship.gridSize - 2).each {
                         int i ->
-                            if((rows[i +1] - rows[i]) != 1) {
+                            if ((rows[i + 1] - rows[i]) != 1) {
                                 throw new ShipPlacementsNotValidException()
                             }
                     }
