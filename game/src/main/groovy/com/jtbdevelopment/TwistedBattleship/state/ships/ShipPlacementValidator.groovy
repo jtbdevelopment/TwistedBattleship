@@ -1,7 +1,6 @@
 package com.jtbdevelopment.TwistedBattleship.state.ships
 
 import com.jtbdevelopment.TwistedBattleship.exceptions.NotAllShipsSetupException
-import com.jtbdevelopment.TwistedBattleship.exceptions.ShipNotInitializedCorrectlyException
 import com.jtbdevelopment.TwistedBattleship.exceptions.ShipPlacementsNotValidException
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
@@ -16,11 +15,11 @@ import org.springframework.stereotype.Component
  */
 @CompileStatic
 @Component
-class ShipStateValidator {
+class ShipPlacementValidator {
     @Autowired
     GridSizeUtil gridSizeUtil
 
-    public void validateShipStateForGame(final TBGame game, Map<Ship, ShipState> shipState) {
+    public void validateShipPlacementsForGame(final TBGame game, Map<Ship, ShipState> shipState) {
         if (shipState.size() != Ship.values().size()) {
             throw new NotAllShipsSetupException()
         }
@@ -30,15 +29,6 @@ class ShipStateValidator {
         Set<GridCoordinate> used = [] as Set
         shipState.each {
             Ship ship, ShipState state ->
-                if (state.ship != ship
-                        || state.healthRemaining != ship.gridSize
-                        || state.shipSegmentHit.size() != ship.gridSize
-                        || state.shipSegmentHit.contains(true)
-                ) {
-                    throw new ShipNotInitializedCorrectlyException()
-                }
-
-                //  TODO - possibly move out for evasive maneuvers/emergency repairs
                 if (state.shipGridCells.size() != ship.gridSize) {
                     throw new ShipPlacementsNotValidException()
                 }
