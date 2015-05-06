@@ -1,7 +1,6 @@
 package com.jtbdevelopment.TwistedBattleship.state.ships
 
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
-import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinateComparator
 
 /**
  * Date: 4/4/15
@@ -9,8 +8,13 @@ import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinateComparator
  */
 class ShipStateTest extends GroovyTestCase {
     void testConstructor() {
-        def coordinates = new TreeSet<GridCoordinate>(new GridCoordinateComparator())
-        coordinates.addAll([new GridCoordinate(0, 0), new GridCoordinate(0, 1), new GridCoordinate(0, 2)])
+        def coordinates = new TreeSet<GridCoordinate>(
+                [
+                        new GridCoordinate(0, 0),
+                        new GridCoordinate(0, 1),
+                        new GridCoordinate(0, 2)
+                ]
+        )
         ShipState shipState = new ShipState(
                 Ship.Cruiser,
                 coordinates
@@ -22,8 +26,13 @@ class ShipStateTest extends GroovyTestCase {
     }
 
     void testPersistenceConstructor() {
-        def coordinates = new TreeSet<GridCoordinate>(new GridCoordinateComparator())
-        coordinates.addAll([new GridCoordinate(0, 0), new GridCoordinate(0, 1), new GridCoordinate(0, 2)])
+        def coordinates = new TreeSet<GridCoordinate>(
+                [
+                        new GridCoordinate(0, 0),
+                        new GridCoordinate(0, 1),
+                        new GridCoordinate(0, 2)
+                ]
+        )
 
         def booleans = [true, false, true]
         ShipState shipState = new ShipState(

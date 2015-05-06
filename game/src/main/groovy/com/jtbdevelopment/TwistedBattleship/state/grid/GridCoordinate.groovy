@@ -7,8 +7,13 @@ import groovy.transform.CompileStatic
  * Time: 6:33 PM
  */
 @CompileStatic
-class GridCoordinate {
+class GridCoordinate implements Comparable<GridCoordinate>, Serializable {
     int row, column
+
+    @SuppressWarnings("unused")
+    protected GridCoordinate() {
+
+    }
 
     GridCoordinate(final int row, final int column) {
         this.row = row
@@ -34,4 +39,14 @@ class GridCoordinate {
         return result
     }
 
+    @Override
+    int compareTo(final GridCoordinate o) {
+        if (this.row == o.row) {
+            if (this.column == o.column) {
+                return 0
+            }
+            return (this.column - o.column)
+        }
+        return (this.row - o.row)
+    }
 }

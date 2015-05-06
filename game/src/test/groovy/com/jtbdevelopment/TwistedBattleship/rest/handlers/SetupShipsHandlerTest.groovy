@@ -7,7 +7,6 @@ import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
-import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinateComparator
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipPlacementValidator
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
@@ -21,14 +20,6 @@ import com.jtbdevelopment.games.state.GamePhase
 class SetupShipsHandlerTest extends MongoGameCoreTestCase {
     SetupShipsHandler setupShipsHandler = new SetupShipsHandler()
     TBGame game = new TBGame(features: [GameFeature.Grid15x15], gamePhase: GamePhase.Setup)
-
-    static GridCoordinateComparator comparator = new GridCoordinateComparator()
-
-    private SortedSet<GridCoordinate> makeSet(Collection<GridCoordinate> collection) {
-        def coordinates = new TreeSet<GridCoordinate>(comparator)
-        coordinates.addAll(collection)
-        coordinates
-    }
 
     void testValidPlacementOfShips() {
         TBGame game = new TBGame(
@@ -83,7 +74,7 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
                     [
                             (Ship.Battleship): new ShipState(Ship.Battleship,
                                     4,
-                                    makeSet([
+                                    new TreeSet([
                                             new GridCoordinate(0, 0),
                                             new GridCoordinate(1, 0),
                                             new GridCoordinate(2, 0),
@@ -92,7 +83,7 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
                                     [false, false, false]             //wrong
                             ),
                             (Ship.Carrier)   : new ShipState(Ship.Carrier,
-                                    makeSet([
+                                    new TreeSet([
                                             new GridCoordinate(0, 1),
                                             new GridCoordinate(0, 2),
                                             new GridCoordinate(0, 3),
@@ -101,21 +92,21 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
                                     ])
                             ),
                             (Ship.Cruiser)   : new ShipState(Ship.Cruiser,
-                                    makeSet([
+                                    new TreeSet([
                                             new GridCoordinate(0, 6),
                                             new GridCoordinate(1, 6),
                                             new GridCoordinate(2, 6),
                                     ])
                             ),
                             (Ship.Submarine) : new ShipState(Ship.Submarine,
-                                    makeSet([
+                                    new TreeSet([
                                             new GridCoordinate(0, 7),
                                             new GridCoordinate(0, 8),
                                             new GridCoordinate(0, 9),
                                     ])
                             ),
                             (Ship.Destroyer) : new ShipState(Ship.Destroyer,
-                                    makeSet([
+                                    new TreeSet([
                                             new GridCoordinate(0, 10),
                                             new GridCoordinate(1, 10)
                                     ])
@@ -132,7 +123,7 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
                     [
                             (Ship.Battleship): new ShipState(Ship.Battleship,
                                     5,
-                                    makeSet([
+                                    new TreeSet([
                                             new GridCoordinate(0, 0),
                                             new GridCoordinate(1, 0),
                                             new GridCoordinate(2, 0),
@@ -141,7 +132,7 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
                                     [false, false, false, true]                // wrong
                             ),
                             (Ship.Carrier)   : new ShipState(Ship.Carrier,
-                                    makeSet([
+                                    new TreeSet([
                                             new GridCoordinate(0, 1),
                                             new GridCoordinate(0, 2),
                                             new GridCoordinate(0, 3),
@@ -150,21 +141,21 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
                                     ])
                             ),
                             (Ship.Cruiser)   : new ShipState(Ship.Cruiser,
-                                    makeSet([
+                                    new TreeSet([
                                             new GridCoordinate(0, 6),
                                             new GridCoordinate(1, 6),
                                             new GridCoordinate(2, 6),
                                     ])
                             ),
                             (Ship.Submarine) : new ShipState(Ship.Submarine,
-                                    makeSet([
+                                    new TreeSet([
                                             new GridCoordinate(0, 7),
                                             new GridCoordinate(0, 8),
                                             new GridCoordinate(0, 9),
                                     ])
                             ),
                             (Ship.Destroyer) : new ShipState(Ship.Destroyer,
-                                    makeSet([
+                                    new TreeSet([
                                             new GridCoordinate(0, 10),
                                             new GridCoordinate(1, 10)
                                     ])
@@ -181,7 +172,7 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
                     [
                             (Ship.Battleship): new ShipState(Ship.Battleship,
                                     3,                                   // wrong
-                                    makeSet([
+                                    new TreeSet([
                                             new GridCoordinate(0, 0),
                                             new GridCoordinate(1, 0),
                                             new GridCoordinate(2, 0),
@@ -190,7 +181,7 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
                                     [false, false, false, false]
                             ),
                             (Ship.Carrier)   : new ShipState(Ship.Carrier,
-                                    makeSet([
+                                    new TreeSet([
                                             new GridCoordinate(0, 1),
                                             new GridCoordinate(0, 2),
                                             new GridCoordinate(0, 3),
@@ -199,21 +190,21 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
                                     ])
                             ),
                             (Ship.Cruiser)   : new ShipState(Ship.Cruiser,
-                                    makeSet([
+                                    new TreeSet([
                                             new GridCoordinate(0, 6),
                                             new GridCoordinate(1, 6),
                                             new GridCoordinate(2, 6),
                                     ])
                             ),
                             (Ship.Submarine) : new ShipState(Ship.Submarine,
-                                    makeSet([
+                                    new TreeSet([
                                             new GridCoordinate(0, 7),
                                             new GridCoordinate(0, 8),
                                             new GridCoordinate(0, 9),
                                     ])
                             ),
                             (Ship.Destroyer) : new ShipState(Ship.Destroyer,
-                                    makeSet([
+                                    new TreeSet([
                                             new GridCoordinate(0, 10),
                                             new GridCoordinate(1, 10)
                                     ])
@@ -229,7 +220,7 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
                     game,
                     [
                             (Ship.Battleship): new ShipState(Ship.Cruiser,        //wrong
-                                    makeSet([
+                                    new TreeSet([
                                             new GridCoordinate(0, 0),
                                             new GridCoordinate(1, 0),
                                             new GridCoordinate(2, 0),
@@ -237,7 +228,7 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
                                     ]),
                             ),
                             (Ship.Carrier)   : new ShipState(Ship.Carrier,
-                                    makeSet([
+                                    new TreeSet([
                                             new GridCoordinate(0, 1),
                                             new GridCoordinate(0, 2),
                                             new GridCoordinate(0, 3),
@@ -246,21 +237,21 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
                                     ])
                             ),
                             (Ship.Cruiser)   : new ShipState(Ship.Cruiser,
-                                    makeSet([
+                                    new TreeSet([
                                             new GridCoordinate(0, 6),
                                             new GridCoordinate(1, 6),
                                             new GridCoordinate(2, 6),
                                     ])
                             ),
                             (Ship.Submarine) : new ShipState(Ship.Submarine,
-                                    makeSet([
+                                    new TreeSet([
                                             new GridCoordinate(0, 7),
                                             new GridCoordinate(0, 8),
                                             new GridCoordinate(0, 9),
                                     ])
                             ),
                             (Ship.Destroyer) : new ShipState(Ship.Destroyer,
-                                    makeSet([
+                                    new TreeSet([
                                             new GridCoordinate(0, 10),
                                             new GridCoordinate(1, 10)
                                     ])
@@ -271,7 +262,7 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
 
     Map<Ship, ShipState> VALID_PLACEMENTS = [
             (Ship.Battleship): new ShipState(Ship.Battleship,
-                    makeSet([
+                    new TreeSet([
                             new GridCoordinate(0, 0),
                             new GridCoordinate(1, 0),
                             new GridCoordinate(2, 0),
@@ -279,7 +270,7 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
                     ])
             ),
             (Ship.Carrier)   : new ShipState(Ship.Carrier,
-                    makeSet([
+                    new TreeSet([
                             new GridCoordinate(0, 1),
                             new GridCoordinate(0, 2),
                             new GridCoordinate(0, 3),
@@ -288,21 +279,21 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
                     ])
             ),
             (Ship.Cruiser)   : new ShipState(Ship.Cruiser,
-                    makeSet([
+                    new TreeSet([
                             new GridCoordinate(0, 6),
                             new GridCoordinate(1, 6),
                             new GridCoordinate(2, 6),
                     ])
             ),
             (Ship.Submarine) : new ShipState(Ship.Submarine,
-                    makeSet([
+                    new TreeSet([
                             new GridCoordinate(0, 7),
                             new GridCoordinate(0, 8),
                             new GridCoordinate(0, 9),
                     ])
             ),
             (Ship.Destroyer) : new ShipState(Ship.Destroyer,
-                    makeSet([
+                    new TreeSet([
                             new GridCoordinate(0, 10),
                             new GridCoordinate(1, 10)
                     ])

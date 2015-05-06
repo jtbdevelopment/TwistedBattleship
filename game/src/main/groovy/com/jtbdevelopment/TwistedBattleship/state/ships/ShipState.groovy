@@ -15,6 +15,10 @@ class ShipState implements Serializable {
     SortedSet<GridCoordinate> shipGridCells // from front to back
     List<Boolean> shipSegmentHit
 
+    @SuppressWarnings("unused")
+    protected ShipState() {
+    }
+
     ShipState(final Ship ship,
               final SortedSet<GridCoordinate> shipGridCells) {
         this.ship = ship
@@ -34,4 +38,5 @@ class ShipState implements Serializable {
         this.shipGridCells = shipGridCells
         this.shipSegmentHit = shipSegmentHit
     }
+
 }

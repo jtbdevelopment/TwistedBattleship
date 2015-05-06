@@ -18,6 +18,7 @@ class GridSizeUtil {
             (GameFeature.Grid20x20): 20
     ]
 
+    @SuppressWarnings("GrMethodMayBeStatic")
     int getSize(final TBGame game) {
         GameFeature size = game.features.find { GameFeature it -> it.group == GameFeature.GridSize }
         if (sizeMap.containsKey(size)) {

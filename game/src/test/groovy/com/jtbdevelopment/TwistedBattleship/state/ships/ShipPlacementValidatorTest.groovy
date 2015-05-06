@@ -5,7 +5,6 @@ import com.jtbdevelopment.TwistedBattleship.exceptions.ShipPlacementsNotValidExc
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
-import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinateComparator
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridSizeUtil
 
 /**
@@ -15,23 +14,16 @@ import com.jtbdevelopment.TwistedBattleship.state.grid.GridSizeUtil
 class ShipPlacementValidatorTest extends GroovyTestCase {
     ShipPlacementValidator validator = new ShipPlacementValidator()
     TBGame game = new TBGame(features: [GameFeature.Grid15x15])
-    static GridCoordinateComparator comparator = new GridCoordinateComparator()
 
     @Override
     protected void setUp() throws Exception {
         validator.gridSizeUtil = new GridSizeUtil()
     }
 
-    private SortedSet<GridCoordinate> makeSet(Collection<GridCoordinate> collection) {
-        def coordinates = new TreeSet<GridCoordinate>(comparator)
-        coordinates.addAll(collection)
-        coordinates
-    }
-
     void testShipPositionsValid1() {
         validator.validateShipPlacementsForGame(game, [
                 (Ship.Battleship): new ShipState(Ship.Battleship,
-                        makeSet([
+                        new TreeSet([
                                 new GridCoordinate(0, 0),
                                 new GridCoordinate(0, 1),
                                 new GridCoordinate(0, 2),
@@ -39,7 +31,7 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
                         ])
                 ),
                 (Ship.Carrier)   : new ShipState(Ship.Carrier,
-                        makeSet([
+                        new TreeSet([
                                 new GridCoordinate(1, 0),
                                 new GridCoordinate(1, 1),
                                 new GridCoordinate(1, 2),
@@ -48,21 +40,21 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
                         ])
                 ),
                 (Ship.Cruiser)   : new ShipState(Ship.Cruiser,
-                        makeSet([
+                        new TreeSet([
                                 new GridCoordinate(2, 0),
                                 new GridCoordinate(2, 1),
                                 new GridCoordinate(2, 2),
                         ])
                 ),
                 (Ship.Submarine) : new ShipState(Ship.Submarine,
-                        makeSet([
+                        new TreeSet([
                                 new GridCoordinate(3, 0),
                                 new GridCoordinate(3, 1),
                                 new GridCoordinate(3, 2),
                         ])
                 ),
                 (Ship.Destroyer) : new ShipState(Ship.Destroyer,
-                        makeSet([
+                        new TreeSet([
                                 new GridCoordinate(0, 4),
                                 new GridCoordinate(0, 5)
                         ])
@@ -73,7 +65,7 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
     void testShipPositionsValid2() {
         validator.validateShipPlacementsForGame(game, [
                 (Ship.Battleship): new ShipState(Ship.Battleship,
-                        makeSet([
+                        new TreeSet([
                                 new GridCoordinate(0, 0),
                                 new GridCoordinate(1, 0),
                                 new GridCoordinate(2, 0),
@@ -81,7 +73,7 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
                         ])
                 ),
                 (Ship.Carrier)   : new ShipState(Ship.Carrier,
-                        makeSet([
+                        new TreeSet([
                                 new GridCoordinate(0, 1),
                                 new GridCoordinate(1, 1),
                                 new GridCoordinate(2, 1),
@@ -90,21 +82,21 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
                         ])
                 ),
                 (Ship.Cruiser)   : new ShipState(Ship.Cruiser,
-                        makeSet([
+                        new TreeSet([
                                 new GridCoordinate(0, 2),
                                 new GridCoordinate(1, 2),
                                 new GridCoordinate(2, 2),
                         ])
                 ),
                 (Ship.Submarine) : new ShipState(Ship.Submarine,
-                        makeSet([
+                        new TreeSet([
                                 new GridCoordinate(0, 3),
                                 new GridCoordinate(0, 4),
                                 new GridCoordinate(0, 5),
                         ])
                 ),
                 (Ship.Destroyer) : new ShipState(Ship.Destroyer,
-                        makeSet([
+                        new TreeSet([
                                 new GridCoordinate(4, 0),
                                 new GridCoordinate(5, 0),
                         ])
@@ -117,7 +109,7 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
                 game,
                 [
                         (Ship.Battleship): new ShipState(Ship.Battleship,
-                                makeSet([
+                                new TreeSet([
                                         new GridCoordinate(0, 0),
                                         new GridCoordinate(1, 0),
                                         new GridCoordinate(2, 0),
@@ -125,7 +117,7 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
                                 ])
                         ),
                         (Ship.Carrier)   : new ShipState(Ship.Carrier,
-                                makeSet([
+                                new TreeSet([
                                         new GridCoordinate(0, 1),
                                         new GridCoordinate(0, 2),
                                         new GridCoordinate(0, 3),
@@ -134,21 +126,21 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
                                 ])
                         ),
                         (Ship.Cruiser)   : new ShipState(Ship.Cruiser,
-                                makeSet([
+                                new TreeSet([
                                         new GridCoordinate(0, 6),
                                         new GridCoordinate(1, 6),
                                         new GridCoordinate(2, 6),
                                 ])
                         ),
                         (Ship.Submarine) : new ShipState(Ship.Submarine,
-                                makeSet([
+                                new TreeSet([
                                         new GridCoordinate(0, 7),
                                         new GridCoordinate(0, 8),
                                         new GridCoordinate(0, 9),
                                 ])
                         ),
                         (Ship.Destroyer) : new ShipState(Ship.Destroyer,
-                                makeSet([
+                                new TreeSet([
                                         new GridCoordinate(0, 10),
                                         new GridCoordinate(1, 10)
                                 ])
@@ -162,7 +154,7 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
             validator.validateShipPlacementsForGame(game, [
                     (Ship.Battleship): new ShipState(Ship.Battleship,
                             4,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(0, 0),
                                     new GridCoordinate(1, 0),
                                     new GridCoordinate(2, 0),       // missing one
@@ -170,7 +162,7 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
                             [false, false, false, false]
                     ),
                     (Ship.Carrier)   : new ShipState(Ship.Carrier,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(0, 1),
                                     new GridCoordinate(0, 2),
                                     new GridCoordinate(0, 3),
@@ -179,21 +171,21 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
                             ])
                     ),
                     (Ship.Cruiser)   : new ShipState(Ship.Cruiser,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(0, 6),
                                     new GridCoordinate(1, 6),
                                     new GridCoordinate(2, 6),
                             ])
                     ),
                     (Ship.Submarine) : new ShipState(Ship.Submarine,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(0, 7),
                                     new GridCoordinate(0, 8),
                                     new GridCoordinate(0, 9),
                             ])
                     ),
                     (Ship.Destroyer) : new ShipState(Ship.Destroyer,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(0, 10),
                                     new GridCoordinate(1, 10)
                             ])
@@ -207,7 +199,7 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
             validator.validateShipPlacementsForGame(game, [
                     (Ship.Battleship): new ShipState(Ship.Battleship,
                             4,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(0, 0),
                                     new GridCoordinate(1, 0),
                                     new GridCoordinate(2, 0),
@@ -217,7 +209,7 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
                             [false, false, false, false]
                     ),
                     (Ship.Carrier)   : new ShipState(Ship.Carrier,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(0, 1),
                                     new GridCoordinate(0, 2),
                                     new GridCoordinate(0, 3),
@@ -226,21 +218,21 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
                             ])
                     ),
                     (Ship.Cruiser)   : new ShipState(Ship.Cruiser,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(0, 6),
                                     new GridCoordinate(1, 6),
                                     new GridCoordinate(2, 6),
                             ])
                     ),
                     (Ship.Submarine) : new ShipState(Ship.Submarine,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(0, 7),
                                     new GridCoordinate(0, 8),
                                     new GridCoordinate(0, 9),
                             ])
                     ),
                     (Ship.Destroyer) : new ShipState(Ship.Destroyer,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(0, 10),
                                     new GridCoordinate(1, 10)
                             ])
@@ -253,7 +245,7 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
         shouldFail(ShipPlacementsNotValidException.class, {
             validator.validateShipPlacementsForGame(game, [
                     (Ship.Battleship): new ShipState(Ship.Battleship,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(0, 0),
                                     new GridCoordinate(1, 0),
                                     new GridCoordinate(2, 0),
@@ -261,7 +253,7 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
                             ])
                     ),
                     (Ship.Carrier)   : new ShipState(Ship.Carrier,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(0, 1),
                                     new GridCoordinate(1, 1),
                                     new GridCoordinate(2, 1),
@@ -270,21 +262,21 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
                             ])
                     ),
                     (Ship.Cruiser)   : new ShipState(Ship.Cruiser,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(0, 2),
                                     new GridCoordinate(1, 2),
                                     new GridCoordinate(2, 2),
                             ])
                     ),
                     (Ship.Submarine) : new ShipState(Ship.Submarine,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(13, 3),
                                     new GridCoordinate(14, 4),
                                     new GridCoordinate(15, 5),      //outside
                             ])
                     ),
                     (Ship.Destroyer) : new ShipState(Ship.Destroyer,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(4, 0),
                                     new GridCoordinate(5, 0)
                             ])
@@ -297,7 +289,7 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
         shouldFail(ShipPlacementsNotValidException.class, {
             validator.validateShipPlacementsForGame(game, [
                     (Ship.Battleship): new ShipState(Ship.Battleship,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(0, 0),
                                     new GridCoordinate(1, 0),
                                     new GridCoordinate(2, 0),
@@ -305,7 +297,7 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
                             ])
                     ),
                     (Ship.Carrier)   : new ShipState(Ship.Carrier,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(0, 1),
                                     new GridCoordinate(1, 1),
                                     new GridCoordinate(2, 1),
@@ -314,21 +306,21 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
                             ])
                     ),
                     (Ship.Cruiser)   : new ShipState(Ship.Cruiser,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(0, 2),
                                     new GridCoordinate(1, 2),
                                     new GridCoordinate(2, 2),
                             ])
                     ),
                     (Ship.Submarine) : new ShipState(Ship.Submarine,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(-1, 3),               // outside
                                     new GridCoordinate(0, 3),
                                     new GridCoordinate(1, 3),
                             ])
                     ),
                     (Ship.Destroyer) : new ShipState(Ship.Destroyer,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(4, 0),
                                     new GridCoordinate(5, 0)
                             ])
@@ -341,7 +333,7 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
         shouldFail(NotAllShipsSetupException.class, {
             validator.validateShipPlacementsForGame(game, [
                     (Ship.Carrier)  : new ShipState(Ship.Carrier,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(0, 1),
                                     new GridCoordinate(1, 1),
                                     new GridCoordinate(2, 1),
@@ -350,21 +342,21 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
                             ])
                     ),
                     (Ship.Cruiser)  : new ShipState(Ship.Cruiser,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(0, 2),
                                     new GridCoordinate(1, 2),
                                     new GridCoordinate(2, 2),
                             ])
                     ),
                     (Ship.Submarine): new ShipState(Ship.Submarine,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(0, 3),
                                     new GridCoordinate(15, 3),
                                     new GridCoordinate(0, 3),
                             ])
                     ),
                     (Ship.Destroyer): new ShipState(Ship.Destroyer,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(4, 0),
                                     new GridCoordinate(5, 0)
                             ])
@@ -377,7 +369,7 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
         shouldFail(ShipPlacementsNotValidException.class, {
             validator.validateShipPlacementsForGame(game, [
                     (Ship.Battleship): new ShipState(Ship.Battleship,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(0, 0),
                                     new GridCoordinate(1, 0),
                                     new GridCoordinate(2, 0),
@@ -385,7 +377,7 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
                             ])
                     ),
                     (Ship.Carrier)   : new ShipState(Ship.Carrier,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(0, 1),
                                     new GridCoordinate(1, 1),
                                     new GridCoordinate(2, 1),
@@ -394,21 +386,21 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
                             ])
                     ),
                     (Ship.Cruiser)   : new ShipState(Ship.Cruiser,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(0, 2),
                                     new GridCoordinate(1, 2),
                                     new GridCoordinate(2, 2),
                             ])
                     ),
                     (Ship.Submarine) : new ShipState(Ship.Submarine,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(0, 3),
                                     new GridCoordinate(0, 4),
                                     new GridCoordinate(0, 5),
                             ])
                     ),
                     (Ship.Destroyer) : new ShipState(Ship.Destroyer,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(3, 0), //Overlap
                                     new GridCoordinate(4, 0)
                             ])
@@ -421,7 +413,7 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
         shouldFail(ShipPlacementsNotValidException.class, {
             validator.validateShipPlacementsForGame(game, [
                     (Ship.Battleship): new ShipState(Ship.Battleship,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(0, 0),
                                     new GridCoordinate(1, 0),
                                     new GridCoordinate(2, 11),       //  non-contig
@@ -429,7 +421,7 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
                             ])
                     ),
                     (Ship.Carrier)   : new ShipState(Ship.Carrier,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(0, 1),
                                     new GridCoordinate(1, 1),
                                     new GridCoordinate(2, 1),
@@ -438,21 +430,21 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
                             ])
                     ),
                     (Ship.Cruiser)   : new ShipState(Ship.Cruiser,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(0, 2),
                                     new GridCoordinate(1, 2),
                                     new GridCoordinate(2, 2),
                             ])
                     ),
                     (Ship.Submarine) : new ShipState(Ship.Submarine,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(0, 4),
                                     new GridCoordinate(0, 5),
                                     new GridCoordinate(0, 6),
                             ])
                     ),
                     (Ship.Destroyer) : new ShipState(Ship.Destroyer,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(4, 0),
                                     new GridCoordinate(5, 0)
                             ])
@@ -465,7 +457,7 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
         shouldFail(ShipPlacementsNotValidException.class, {
             validator.validateShipPlacementsForGame(game, [
                     (Ship.Battleship): new ShipState(Ship.Battleship,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(0, 0),
                                     new GridCoordinate(1, 0),
                                     new GridCoordinate(2, 0),
@@ -473,7 +465,7 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
                             ])
                     ),
                     (Ship.Carrier)   : new ShipState(Ship.Carrier,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(0, 1),
                                     new GridCoordinate(1, 1),
                                     new GridCoordinate(2, 1),
@@ -482,21 +474,21 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
                             ])
                     ),
                     (Ship.Cruiser)   : new ShipState(Ship.Cruiser,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(0, 2),
                                     new GridCoordinate(1, 2),
                                     new GridCoordinate(2, 2),
                             ])
                     ),
                     (Ship.Submarine) : new ShipState(Ship.Submarine,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(0, 4),
                                     new GridCoordinate(0, 5),
                                     new GridCoordinate(0, 6),
                             ])
                     ),
                     (Ship.Destroyer) : new ShipState(Ship.Destroyer,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(4, 0),
                                     new GridCoordinate(5, 0)
                             ])
@@ -509,7 +501,7 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
         shouldFail(ShipPlacementsNotValidException.class, {
             validator.validateShipPlacementsForGame(game, [
                     (Ship.Battleship): new ShipState(Ship.Battleship,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(10, 0),
                                     new GridCoordinate(10, 1),
                                     new GridCoordinate(10, 2),
@@ -517,7 +509,7 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
                             ])
                     ),
                     (Ship.Carrier)   : new ShipState(Ship.Carrier,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(1, 0),
                                     new GridCoordinate(1, 1),
                                     new GridCoordinate(1, 2),
@@ -526,21 +518,21 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
                             ])
                     ),
                     (Ship.Cruiser)   : new ShipState(Ship.Cruiser,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(2, 0),
                                     new GridCoordinate(2, 1),
                                     new GridCoordinate(2, 2),
                             ])
                     ),
                     (Ship.Submarine) : new ShipState(Ship.Submarine,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(3, 0),
                                     new GridCoordinate(3, 1),
                                     new GridCoordinate(3, 2),
                             ])
                     ),
                     (Ship.Destroyer) : new ShipState(Ship.Destroyer,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(0, 4),
                                     new GridCoordinate(0, 5)
                             ])
@@ -553,7 +545,7 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
         shouldFail(ShipPlacementsNotValidException.class, {
             validator.validateShipPlacementsForGame(game, [
                     (Ship.Battleship): new ShipState(Ship.Battleship,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(10, 0),
                                     new GridCoordinate(10, 1),
                                     new GridCoordinate(10, 2),
@@ -561,7 +553,7 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
                             ])
                     ),
                     (Ship.Carrier)   : new ShipState(Ship.Carrier,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(1, 0),
                                     new GridCoordinate(1, 1),
                                     new GridCoordinate(1, 2),
@@ -570,21 +562,21 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
                             ])
                     ),
                     (Ship.Cruiser)   : new ShipState(Ship.Cruiser,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(2, 0),
                                     new GridCoordinate(2, 1),
                                     new GridCoordinate(2, 2),
                             ])
                     ),
                     (Ship.Submarine) : new ShipState(Ship.Submarine,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(3, 0),
                                     new GridCoordinate(3, 1),
                                     new GridCoordinate(3, 2),
                             ])
                     ),
                     (Ship.Destroyer) : new ShipState(Ship.Destroyer,
-                            makeSet([
+                            new TreeSet([
                                     new GridCoordinate(0, 4),
                                     new GridCoordinate(0, 5)
                             ])
