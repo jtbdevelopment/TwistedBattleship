@@ -18,6 +18,7 @@ import org.junit.BeforeClass
 import org.junit.Test
 
 import javax.ws.rs.client.Entity
+import javax.ws.rs.client.WebTarget
 import javax.ws.rs.core.GenericType
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
@@ -26,7 +27,7 @@ import javax.ws.rs.core.Response
  * Date: 4/26/15
  * Time: 10:36 AM
  */
-class TwistedBattleshipIntegration extends AbstractGameIntegration {
+class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame> {
 
     static HazelcastCacheManager cacheManager
 
@@ -91,8 +92,8 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration {
 
     @Test
     void testCreateNewGame() {
-        def P3 = createConnection(TEST_PLAYER3).target(PLAYER_API)
-        def entity = Entity.entity(
+        def P3 = createAPITarget(TEST_PLAYER3)
+        TBMaskedGame game = newGame(P3,
                 new FeaturesAndPlayers(
                         features: [
                                 GameFeature.Grid20x20,
@@ -105,13 +106,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration {
                                 GameFeature.PerShip
                         ] as Set,
                         players: [TEST_PLAYER2.md5, TEST_PLAYER3.md5, TEST_PLAYER1.md5],
-                ),
-                MediaType.APPLICATION_JSON)
-
-
-        TBMaskedGame game = P3.path("new")
-                .request(MediaType.APPLICATION_JSON)
-                .post(entity, TBMaskedGame.class)
+                ))
         assert game != null
         assert game.playerStates == [
                 (TEST_PLAYER1.md5): PlayerState.Pending,
@@ -146,6 +141,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration {
         assert game.maskedPlayersState.ecmsRemaining == 3
         assert game.maskedPlayersState.emergencyRepairsRemaining == 3
         assert game.maskedPlayersState.evasiveManeuversRemaining == 0
+        assert game.gamePhase == GamePhase.Challenged
 
         //  Clear cache and force a load from db to confirm loads
         cacheManager.cacheNames.each {
@@ -157,26 +153,63 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration {
     }
 
     @Test
-    void testSetupGame() {
-        def P3 = createConnection(TEST_PLAYER3).target(PLAYER_API)
-        def P1 = createConnection(TEST_PLAYER1).target(PLAYER_API)
-        def P2 = createConnection(TEST_PLAYER2).target(PLAYER_API)
-        def entity = Entity.entity(
-                STANDARD_PLAYERS_AND_FEATURES,
-                MediaType.APPLICATION_JSON)
-
-        TBMaskedGame game
-
-        game = P3.path("new")
-                .request(MediaType.APPLICATION_JSON)
-                .post(entity, TBMaskedGame.class)
+    void testCreateAndRejectNewGame() {
+        def P3 = createAPITarget(TEST_PLAYER3)
+        TBMaskedGame game = newGame(P3, STANDARD_PLAYERS_AND_FEATURES)
+        def P1G = createGameTarget(createAPITarget(TEST_PLAYER1), game)
         assert game != null
-        def P1G = P1.path("game").path(game.idAsString)
-        def P2G = P2.path("game").path(game.idAsString)
-        def P3G = P3.path("game").path(game.idAsString)
+        assert game.playerStates == [
+                (TEST_PLAYER1.md5): PlayerState.Pending,
+                (TEST_PLAYER2.md5): PlayerState.Pending,
+                (TEST_PLAYER3.md5): PlayerState.Accepted
+        ]
+        assert game.gamePhase == GamePhase.Challenged
 
-        game = P1G.path("accept").request(MediaType.APPLICATION_JSON).put(EMPTY_PUT_POST, TBMaskedGame.class)
-        game = P2G.path("accept").request(MediaType.APPLICATION_JSON).put(EMPTY_PUT_POST, TBMaskedGame.class)
+        game = reject(P1G)
+        assert game.playerStates == [
+                (TEST_PLAYER1.md5): PlayerState.Rejected,
+                (TEST_PLAYER2.md5): PlayerState.Pending,
+                (TEST_PLAYER3.md5): PlayerState.Accepted
+        ]
+        assert game.gamePhase == GamePhase.Declined
+    }
+
+    @Test
+    void testCreateAndQuitNewGame() {
+        def P3 = createAPITarget(TEST_PLAYER3)
+        TBMaskedGame game = newGame(P3, STANDARD_PLAYERS_AND_FEATURES)
+        def P1G = createGameTarget(createAPITarget(TEST_PLAYER1), game)
+        def P2G = createGameTarget(createAPITarget(TEST_PLAYER2), game)
+        accept(P1G)
+        accept(P2G)
+        game = quit(P1G)
+        assert game.playerStates == [
+                (TEST_PLAYER1.md5): PlayerState.Quit,
+                (TEST_PLAYER2.md5): PlayerState.Accepted,
+                (TEST_PLAYER3.md5): PlayerState.Accepted
+        ]
+    }
+
+    @Test
+    void testSetupGame() {
+        def P3 = createAPITarget(TEST_PLAYER3)
+        TBMaskedGame game = newGame(P3, STANDARD_PLAYERS_AND_FEATURES)
+        assert game != null
+        def P3G = createGameTarget(P3, game)
+        def P1G = createGameTarget(createAPITarget(TEST_PLAYER1), game)
+        def P2G = createGameTarget(createAPITarget(TEST_PLAYER2), game)
+
+
+        game = accept(P1G)
+        assert game != null
+        assert game.playerStates == [
+                (TEST_PLAYER1.md5): PlayerState.Accepted,
+                (TEST_PLAYER2.md5): PlayerState.Pending,
+                (TEST_PLAYER3.md5): PlayerState.Accepted
+        ]
+        assert game.gamePhase == GamePhase.Challenged
+
+        game = accept(P2G)
         assert game != null
         assert game.playerStates == [
                 (TEST_PLAYER1.md5): PlayerState.Accepted,
@@ -188,14 +221,9 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration {
                 (TEST_PLAYER2.md5): false,
                 (TEST_PLAYER3.md5): false
         ]
+        assert game.gamePhase == GamePhase.Setup
 
-
-        def placement
-        placement = Entity.entity(
-                P3POSITIONS,
-                MediaType.APPLICATION_JSON
-        )
-        game = P3G.path("setup").request(MediaType.APPLICATION_JSON).put(placement, TBMaskedGame.class)
+        game = setup(P3G, P3POSITIONS)
         assert game.playersSetup == [
                 (TEST_PLAYER1.md5): false,
                 (TEST_PLAYER2.md5): false,
@@ -203,11 +231,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration {
         ]
         assert game.gamePhase == GamePhase.Setup
 
-        placement = Entity.entity(
-                P1POSITIONS,
-                MediaType.APPLICATION_JSON
-        )
-        game = P1G.path("setup").request(MediaType.APPLICATION_JSON).put(placement, TBMaskedGame.class)
+        game = setup(P1G, P1POSITIONS)
         assert game.playersSetup == [
                 (TEST_PLAYER1.md5): true,
                 (TEST_PLAYER2.md5): false,
@@ -215,11 +239,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration {
         ]
         assert game.gamePhase == GamePhase.Setup
 
-        placement = Entity.entity(
-                P2POSITIONS,
-                MediaType.APPLICATION_JSON
-        )
-        game = P2G.path("setup").request(MediaType.APPLICATION_JSON).put(placement, TBMaskedGame.class)
+        game = setup(P2G, P2POSITIONS)
         assert game.playersSetup == [
                 (TEST_PLAYER1.md5): true,
                 (TEST_PLAYER2.md5): true,
@@ -274,6 +294,27 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration {
                 .post(entity)
         assert response != null
         assert response.statusInfo.statusCode == 400
+    }
+
+    protected TBMaskedGame newGame(WebTarget target, FeaturesAndPlayers featuresAndPlayers) {
+        TBMaskedGame game
+        def entity = Entity.entity(
+                featuresAndPlayers,
+                MediaType.APPLICATION_JSON)
+        game = target.path("new")
+                .request(MediaType.APPLICATION_JSON)
+                .post(entity, TBMaskedGame.class)
+        game
+    }
+
+    protected TBMaskedGame setup(WebTarget target, LinkedHashMap<Ship, ArrayList<GridCoordinate>> positions) {
+        TBMaskedGame game
+        def placement = Entity.entity(
+                positions,
+                MediaType.APPLICATION_JSON
+        )
+        game = target.path("setup").request(MediaType.APPLICATION_JSON).put(placement, TBMaskedGame.class)
+        game
     }
 
     private static final LinkedHashMap<Ship, ArrayList<GridCoordinate>> P1POSITIONS = [
@@ -379,4 +420,9 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration {
             ] as Set,
             players: [TEST_PLAYER2.md5, TEST_PLAYER3.md5, TEST_PLAYER1.md5]
     )
+
+    @Override
+    Class<TBMaskedGame> returnedGameClass() {
+        return TBMaskedGame.class
+    }
 }
