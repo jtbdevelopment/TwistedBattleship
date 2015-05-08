@@ -1,5 +1,8 @@
 package com.jtbdevelopment.TwistedBattleship.rest.services
 
+import com.jtbdevelopment.TwistedBattleship.rest.GameAction
+import com.jtbdevelopment.TwistedBattleship.rest.GameActionInfo
+import com.jtbdevelopment.TwistedBattleship.rest.handlers.PlayerMoveHandler
 import com.jtbdevelopment.TwistedBattleship.rest.handlers.SetupShipsHandler
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.TwistedBattleship.state.masked.TBMaskedGame
@@ -23,8 +26,7 @@ class GameServicesTest extends MongoGameCoreTestCase {
         Map<String, List<Object>> stuff = [
                 //  method: [name, params, path, path param values, consumes
                 "setupShips": ["setup", [Map.class], [], [MediaType.APPLICATION_JSON]],
-//                "stealLetter"  : ["steal/{position}", [int.class], ["position"], [], []],
-//                "guessLetter"  : ["guess/{letter}", [String.class], ["letter"], [], []]
+                "play": ["play", [GameActionInfo.class], [], [MediaType.APPLICATION_JSON]],
         ]
         stuff.each {
             String method, List<Object> details ->
@@ -88,5 +90,25 @@ class GameServicesTest extends MongoGameCoreTestCase {
                 }
         ] as SetupShipsHandler
         assert maskedGame.is(services.setupShips(input))
+    }
+
+    void testPlayTurn() {
+        ObjectId gameId = new ObjectId()
+        services.playerID.set(PTHREE.id)
+        services.gameID.set(gameId)
+        GameActionInfo info = new GameActionInfo(action: GameAction.ECM, coordinate: new GridCoordinate(20, 10))
+        TBMaskedGame maskedGame = new TBMaskedGame()
+
+        services.playerMoveHandler = [
+                handleAction: {
+                    Serializable p, Serializable g, GameActionInfo action ->
+                        assert PTHREE.id.is(p)
+                        assert gameId.is(g)
+                        assert action.action == GameAction.ECM
+                        assert action.coordinate == new GridCoordinate(20, 10)
+                        maskedGame
+                }
+        ] as PlayerMoveHandler
+        assert maskedGame.is(services.play(info))
     }
 }

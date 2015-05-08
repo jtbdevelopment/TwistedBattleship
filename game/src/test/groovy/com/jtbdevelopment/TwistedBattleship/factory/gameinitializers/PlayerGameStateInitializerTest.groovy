@@ -6,6 +6,7 @@ import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridSizeUtil
+import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
 import com.jtbdevelopment.games.players.Player
 import org.bson.types.ObjectId
@@ -19,7 +20,7 @@ class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
 
     void testInitializeGame() {
         TBGame game = new TBGame(
-                features: [GameFeature.Grid15x15, GameFeature.CriticalEnabled, GameFeature.ECMEnabled, GameFeature.CriticalEnabled.EREnabled, GameFeature.SpyEnabled, GameFeature.CriticalEnabled.EMEnabled],
+                features: [GameFeature.Grid15x15, GameFeature.Single, GameFeature.CriticalEnabled, GameFeature.ECMEnabled, GameFeature.CriticalEnabled.EREnabled, GameFeature.SpyEnabled, GameFeature.CriticalEnabled.EMEnabled],
                 players: [PONE, PTWO, PTHREE]
         )
 
@@ -34,9 +35,12 @@ class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
         assert game.playerDetails == [:]
         initializer.initializeGame(game)
         assert game.playerDetails.size() == 3
+        assert game.currentPlayer == PONE.id
+        assert game.remainingMoves == 1
+        assert game.movesPerTurn == 1
         game.players.each {
             Player p ->
-                def expectedSpecials = 3
+                def expectedSpecials = 2
                 validatePlayerStates(game, p, expectedSpecials, size)
         }
     }
@@ -44,7 +48,7 @@ class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
     void testInitializeGameNoOptionalFeatures() {
         TBGame game = new TBGame(
                 features: [GameFeature.Grid20x20],
-                players: [PONE, PTWO, PTHREE]
+                players: [PTWO, PTHREE, PONE]
         )
 
         assert game.playerDetails == [:]
@@ -58,6 +62,9 @@ class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
         ] as GridSizeUtil
         initializer.initializeGame(game)
         assert game.playerDetails.size() == 3
+        assert game.currentPlayer == PTWO.id
+        assert game.remainingMoves == Ship.values().size()
+        assert game.movesPerTurn == Ship.values().size()
         game.players.each {
             Player p ->
                 validatePlayerStates(game, p, 0, size)

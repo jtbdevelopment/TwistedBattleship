@@ -18,4 +18,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 ])
 class TBGame extends AbstractMongoMultiPlayerGame<GameFeature> {
     Map<ObjectId, TBPlayerState> playerDetails = [:]
+    ObjectId currentPlayer
+    int movesPerTurn
+    int remainingMoves
 }

@@ -5,6 +5,7 @@ import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridSizeUtil
+import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.games.factory.GameInitializer
 import com.jtbdevelopment.games.players.Player
 import groovy.transform.CompileStatic
@@ -24,17 +25,20 @@ class PlayerGameStateInitializer implements GameInitializer<TBGame> {
 
     @Override
     void initializeGame(final TBGame game) {
-        int players = game.players.size()
+        int specialMoves = game.players.size() - 1
         int sizeValue = util.getSize(game)
+        game.currentPlayer = game.players[0].id
+        game.movesPerTurn = game.features.contains(GameFeature.Single) ? 1 : Ship.values().size()
+        game.remainingMoves = game.movesPerTurn
         game.players.each {
             Player<ObjectId> p ->
                 Set<Player> opponents = new HashSet<Player>(game.players)
                 opponents.remove(p)
                 game.playerDetails[p.id] = new TBPlayerState(
-                        ecmsRemaining: game.features.contains(GameFeature.ECMEnabled) ? players : 0,
-                        emergencyRepairsRemaining: game.features.contains(GameFeature.EREnabled) ? players : 0,
-                        evasiveManeuversRemaining: game.features.contains(GameFeature.EMEnabled) ? players : 0,
-                        spysRemaining: game.features.contains(GameFeature.SpyEnabled) ? players : 0,
+                        ecmsRemaining: game.features.contains(GameFeature.ECMEnabled) ? specialMoves : 0,
+                        emergencyRepairsRemaining: game.features.contains(GameFeature.EREnabled) ? specialMoves : 0,
+                        evasiveManeuversRemaining: game.features.contains(GameFeature.EMEnabled) ? specialMoves : 0,
+                        spysRemaining: game.features.contains(GameFeature.SpyEnabled) ? specialMoves : 0,
                         opponentGrids: opponents.collectEntries { Player o ->
                             [(o.id), new Grid(sizeValue)]
                         },
