@@ -26,4 +26,9 @@ class GridSizeUtil {
         }
         throw new IllegalArgumentException('Unhandled size ' + size)
     }
+
+    boolean isValidCoordinate(final TBGame game, final GridCoordinate coordinate) {
+        int max = getSize(game) - 1
+        return !(coordinate.row < 0 || coordinate.column < 0 || coordinate.row > max || coordinate.column > max)
+    }
 }

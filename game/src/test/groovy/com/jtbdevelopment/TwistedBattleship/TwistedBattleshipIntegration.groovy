@@ -1,10 +1,8 @@
 package com.jtbdevelopment.TwistedBattleship
 
-import com.jtbdevelopment.TwistedBattleship.dao.GameRepository
 import com.jtbdevelopment.TwistedBattleship.rest.GameFeatureInfo
 import com.jtbdevelopment.TwistedBattleship.rest.services.messages.FeaturesAndPlayers
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
-import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.TwistedBattleship.state.masked.TBMaskedGame
@@ -13,7 +11,6 @@ import com.jtbdevelopment.core.hazelcast.caching.HazelcastCacheManager
 import com.jtbdevelopment.games.dev.utilities.integrationtesting.AbstractGameIntegration
 import com.jtbdevelopment.games.state.GamePhase
 import com.jtbdevelopment.games.state.PlayerState
-import org.bson.types.ObjectId
 import org.junit.BeforeClass
 import org.junit.Test
 
@@ -38,12 +35,9 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
 
     @Test
     void testGetFeatures() {
-        def client = createConnection(TEST_PLAYER2)
-        def features = client
-                .target(API_URI)
-                .path("features")
-                .request(MediaType.APPLICATION_JSON_TYPE)
-                .get(new GenericType<List<GameFeatureInfo>>() {
+        def client = createAPITarget(TEST_PLAYER2)
+        def features = client.path("features").request(MediaType.APPLICATION_JSON_TYPE).get(
+                new GenericType<List<GameFeatureInfo>>() {
         })
         assert features == [
                 new GameFeatureInfo(GameFeature.GridSize,
@@ -92,7 +86,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
 
     @Test
     void testCreateNewGame() {
-        def P3 = createAPITarget(TEST_PLAYER3)
+        def P3 = createPlayerAPITarget(TEST_PLAYER3)
         TBMaskedGame game = newGame(P3,
                 new FeaturesAndPlayers(
                         features: [
@@ -138,25 +132,43 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
                 (TEST_PLAYER2.md5): new Grid(20)
         ]
         assert game.maskedPlayersState.spysRemaining == 0
-        assert game.maskedPlayersState.ecmsRemaining == 3
-        assert game.maskedPlayersState.emergencyRepairsRemaining == 3
+        assert game.maskedPlayersState.ecmsRemaining == 2
+        assert game.maskedPlayersState.emergencyRepairsRemaining == 2
         assert game.maskedPlayersState.evasiveManeuversRemaining == 0
         assert game.gamePhase == GamePhase.Challenged
 
-        //  Clear cache and force a load from db to confirm loads
+        //  Clear cache and force a load from db to confirm full round trip
         cacheManager.cacheNames.each {
             cacheManager.getCache(it).clear()
         }
 
-        TBGame dbGame = context.getBean(GameRepository.class).findOne(new ObjectId(game.id))
-        assert dbGame != null
+        game = getGame(createGameTarget(P3, game))
+        assert game.playersScore == [
+                (TEST_PLAYER1.md5): 0,
+                (TEST_PLAYER2.md5): 0,
+                (TEST_PLAYER3.md5): 0
+        ]
+        assert game.maskedPlayersState.activeShipsRemaining == 0
+        assert game.maskedPlayersState.opponentGrids == [
+                (TEST_PLAYER1.md5): new Grid(20),
+                (TEST_PLAYER2.md5): new Grid(20)
+        ]
+        assert game.maskedPlayersState.opponentViews == [
+                (TEST_PLAYER1.md5): new Grid(20),
+                (TEST_PLAYER2.md5): new Grid(20)
+        ]
+        assert game.maskedPlayersState.spysRemaining == 0
+        assert game.maskedPlayersState.ecmsRemaining == 2
+        assert game.maskedPlayersState.emergencyRepairsRemaining == 2
+        assert game.maskedPlayersState.evasiveManeuversRemaining == 0
+        assert game.gamePhase == GamePhase.Challenged
     }
 
     @Test
     void testCreateAndRejectNewGame() {
-        def P3 = createAPITarget(TEST_PLAYER3)
+        def P3 = createPlayerAPITarget(TEST_PLAYER3)
         TBMaskedGame game = newGame(P3, STANDARD_PLAYERS_AND_FEATURES)
-        def P1G = createGameTarget(createAPITarget(TEST_PLAYER1), game)
+        def P1G = createGameTarget(createPlayerAPITarget(TEST_PLAYER1), game)
         assert game != null
         assert game.playerStates == [
                 (TEST_PLAYER1.md5): PlayerState.Pending,
@@ -165,7 +177,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
         ]
         assert game.gamePhase == GamePhase.Challenged
 
-        game = reject(P1G)
+        game = rejectGame(P1G)
         assert game.playerStates == [
                 (TEST_PLAYER1.md5): PlayerState.Rejected,
                 (TEST_PLAYER2.md5): PlayerState.Pending,
@@ -176,13 +188,13 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
 
     @Test
     void testCreateAndQuitNewGame() {
-        def P3 = createAPITarget(TEST_PLAYER3)
+        def P3 = createPlayerAPITarget(TEST_PLAYER3)
         TBMaskedGame game = newGame(P3, STANDARD_PLAYERS_AND_FEATURES)
-        def P1G = createGameTarget(createAPITarget(TEST_PLAYER1), game)
-        def P2G = createGameTarget(createAPITarget(TEST_PLAYER2), game)
-        accept(P1G)
-        accept(P2G)
-        game = quit(P1G)
+        def P1G = createGameTarget(createPlayerAPITarget(TEST_PLAYER1), game)
+        def P2G = createGameTarget(createPlayerAPITarget(TEST_PLAYER2), game)
+        acceptGame(P1G)
+        acceptGame(P2G)
+        game = quitGame(P1G)
         assert game.playerStates == [
                 (TEST_PLAYER1.md5): PlayerState.Quit,
                 (TEST_PLAYER2.md5): PlayerState.Accepted,
@@ -192,15 +204,15 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
 
     @Test
     void testSetupGame() {
-        def P3 = createAPITarget(TEST_PLAYER3)
+        def P3 = createPlayerAPITarget(TEST_PLAYER3)
         TBMaskedGame game = newGame(P3, STANDARD_PLAYERS_AND_FEATURES)
         assert game != null
         def P3G = createGameTarget(P3, game)
-        def P1G = createGameTarget(createAPITarget(TEST_PLAYER1), game)
-        def P2G = createGameTarget(createAPITarget(TEST_PLAYER2), game)
+        def P1G = createGameTarget(createPlayerAPITarget(TEST_PLAYER1), game)
+        def P2G = createGameTarget(createPlayerAPITarget(TEST_PLAYER2), game)
 
 
-        game = accept(P1G)
+        game = acceptGame(P1G)
         assert game != null
         assert game.playerStates == [
                 (TEST_PLAYER1.md5): PlayerState.Accepted,
@@ -209,7 +221,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
         ]
         assert game.gamePhase == GamePhase.Challenged
 
-        game = accept(P2G)
+        game = acceptGame(P2G)
         assert game != null
         assert game.playerStates == [
                 (TEST_PLAYER1.md5): PlayerState.Accepted,

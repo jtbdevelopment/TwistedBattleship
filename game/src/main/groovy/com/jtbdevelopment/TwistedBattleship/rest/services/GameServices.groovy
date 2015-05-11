@@ -1,7 +1,5 @@
 package com.jtbdevelopment.TwistedBattleship.rest.services
 
-import com.jtbdevelopment.TwistedBattleship.rest.GameActionInfo
-import com.jtbdevelopment.TwistedBattleship.rest.handlers.PlayerMoveHandler
 import com.jtbdevelopment.TwistedBattleship.rest.handlers.SetupShipsHandler
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
@@ -27,8 +25,6 @@ import javax.ws.rs.core.MediaType
 class GameServices extends AbstractMultiPlayerGameServices<ObjectId> {
     @Autowired
     SetupShipsHandler setupShipsHandler
-    @Autowired
-    PlayerMoveHandler playerMoveHandler
 
     @PUT
     @Path("setup")
@@ -43,10 +39,10 @@ class GameServices extends AbstractMultiPlayerGameServices<ObjectId> {
     }
 
     @PUT
-    @Path("play")
+    @Path("fire")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    Object play(final GameActionInfo action) {
-        playerMoveHandler.handleAction((ObjectId) playerID.get(), (ObjectId) gameID.get(), action)
+    Object fire(final GridCoordinate action) {
+        //playerMoveHandler.handleAction((ObjectId) playerID.get(), (ObjectId) gameID.get(), action)
     }
 }
