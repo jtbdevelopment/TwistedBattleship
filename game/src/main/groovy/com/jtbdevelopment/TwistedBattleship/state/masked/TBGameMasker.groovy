@@ -4,12 +4,15 @@ import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
+import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
+import com.jtbdevelopment.TwistedBattleship.state.grid.GridSizeUtil
 import com.jtbdevelopment.games.players.Player
 import com.jtbdevelopment.games.state.MultiPlayerGame
 import com.jtbdevelopment.games.state.masking.AbstractMultiPlayerGameMasker
 import com.jtbdevelopment.games.state.masking.MaskedMultiPlayerGame
 import groovy.transform.CompileStatic
 import org.bson.types.ObjectId
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 import java.time.ZonedDateTime
@@ -21,6 +24,9 @@ import java.time.ZonedDateTime
 @CompileStatic
 @Component
 class TBGameMasker extends AbstractMultiPlayerGameMasker<ObjectId, GameFeature, TBGame, TBMaskedGame> {
+    @Autowired
+    GridSizeUtil gridSizeUtil
+
     @Override
     protected TBMaskedGame newMaskedGame() {
         return new TBMaskedGame()
@@ -41,6 +47,7 @@ class TBGameMasker extends AbstractMultiPlayerGameMasker<ObjectId, GameFeature, 
         TBMaskedGame masked = (TBMaskedGame) playerMaskedGame
         TBGame game = (TBGame) mpGame
         masked.maskedPlayersState = createMaskedPlayerState(game.playerDetails[player.id], idMap)
+        masked.maskedPlayersState.consolidatedOpponentView = createConsolidatedView(game, masked)
         game.playerDetails.each {
             ObjectId playerId, TBPlayerState state ->
                 masked.playersAlive[idMap[playerId].md5] = state.alive
@@ -49,6 +56,7 @@ class TBGameMasker extends AbstractMultiPlayerGameMasker<ObjectId, GameFeature, 
         }
     }
 
+    @SuppressWarnings("GrMethodMayBeStatic")
     TBMaskedPlayerState createMaskedPlayerState(final TBPlayerState playerState,
                                                 final Map<ObjectId, Player<ObjectId>> idMap) {
         TBMaskedPlayerState maskedPlayerState = new TBMaskedPlayerState()
@@ -74,5 +82,27 @@ class TBGameMasker extends AbstractMultiPlayerGameMasker<ObjectId, GameFeature, 
                 [(idMap[id].md5): view]
         }
         return maskedPlayerState
+    }
+
+    Grid createConsolidatedView(final TBGame game, final TBMaskedGame masked) {
+        int size = gridSizeUtil.getSize(game)
+        Grid consolidatedView = new Grid(size)
+        (0..size - 1).each {
+            int row ->
+                (0..size - 1).each {
+                    int col ->
+                        List<GridCellState> states = masked.maskedPlayersState.opponentViews.collect {
+                            it.value.get(row, col)
+                        }.sort {
+                            GridCellState a, GridCellState b ->
+                                b.rank - a.rank // reverse sort
+                        }
+                        consolidatedView.set(
+                                row,
+                                col,
+                                states[0])
+                }
+        }
+        consolidatedView
     }
 }

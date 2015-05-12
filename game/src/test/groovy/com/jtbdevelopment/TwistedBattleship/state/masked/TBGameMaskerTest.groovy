@@ -1,10 +1,12 @@
 package com.jtbdevelopment.TwistedBattleship.state.masked
 
+import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
+import com.jtbdevelopment.TwistedBattleship.state.grid.GridSizeUtil
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
 import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
@@ -22,9 +24,11 @@ class TBGameMaskerTest extends MongoGameCoreTestCase {
     TBGameMasker masker = new TBGameMasker()
 
     void testMaskingGame() {
+        masker.gridSizeUtil = new GridSizeUtil()
         TBGame game = new TBGame(
                 rematchTimestamp: ZonedDateTime.now(),
                 gamePhase: GamePhase.Playing,
+                features: [GameFeature.Grid10x10],
                 players: [PONE, PTWO, PTHREE],
                 initiatingPlayer: PTHREE.id,
                 playerDetails: [
@@ -60,10 +64,18 @@ class TBGameMaskerTest extends MongoGameCoreTestCase {
                         (PTHREE.id): new TBPlayerState(scoreFromHits: 10, scoreFromSinks: 10),
                 ]
         )
-        game.playerDetails[PONE.id].opponentGrids[PTWO.id].set(3, 5, GridCellState.KnownByHit)
-        game.playerDetails[PONE.id].opponentGrids[PTHREE.id].set(1, 1, GridCellState.KnownByMiss)
-        game.playerDetails[PONE.id].opponentViews[PTWO.id].set(0, 2, GridCellState.KnownByHit)
-        game.playerDetails[PONE.id].opponentViews[PTHREE.id].set(1, 4, GridCellState.KnownByMiss)
+        game.playerDetails[PONE.id].opponentGrids[PTWO.id].set(4, 0, GridCellState.KnownByHit)
+        game.playerDetails[PONE.id].opponentGrids[PTHREE.id].set(4, 1, GridCellState.KnownByMiss)
+        game.playerDetails[PONE.id].opponentViews[PTWO.id].set(5, 0, GridCellState.KnownByHit)
+        game.playerDetails[PONE.id].opponentViews[PTHREE.id].set(5, 1, GridCellState.KnownByMiss)
+
+        game.playerDetails[PONE.id].opponentViews[PTWO.id].set(5, 2, GridCellState.Unknown)
+        game.playerDetails[PONE.id].opponentViews[PTHREE.id].set(5, 2, GridCellState.KnownShip)
+        game.playerDetails[PONE.id].opponentViews[PTWO.id].set(5, 3, GridCellState.KnownShip)
+        game.playerDetails[PONE.id].opponentViews[PTHREE.id].set(5, 3, GridCellState.KnownByHit)
+        game.playerDetails[PONE.id].opponentViews[PTWO.id].set(5, 4, GridCellState.KnownByHit)
+        game.playerDetails[PONE.id].opponentViews[PTHREE.id].set(5, 4, GridCellState.KnownByRehit)
+
         TBMaskedGame maskedGame = masker.maskGameForPlayer(game, PONE)
         assert maskedGame
         assert maskedGame.playersAlive == [(PONE.md5): true, (PTWO.md5): false, (PTHREE.md5): false]
@@ -81,15 +93,46 @@ class TBGameMaskerTest extends MongoGameCoreTestCase {
         assert maskedGame.maskedPlayersState.ecmsRemaining == playerState.ecmsRemaining
         assert maskedGame.maskedPlayersState.emergencyRepairsRemaining == playerState.emergencyRepairsRemaining
         assert maskedGame.maskedPlayersState.shipStates == playerState.shipStates
+        assert maskedGame.maskedPlayersState.opponentViews.size() == 2
+        assert maskedGame.maskedPlayersState.opponentGrids.size() == 2
         playerState.opponentGrids.each {
             ObjectId id, Grid grid ->
+                assertNotNull grid
                 Player p = game.players.find { it.id == id }
                 assert grid == maskedGame.maskedPlayersState.opponentGrids[p.md5]
         }
         playerState.opponentViews.each {
             ObjectId id, Grid grid ->
+                assertNotNull grid
                 Player p = game.players.find { it.id == id }
                 assert grid == maskedGame.maskedPlayersState.opponentViews[p.md5]
+        }
+        assertNotNull maskedGame.maskedPlayersState.consolidatedOpponentView
+        for (int row = 0; row < 10; ++row) {
+            for (int col = 0; col < 10; ++col) {
+                def state = maskedGame.maskedPlayersState.consolidatedOpponentView.get(row, col)
+                if (row != 5 || col > 4) {
+                    assert state == GridCellState.Unknown
+                } else {
+                    switch (col) {
+                        case 0:
+                            assert GridCellState.KnownByHit == state
+                            break
+                        case 1:
+                            assert GridCellState.KnownByMiss == state;
+                            break
+                        case 2:
+                            assert GridCellState.KnownShip == state;
+                            break
+                        case 3:
+                            assert GridCellState.KnownByHit == state;
+                            break
+                        case 4:
+                            assert GridCellState.KnownByHit == state
+                            break
+                    }
+                }
+            }
         }
     }
 }

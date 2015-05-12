@@ -31,8 +31,16 @@ class Grid implements Serializable {
         }
     }
 
+    GridCellState get(final GridCoordinate coordinate) {
+        get(coordinate.row, coordinate.column)
+    }
+
     GridCellState get(final int row, final int column) {
         return table[row][column]
+    }
+
+    Grid set(final GridCoordinate coordinate, final GridCellState state) {
+        set(coordinate.row, coordinate.column, state)
     }
 
     Grid set(final int row, final int column, final GridCellState state) {

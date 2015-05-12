@@ -26,4 +26,5 @@ class TBMaskedPlayerState {
 
     Map<String, Grid> opponentGrids = [:]
     Map<String, Grid> opponentViews = [:]
+    Grid consolidatedOpponentView
 }

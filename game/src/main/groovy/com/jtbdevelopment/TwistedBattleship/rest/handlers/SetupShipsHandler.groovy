@@ -30,6 +30,7 @@ class SetupShipsHandler extends AbstractGameActionHandler<Map<Ship, ShipState>, 
         validateGame(game);
         validateShipStates(game, param)
         game.playerDetails[(ObjectId) player.id].shipStates = param
+
         game
     }
 

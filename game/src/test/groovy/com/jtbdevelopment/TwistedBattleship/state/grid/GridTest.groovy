@@ -54,6 +54,15 @@ class GridTest extends GroovyTestCase {
         })
     }
 
+    void testCoordinateVsActual() {
+        Grid grid = new Grid(5)
+        grid.set(1, 1, GridCellState.KnownByHit)
+        assert GridCellState.KnownByHit == grid.get(new GridCoordinate(1, 1))
+
+        grid.set(new GridCoordinate(4, 4), GridCellState.KnownShip)
+        assert GridCellState.KnownShip == grid.get(4, 4)
+    }
+
     void testHashCode() {
         Grid g1 = new Grid(5)
         Grid g2 = new Grid(10)
