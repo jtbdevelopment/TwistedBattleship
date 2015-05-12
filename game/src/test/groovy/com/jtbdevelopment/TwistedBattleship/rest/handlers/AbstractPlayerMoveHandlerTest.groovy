@@ -2,6 +2,7 @@ package com.jtbdevelopment.TwistedBattleship.rest.handlers
 
 import com.jtbdevelopment.TwistedBattleship.exceptions.CoordinateOutOfBoundsException
 import com.jtbdevelopment.TwistedBattleship.exceptions.NotEnoughActionsForSpecialException
+import com.jtbdevelopment.TwistedBattleship.rest.Target
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
@@ -9,7 +10,9 @@ import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridSizeUtil
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
+import com.jtbdevelopment.games.dao.AbstractPlayerRepository
 import com.jtbdevelopment.games.exceptions.input.GameIsNotInPlayModeException
+import com.jtbdevelopment.games.exceptions.input.PlayerNotPartOfGameException
 import com.jtbdevelopment.games.exceptions.input.PlayerOutOfTurnException
 import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
 import com.jtbdevelopment.games.players.Player
@@ -28,9 +31,25 @@ class AbstractPlayerMoveHandlerTest extends MongoGameCoreTestCase {
         }
 
         @Override
-        TBGame playMove(final Player player, final TBGame game, final GridCoordinate coordinate) {
+        TBGame playMove(final Player player, final TBGame game, final Target target) {
             return game
         }
+    }
+
+    @Override
+    protected void setUp() throws Exception {
+        handler.playerRepository = [
+                findByMd5In: {
+                    Collection<String> md5s ->
+                        def ret = []
+                        [PONE, PTWO, PTHREE, PFOUR, PINACTIVE1, PINACTIVE2].each {
+                            if (md5s.contains(it.md5)) {
+                                ret.add(it)
+                            }
+                        }
+                        return ret
+                }
+        ] as AbstractPlayerRepository
     }
 
     void testExceptionForPlayerOutOfTurn() {
@@ -40,11 +59,18 @@ class AbstractPlayerMoveHandlerTest extends MongoGameCoreTestCase {
         })
     }
 
-    void testExceptionForPlayerOutBoundsCoordinate() {
+    void testExceptionForTargetPlayerNotPartOfGame() {
+        shouldFail(PlayerNotPartOfGameException.class, {
+            handler
+            TBGame game = new TBGame(currentPlayer: PONE.id, players: [PONE, PTWO])
+            handler.handleActionInternal(PONE, game, new Target(player: PTHREE.md5))
+        })
+    }
 
+    void testExceptionForPlayerOutBoundsCoordinate() {
         [GameFeature.Grid20x20, GameFeature.Grid10x10, GameFeature.Grid15x15].each {
             GameFeature size ->
-                TBGame game = new TBGame(currentPlayer: PONE.id, features: [size], remainingMoves: 5, gamePhase: GamePhase.Playing)
+                TBGame game = new TBGame(currentPlayer: PONE.id, features: [size], remainingMoves: 5, gamePhase: GamePhase.Playing, players: [PONE, PTWO])
                 GridCoordinate coord = new GridCoordinate(0, 0)
                 handler.gridSizeUtil = [
                         isValidCoordinate: {
@@ -55,15 +81,15 @@ class AbstractPlayerMoveHandlerTest extends MongoGameCoreTestCase {
                         }
                 ] as GridSizeUtil
                 shouldFail(CoordinateOutOfBoundsException.class, {
-                    handler.handleActionInternal(PONE, game, coord)
+                    handler.handleActionInternal(PONE, game, new Target(player: PTWO.md5, coordinate: coord))
                 })
         }
     }
 
     void testExceptionForNotEnoughMovesRemainingForSpecialMoveOnPerShipGame() {
         shouldFail(NotEnoughActionsForSpecialException.class, {
-            TBGame game = new TBGame(currentPlayer: PONE.id, remainingMoves: MOVES_REQUIRED - 1, features: [GameFeature.PerShip], gamePhase: GamePhase.Playing)
-            handler.handleActionInternal(PONE, game, new GridCoordinate(0, 0))
+            TBGame game = new TBGame(currentPlayer: PONE.id, remainingMoves: MOVES_REQUIRED - 1, features: [GameFeature.PerShip], gamePhase: GamePhase.Playing, players: [PONE, PTHREE])
+            handler.handleActionInternal(PONE, game, new Target(player: PTHREE.md5, coordinate: new GridCoordinate(0, 0)))
         })
     }
 
@@ -71,9 +97,9 @@ class AbstractPlayerMoveHandlerTest extends MongoGameCoreTestCase {
         GamePhase.values().findAll { it != GamePhase.Playing }.each {
             GamePhase it ->
                 handler.gridSizeUtil = new GridSizeUtil()
-                TBGame game = new TBGame(currentPlayer: PONE.id, remainingMoves: MOVES_REQUIRED, features: [GameFeature.PerShip, GameFeature.Grid10x10], gamePhase: it)
+                TBGame game = new TBGame(currentPlayer: PONE.id, remainingMoves: MOVES_REQUIRED, features: [GameFeature.PerShip, GameFeature.Grid10x10], gamePhase: it, players: [PONE, PFOUR])
                 shouldFail(GameIsNotInPlayModeException.class, {
-                    handler.handleActionInternal(PONE, game, new GridCoordinate(0, 0))
+                    handler.handleActionInternal(PONE, game, new Target(player: PFOUR.md5, coordinate: new GridCoordinate(0, 0)))
                 })
 
         }
