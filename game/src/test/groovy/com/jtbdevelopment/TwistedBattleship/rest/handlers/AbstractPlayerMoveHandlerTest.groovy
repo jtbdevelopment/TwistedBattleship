@@ -1,6 +1,7 @@
 package com.jtbdevelopment.TwistedBattleship.rest.handlers
 
 import com.jtbdevelopment.TwistedBattleship.exceptions.CoordinateOutOfBoundsException
+import com.jtbdevelopment.TwistedBattleship.exceptions.InvalidTargetPlayerException
 import com.jtbdevelopment.TwistedBattleship.exceptions.NotEnoughActionsForSpecialException
 import com.jtbdevelopment.TwistedBattleship.rest.Target
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
@@ -24,14 +25,22 @@ import com.jtbdevelopment.games.state.GamePhase
  */
 class AbstractPlayerMoveHandlerTest extends MongoGameCoreTestCase {
     private static final int MOVES_REQUIRED = 2
+    boolean targetSelf = false
     AbstractPlayerMoveHandler handler = new AbstractPlayerMoveHandler() {
+
         @Override
-        int movesRequired() {
+        int movesRequired(final TBGame game) {
             return MOVES_REQUIRED
         }
 
         @Override
-        TBGame playMove(final Player player, final TBGame game, final Target target) {
+        boolean targetSelf() {
+            return targetSelf
+        }
+
+        @Override
+        TBGame playMove(
+                final Player player, final TBGame game, final Player targetedPlayer, final GridCoordinate coordinate) {
             return game
         }
     }
@@ -39,31 +48,40 @@ class AbstractPlayerMoveHandlerTest extends MongoGameCoreTestCase {
     @Override
     protected void setUp() throws Exception {
         handler.playerRepository = [
-                findByMd5In: {
-                    Collection<String> md5s ->
-                        def ret = []
-                        [PONE, PTWO, PTHREE, PFOUR, PINACTIVE1, PINACTIVE2].each {
-                            if (md5s.contains(it.md5)) {
-                                ret.add(it)
-                            }
-                        }
-                        return ret
+                findByMd5: {
+                    String md5 ->
+                        [PONE, PTWO, PTHREE, PFOUR, PINACTIVE1, PINACTIVE2].find { md5 == it.md5 }
                 }
         ] as AbstractPlayerRepository
+        targetSelf = false
     }
 
     void testExceptionForPlayerOutOfTurn() {
         shouldFail(PlayerOutOfTurnException.class, {
             TBGame game = new TBGame(currentPlayer: PONE.id)
-            handler.handleActionInternal(PTHREE, game, null)
+            handler.handleActionInternal(PTHREE, game, new Target(player: PTHREE.md5, coordinate: null))
         })
     }
 
     void testExceptionForTargetPlayerNotPartOfGame() {
         shouldFail(PlayerNotPartOfGameException.class, {
-            handler
             TBGame game = new TBGame(currentPlayer: PONE.id, players: [PONE, PTWO])
             handler.handleActionInternal(PONE, game, new Target(player: PTHREE.md5))
+        })
+    }
+
+    void testExceptionForTargetingSelfForNonSelfMove() {
+        shouldFail(InvalidTargetPlayerException.class, {
+            TBGame game = new TBGame(currentPlayer: PONE.id, players: [PONE, PTWO])
+            handler.handleActionInternal(PONE, game, new Target(player: PONE.md5))
+        })
+    }
+
+    void testExceptionForTargetingOtherForSelfMove() {
+        shouldFail(InvalidTargetPlayerException.class, {
+            targetSelf = true
+            TBGame game = new TBGame(currentPlayer: PONE.id, players: [PONE, PTWO])
+            handler.handleActionInternal(PONE, game, new Target(player: PTWO.md5))
         })
     }
 

@@ -1,10 +1,12 @@
 package com.jtbdevelopment.TwistedBattleship.rest.handlers
 
 import com.jtbdevelopment.TwistedBattleship.exceptions.CoordinateOutOfBoundsException
+import com.jtbdevelopment.TwistedBattleship.exceptions.InvalidTargetPlayerException
 import com.jtbdevelopment.TwistedBattleship.exceptions.NotEnoughActionsForSpecialException
 import com.jtbdevelopment.TwistedBattleship.rest.Target
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
+import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridSizeUtil
 import com.jtbdevelopment.games.exceptions.input.GameIsNotInPlayModeException
 import com.jtbdevelopment.games.exceptions.input.PlayerOutOfTurnException
@@ -24,21 +26,25 @@ abstract class AbstractPlayerMoveHandler extends AbstractGameActionHandler<Targe
     @Autowired
     GridSizeUtil gridSizeUtil
 
-    abstract int movesRequired()
+    abstract boolean targetSelf()
 
-    abstract TBGame playMove(final Player player, final TBGame game, final Target target)
+    abstract int movesRequired(final TBGame game)
+
+    abstract TBGame playMove(
+            final Player player, final TBGame game, final Player targetedPlayer, final GridCoordinate coordinate)
 
     @Override
     protected TBGame handleActionInternal(
             final Player player, final TBGame game, final Target target) {
 
-        validateMove(player, game, target)
-        return playMove(player, game, target)
+        Player targetPlayer = loadPlayerMD5(target.player)
+        validateMove(player, game, targetPlayer, target.coordinate)
+        return playMove(player, game, targetPlayer, target.coordinate)
     }
 
     @Override
     protected TBGame rotateTurnBasedGame(final TBGame game) {
-        game.remainingMoves -= movesRequired()
+        game.remainingMoves -= movesRequired(game)
         if (game.remainingMoves == 0) {
             if (game.playerDetails.findAll { ObjectId id, TBPlayerState state -> state.alive }.size() > 1) {
                 int initialIndex = game.players.findIndexOf { Player p -> p.id == game.currentPlayer }
@@ -62,17 +68,26 @@ abstract class AbstractPlayerMoveHandler extends AbstractGameActionHandler<Targe
         return game
     }
 
-    private void validateMove(final Player player, final TBGame game, final Target target) {
+    private void validateMove(
+            final Player player, final TBGame game, final Player targetPlayer, final GridCoordinate coordinate) {
         if (game.currentPlayer != player.id) {
             throw new PlayerOutOfTurnException()
         }
-        validatePlayerForGame(game, loadPlayerMD5s([target.player])[0])
-        if (game.remainingMoves < movesRequired()) {
+
+        validatePlayerForGame(game, targetPlayer)
+
+        if (targetSelf() != (player == targetPlayer)) {
+            throw new InvalidTargetPlayerException()
+        }
+
+        if (game.remainingMoves < movesRequired(game)) {
             throw new NotEnoughActionsForSpecialException()
         }
-        if (!gridSizeUtil.isValidCoordinate(game, target.coordinate)) {
+
+        if (!gridSizeUtil.isValidCoordinate(game, coordinate)) {
             throw new CoordinateOutOfBoundsException()
         }
+
         if (game.gamePhase != GamePhase.Playing) {
             throw new GameIsNotInPlayModeException()
         }
