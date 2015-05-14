@@ -38,6 +38,16 @@ class TBGameMasker extends AbstractMultiPlayerGameMasker<ObjectId, GameFeature, 
     }
 
     @Override
+    protected void copyUnmaskedData(
+            final MultiPlayerGame<ObjectId, ZonedDateTime, GameFeature> mpGame,
+            final MaskedMultiPlayerGame<GameFeature> playerMaskedGame) {
+        super.copyUnmaskedData(mpGame, playerMaskedGame)
+        TBMaskedGame masked = (TBMaskedGame) playerMaskedGame
+        TBGame game = (TBGame) mpGame
+        masked.generalMessage = game.generalMessage
+    }
+
+    @Override
     protected void copyMaskedData(
             final MultiPlayerGame<ObjectId, ZonedDateTime, GameFeature> mpGame,
             final Player<ObjectId> player,
@@ -72,6 +82,7 @@ class TBGameMasker extends AbstractMultiPlayerGameMasker<ObjectId, GameFeature, 
         maskedPlayerState.emergencyRepairsRemaining = playerState.emergencyRepairsRemaining
         maskedPlayerState.evasiveManeuversRemaining = playerState.evasiveManeuversRemaining
         maskedPlayerState.spysRemaining = playerState.spysRemaining
+        maskedPlayerState.lastActionMessage = playerState.lastActionMessage
 
         maskedPlayerState.opponentViews = (Map<String, Grid>) playerState.opponentViews.collectEntries {
             ObjectId id, Grid view ->

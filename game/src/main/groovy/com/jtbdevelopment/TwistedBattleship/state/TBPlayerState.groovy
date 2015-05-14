@@ -28,6 +28,8 @@ class TBPlayerState implements Serializable {
     Map<ObjectId, Grid> opponentGrids = [:]
     Map<ObjectId, Grid> opponentViews = [:]
 
+    String lastActionMessage = ""
+
     int getTotalScore() {
         scoreFromHits + scoreFromSinks + scoreFromLiving
     }

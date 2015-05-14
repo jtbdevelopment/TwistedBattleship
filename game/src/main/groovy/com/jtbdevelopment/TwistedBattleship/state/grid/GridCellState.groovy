@@ -15,6 +15,7 @@ enum GridCellState {
     ObscuredShip(10),  // previously spied
 
     ObscuredOtherHit(20),
+    ObscuredOtherMiss(20),
     ObscuredRehit(25),
     ObscuredMiss(30),
     ObscuredHit(30),
@@ -23,6 +24,7 @@ enum GridCellState {
     KnownShip(40),   // Spied
 
     KnownByOtherHit(50),
+    KnownByOtherMiss(50),
     KnownByRehit(55),
     KnownByMiss(60),
     KnownByHit(60)

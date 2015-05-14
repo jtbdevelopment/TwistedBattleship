@@ -74,12 +74,12 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
                     [
                             (Ship.Battleship): new ShipState(Ship.Battleship,
                                     4,
-                                    new TreeSet([
+                                    [
                                             new GridCoordinate(0, 0),
                                             new GridCoordinate(1, 0),
                                             new GridCoordinate(2, 0),
                                             new GridCoordinate(3, 0)
-                                    ]),
+                                    ],
                                     [false, false, false]             //wrong
                             ),
                             (Ship.Carrier)   : new ShipState(Ship.Carrier,
@@ -123,12 +123,12 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
                     [
                             (Ship.Battleship): new ShipState(Ship.Battleship,
                                     5,
-                                    new TreeSet([
+                                    [
                                             new GridCoordinate(0, 0),
                                             new GridCoordinate(1, 0),
                                             new GridCoordinate(2, 0),
                                             new GridCoordinate(3, 0)
-                                    ]),
+                                    ],
                                     [false, false, false, true]                // wrong
                             ),
                             (Ship.Carrier)   : new ShipState(Ship.Carrier,
@@ -172,12 +172,12 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
                     [
                             (Ship.Battleship): new ShipState(Ship.Battleship,
                                     3,                                   // wrong
-                                    new TreeSet([
+                                    [
                                             new GridCoordinate(0, 0),
                                             new GridCoordinate(1, 0),
                                             new GridCoordinate(2, 0),
                                             new GridCoordinate(3, 0)
-                                    ]),
+                                    ],
                                     [false, false, false, false]
                             ),
                             (Ship.Carrier)   : new ShipState(Ship.Carrier,

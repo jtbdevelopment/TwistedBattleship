@@ -24,6 +24,7 @@ class TBPlayerStateTest extends GroovyTestCase {
         assert 0 == state.emergencyRepairsRemaining
         assert [:] == state.opponentGrids
         assert [:] == state.shipStates
+        assert "" == state.lastActionMessage
         assertFalse state.setup
         assertFalse state.alive
     }

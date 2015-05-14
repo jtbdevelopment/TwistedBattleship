@@ -31,6 +31,7 @@ class TBGameMaskerTest extends MongoGameCoreTestCase {
                 features: [GameFeature.Grid10x10],
                 players: [PONE, PTWO, PTHREE],
                 initiatingPlayer: PTHREE.id,
+                generalMessage: "All hands on deck!",
                 playerDetails: [
                         (PONE.id)  : new TBPlayerState(
                                 scoreFromHits: 10,
@@ -40,6 +41,7 @@ class TBGameMaskerTest extends MongoGameCoreTestCase {
                                 ecmsRemaining: 2,
                                 evasiveManeuversRemaining: 3,
                                 emergencyRepairsRemaining: 4,
+                                lastActionMessage: "P1 MESSAGE",
                                 opponentViews: [
                                         (PTWO.id)  : new Grid(10),
                                         (PTHREE.id): new Grid(10)
@@ -58,8 +60,8 @@ class TBGameMaskerTest extends MongoGameCoreTestCase {
                         (PTWO.id)  : new TBPlayerState(
                                 scoreFromLiving: 30, scoreFromSinks: 10,
                                 shipStates: [
-                                        (Ship.Battleship): new ShipState(Ship.Battleship, 0, new TreeSet<GridCoordinate>(), []),
-                                        (Ship.Cruiser)   : new ShipState(Ship.Cruiser, 0, new TreeSet<GridCoordinate>(), [])
+                                        (Ship.Battleship): new ShipState(Ship.Battleship, 0, [], []),
+                                        (Ship.Cruiser)   : new ShipState(Ship.Cruiser, 0, [], [])
                                 ]),
                         (PTHREE.id): new TBPlayerState(scoreFromHits: 10, scoreFromSinks: 10),
                 ]
@@ -78,11 +80,13 @@ class TBGameMaskerTest extends MongoGameCoreTestCase {
 
         TBMaskedGame maskedGame = masker.maskGameForPlayer(game, PONE)
         assert maskedGame
-        assert maskedGame.playersAlive == [(PONE.md5): true, (PTWO.md5): false, (PTHREE.md5): false]
-        assert maskedGame.playersScore == [(PONE.md5): 70, (PTWO.md5): 40, (PTHREE.md5): 20]
-        assert maskedGame.playersSetup == [(PONE.md5): true, (PTWO.md5): false, (PTHREE.md5): false]
+        assert "All hands on deck!" == maskedGame.generalMessage
+        assert [(PONE.md5): true, (PTWO.md5): false, (PTHREE.md5): false] == maskedGame.playersAlive
+        assert [(PONE.md5): 70, (PTWO.md5): 40, (PTHREE.md5): 20] == maskedGame.playersScore
+        assert [(PONE.md5): true, (PTWO.md5): false, (PTHREE.md5): false] == maskedGame.playersSetup
 
         TBPlayerState playerState = game.playerDetails[PONE.id]
+        assert maskedGame.maskedPlayersState.lastActionMessage == playerState.lastActionMessage
         assert maskedGame.maskedPlayersState.shipStates == playerState.shipStates
         assert maskedGame.maskedPlayersState.alive == playerState.alive
         assert maskedGame.maskedPlayersState.setup == playerState.setup

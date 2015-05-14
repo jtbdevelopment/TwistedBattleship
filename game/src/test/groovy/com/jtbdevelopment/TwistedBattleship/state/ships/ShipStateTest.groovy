@@ -21,18 +21,16 @@ class ShipStateTest extends GroovyTestCase {
         )
         assert shipState.healthRemaining == Ship.Cruiser.gridSize
         assert shipState.shipSegmentHit == [false, false, false]
-        assert shipState.shipGridCells == coordinates
+        assert shipState.shipGridCells == (coordinates as List).sort()
         assert shipState.ship == Ship.Cruiser
     }
 
     void testPersistenceConstructor() {
-        def coordinates = new TreeSet<GridCoordinate>(
-                [
+        def coordinates = [
                         new GridCoordinate(0, 0),
                         new GridCoordinate(0, 1),
                         new GridCoordinate(0, 2)
                 ]
-        )
 
         def booleans = [true, false, true]
         ShipState shipState = new ShipState(
@@ -43,7 +41,7 @@ class ShipStateTest extends GroovyTestCase {
         )
         assert shipState.healthRemaining == 1
         assert shipState.shipSegmentHit == booleans
-        assert shipState.shipGridCells == coordinates
+        assert shipState.shipGridCells == (coordinates as List).sort()
         assert shipState.ship == Ship.Cruiser
     }
 }

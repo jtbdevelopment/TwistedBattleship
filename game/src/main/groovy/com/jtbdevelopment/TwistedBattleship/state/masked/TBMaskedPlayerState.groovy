@@ -14,6 +14,8 @@ class TBMaskedPlayerState {
     boolean setup
     boolean alive
 
+    String lastActionMessage
+
     Map<Ship, ShipState> shipStates = [:]
     int activeShipsRemaining
 

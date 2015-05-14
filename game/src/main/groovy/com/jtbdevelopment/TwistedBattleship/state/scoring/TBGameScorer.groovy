@@ -12,6 +12,10 @@ import org.springframework.stereotype.Component
 @Component
 @CompileStatic
 class TBGameScorer implements GameScorer<TBGame> {
+    public static final int SCORE_FOR_HIT = 1
+    public static final int SCORE_FOR_SINK = 5
+    public static final int SCORE_FOR_VICTORY = 10
+
     @Override
     TBGame scoreGame(final TBGame game) {
         //TODO

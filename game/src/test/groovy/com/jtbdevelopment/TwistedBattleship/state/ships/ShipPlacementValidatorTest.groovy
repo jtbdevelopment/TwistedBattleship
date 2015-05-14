@@ -154,11 +154,11 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
             validator.validateShipPlacementsForGame(game, [
                     (Ship.Battleship): new ShipState(Ship.Battleship,
                             4,
-                            new TreeSet([
+                            [
                                     new GridCoordinate(0, 0),
                                     new GridCoordinate(1, 0),
                                     new GridCoordinate(2, 0),       // missing one
-                            ]),
+                            ],
                             [false, false, false, false]
                     ),
                     (Ship.Carrier)   : new ShipState(Ship.Carrier,
@@ -199,13 +199,13 @@ class ShipPlacementValidatorTest extends GroovyTestCase {
             validator.validateShipPlacementsForGame(game, [
                     (Ship.Battleship): new ShipState(Ship.Battleship,
                             4,
-                            new TreeSet([
+                            [
                                     new GridCoordinate(0, 0),
                                     new GridCoordinate(1, 0),
                                     new GridCoordinate(2, 0),
                                     new GridCoordinate(3, 0),
                                     new GridCoordinate(4, 0),                          //  Extra
-                            ]),
+                            ],
                             [false, false, false, false]
                     ),
                     (Ship.Carrier)   : new ShipState(Ship.Carrier,
