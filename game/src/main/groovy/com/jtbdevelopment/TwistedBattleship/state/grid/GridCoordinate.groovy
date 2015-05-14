@@ -12,7 +12,6 @@ class GridCoordinate implements Comparable<GridCoordinate>, Serializable {
 
     @SuppressWarnings("unused")
     protected GridCoordinate() {
-
     }
 
     GridCoordinate(final int row, final int column) {
@@ -48,5 +47,10 @@ class GridCoordinate implements Comparable<GridCoordinate>, Serializable {
             return (this.column - o.column)
         }
         return (this.row - o.row)
+    }
+
+    @Override
+    public String toString() {
+        return "(" + row + "," + column + ")"
     }
 }

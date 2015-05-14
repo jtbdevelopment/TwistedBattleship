@@ -79,7 +79,8 @@ class FireAtCoordinateHandlerTest extends MongoGameCoreTestCase {
 
         def coordinate = new GridCoordinate(7, 6)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
-        assert game.playerDetails[PTWO.id].lastActionMessage == "Wasted ammo!"
+        assert game.playerDetails[PTWO.id].lastActionMessage == "No enemy at (7,6)."
+        assert game.playerDetails[PONE.id].lastActionMessage == "2 missed at (7,6)."
         game.playerDetails[PONE.id].shipStates.each {
             assert it.key.gridSize == it.value.healthRemaining
             assertNull it.value.shipSegmentHit.find { it }
@@ -107,7 +108,8 @@ class FireAtCoordinateHandlerTest extends MongoGameCoreTestCase {
 
         def coordinate = new GridCoordinate(7, 6)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
-        assert game.playerDetails[PTWO.id].lastActionMessage == "Wasted ammo!"
+        assert game.playerDetails[PTWO.id].lastActionMessage == "No enemy at (7,6)."
+        assert game.playerDetails[PONE.id].lastActionMessage == "2 missed at (7,6)."
         game.playerDetails[PONE.id].shipStates.each {
             assert it.key.gridSize == it.value.healthRemaining
             assertNull it.value.shipSegmentHit.find { it }
@@ -135,7 +137,8 @@ class FireAtCoordinateHandlerTest extends MongoGameCoreTestCase {
 
         def coordinate = new GridCoordinate(7, 7)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
-        assert game.playerDetails[PTWO.id].lastActionMessage == "Direct hit!"
+        assert game.playerDetails[PTWO.id].lastActionMessage == "Direct hit at (7,7)!"
+        assert game.playerDetails[PONE.id].lastActionMessage == "2 hit your Destroyer at (7,7)!"
         game.playerDetails[PONE.id].shipStates.each {
             if (it.key == Ship.Destroyer) {
                 assert 1 == it.value.healthRemaining
@@ -168,7 +171,8 @@ class FireAtCoordinateHandlerTest extends MongoGameCoreTestCase {
 
         def coordinate = new GridCoordinate(7, 7)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
-        assert game.playerDetails[PTWO.id].lastActionMessage == "Direct hit!"
+        assert game.playerDetails[PTWO.id].lastActionMessage == "Direct hit at (7,7)!"
+        assert game.playerDetails[PONE.id].lastActionMessage == "2 hit your Destroyer at (7,7)!"
         game.playerDetails[PONE.id].shipStates.each {
             if (it.key == Ship.Destroyer) {
                 assert 1 == it.value.healthRemaining
@@ -205,7 +209,8 @@ class FireAtCoordinateHandlerTest extends MongoGameCoreTestCase {
         game.playerDetails[PFOUR.id].opponentGrids[PONE.id].set(coordinate, GridCellState.KnownByHit)
         game.playerDetails[PONE.id].opponentViews[PFOUR.id].set(coordinate, GridCellState.KnownByHit)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
-        assert game.playerDetails[PTWO.id].lastActionMessage == "Damaged area hit again."
+        assert game.playerDetails[PTWO.id].lastActionMessage == "Damaged area hit again at (7,7)."
+        assert game.playerDetails[PONE.id].lastActionMessage == "2 re-hit your Destroyer at (7,7)."
         game.playerDetails[PONE.id].shipStates.each {
             if (it.key == Ship.Destroyer) {
                 assert 1 == it.value.healthRemaining
@@ -254,7 +259,8 @@ class FireAtCoordinateHandlerTest extends MongoGameCoreTestCase {
         game.playerDetails[PFOUR.id].opponentGrids[PONE.id].set(coordinate, GridCellState.KnownByHit)
         game.playerDetails[PONE.id].opponentViews[PFOUR.id].set(coordinate, GridCellState.KnownByHit)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
-        assert game.playerDetails[PTWO.id].lastActionMessage == "Damaged area hit again."
+        assert game.playerDetails[PTWO.id].lastActionMessage == "Damaged area hit again at (7,7)."
+        assert game.playerDetails[PONE.id].lastActionMessage == "2 re-hit your Destroyer at (7,7)."
         game.playerDetails[PONE.id].shipStates.each {
             if (it.key == Ship.Destroyer) {
                 assert 1 == it.value.healthRemaining
@@ -302,6 +308,7 @@ class FireAtCoordinateHandlerTest extends MongoGameCoreTestCase {
         def coordinate = new GridCoordinate(7, 7)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
         assert game.playerDetails[PTWO.id].lastActionMessage == "You sunk a Destroyer!"
+        assert game.playerDetails[PONE.id].lastActionMessage == "2 sunk your Destroyer!"
         game.playerDetails[PONE.id].shipStates.each {
             if (it.key == Ship.Destroyer) {
                 assert 0 == it.value.healthRemaining
@@ -333,7 +340,7 @@ class FireAtCoordinateHandlerTest extends MongoGameCoreTestCase {
         }
         assert TBGameScorer.SCORE_FOR_HIT == game.playerDetails[PTWO.id].scoreFromHits
         assert TBGameScorer.SCORE_FOR_SINK == game.playerDetails[PTWO.id].scoreFromSinks
-        assert "" == game.generalMessage
+        assert "2 sunk 1's Destroyer!" == game.generalMessage
     }
 
     void testFireAndSinkShipWithIsolatedIntel() {
@@ -344,6 +351,7 @@ class FireAtCoordinateHandlerTest extends MongoGameCoreTestCase {
         def coordinate = new GridCoordinate(7, 7)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
         assert game.playerDetails[PTWO.id].lastActionMessage == "You sunk a Destroyer!"
+        assert game.playerDetails[PONE.id].lastActionMessage == "2 sunk your Destroyer!"
         game.playerDetails[PONE.id].shipStates.each {
             if (it.key == Ship.Destroyer) {
                 assert 0 == it.value.healthRemaining
@@ -375,7 +383,7 @@ class FireAtCoordinateHandlerTest extends MongoGameCoreTestCase {
         }
         assert TBGameScorer.SCORE_FOR_HIT == game.playerDetails[PTWO.id].scoreFromHits
         assert TBGameScorer.SCORE_FOR_SINK == game.playerDetails[PTWO.id].scoreFromSinks
-        assert "" == game.generalMessage
+        assert "2 sunk 1's Destroyer!" == game.generalMessage
     }
 
     void testFireAndSinkShipAndEndPlayerWithSharedIntel() {
@@ -397,6 +405,7 @@ class FireAtCoordinateHandlerTest extends MongoGameCoreTestCase {
         def coordinate = new GridCoordinate(7, 7)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
         assert game.playerDetails[PTWO.id].lastActionMessage == "You sunk a Destroyer!"
+        assert game.playerDetails[PONE.id].lastActionMessage == "2 sunk your Destroyer!"
         game.playerDetails[PONE.id].shipStates.each {
             if (it.key == Ship.Destroyer) {
                 assert 0 == it.value.healthRemaining
@@ -450,6 +459,7 @@ class FireAtCoordinateHandlerTest extends MongoGameCoreTestCase {
         def coordinate = new GridCoordinate(7, 7)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
         assert game.playerDetails[PTWO.id].lastActionMessage == "You sunk a Destroyer!"
+        assert game.playerDetails[PONE.id].lastActionMessage == "2 sunk your Destroyer!"
         game.playerDetails[PONE.id].shipStates.each {
             if (it.key == Ship.Destroyer) {
                 assert 0 == it.value.healthRemaining

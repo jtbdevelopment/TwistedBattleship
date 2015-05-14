@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component
  */
 
 //  TODO - criticals
+//  TODO - breakup?
 @Component
 @CompileStatic
 class FireAtCoordinateHandler extends AbstractPlayerMoveHandler {
@@ -39,38 +40,115 @@ class FireAtCoordinateHandler extends AbstractPlayerMoveHandler {
     @Override
     TBGame playMove(
             final Player player, final TBGame game, final Player targetedPlayer, final GridCoordinate coordinate) {
-        TBPlayerState targeted = game.playerDetails[(ObjectId) targetedPlayer.id]
+        TBPlayerState targetedState = game.playerDetails[(ObjectId) targetedPlayer.id]
         TBPlayerState playerState = game.playerDetails[(ObjectId) player.id]
-
-        ShipState ship = shipFinder.findShipForCoordinate(targeted, coordinate)
+        ShipState ship = shipFinder.findShipForCoordinate(targetedState, coordinate)
         if (ship) {
-            int index = ship.shipGridCells.indexOf(coordinate)
-            if (ship.shipSegmentHit[index]) {
-                markGrids(game, player, targetedPlayer, coordinate, GridCellState.KnownByRehit, GridCellState.KnownByOtherHit)
-                playerState.lastActionMessage = "Damaged area hit again."
+            int hitIndex = ship.shipGridCells.indexOf(coordinate)
+            if (ship.shipSegmentHit[hitIndex]) {
+                processReHit(game, player, playerState, targetedPlayer, targetedState, coordinate, ship)
             } else {
-                ship.shipSegmentHit[index] = true
-                ship.healthRemaining -= 1
-                markGrids(game, player, targetedPlayer, coordinate, GridCellState.KnownByHit, GridCellState.KnownByOtherHit)
-
-                playerState.scoreFromHits += TBGameScorer.SCORE_FOR_HIT
-                playerState.lastActionMessage = "Direct hit!"
-                if (ship.healthRemaining == 0) {
-                    playerState.lastActionMessage = "You sunk a " + ship.ship + "!"
-                    playerState.scoreFromSinks += TBGameScorer.SCORE_FOR_SINK
-                    if (!targeted.alive) {
-                        game.generalMessage = player.displayName + " has defeated " + targetedPlayer.displayName + "!"
-                    }
-                }
+                processHit(game, player, playerState, targetedPlayer, targetedState, coordinate, ship, hitIndex)
             }
         } else {
-            playerState.lastActionMessage = "Wasted ammo!"
-            markGrids(game, player, targetedPlayer, coordinate, GridCellState.KnownByMiss, GridCellState.KnownByOtherMiss)
+            processMiss(game, player, playerState, targetedPlayer, targetedState, coordinate)
         }
         game
     }
 
-    protected void markGrids(TBGame game, Player player, Player targetedPlayer, GridCoordinate coordinate, GridCellState markForPlayer, GridCellState markForOthers) {
+    protected void processMiss(
+            final TBGame game,
+            final Player player,
+            final TBPlayerState playerState,
+            final Player targetedPlayer,
+            final TBPlayerState targetedState,
+            final GridCoordinate coordinate) {
+        playerState.lastActionMessage = "No enemy at " + coordinate + "."
+        targetedState.lastActionMessage = player.displayName + " missed at " + coordinate + "."
+        markGrids(game, player, targetedPlayer, targetedState, coordinate, GridCellState.KnownByMiss, GridCellState.KnownByOtherMiss)
+    }
+
+    protected void processHit(
+            final TBGame game,
+            final Player player,
+            final TBPlayerState playerState,
+            final Player targetedPlayer,
+            final TBPlayerState targetedState,
+            final GridCoordinate coordinate,
+            final ShipState ship,
+            final int hitIndex) {
+        ship.shipSegmentHit[hitIndex] = true
+        ship.healthRemaining -= 1
+        markGrids(game, player, targetedPlayer, targetedState, coordinate, GridCellState.KnownByHit, GridCellState.KnownByOtherHit)
+
+        playerState.scoreFromHits += TBGameScorer.SCORE_FOR_HIT
+        playerState.lastActionMessage = "Direct hit at " + coordinate + "!"
+        targetedState.lastActionMessage = player.displayName + " hit your " + ship.ship.description + " at " + coordinate + "!"
+        checkForShipSinking(game, player, playerState, targetedPlayer, targetedState, ship)
+    }
+
+    @SuppressWarnings("GrMethodMayBeStatic")
+    protected void checkForShipSinking(
+            final TBGame game,
+            final Player player,
+            final TBPlayerState playerState,
+            final Player targetedPlayer,
+            final TBPlayerState targetedState,
+            final ShipState ship) {
+        if (ship.healthRemaining == 0) {
+            playerState.lastActionMessage = "You sunk a " + ship.ship.description + "!"
+            targetedState.lastActionMessage = player.displayName + " sunk your " + ship.ship.description + "!"
+            game.generalMessage = player.displayName + " sunk " + targetedPlayer.displayName + "'s " + ship.ship.description + "!"
+            playerState.scoreFromSinks += TBGameScorer.SCORE_FOR_SINK
+            if (!targetedState.alive) {
+                game.generalMessage = player.displayName + " has defeated " + targetedPlayer.displayName + "!"
+            }
+        }
+    }
+
+    protected void processReHit(
+            final TBGame game,
+            final Player player,
+            final TBPlayerState playerState,
+            final Player targetedPlayer,
+            final TBPlayerState targetedState,
+            final GridCoordinate coordinate,
+            final ShipState ship) {
+        markGrids(game, player, targetedPlayer, targetedState, coordinate, GridCellState.KnownByRehit, GridCellState.KnownByOtherHit)
+        playerState.lastActionMessage = "Damaged area hit again at " + coordinate + "."
+        targetedState.lastActionMessage = player.displayName + " re-hit your " + ship.ship.description + " at " + coordinate + "."
+    }
+
+    @SuppressWarnings("GrMethodMayBeStatic")
+    protected void markGrids(
+            final TBGame game,
+            final Player player,
+            final Player targetedPlayer,
+            final TBPlayerState targetedState,
+            final GridCoordinate coordinate,
+            final GridCellState markForPlayer,
+            final GridCellState markForOthers) {
+        boolean sharedState = game.features.contains(GameFeature.SharedIntel)
+        game.playerDetails.each {
+            ObjectId playerId, TBPlayerState state ->
+                switch (playerId) {
+                    case player.id:
+                        state.opponentGrids[(ObjectId) targetedPlayer.id].set(coordinate, markForPlayer)
+                        break
+                    case targetedPlayer.id:
+                        state.opponentViews[(ObjectId) player.id].set(coordinate, markForPlayer)
+                        break
+                    default:
+                        if (sharedState) {
+                            if (state.opponentGrids[(ObjectId) targetedPlayer.id].get(coordinate).rank < markForOthers.rank) {
+                                state.opponentGrids[(ObjectId) targetedPlayer.id].set(coordinate, markForOthers)
+                                targetedState.opponentViews[playerId].set(coordinate, markForOthers)
+                            }
+
+                        }
+                }
+        }
+        /*
         game.playerDetails[(ObjectId) player.id].opponentGrids[(ObjectId) targetedPlayer.id].set(coordinate, markForPlayer)
         game.playerDetails[(ObjectId) targetedPlayer.id].opponentViews[(ObjectId) player.id].set(coordinate, markForPlayer)
         if (game.features.contains(GameFeature.SharedIntel)) {
@@ -83,5 +161,6 @@ class FireAtCoordinateHandler extends AbstractPlayerMoveHandler {
                 }
             }
         }
+        */
     }
 }
