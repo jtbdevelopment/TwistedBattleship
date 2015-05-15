@@ -33,6 +33,9 @@ abstract class AbstractPlayerMoveHandler extends AbstractGameActionHandler<Targe
     abstract TBGame playMove(
             final Player player, final TBGame game, final Player targetedPlayer, final GridCoordinate coordinate)
 
+    abstract void validateMoveSpecific(
+            final Player player, final TBGame game, final Player targetPlayer, final GridCoordinate coordinate);
+
     @Override
     protected TBGame handleActionInternal(
             final Player player, final TBGame game, final Target target) {
@@ -91,5 +94,6 @@ abstract class AbstractPlayerMoveHandler extends AbstractGameActionHandler<Targe
         if (game.gamePhase != GamePhase.Playing) {
             throw new GameIsNotInPlayModeException()
         }
+        validateMoveSpecific(player, game, targetPlayer, coordinate)
     }
 }

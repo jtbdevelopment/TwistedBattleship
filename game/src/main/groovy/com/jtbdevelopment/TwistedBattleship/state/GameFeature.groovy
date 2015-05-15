@@ -21,9 +21,9 @@ enum GameFeature {
     ECMEnabled(1, 'Available', 'Players can use part of turn to re-hide a chosen portion of their grid.', ECM),
     ECMDisabled(2, 'Not Available', 'ECM option disabled.', ECM),
 
-    Spy(4, SpyEnabled, 'Spying:', 'Allows player spy on opponent grids.'),
-    SpyEnabled(1, 'Available', 'Players can use part of turn to get a random glimpse of a random opponents grid.', Spy),
-    SpyDisabled(2, 'Not Available', 'Spying disabled.', Spy),
+    Spy(4, SpyEnabled, 'Spying:', "Allows player's drones to spy on opponent grids."),
+    SpyEnabled(1, 'Available', 'Players can use part of turn to get a targeted glimpse of an opponents grid.', Spy),
+    SpyDisabled(2, 'Not Available', 'Spy drones disabled.', Spy),
 
     EvasiveManeuvers(5, EMEnabled, 'Evasive Maneuvers:', 'Allows defensive evasive maneuvers of a ship.'),
     EMEnabled(1, 'Available', 'Players can move a ship a short distance, re-hiding the old and new positions and some random squares in the area.', EvasiveManeuvers),

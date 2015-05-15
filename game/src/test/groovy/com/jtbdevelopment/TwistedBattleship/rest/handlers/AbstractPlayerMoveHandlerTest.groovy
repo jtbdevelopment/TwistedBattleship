@@ -27,6 +27,11 @@ class AbstractPlayerMoveHandlerTest extends MongoGameCoreTestCase {
     private static final int MOVES_REQUIRED = 2
     boolean targetSelf = false
     AbstractPlayerMoveHandler handler = new AbstractPlayerMoveHandler() {
+        @Override
+        void validateMoveSpecific(
+                final Player player, final TBGame game, final Player targetPlayer, final GridCoordinate coordinate) {
+            throw new IllegalArgumentException()
+        }
 
         @Override
         int movesRequired(final TBGame game) {
@@ -121,6 +126,14 @@ class AbstractPlayerMoveHandlerTest extends MongoGameCoreTestCase {
                 })
 
         }
+    }
+
+    void testExceptionForMoveSpecificValidation() {
+        handler.gridSizeUtil = new GridSizeUtil()
+        TBGame game = new TBGame(currentPlayer: PONE.id, remainingMoves: MOVES_REQUIRED, features: [GameFeature.PerShip, GameFeature.Grid10x10], gamePhase: GamePhase.Playing, players: [PONE, PFOUR])
+        shouldFail(IllegalArgumentException.class, {
+            handler.handleActionInternal(PONE, game, new Target(player: PFOUR.md5, coordinate: new GridCoordinate(0, 0)))
+        })
     }
 
     void testDoesNotRotateIfMovesRemain() {

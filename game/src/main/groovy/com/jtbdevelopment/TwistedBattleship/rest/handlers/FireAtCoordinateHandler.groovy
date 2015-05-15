@@ -38,6 +38,12 @@ class FireAtCoordinateHandler extends AbstractPlayerMoveHandler {
     }
 
     @Override
+    void validateMoveSpecific(
+            final Player player, final TBGame game, final Player targetPlayer, final GridCoordinate coordinate) {
+        //
+    }
+
+    @Override
     TBGame playMove(
             final Player player, final TBGame game, final Player targetedPlayer, final GridCoordinate coordinate) {
         TBPlayerState targetedState = game.playerDetails[(ObjectId) targetedPlayer.id]
