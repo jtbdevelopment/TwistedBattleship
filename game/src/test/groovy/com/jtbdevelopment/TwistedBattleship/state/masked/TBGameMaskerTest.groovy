@@ -30,6 +30,8 @@ class TBGameMaskerTest extends MongoGameCoreTestCase {
                 gamePhase: GamePhase.Playing,
                 features: [GameFeature.Grid10x10],
                 players: [PONE, PTWO, PTHREE],
+                currentPlayer: PTHREE.id,
+                remainingMoves: 4,
                 initiatingPlayer: PTHREE.id,
                 generalMessage: "All hands on deck!",
                 playerDetails: [
@@ -86,19 +88,21 @@ class TBGameMaskerTest extends MongoGameCoreTestCase {
         assert [(PONE.md5): true, (PTWO.md5): false, (PTHREE.md5): false] == maskedGame.playersSetup
 
         TBPlayerState playerState = game.playerDetails[PONE.id]
-        assert maskedGame.maskedPlayersState.lastActionMessage == playerState.lastActionMessage
-        assert maskedGame.maskedPlayersState.shipStates == playerState.shipStates
-        assert maskedGame.maskedPlayersState.alive == playerState.alive
-        assert maskedGame.maskedPlayersState.setup == playerState.setup
-        assert maskedGame.maskedPlayersState.totalScore == playerState.totalScore
-        assert maskedGame.maskedPlayersState.activeShipsRemaining == playerState.activeShipsRemaining
-        assert maskedGame.maskedPlayersState.spysRemaining == playerState.spysRemaining
-        assert maskedGame.maskedPlayersState.evasiveManeuversRemaining == playerState.evasiveManeuversRemaining
-        assert maskedGame.maskedPlayersState.ecmsRemaining == playerState.ecmsRemaining
-        assert maskedGame.maskedPlayersState.emergencyRepairsRemaining == playerState.emergencyRepairsRemaining
-        assert maskedGame.maskedPlayersState.shipStates == playerState.shipStates
-        assert maskedGame.maskedPlayersState.opponentViews.size() == 2
-        assert maskedGame.maskedPlayersState.opponentGrids.size() == 2
+        assert playerState.lastActionMessage == maskedGame.maskedPlayersState.lastActionMessage
+        assert playerState.shipStates == maskedGame.maskedPlayersState.shipStates
+        assert playerState.alive == maskedGame.maskedPlayersState.alive
+        assert playerState.setup == maskedGame.maskedPlayersState.setup
+        assert playerState.totalScore == maskedGame.maskedPlayersState.totalScore
+        assert playerState.activeShipsRemaining == maskedGame.maskedPlayersState.activeShipsRemaining
+        assert playerState.spysRemaining == maskedGame.maskedPlayersState.spysRemaining
+        assert playerState.evasiveManeuversRemaining == maskedGame.maskedPlayersState.evasiveManeuversRemaining
+        assert playerState.ecmsRemaining == maskedGame.maskedPlayersState.ecmsRemaining
+        assert playerState.emergencyRepairsRemaining == maskedGame.maskedPlayersState.emergencyRepairsRemaining
+        assert playerState.shipStates == maskedGame.maskedPlayersState.shipStates
+        assert 2 == maskedGame.maskedPlayersState.opponentViews.size()
+        assert 2 == maskedGame.maskedPlayersState.opponentGrids.size()
+        assert 4 == maskedGame.remainingMoves
+        assert PTHREE.md5 == maskedGame.currentPlayer
         playerState.opponentGrids.each {
             ObjectId id, Grid grid ->
                 assertNotNull grid

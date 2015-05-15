@@ -45,6 +45,7 @@ class TBGameMasker extends AbstractMultiPlayerGameMasker<ObjectId, GameFeature, 
         TBMaskedGame masked = (TBMaskedGame) playerMaskedGame
         TBGame game = (TBGame) mpGame
         masked.generalMessage = game.generalMessage
+        masked.remainingMoves = game.remainingMoves
     }
 
     @Override
@@ -58,6 +59,7 @@ class TBGameMasker extends AbstractMultiPlayerGameMasker<ObjectId, GameFeature, 
         TBGame game = (TBGame) mpGame
         masked.maskedPlayersState = createMaskedPlayerState(game.playerDetails[player.id], idMap)
         masked.maskedPlayersState.consolidatedOpponentView = createConsolidatedView(game, masked)
+        masked.currentPlayer = idMap[game.currentPlayer].md5
         game.playerDetails.each {
             ObjectId playerId, TBPlayerState state ->
                 masked.playersAlive[idMap[playerId].md5] = state.alive

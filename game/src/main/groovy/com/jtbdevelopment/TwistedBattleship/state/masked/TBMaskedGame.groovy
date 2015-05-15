@@ -15,4 +15,6 @@ class TBMaskedGame extends AbstractMaskedMultiPlayerGame<GameFeature> {
     Map<String, Integer> playersScore = [:]
     TBMaskedPlayerState maskedPlayersState
     String generalMessage
+    String currentPlayer
+    int remainingMoves
 }
