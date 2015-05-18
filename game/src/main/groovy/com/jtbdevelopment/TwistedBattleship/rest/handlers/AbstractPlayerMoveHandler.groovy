@@ -1,5 +1,6 @@
 package com.jtbdevelopment.TwistedBattleship.rest.handlers
 
+import com.jtbdevelopment.TwistedBattleship.exceptions.CannotTargetInactivePlayerException
 import com.jtbdevelopment.TwistedBattleship.exceptions.CoordinateOutOfBoundsException
 import com.jtbdevelopment.TwistedBattleship.exceptions.InvalidTargetPlayerException
 import com.jtbdevelopment.TwistedBattleship.exceptions.NotEnoughActionsForSpecialException
@@ -93,6 +94,10 @@ abstract class AbstractPlayerMoveHandler extends AbstractGameActionHandler<Targe
 
         if (game.gamePhase != GamePhase.Playing) {
             throw new GameIsNotInPlayModeException()
+        }
+
+        if (!game.playerDetails[(ObjectId) targetPlayer.id].alive) {
+            throw new CannotTargetInactivePlayerException()
         }
         validateMoveSpecific(player, game, targetPlayer, coordinate)
     }

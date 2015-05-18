@@ -36,4 +36,39 @@ class SpyHandlerTest extends MongoGameCoreTestCase {
             handler.validateMoveSpecific(PONE, game, PTWO, null)
         })
     }
+
+    /*
+    void testDrawGrid() {
+        TBGame game = new TBGame(features: [GameFeature.Grid20x20])
+        Grid grid = new Grid(20)
+        GridCoordinate start = new GridCoordinate(1, 1)
+        GridSizeUtil util = new GridSizeUtil()
+        def x = SpyHandler.SPY_CIRCLE.collectMany {
+            int size, ArrayList<GridCoordinate> adjust ->
+                adjust.collect {
+                    GridCoordinate adjustCoord ->
+                        start.add(adjustCoord)
+                }
+        }.findAll {GridCoordinate it->  util.isValidCoordinate(game, it)}.each {
+            GridCoordinate coordinate ->
+                grid.set(coordinate, GridCellState.KnownShip)
+        }
+        (0..19).each {
+            int row ->
+                (0..19).each {
+                    int col ->
+                        if(row == start.row && col ==start.column) {
+                            print "C"
+                        } else {
+                            if (grid.get(row, col) == GridCellState.Unknown) {
+                                print "U"
+                            } else {
+                                print "X"
+                            }
+                        }
+                }
+                println ""
+        }
+    }
+    */
 }

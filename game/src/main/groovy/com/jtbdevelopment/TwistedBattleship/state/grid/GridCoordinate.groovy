@@ -19,6 +19,10 @@ class GridCoordinate implements Comparable<GridCoordinate>, Serializable {
         this.column = column
     }
 
+    GridCoordinate add(final GridCoordinate other) {
+        new GridCoordinate(this.row + other.row, this.column + other.column)
+    }
+
     boolean equals(final o) {
         if (this.is(o)) return true
         if (!(o instanceof GridCoordinate)) return false

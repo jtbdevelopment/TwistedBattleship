@@ -1,5 +1,6 @@
 package com.jtbdevelopment.TwistedBattleship.rest.handlers
 
+import com.jtbdevelopment.TwistedBattleship.exceptions.CannotTargetInactivePlayerException
 import com.jtbdevelopment.TwistedBattleship.exceptions.CoordinateOutOfBoundsException
 import com.jtbdevelopment.TwistedBattleship.exceptions.InvalidTargetPlayerException
 import com.jtbdevelopment.TwistedBattleship.exceptions.NotEnoughActionsForSpecialException
@@ -128,9 +129,43 @@ class AbstractPlayerMoveHandlerTest extends MongoGameCoreTestCase {
         }
     }
 
+    void testExceptionForTargetingInactivePlayer() {
+        handler.gridSizeUtil = new GridSizeUtil()
+        TBGame game = new TBGame(
+                currentPlayer: PONE.id,
+                remainingMoves: MOVES_REQUIRED,
+                features: [GameFeature.PerShip, GameFeature.Grid10x10],
+                gamePhase: GamePhase.Playing,
+                players: [PONE, PFOUR],
+                playerDetails: [
+                        (PFOUR.id): [
+                                isAlive: {
+                                    false
+                                }
+                        ] as TBPlayerState
+                ]
+        )
+        shouldFail(CannotTargetInactivePlayerException.class, {
+            handler.handleActionInternal(PONE, game, new Target(player: PFOUR.md5, coordinate: new GridCoordinate(0, 0)))
+        })
+    }
+
     void testExceptionForMoveSpecificValidation() {
         handler.gridSizeUtil = new GridSizeUtil()
-        TBGame game = new TBGame(currentPlayer: PONE.id, remainingMoves: MOVES_REQUIRED, features: [GameFeature.PerShip, GameFeature.Grid10x10], gamePhase: GamePhase.Playing, players: [PONE, PFOUR])
+        TBGame game = new TBGame(
+                currentPlayer: PONE.id,
+                remainingMoves: MOVES_REQUIRED,
+                features: [GameFeature.PerShip, GameFeature.Grid10x10],
+                gamePhase: GamePhase.Playing,
+                players: [PONE, PFOUR],
+                playerDetails: [
+                        (PFOUR.id): [
+                                isAlive: {
+                                    true
+                                }
+                        ] as TBPlayerState
+                ]
+        )
         shouldFail(IllegalArgumentException.class, {
             handler.handleActionInternal(PONE, game, new Target(player: PFOUR.md5, coordinate: new GridCoordinate(0, 0)))
         })

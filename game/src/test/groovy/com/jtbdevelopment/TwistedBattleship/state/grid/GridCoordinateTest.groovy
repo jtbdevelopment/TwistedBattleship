@@ -11,12 +11,25 @@ class GridCoordinateTest extends GroovyTestCase {
     GridCoordinate gc4 = new GridCoordinate(3, 5)
     GridCoordinate gc5 = new GridCoordinate(0, 2)
 
+    void testAdd() {
+        GridCoordinate g = gc1.add(gc5)
+        assert 5 == g.row
+        assert 5 == g.column
+        g = gc1.add(gc4)
+        assert 8 == g.row
+        assert 8 == g.column
+        g = gc1.add(new GridCoordinate(-1, -2))
+        assert 4 == g.row
+        assert 1 == g.column
+    }
+
     void testToString() {
         assert "(5,3)" == gc1.toString()
         assert "(5,3)" == gc2.toString()
         assert "(3,5)" == gc3.toString()
-        assert "(10,12)" == new GridCoordinate(10,12).toString()
+        assert "(10,12)" == new GridCoordinate(10, 12).toString()
     }
+
     void testEquals() {
         assert gc1 == gc2
         assert gc1 != gc3

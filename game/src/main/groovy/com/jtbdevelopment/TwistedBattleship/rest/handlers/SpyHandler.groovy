@@ -16,6 +16,39 @@ import org.springframework.stereotype.Component
 @CompileStatic
 @Component
 class SpyHandler extends AbstractPlayerMoveHandler {
+    protected static SPY_CIRCLE = [
+            10: [
+                    new GridCoordinate(0, -1),
+                    new GridCoordinate(0, 0),
+                    new GridCoordinate(0, 1),
+                    new GridCoordinate(1, 0),
+                    new GridCoordinate(-1, 0),
+            ],  // 5, of 100 = 5%
+            15: [
+                    new GridCoordinate(0, -2),
+                    new GridCoordinate(0, 2),
+                    new GridCoordinate(2, 0),
+                    new GridCoordinate(-2, 0),
+                    new GridCoordinate(1, 1),
+                    new GridCoordinate(1, -1),
+                    new GridCoordinate(-1, -1),
+                    new GridCoordinate(-1, 1),
+            ],  // 13, of 225 = 5.7%
+            20: [
+                    new GridCoordinate(2, 2),
+                    new GridCoordinate(2, -2),
+                    new GridCoordinate(-2, -2),
+                    new GridCoordinate(-2, 2),
+                    new GridCoordinate(2, 1),
+                    new GridCoordinate(1, 2),
+                    new GridCoordinate(2, -1),
+                    new GridCoordinate(-1, 2),
+                    new GridCoordinate(-2, -1),
+                    new GridCoordinate(-1, -2),
+                    new GridCoordinate(-2, 1),
+                    new GridCoordinate(1, -2),
+            ],  // 25 of 400 = 6.25%
+    ]
     @Override
     boolean targetSelf() {
         return false
