@@ -1,10 +1,12 @@
 package com.jtbdevelopment.TwistedBattleship.state
 
 import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
+import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
 import groovy.transform.CompileStatic
 import org.bson.types.ObjectId
+import org.springframework.data.annotation.Transient
 
 /**
  * Date: 4/2/15
@@ -15,6 +17,9 @@ class TBPlayerState implements Serializable {
     private static int SHIP_COUNT = Ship.values().size()
 
     Map<Ship, ShipState> shipStates = [:]
+
+    @Transient
+    Map<GridCoordinate, ShipState> coordinateShipMap = null
 
     int spysRemaining = 0
     int evasiveManeuversRemaining = 0
@@ -69,4 +74,36 @@ class TBPlayerState implements Serializable {
     void setActiveShipsRemaining(final int remaining) {
         //  ignore
     }
+
+    Map<Ship, ShipState> getShipStates() {
+        return shipStates
+    }
+
+    void setShipStates(final Map<Ship, ShipState> shipStates) {
+        this.shipStates = shipStates
+        computeCoordinateShipMap()
+    }
+
+    Map<GridCoordinate, ShipState> getCoordinateShipMap() {
+        if (coordinateShipMap == null) {
+            computeCoordinateShipMap()
+        }
+        return coordinateShipMap
+    }
+
+    void setCoordinateShipMap(final Map<GridCoordinate, ShipState> coordinateShipMap) {
+        //  ignore
+    }
+
+    private void computeCoordinateShipMap() {
+        def temp = (Map<GridCoordinate, ShipState>) shipStates.collectEntries {
+            Ship ship, ShipState state ->
+                state.shipGridCells.collectEntries {
+                    GridCoordinate coordinate ->
+                        [(coordinate): state]
+                }
+        }
+        this.coordinateShipMap = temp
+    }
+
 }

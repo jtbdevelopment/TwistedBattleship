@@ -1,7 +1,6 @@
 package com.jtbdevelopment.TwistedBattleship.rest.handlers
 
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
-import com.jtbdevelopment.TwistedBattleship.state.ShipFinder
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
@@ -11,7 +10,6 @@ import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
 import com.jtbdevelopment.games.players.Player
 import groovy.transform.CompileStatic
 import org.bson.types.ObjectId
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 /**
@@ -24,8 +22,6 @@ import org.springframework.stereotype.Component
 @Component
 @CompileStatic
 class FireAtCoordinateHandler extends AbstractPlayerMoveHandler {
-    @Autowired
-    ShipFinder shipFinder
 
     @Override
     boolean targetSelf() {
@@ -48,7 +44,7 @@ class FireAtCoordinateHandler extends AbstractPlayerMoveHandler {
             final Player player, final TBGame game, final Player targetedPlayer, final GridCoordinate coordinate) {
         TBPlayerState targetedState = game.playerDetails[(ObjectId) targetedPlayer.id]
         TBPlayerState playerState = game.playerDetails[(ObjectId) player.id]
-        ShipState ship = shipFinder.findShipForCoordinate(targetedState, coordinate)
+        ShipState ship = targetedState.coordinateShipMap[coordinate]
         if (ship) {
             int hitIndex = ship.shipGridCells.indexOf(coordinate)
             if (ship.shipSegmentHit[hitIndex]) {

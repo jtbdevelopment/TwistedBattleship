@@ -2,7 +2,6 @@ package com.jtbdevelopment.TwistedBattleship.rest.handlers
 
 import com.jtbdevelopment.TwistedBattleship.factory.gameinitializers.PlayerGameStateInitializer
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
-import com.jtbdevelopment.TwistedBattleship.state.ShipFinder
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
@@ -62,7 +61,6 @@ class FireAtCoordinateHandlerTest extends MongoGameCoreTestCase {
                         ] as SortedSet),
                 ]
         )
-        handler.shipFinder = new ShipFinder()
     }
 
     void testTargetSelf() {

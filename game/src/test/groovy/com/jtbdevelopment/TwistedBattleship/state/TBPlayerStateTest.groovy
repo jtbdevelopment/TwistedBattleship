@@ -25,6 +25,7 @@ class TBPlayerStateTest extends GroovyTestCase {
         assert [:] == state.opponentGrids
         assert [:] == state.shipStates
         assert "" == state.lastActionMessage
+        assert [:] == state.coordinateShipMap
         assertFalse state.setup
         assertFalse state.alive
     }
@@ -91,5 +92,17 @@ class TBPlayerStateTest extends GroovyTestCase {
         assertFalse state.setup
         state.setup = true
         assertFalse state.setup
+    }
+
+    void testSettingShipStatesSetsTransientMap() {
+        assert 0 == state.coordinateShipMap.size()
+        def shipState = new ShipState(Ship.Submarine, new TreeSet<GridCoordinate>(
+                [new GridCoordinate(0, 0), new GridCoordinate(0, 1), new GridCoordinate(0, 2)]
+        ))
+        this.state.shipStates += [(Ship.Submarine): shipState]
+        assert 3 == state.coordinateShipMap.size()
+        assert shipState.is(state.coordinateShipMap[new GridCoordinate(0, 0)])
+        assert shipState.is(state.coordinateShipMap[new GridCoordinate(0, 1)])
+        assert shipState.is(state.coordinateShipMap[new GridCoordinate(0, 2)])
     }
 }

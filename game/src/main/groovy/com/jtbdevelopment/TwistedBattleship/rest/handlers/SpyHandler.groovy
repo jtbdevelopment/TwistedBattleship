@@ -16,15 +16,15 @@ import org.springframework.stereotype.Component
 @CompileStatic
 @Component
 class SpyHandler extends AbstractPlayerMoveHandler {
-    protected static SPY_CIRCLE = [
-            10: [
+    protected final static Map<Integer, List<GridCoordinate>> SPY_CIRCLE = [
+            (10): [
                     new GridCoordinate(0, -1),
                     new GridCoordinate(0, 0),
                     new GridCoordinate(0, 1),
                     new GridCoordinate(1, 0),
                     new GridCoordinate(-1, 0),
             ],  // 5, of 100 = 5%
-            15: [
+            (15): [
                     new GridCoordinate(0, -2),
                     new GridCoordinate(0, 2),
                     new GridCoordinate(2, 0),
@@ -34,7 +34,7 @@ class SpyHandler extends AbstractPlayerMoveHandler {
                     new GridCoordinate(-1, -1),
                     new GridCoordinate(-1, 1),
             ],  // 13, of 225 = 5.7%
-            20: [
+            (20): [
                     new GridCoordinate(2, 2),
                     new GridCoordinate(2, -2),
                     new GridCoordinate(-2, -2),
@@ -49,6 +49,7 @@ class SpyHandler extends AbstractPlayerMoveHandler {
                     new GridCoordinate(1, -2),
             ],  // 25 of 400 = 6.25%
     ]
+
     @Override
     boolean targetSelf() {
         return false
@@ -70,6 +71,21 @@ class SpyHandler extends AbstractPlayerMoveHandler {
     @Override
     TBGame playMove(
             final Player player, final TBGame game, final Player targetedPlayer, final GridCoordinate coordinate) {
+        int size = gridSizeUtil.getSize(game)
+
+        Collection<GridCoordinate> coordinates = SPY_CIRCLE.findAll {
+            it.key <= size
+        }.collectMany {
+            int listSize, List<GridCoordinate> adjustments ->
+                adjustments.collect {
+                    GridCoordinate adjustment ->
+                        coordinate.add(adjustment)
+                }
+        }.findAll {
+            GridCoordinate it -> gridSizeUtil.isValidCoordinate(game, it)
+        }
+
+
 
         return null
     }
