@@ -150,19 +150,5 @@ class FireAtCoordinateHandler extends AbstractPlayerMoveHandler {
                         }
                 }
         }
-        /*
-        game.playerDetails[(ObjectId) player.id].opponentGrids[(ObjectId) targetedPlayer.id].set(coordinate, markForPlayer)
-        game.playerDetails[(ObjectId) targetedPlayer.id].opponentViews[(ObjectId) player.id].set(coordinate, markForPlayer)
-        if (game.features.contains(GameFeature.SharedIntel)) {
-            game.playerDetails.findAll {
-                it.key != targetedPlayer.id && it.key != player.id
-            }.each {
-                if (it.value.opponentGrids[(ObjectId) targetedPlayer.id].get(coordinate).rank < markForOthers.rank) {
-                    it.value.opponentGrids[(ObjectId) targetedPlayer.id].set(coordinate, markForOthers)
-                    game.playerDetails[(ObjectId) targetedPlayer.id].opponentViews[(ObjectId) it.key].set(coordinate, markForOthers)
-                }
-            }
-        }
-        */
     }
 }
