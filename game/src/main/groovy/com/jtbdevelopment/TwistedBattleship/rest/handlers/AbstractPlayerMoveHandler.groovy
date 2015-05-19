@@ -32,10 +32,12 @@ abstract class AbstractPlayerMoveHandler extends AbstractGameActionHandler<Targe
     abstract int movesRequired(final TBGame game)
 
     abstract TBGame playMove(
-            final Player player, final TBGame game, final Player targetedPlayer, final GridCoordinate coordinate)
+            final Player<ObjectId> player,
+            final TBGame game, final Player<ObjectId> targetedPlayer, final GridCoordinate coordinate)
 
     abstract void validateMoveSpecific(
-            final Player player, final TBGame game, final Player targetPlayer, final GridCoordinate coordinate);
+            final Player<ObjectId> player,
+            final TBGame game, final Player<ObjectId> targetPlayer, final GridCoordinate coordinate);
 
     @Override
     protected TBGame handleActionInternal(

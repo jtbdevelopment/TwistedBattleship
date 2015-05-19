@@ -35,15 +35,17 @@ class FireAtCoordinateHandler extends AbstractPlayerMoveHandler {
 
     @Override
     void validateMoveSpecific(
-            final Player player, final TBGame game, final Player targetPlayer, final GridCoordinate coordinate) {
+            final Player<ObjectId> player,
+            final TBGame game, final Player<ObjectId> targetPlayer, final GridCoordinate coordinate) {
         //
     }
 
     @Override
     TBGame playMove(
-            final Player player, final TBGame game, final Player targetedPlayer, final GridCoordinate coordinate) {
-        TBPlayerState targetedState = game.playerDetails[(ObjectId) targetedPlayer.id]
-        TBPlayerState playerState = game.playerDetails[(ObjectId) player.id]
+            final Player<ObjectId> player,
+            final TBGame game, final Player<ObjectId> targetedPlayer, final GridCoordinate coordinate) {
+        TBPlayerState targetedState = game.playerDetails[targetedPlayer.id]
+        TBPlayerState playerState = game.playerDetails[player.id]
         ShipState ship = targetedState.coordinateShipMap[coordinate]
         if (ship) {
             int hitIndex = ship.shipGridCells.indexOf(coordinate)
@@ -60,9 +62,9 @@ class FireAtCoordinateHandler extends AbstractPlayerMoveHandler {
 
     protected void processMiss(
             final TBGame game,
-            final Player player,
+            final Player<ObjectId> player,
             final TBPlayerState playerState,
-            final Player targetedPlayer,
+            final Player<ObjectId> targetedPlayer,
             final TBPlayerState targetedState,
             final GridCoordinate coordinate) {
         playerState.lastActionMessage = "No enemy at " + coordinate + "."
@@ -92,9 +94,9 @@ class FireAtCoordinateHandler extends AbstractPlayerMoveHandler {
     @SuppressWarnings("GrMethodMayBeStatic")
     protected void checkForShipSinking(
             final TBGame game,
-            final Player player,
+            final Player<ObjectId> player,
             final TBPlayerState playerState,
-            final Player targetedPlayer,
+            final Player<ObjectId> targetedPlayer,
             final TBPlayerState targetedState,
             final ShipState ship) {
         if (ship.healthRemaining == 0) {
@@ -110,9 +112,9 @@ class FireAtCoordinateHandler extends AbstractPlayerMoveHandler {
 
     protected void processReHit(
             final TBGame game,
-            final Player player,
+            final Player<ObjectId> player,
             final TBPlayerState playerState,
-            final Player targetedPlayer,
+            final Player<ObjectId> targetedPlayer,
             final TBPlayerState targetedState,
             final GridCoordinate coordinate,
             final ShipState ship) {
@@ -124,8 +126,8 @@ class FireAtCoordinateHandler extends AbstractPlayerMoveHandler {
     @SuppressWarnings("GrMethodMayBeStatic")
     protected void markGrids(
             final TBGame game,
-            final Player player,
-            final Player targetedPlayer,
+            final Player<ObjectId> player,
+            final Player<ObjectId> targetedPlayer,
             final TBPlayerState targetedState,
             final GridCoordinate coordinate,
             final GridCellState markForPlayer,
@@ -135,15 +137,15 @@ class FireAtCoordinateHandler extends AbstractPlayerMoveHandler {
             ObjectId playerId, TBPlayerState state ->
                 switch (playerId) {
                     case player.id:
-                        state.opponentGrids[(ObjectId) targetedPlayer.id].set(coordinate, markForPlayer)
+                        state.opponentGrids[targetedPlayer.id].set(coordinate, markForPlayer)
                         break
                     case targetedPlayer.id:
-                        state.opponentViews[(ObjectId) player.id].set(coordinate, markForPlayer)
+                        state.opponentViews[player.id].set(coordinate, markForPlayer)
                         break
                     default:
                         if (sharedState) {
-                            if (state.opponentGrids[(ObjectId) targetedPlayer.id].get(coordinate).rank < markForOthers.rank) {
-                                state.opponentGrids[(ObjectId) targetedPlayer.id].set(coordinate, markForOthers)
+                            if (state.opponentGrids[targetedPlayer.id].get(coordinate).rank < markForOthers.rank) {
+                                state.opponentGrids[targetedPlayer.id].set(coordinate, markForOthers)
                                 targetedState.opponentViews[playerId].set(coordinate, markForOthers)
                             }
 

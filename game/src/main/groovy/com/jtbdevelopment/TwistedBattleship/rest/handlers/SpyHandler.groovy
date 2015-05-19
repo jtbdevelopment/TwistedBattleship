@@ -61,27 +61,29 @@ class SpyHandler extends AbstractSpecialMoveHandler {
 
     @Override
     void validateMoveSpecific(
-            final Player player, final TBGame game, final Player targetPlayer, final GridCoordinate coordinate) {
-        if (game.playerDetails[(ObjectId) player.id].spysRemaining < 1) {
+            final Player<ObjectId> player,
+            final TBGame game, final Player<ObjectId> targetPlayer, final GridCoordinate coordinate) {
+        if (game.playerDetails[player.id].spysRemaining < 1) {
             throw new NoSpyActionsRemainException()
         }
     }
 
     @Override
     TBGame playMove(
-            final Player player, final TBGame game, final Player targetedPlayer, final GridCoordinate coordinate) {
+            final Player<ObjectId> player,
+            final TBGame game, final Player<ObjectId> targetedPlayer, final GridCoordinate coordinate) {
         Collection<GridCoordinate> coordinates = computeSpyCoordinates(game, coordinate)
         Map<GridCoordinate, GridCellState> spyResults = computeSpyCoordinateStates(game, targetedPlayer, coordinates)
         updatePlayerGrids(game, player, targetedPlayer, spyResults, coordinate)
-        --game.playerDetails[(ObjectId) player.id].spysRemaining
+        --game.playerDetails[player.id].spysRemaining
         return game
     }
 
     @SuppressWarnings("GrMethodMayBeStatic")
     protected void updatePlayerGrids(
             final TBGame game,
-            final Player player,
-            final Player targetedPlayer,
+            final Player<ObjectId> player,
+            final Player<ObjectId> targetedPlayer,
             final Map<GridCoordinate, GridCellState> spyResults,
             final GridCoordinate targetCoordinate) {
         String message = player.displayName + " spied on " + targetedPlayer.displayName + " at " + targetCoordinate + "."
@@ -91,12 +93,12 @@ class SpyHandler extends AbstractSpecialMoveHandler {
                 id != targetedPlayer.id && (sharedIntel || id == player.id)
         }.each {
             ObjectId id, TBPlayerState state ->
-                Grid playerGrid = state.opponentGrids[(ObjectId) targetedPlayer.id]
-                Grid targetView = game.playerDetails[(ObjectId) targetedPlayer.id].opponentViews[id]
+                Grid playerGrid = state.opponentGrids[targetedPlayer.id]
+                Grid targetView = game.playerDetails[targetedPlayer.id].opponentViews[id]
                 updateGridForPlayer(playerGrid, targetView, spyResults)
                 state.lastActionMessage = message
         }
-        game.playerDetails[(ObjectId) targetedPlayer.id].lastActionMessage = message
+        game.playerDetails[targetedPlayer.id].lastActionMessage = message
     }
 
     @SuppressWarnings("GrMethodMayBeStatic")
@@ -115,8 +117,8 @@ class SpyHandler extends AbstractSpecialMoveHandler {
 
     @SuppressWarnings("GrMethodMayBeStatic")
     protected Map<GridCoordinate, GridCellState> computeSpyCoordinateStates(
-            final TBGame game, final Player targetedPlayer, final Collection<GridCoordinate> coordinates) {
-        TBPlayerState targetedState = game.playerDetails[(ObjectId) targetedPlayer.id]
+            final TBGame game, final Player<ObjectId> targetedPlayer, final Collection<GridCoordinate> coordinates) {
+        TBPlayerState targetedState = game.playerDetails[targetedPlayer.id]
         coordinates.collectEntries {
             GridCoordinate targetCoordinate ->
                 GridCellState state
