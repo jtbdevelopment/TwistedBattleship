@@ -7,6 +7,7 @@ import com.jtbdevelopment.TwistedBattleship.rest.services.messages.FeaturesAndPl
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
+import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.TwistedBattleship.state.masked.TBMaskedGame
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
@@ -313,6 +314,61 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
     }
 
     @Test
+    void testSpyForTurnInGame() {
+        def P3 = createPlayerAPITarget(TEST_PLAYER3)
+        TBMaskedGame game = newGame(P3, STANDARD_PLAYERS_AND_FEATURES)
+        assert game != null
+        def P3G = createGameTarget(P3, game)
+        def P1G = createGameTarget(createPlayerAPITarget(TEST_PLAYER1), game)
+        def P2G = createGameTarget(createPlayerAPITarget(TEST_PLAYER2), game)
+
+        acceptGame(P1G)
+        acceptGame(P2G)
+        setup(P3G, P3POSITIONS)
+        setup(P1G, P1POSITIONS)
+        setup(P2G, P2POSITIONS)
+
+        //  Force turn to P2
+        TBGame dbGame = gameRepository.findOne(new ObjectId(game.idAsString))
+        dbGame.currentPlayer = TEST_PLAYER2.id
+        gameRepository.save(dbGame)
+        cacheManager.cacheNames.each {
+            cacheManager.getCache(it).clear()
+        }
+
+        game = fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 7))
+        assert GamePhase.Playing == game.gamePhase
+        assert "Direct hit at (7,7)!" == game.maskedPlayersState.lastActionMessage
+        assert 1 == game.playersScore[TEST_PLAYER2.md5]
+        assert 4 == game.remainingMoves
+        assert 2 == game.maskedPlayersState.spysRemaining
+        assert TEST_PLAYER2.md5 == game.currentPlayer
+        game = spy(P2G, TEST_PLAYER1, new GridCoordinate(7, 8))
+        assert "TEST PLAYER2 spied on TEST PLAYER1 at (7,8)." == game.maskedPlayersState.lastActionMessage
+        assert 1 == game.maskedPlayersState.spysRemaining
+        game = spy(P2G, TEST_PLAYER1, new GridCoordinate(2, 6))
+        assert "TEST PLAYER2 spied on TEST PLAYER1 at (2,6)." == game.maskedPlayersState.lastActionMessage
+        assert 1 == game.playersScore[TEST_PLAYER2.md5]
+        assert 0 == game.maskedPlayersState.spysRemaining
+        assert TEST_PLAYER2.md5 != game.currentPlayer
+
+        //Sample checks, not full
+        assert GridCellState.KnownByHit == game.maskedPlayersState.opponentGrids[TEST_PLAYER1.md5].get(7, 7)
+        assert GridCellState.KnownShip == game.maskedPlayersState.opponentGrids[TEST_PLAYER1.md5].get(8, 7)
+        assert GridCellState.KnownShip == game.maskedPlayersState.opponentGrids[TEST_PLAYER1.md5].get(0, 6)
+        assert GridCellState.KnownEmpty == game.maskedPlayersState.opponentGrids[TEST_PLAYER1.md5].get(7, 8)
+        game = getGame(P1G)
+        assert GridCellState.KnownByHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 7)
+        assert GridCellState.KnownShip == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(8, 7)
+        assert GridCellState.KnownShip == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(0, 6)
+        assert GridCellState.KnownEmpty == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 8)
+        assert GridCellState.KnownByHit == game.maskedPlayersState.consolidatedOpponentView.get(7, 7)
+        assert GridCellState.KnownShip == game.maskedPlayersState.consolidatedOpponentView.get(8, 7)
+        assert GridCellState.KnownShip == game.maskedPlayersState.consolidatedOpponentView.get(0, 6)
+        assert GridCellState.KnownEmpty == game.maskedPlayersState.consolidatedOpponentView.get(7, 8)
+    }
+
+    @Test
     void testCreatingInvalidGames() {
         def P3 = createConnection(TEST_PLAYER3).target(PLAYER_API)
         def entity = Entity.entity(
@@ -383,6 +439,14 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
                 MediaType.APPLICATION_JSON
         )
         target.path("fire").request(MediaType.APPLICATION_JSON).put(placement, returnedGameClass())
+    }
+
+    protected TBMaskedGame spy(WebTarget target, Player player, GridCoordinate coordinate) {
+        def placement = Entity.entity(
+                new Target(player: player.md5, coordinate: coordinate),
+                MediaType.APPLICATION_JSON
+        )
+        target.path("spy").request(MediaType.APPLICATION_JSON).put(placement, returnedGameClass())
     }
 
     private static final LinkedHashMap<Ship, ArrayList<GridCoordinate>> P1POSITIONS = [

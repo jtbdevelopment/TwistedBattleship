@@ -4,14 +4,35 @@ import com.jtbdevelopment.TwistedBattleship.exceptions.NoSpyActionsRemainExcepti
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
-import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
+import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
+import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
+import com.jtbdevelopment.TwistedBattleship.state.grid.GridSizeUtil
+import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 
 /**
  * Date: 5/15/15
  * Time: 6:56 AM
  */
-class SpyHandlerTest extends MongoGameCoreTestCase {
+class SpyHandlerTest extends AbstractMoveHandlerTest {
     SpyHandler handler = new SpyHandler()
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp()
+        handler.gridSizeUtil = new GridSizeUtil()
+        game.playerDetails[PTWO.id].opponentGrids[PONE.id].set(1, 0, GridCellState.KnownByHit)
+        game.playerDetails[PTWO.id].opponentGrids[PONE.id].set(2, 0, GridCellState.KnownByOtherHit)
+        game.playerDetails[PTWO.id].opponentGrids[PONE.id].set(1, 1, GridCellState.KnownByMiss)
+        game.playerDetails[PONE.id].opponentViews[PTWO.id].set(1, 0, GridCellState.KnownByHit)
+        game.playerDetails[PONE.id].opponentViews[PTWO.id].set(2, 0, GridCellState.KnownByOtherHit)
+        game.playerDetails[PONE.id].opponentViews[PTWO.id].set(1, 1, GridCellState.KnownByMiss)
+
+        game.playerDetails[PFOUR.id].opponentGrids[PONE.id].set(2, 0, GridCellState.KnownByHit)
+        game.playerDetails[PONE.id].opponentViews[PFOUR.id].set(2, 0, GridCellState.KnownByHit)
+
+        game.playerDetails[PONE.id].shipStates[Ship.Carrier].healthRemaining = 3
+        game.playerDetails[PONE.id].shipStates[Ship.Carrier].shipSegmentHit = [false, true, true, false, false]
+    }
 
     void testTargetSelf() {
         assertFalse handler.targetSelf()
@@ -37,27 +58,152 @@ class SpyHandlerTest extends MongoGameCoreTestCase {
         })
     }
 
+    void testSpyWithIsolatedIntel() {
+        game.features.add(GameFeature.IsolatedIntel)
+
+        TBGame g = handler.playMove(PTWO, game, PONE, new GridCoordinate(2, 1))
+
+        assert game.is(g)
+        coreSpyAsserts()
+        (0..14).each {
+            int row ->
+                int start = row < 5 ? 4 : 0
+                (0..14).each {
+                    int col ->
+                        if (start <= col) {
+                            assert GridCellState.Unknown == game.playerDetails[PTWO.id].opponentGrids[PONE.id].get(row, col)
+                            assert GridCellState.Unknown == game.playerDetails[PONE.id].opponentViews[PTWO.id].get(row, col)
+                        }
+                        if (row == 2 && col == 0) {
+                            assert GridCellState.KnownByHit == game.playerDetails[PFOUR.id].opponentGrids[PONE.id].get(row, col)
+                            assert GridCellState.KnownByHit == game.playerDetails[PONE.id].opponentViews[PFOUR.id].get(row, col)
+                        } else {
+                            assert GridCellState.Unknown == game.playerDetails[PFOUR.id].opponentGrids[PONE.id].get(row, col)
+                            assert GridCellState.Unknown == game.playerDetails[PONE.id].opponentViews[PFOUR.id].get(row, col)
+                        }
+                        assert GridCellState.Unknown == game.playerDetails[PTHREE.id].opponentGrids[PONE.id].get(row, col)
+                        assert GridCellState.Unknown == game.playerDetails[PONE.id].opponentViews[PTHREE.id].get(row, col)
+                }
+        }
+        assert "" == game.playerDetails[PTHREE.id].lastActionMessage
+        assert "" == game.playerDetails[PFOUR.id].lastActionMessage
+    }
+
+    void testSpyWithSharedIntel() {
+        game.features.add(GameFeature.SharedIntel)
+
+        TBGame g = handler.playMove(PTWO, game, PONE, new GridCoordinate(2, 1))
+
+        assert game.is(g)
+        coreSpyAsserts()
+        (0..14).each {
+            int row ->
+                int start = row < 5 ? 4 : 0
+                (0..14).each {
+                    int col ->
+                        if (start <= col) {
+                            assert GridCellState.Unknown == game.playerDetails[PTWO.id].opponentGrids[PONE.id].get(row, col)
+                            assert GridCellState.Unknown == game.playerDetails[PONE.id].opponentViews[PTWO.id].get(row, col)
+                        }
+                        if (row == 1 && col == 0) {
+                            assert GridCellState.KnownByOtherHit == game.playerDetails[PFOUR.id].opponentGrids[PONE.id].get(row, col)
+                            assert GridCellState.KnownByOtherHit == game.playerDetails[PONE.id].opponentViews[PFOUR.id].get(row, col)
+                            assert GridCellState.KnownByOtherHit == game.playerDetails[PTHREE.id].opponentGrids[PONE.id].get(row, col)
+                            assert GridCellState.KnownByOtherHit == game.playerDetails[PONE.id].opponentViews[PTHREE.id].get(row, col)
+                        } else if (row == 1 && col == 1) {
+                            assert GridCellState.KnownEmpty == game.playerDetails[PFOUR.id].opponentGrids[PONE.id].get(row, col)
+                            assert GridCellState.KnownEmpty == game.playerDetails[PONE.id].opponentViews[PFOUR.id].get(row, col)
+                            assert GridCellState.KnownEmpty == game.playerDetails[PTHREE.id].opponentGrids[PONE.id].get(row, col)
+                            assert GridCellState.KnownEmpty == game.playerDetails[PONE.id].opponentViews[PTHREE.id].get(row, col)
+                        } else {
+                            assert game.playerDetails[PTWO.id].opponentGrids[PONE.id].get(row, col) == game.playerDetails[PTHREE.id].opponentGrids[PONE.id].get(row, col)
+                            assert game.playerDetails[PONE.id].opponentViews[PTWO.id].get(row, col) == game.playerDetails[PONE.id].opponentViews[PTHREE.id].get(row, col)
+                            if (row == 2 && col == 0) {
+                                assert GridCellState.KnownByHit == game.playerDetails[PFOUR.id].opponentGrids[PONE.id].get(row, col)
+                                assert GridCellState.KnownByHit == game.playerDetails[PONE.id].opponentViews[PFOUR.id].get(row, col)
+                            } else {
+                                assert game.playerDetails[PTWO.id].opponentGrids[PONE.id].get(row, col) == game.playerDetails[PFOUR.id].opponentGrids[PONE.id].get(row, col)
+                                assert game.playerDetails[PONE.id].opponentViews[PTWO.id].get(row, col) == game.playerDetails[PONE.id].opponentViews[PFOUR.id].get(row, col)
+                            }
+                        }
+                }
+        }
+        assert "2 spied on 1 at (2,1)." == game.playerDetails[PTHREE.id].lastActionMessage
+        assert "2 spied on 1 at (2,1)." == game.playerDetails[PFOUR.id].lastActionMessage
+    }
+
+    protected void coreSpyAsserts() {
+        assert 3 == game.playerDetails[PTHREE.id].spysRemaining
+        assert 3 == game.playerDetails[PFOUR.id].spysRemaining
+        assert 3 == game.playerDetails[PONE.id].spysRemaining
+        assert 2 == game.playerDetails[PTWO.id].spysRemaining
+        assert "2 spied on 1 at (2,1)." == game.playerDetails[PONE.id].lastActionMessage
+        assert "2 spied on 1 at (2,1)." == game.playerDetails[PTWO.id].lastActionMessage
+        assert GridCellState.Unknown == game.playerDetails[PTWO.id].opponentGrids[PONE.id].get(4, 0)
+        assert GridCellState.KnownEmpty == game.playerDetails[PTWO.id].opponentGrids[PONE.id].get(4, 1)
+        assert GridCellState.Unknown == game.playerDetails[PTWO.id].opponentGrids[PONE.id].get(4, 2)
+        assert GridCellState.Unknown == game.playerDetails[PTWO.id].opponentGrids[PONE.id].get(4, 3)
+        assert GridCellState.KnownShip == game.playerDetails[PTWO.id].opponentGrids[PONE.id].get(3, 0)
+        assert GridCellState.KnownEmpty == game.playerDetails[PTWO.id].opponentGrids[PONE.id].get(3, 1)
+        assert GridCellState.KnownEmpty == game.playerDetails[PTWO.id].opponentGrids[PONE.id].get(3, 2)
+        assert GridCellState.Unknown == game.playerDetails[PTWO.id].opponentGrids[PONE.id].get(3, 3)
+        assert GridCellState.KnownByOtherHit == game.playerDetails[PTWO.id].opponentGrids[PONE.id].get(2, 0)
+        assert GridCellState.KnownEmpty == game.playerDetails[PTWO.id].opponentGrids[PONE.id].get(2, 1)
+        assert GridCellState.KnownEmpty == game.playerDetails[PTWO.id].opponentGrids[PONE.id].get(2, 2)
+        assert GridCellState.KnownEmpty == game.playerDetails[PTWO.id].opponentGrids[PONE.id].get(2, 3)
+        assert GridCellState.KnownByHit == game.playerDetails[PTWO.id].opponentGrids[PONE.id].get(1, 0)
+        assert GridCellState.KnownByMiss == game.playerDetails[PTWO.id].opponentGrids[PONE.id].get(1, 1)
+        assert GridCellState.KnownEmpty == game.playerDetails[PTWO.id].opponentGrids[PONE.id].get(1, 2)
+        assert GridCellState.Unknown == game.playerDetails[PTWO.id].opponentGrids[PONE.id].get(1, 3)
+        assert GridCellState.Unknown == game.playerDetails[PTWO.id].opponentGrids[PONE.id].get(0, 0)
+        assert GridCellState.KnownEmpty == game.playerDetails[PTWO.id].opponentGrids[PONE.id].get(0, 1)
+        assert GridCellState.Unknown == game.playerDetails[PTWO.id].opponentGrids[PONE.id].get(0, 2)
+        assert GridCellState.Unknown == game.playerDetails[PTWO.id].opponentGrids[PONE.id].get(0, 3)
+
+        assert GridCellState.Unknown == game.playerDetails[PONE.id].opponentViews[PTWO.id].get(4, 0)
+        assert GridCellState.KnownEmpty == game.playerDetails[PONE.id].opponentViews[PTWO.id].get(4, 1)
+        assert GridCellState.Unknown == game.playerDetails[PONE.id].opponentViews[PTWO.id].get(4, 2)
+        assert GridCellState.Unknown == game.playerDetails[PONE.id].opponentViews[PTWO.id].get(4, 3)
+        assert GridCellState.KnownShip == game.playerDetails[PONE.id].opponentViews[PTWO.id].get(3, 0)
+        assert GridCellState.KnownEmpty == game.playerDetails[PONE.id].opponentViews[PTWO.id].get(3, 1)
+        assert GridCellState.KnownEmpty == game.playerDetails[PONE.id].opponentViews[PTWO.id].get(3, 2)
+        assert GridCellState.Unknown == game.playerDetails[PONE.id].opponentViews[PTWO.id].get(3, 3)
+        assert GridCellState.KnownByOtherHit == game.playerDetails[PONE.id].opponentViews[PTWO.id].get(2, 0)
+        assert GridCellState.KnownEmpty == game.playerDetails[PONE.id].opponentViews[PTWO.id].get(2, 1)
+        assert GridCellState.KnownEmpty == game.playerDetails[PONE.id].opponentViews[PTWO.id].get(2, 2)
+        assert GridCellState.KnownEmpty == game.playerDetails[PONE.id].opponentViews[PTWO.id].get(2, 3)
+        assert GridCellState.KnownByHit == game.playerDetails[PONE.id].opponentViews[PTWO.id].get(1, 0)
+        assert GridCellState.KnownByMiss == game.playerDetails[PONE.id].opponentViews[PTWO.id].get(1, 1)
+        assert GridCellState.KnownEmpty == game.playerDetails[PONE.id].opponentViews[PTWO.id].get(1, 2)
+        assert GridCellState.Unknown == game.playerDetails[PONE.id].opponentViews[PTWO.id].get(1, 3)
+        assert GridCellState.Unknown == game.playerDetails[PONE.id].opponentViews[PTWO.id].get(0, 0)
+        assert GridCellState.KnownEmpty == game.playerDetails[PONE.id].opponentViews[PTWO.id].get(0, 1)
+        assert GridCellState.Unknown == game.playerDetails[PONE.id].opponentViews[PTWO.id].get(0, 2)
+        assert GridCellState.Unknown == game.playerDetails[PONE.id].opponentViews[PTWO.id].get(0, 3)
+    }
+
     /*
     void testDrawGrid() {
-        TBGame game = new TBGame(features: [GameFeature.Grid20x20])
-        Grid grid = new Grid(20)
-        GridCoordinate start = new GridCoordinate(1, 1)
+        int size = 15
+        TBGame game = new TBGame(features: [GameFeature.Grid15x15])
+        Grid grid = new Grid(size)
+        GridCoordinate start = new GridCoordinate(2, 1)
         GridSizeUtil util = new GridSizeUtil()
-        def x = SpyHandler.SPY_CIRCLE.collectMany {
-            int size, ArrayList<GridCoordinate> adjust ->
+        def x = SpyHandler.SPY_CIRCLE.findAll { it.key <= size }.collectMany {
+            int k, ArrayList<GridCoordinate> adjust ->
                 adjust.collect {
                     GridCoordinate adjustCoord ->
                         start.add(adjustCoord)
                 }
-        }.findAll {GridCoordinate it->  util.isValidCoordinate(game, it)}.each {
+        }.findAll { GridCoordinate it -> util.isValidCoordinate(game, it) }.each {
             GridCoordinate coordinate ->
                 grid.set(coordinate, GridCellState.KnownShip)
         }
-        (0..19).each {
+        (0..(size - 1)).each {
             int row ->
-                (0..19).each {
+                (0..(size - 1)).each {
                     int col ->
-                        if(row == start.row && col ==start.column) {
+                        if (row == start.row && col == start.column) {
                             print "C"
                         } else {
                             if (grid.get(row, col) == GridCellState.Unknown) {

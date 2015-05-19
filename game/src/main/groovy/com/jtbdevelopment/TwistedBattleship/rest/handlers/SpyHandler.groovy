@@ -3,7 +3,11 @@ package com.jtbdevelopment.TwistedBattleship.rest.handlers
 import com.jtbdevelopment.TwistedBattleship.exceptions.NoSpyActionsRemainException
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
+import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
+import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
+import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
+import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
 import com.jtbdevelopment.games.players.Player
 import groovy.transform.CompileStatic
 import org.bson.types.ObjectId
@@ -71,6 +75,72 @@ class SpyHandler extends AbstractPlayerMoveHandler {
     @Override
     TBGame playMove(
             final Player player, final TBGame game, final Player targetedPlayer, final GridCoordinate coordinate) {
+        Collection<GridCoordinate> coordinates = computeSpyCoordinates(game, coordinate)
+        Map<GridCoordinate, GridCellState> spyResults = computeSpyCoordinateStates(game, targetedPlayer, coordinates)
+        updatePlayerGrids(game, player, targetedPlayer, spyResults, coordinate)
+        --game.playerDetails[(ObjectId) player.id].spysRemaining
+        return game
+    }
+
+    @SuppressWarnings("GrMethodMayBeStatic")
+    protected void updatePlayerGrids(
+            final TBGame game,
+            final Player player,
+            final Player targetedPlayer,
+            final Map<GridCoordinate, GridCellState> spyResults,
+            final GridCoordinate targetCoordinate) {
+        String message = player.displayName + " spied on " + targetedPlayer.displayName + " at " + targetCoordinate + "."
+        boolean sharedIntel = game.features.contains(GameFeature.SharedIntel)
+        game.playerDetails.findAll {
+            ObjectId id, TBPlayerState state ->
+                id != targetedPlayer.id && (sharedIntel || id == player.id)
+        }.each {
+            ObjectId id, TBPlayerState state ->
+                Grid playerGrid = state.opponentGrids[(ObjectId) targetedPlayer.id]
+                Grid targetView = game.playerDetails[(ObjectId) targetedPlayer.id].opponentViews[id]
+                updateGridForPlayer(playerGrid, targetView, spyResults)
+                state.lastActionMessage = message
+        }
+        game.playerDetails[(ObjectId) targetedPlayer.id].lastActionMessage = message
+    }
+
+    @SuppressWarnings("GrMethodMayBeStatic")
+    protected Map<GridCoordinate, GridCellState> updateGridForPlayer(
+            final Grid playerGrid,
+            final Grid targetView,
+            final Map<GridCoordinate, GridCellState> spyResults) {
+        spyResults.each {
+            GridCoordinate c, GridCellState cs ->
+                if (playerGrid.get(c).rank < cs.rank) {
+                    playerGrid.set(c, cs)
+                    targetView.set(c, cs)
+                }
+        }
+    }
+
+    @SuppressWarnings("GrMethodMayBeStatic")
+    protected Map<GridCoordinate, GridCellState> computeSpyCoordinateStates(
+            final TBGame game, final Player targetedPlayer, final Collection<GridCoordinate> coordinates) {
+        TBPlayerState targetedState = game.playerDetails[(ObjectId) targetedPlayer.id]
+        coordinates.collectEntries {
+            GridCoordinate targetCoordinate ->
+                GridCellState state
+                ShipState shipState = targetedState.coordinateShipMap[targetCoordinate]
+                if (shipState) {
+                    if (shipState.shipSegmentHit[shipState.shipGridCells.indexOf(targetCoordinate)]) {
+                        state = GridCellState.KnownByOtherHit
+                    } else {
+                        state = GridCellState.KnownShip
+                    }
+                } else {
+                    state = GridCellState.KnownEmpty
+                }
+                [(targetCoordinate): state]
+        }
+    }
+
+    protected Collection<GridCoordinate> computeSpyCoordinates(
+            final TBGame game, final GridCoordinate centerCoordinate) {
         int size = gridSizeUtil.getSize(game)
 
         Collection<GridCoordinate> coordinates = SPY_CIRCLE.findAll {
@@ -79,14 +149,12 @@ class SpyHandler extends AbstractPlayerMoveHandler {
             int listSize, List<GridCoordinate> adjustments ->
                 adjustments.collect {
                     GridCoordinate adjustment ->
-                        coordinate.add(adjustment)
+                        centerCoordinate.add(adjustment)
                 }
         }.findAll {
             GridCoordinate it -> gridSizeUtil.isValidCoordinate(game, it)
         }
-
-
-
-        return null
+        coordinates
     }
+
 }

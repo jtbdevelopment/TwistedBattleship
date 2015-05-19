@@ -3,6 +3,7 @@ package com.jtbdevelopment.TwistedBattleship.rest.services
 import com.jtbdevelopment.TwistedBattleship.rest.Target
 import com.jtbdevelopment.TwistedBattleship.rest.handlers.FireAtCoordinateHandler
 import com.jtbdevelopment.TwistedBattleship.rest.handlers.SetupShipsHandler
+import com.jtbdevelopment.TwistedBattleship.rest.handlers.SpyHandler
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.TwistedBattleship.state.masked.TBMaskedGame
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
@@ -26,6 +27,7 @@ class GameServicesTest extends MongoGameCoreTestCase {
                 //  method: [name, params, path, path param values, consumes
                 "setupShips": ["setup", [Map.class], [], [MediaType.APPLICATION_JSON]],
                 "fire": ["fire", [Target.class], [], [MediaType.APPLICATION_JSON]],
+                "spy": ["spy", [Target.class], [], [MediaType.APPLICATION_JSON]],
         ]
         stuff.each {
             String method, List<Object> details ->
@@ -107,5 +109,23 @@ class GameServicesTest extends MongoGameCoreTestCase {
                 }
         ] as FireAtCoordinateHandler
         assert maskedGame.is(services.fire(target))
+    }
+
+    void testSpy() {
+        TBMaskedGame maskedGame = new TBMaskedGame()
+        Target target = new Target(player: PONE.md5, coordinate: new GridCoordinate(10, 5))
+        ObjectId gameId = new ObjectId()
+        services.playerID.set(PONE.id)
+        services.gameID.set(gameId)
+        services.spyHandler = [
+                handleAction: {
+                    Serializable p, Serializable g, Target t ->
+                        assert PONE.id.is(p)
+                        assert gameId.is(g)
+                        assert target.is(t)
+                        maskedGame
+                }
+        ] as SpyHandler
+        assert maskedGame.is(services.spy(target))
     }
 }
