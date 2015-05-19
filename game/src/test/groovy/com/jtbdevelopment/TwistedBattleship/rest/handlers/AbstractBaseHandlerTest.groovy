@@ -15,7 +15,7 @@ import com.jtbdevelopment.games.state.GamePhase
  * Date: 5/18/15
  * Time: 6:47 AM
  */
-abstract class AbstractMoveHandlerTest extends MongoGameCoreTestCase {
+abstract class AbstractBaseHandlerTest extends MongoGameCoreTestCase {
     protected TBGame game
 
     @Override

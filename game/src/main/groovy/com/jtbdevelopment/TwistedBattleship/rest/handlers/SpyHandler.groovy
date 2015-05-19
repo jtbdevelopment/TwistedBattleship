@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component
  */
 @CompileStatic
 @Component
-class SpyHandler extends AbstractPlayerMoveHandler {
+class SpyHandler extends AbstractSpecialMoveHandler {
     protected final static Map<Integer, List<GridCoordinate>> SPY_CIRCLE = [
             (10): [
                     new GridCoordinate(0, -1),
@@ -57,11 +57,6 @@ class SpyHandler extends AbstractPlayerMoveHandler {
     @Override
     boolean targetSelf() {
         return false
-    }
-
-    @Override
-    int movesRequired(final TBGame game) {
-        return game.features.contains(GameFeature.PerShip) ? 2 : 1
     }
 
     @Override

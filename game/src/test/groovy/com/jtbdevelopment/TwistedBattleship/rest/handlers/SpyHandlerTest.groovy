@@ -13,7 +13,7 @@ import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
  * Date: 5/15/15
  * Time: 6:56 AM
  */
-class SpyHandlerTest extends AbstractMoveHandlerTest {
+class SpyHandlerTest extends AbstractBaseHandlerTest {
     SpyHandler handler = new SpyHandler()
 
     @Override

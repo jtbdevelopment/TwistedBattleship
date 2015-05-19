@@ -11,7 +11,7 @@ import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
  * Date: 5/12/15
  * Time: 11:50 AM
  */
-class FireAtCoordinateHandlerTest extends AbstractMoveHandlerTest {
+class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
     FireAtCoordinateHandler handler = new FireAtCoordinateHandler()
 
     void testTargetSelf() {
