@@ -2,6 +2,7 @@ package com.jtbdevelopment.TwistedBattleship.rest.services
 
 import com.jtbdevelopment.TwistedBattleship.rest.Target
 import com.jtbdevelopment.TwistedBattleship.rest.handlers.FireAtCoordinateHandler
+import com.jtbdevelopment.TwistedBattleship.rest.handlers.RepairShipHandler
 import com.jtbdevelopment.TwistedBattleship.rest.handlers.SetupShipsHandler
 import com.jtbdevelopment.TwistedBattleship.rest.handlers.SpyHandler
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
@@ -35,6 +36,9 @@ class GameServices extends AbstractMultiPlayerGameServices<ObjectId> {
     @Autowired
     SpyHandler spyHandler
 
+    @Autowired
+    RepairShipHandler repairShipHandler
+
     @PUT
     @Path("setup")
     @Produces(MediaType.APPLICATION_JSON)
@@ -63,7 +67,14 @@ class GameServices extends AbstractMultiPlayerGameServices<ObjectId> {
         spyHandler.handleAction((ObjectId) playerID.get(), (ObjectId) gameID.get(), target)
     }
 
-    //  TODO - repair
+    @PUT
+    @Path("repair")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    Object repair(final Target target) {
+        repairShipHandler.handleAction((ObjectId) playerID.get(), (ObjectId) gameID.get(), target)
+    }
+
     //  TODO - ecm
     //  TODO - move
 }

@@ -337,15 +337,13 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
         }
 
         game = fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 7))
-        assert GamePhase.Playing == game.gamePhase
-        assert "Direct hit at (7,7)!" == game.maskedPlayersState.lastActionMessage
-        assert 1 == game.playersScore[TEST_PLAYER2.md5]
-        assert 4 == game.remainingMoves
-        assert 2 == game.maskedPlayersState.spysRemaining
-        assert TEST_PLAYER2.md5 == game.currentPlayer
+
         game = spy(P2G, TEST_PLAYER1, new GridCoordinate(7, 8))
+        assert GamePhase.Playing == game.gamePhase
         assert "TEST PLAYER2 spied on TEST PLAYER1 at (7,8)." == game.maskedPlayersState.lastActionMessage
+        assert 2 == game.remainingMoves
         assert 1 == game.maskedPlayersState.spysRemaining
+        assert TEST_PLAYER2.md5 == game.currentPlayer
         game = spy(P2G, TEST_PLAYER1, new GridCoordinate(2, 6))
         assert "TEST PLAYER2 spied on TEST PLAYER1 at (2,6)." == game.maskedPlayersState.lastActionMessage
         assert 1 == game.playersScore[TEST_PLAYER2.md5]
@@ -366,6 +364,63 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
         assert GridCellState.KnownShip == game.maskedPlayersState.consolidatedOpponentView.get(8, 7)
         assert GridCellState.KnownShip == game.maskedPlayersState.consolidatedOpponentView.get(0, 6)
         assert GridCellState.KnownEmpty == game.maskedPlayersState.consolidatedOpponentView.get(7, 8)
+    }
+
+    @Test
+    void testRepairForTurnInGame() {
+        def P3 = createPlayerAPITarget(TEST_PLAYER3)
+        TBMaskedGame game = newGame(P3, STANDARD_PLAYERS_AND_FEATURES)
+        assert game != null
+        def P3G = createGameTarget(P3, game)
+        def P1G = createGameTarget(createPlayerAPITarget(TEST_PLAYER1), game)
+        def P2G = createGameTarget(createPlayerAPITarget(TEST_PLAYER2), game)
+
+        acceptGame(P1G)
+        acceptGame(P2G)
+        setup(P3G, P3POSITIONS)
+        setup(P1G, P1POSITIONS)
+        setup(P2G, P2POSITIONS)
+
+        //  Force turn to P2
+        TBGame dbGame = gameRepository.findOne(new ObjectId(game.idAsString))
+        dbGame.currentPlayer = TEST_PLAYER2.id
+        gameRepository.save(dbGame)
+        cacheManager.cacheNames.each {
+            cacheManager.getCache(it).clear()
+        }
+
+        game = fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 7))
+        game = fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 0))
+
+        //  Force turn to P1
+        dbGame = gameRepository.findOne(new ObjectId(game.idAsString))
+        dbGame.currentPlayer = TEST_PLAYER1.id
+        dbGame.remainingMoves = 5
+        gameRepository.save(dbGame)
+        cacheManager.cacheNames.each {
+            cacheManager.getCache(it).clear()
+        }
+
+        game = fire(P1G, TEST_PLAYER2, new GridCoordinate(7, 0))
+        game = repair(P1G, TEST_PLAYER1, new GridCoordinate(8, 7))
+        assert 2 == game.remainingMoves
+        assert "TEST PLAYER1 repaired their Aircraft Carrier."
+        assert 5 == game.maskedPlayersState.shipStates[Ship.Carrier].healthRemaining
+        assert [false, false, false, false, false] == game.maskedPlayersState.shipStates[Ship.Carrier].shipSegmentHit
+        assert GridCellState.KnownShip == game.maskedPlayersState.consolidatedOpponentView.get(7, 7)
+        assert 1 == game.maskedPlayersState.emergencyRepairsRemaining
+        assert 2 == game.remainingMoves
+
+
+        game = repair(P1G, TEST_PLAYER1, new GridCoordinate(8, 0))
+        assert "TEST PLAYER1 repaired their Cruiser."
+        assert 3 == game.maskedPlayersState.shipStates[Ship.Cruiser].healthRemaining
+        assert [false, false, false] == game.maskedPlayersState.shipStates[Ship.Cruiser].shipSegmentHit
+        assert GridCellState.KnownShip == game.maskedPlayersState.consolidatedOpponentView.get(7, 0)
+        assert GamePhase.Playing == game.gamePhase
+        assert 0 == game.playersScore[TEST_PLAYER1.md5]
+        assert 0 == game.maskedPlayersState.emergencyRepairsRemaining
+        assert TEST_PLAYER1.md5 != game.currentPlayer
     }
 
     @Test
@@ -434,19 +489,23 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
     }
 
     protected TBMaskedGame fire(WebTarget target, Player player, GridCoordinate coordinate) {
-        def placement = Entity.entity(
-                new Target(player: player.md5, coordinate: coordinate),
-                MediaType.APPLICATION_JSON
-        )
-        target.path("fire").request(MediaType.APPLICATION_JSON).put(placement, returnedGameClass())
+        makeMove(player, coordinate, target, "fire")
     }
 
     protected TBMaskedGame spy(WebTarget target, Player player, GridCoordinate coordinate) {
+        makeMove(player, coordinate, target, "spy")
+    }
+
+    protected TBMaskedGame repair(WebTarget target, Player player, GridCoordinate coordinate) {
+        makeMove(player, coordinate, target, "repair")
+    }
+
+    protected TBMaskedGame makeMove(Player player, GridCoordinate coordinate, WebTarget target, String command) {
         def placement = Entity.entity(
                 new Target(player: player.md5, coordinate: coordinate),
                 MediaType.APPLICATION_JSON
         )
-        target.path("spy").request(MediaType.APPLICATION_JSON).put(placement, returnedGameClass())
+        target.path(command).request(MediaType.APPLICATION_JSON).put(placement, returnedGameClass())
     }
 
     private static final LinkedHashMap<Ship, ArrayList<GridCoordinate>> P1POSITIONS = [
