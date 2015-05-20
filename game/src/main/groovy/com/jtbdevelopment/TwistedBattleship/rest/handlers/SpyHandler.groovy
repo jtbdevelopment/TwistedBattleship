@@ -6,11 +6,13 @@ import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
+import com.jtbdevelopment.TwistedBattleship.state.grid.GridCircleUtil
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
 import com.jtbdevelopment.games.players.Player
 import groovy.transform.CompileStatic
 import org.bson.types.ObjectId
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 /**
@@ -20,39 +22,8 @@ import org.springframework.stereotype.Component
 @CompileStatic
 @Component
 class SpyHandler extends AbstractSpecialMoveHandler {
-    protected final static Map<Integer, List<GridCoordinate>> SPY_CIRCLE = [
-            (10): [
-                    new GridCoordinate(0, -1),
-                    new GridCoordinate(0, 0),
-                    new GridCoordinate(0, 1),
-                    new GridCoordinate(1, 0),
-                    new GridCoordinate(-1, 0),
-            ],  // 5, of 100 = 5%
-            (15): [
-                    new GridCoordinate(0, -2),
-                    new GridCoordinate(0, 2),
-                    new GridCoordinate(2, 0),
-                    new GridCoordinate(-2, 0),
-                    new GridCoordinate(1, 1),
-                    new GridCoordinate(1, -1),
-                    new GridCoordinate(-1, -1),
-                    new GridCoordinate(-1, 1),
-            ],  // 13, of 225 = 5.7%
-            (20): [
-                    new GridCoordinate(2, 2),
-                    new GridCoordinate(2, -2),
-                    new GridCoordinate(-2, -2),
-                    new GridCoordinate(-2, 2),
-                    new GridCoordinate(2, 1),
-                    new GridCoordinate(1, 2),
-                    new GridCoordinate(2, -1),
-                    new GridCoordinate(-1, 2),
-                    new GridCoordinate(-2, -1),
-                    new GridCoordinate(-1, -2),
-                    new GridCoordinate(-2, 1),
-                    new GridCoordinate(1, -2),
-            ],  // 25 of 400 = 6.25%
-    ]
+    @Autowired
+    GridCircleUtil gridCircleUtil
 
     @Override
     boolean targetSelf() {
@@ -72,7 +43,7 @@ class SpyHandler extends AbstractSpecialMoveHandler {
     TBGame playMove(
             final Player<ObjectId> player,
             final TBGame game, final Player<ObjectId> targetedPlayer, final GridCoordinate coordinate) {
-        Collection<GridCoordinate> coordinates = computeSpyCoordinates(game, coordinate)
+        Collection<GridCoordinate> coordinates = gridCircleUtil.computeCircleCoordinates(game, coordinate)
         Map<GridCoordinate, GridCellState> spyResults = computeSpyCoordinateStates(game, targetedPlayer, coordinates)
         updatePlayerGrids(game, player, targetedPlayer, spyResults, coordinate)
         --game.playerDetails[player.id].spysRemaining
@@ -135,21 +106,4 @@ class SpyHandler extends AbstractSpecialMoveHandler {
                 [(targetCoordinate): state]
         }
     }
-
-    protected Collection<GridCoordinate> computeSpyCoordinates(
-            final TBGame game, final GridCoordinate centerCoordinate) {
-        Collection<GridCoordinate> coordinates = SPY_CIRCLE.findAll {
-            it.key <= game.gridSize
-        }.collectMany {
-            int listSize, List<GridCoordinate> adjustments ->
-                adjustments.collect {
-                    GridCoordinate adjustment ->
-                        centerCoordinate.add(adjustment)
-                }
-        }.findAll {
-            GridCoordinate it -> gridSizeUtil.isValidCoordinate(game, it)
-        }
-        coordinates
-    }
-
 }

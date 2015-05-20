@@ -5,6 +5,7 @@ import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
+import com.jtbdevelopment.TwistedBattleship.state.grid.GridCircleUtil
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridSizeUtil
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
@@ -19,7 +20,8 @@ class SpyHandlerTest extends AbstractBaseHandlerTest {
     @Override
     protected void setUp() throws Exception {
         super.setUp()
-        handler.gridSizeUtil = new GridSizeUtil()
+        handler.gridCircleUtil = new GridCircleUtil()
+        handler.gridCircleUtil.gridSizeUtil = new GridSizeUtil()
         game.playerDetails[PTWO.id].opponentGrids[PONE.id].set(1, 0, GridCellState.KnownByHit)
         game.playerDetails[PTWO.id].opponentGrids[PONE.id].set(2, 0, GridCellState.KnownByOtherHit)
         game.playerDetails[PTWO.id].opponentGrids[PONE.id].set(1, 1, GridCellState.KnownByMiss)
@@ -182,39 +184,4 @@ class SpyHandlerTest extends AbstractBaseHandlerTest {
         assert GridCellState.Unknown == game.playerDetails[PONE.id].opponentViews[PTWO.id].get(0, 3)
     }
 
-    /*
-    void testDrawGrid() {
-        int size = 15
-        TBGame game = new TBGame(features: [GameFeature.Grid15x15])
-        Grid grid = new Grid(size)
-        GridCoordinate start = new GridCoordinate(2, 1)
-        GridSizeUtil util = new GridSizeUtil()
-        def x = SpyHandler.SPY_CIRCLE.findAll { it.key <= size }.collectMany {
-            int k, ArrayList<GridCoordinate> adjust ->
-                adjust.collect {
-                    GridCoordinate adjustCoord ->
-                        start.add(adjustCoord)
-                }
-        }.findAll { GridCoordinate it -> util.isValidCoordinate(game, it) }.each {
-            GridCoordinate coordinate ->
-                grid.set(coordinate, GridCellState.KnownShip)
-        }
-        (0..(size - 1)).each {
-            int row ->
-                (0..(size - 1)).each {
-                    int col ->
-                        if (row == start.row && col == start.column) {
-                            print "C"
-                        } else {
-                            if (grid.get(row, col) == GridCellState.Unknown) {
-                                print "U"
-                            } else {
-                                print "X"
-                            }
-                        }
-                }
-                println ""
-        }
-    }
-    */
 }
