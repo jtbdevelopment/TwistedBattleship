@@ -15,14 +15,15 @@ class GridCircleUtil {
     @Autowired
     GridSizeUtil gridSizeUtil
 
-    final static Map<Integer, List<GridCoordinate>> CIRCLE_OFFSETS = [
+    //  Details are cumulative - use entries for 10 + 15 to get circle for grid size 15
+    final static Map<Integer, Set<GridCoordinate>> CIRCLE_OFFSETS = [
             (10): [
                     new GridCoordinate(0, -1),
                     new GridCoordinate(0, 0),
                     new GridCoordinate(0, 1),
                     new GridCoordinate(1, 0),
                     new GridCoordinate(-1, 0),
-            ],  // 5, of 100 = 5%
+            ] as Set,  // 5, of 100 = 5%
             (15): [
                     new GridCoordinate(0, -2),
                     new GridCoordinate(0, 2),
@@ -32,7 +33,7 @@ class GridCircleUtil {
                     new GridCoordinate(1, -1),
                     new GridCoordinate(-1, -1),
                     new GridCoordinate(-1, 1),
-            ],  // 13, of 225 = 5.7%
+            ] as Set,  // 13, of 225 = 5.7%
             (20): [
                     new GridCoordinate(2, 2),
                     new GridCoordinate(2, -2),
@@ -46,22 +47,21 @@ class GridCircleUtil {
                     new GridCoordinate(-1, -2),
                     new GridCoordinate(-2, 1),
                     new GridCoordinate(1, -2),
-            ],  // 25 of 400 = 6.25%
+            ] as Set,  // 25 of 400 = 6.25%
     ]
 
-    Collection<GridCoordinate> computeCircleCoordinates(
+    Set<GridCoordinate> computeCircleCoordinates(
             final TBGame game, final GridCoordinate centerCoordinate) {
-        Collection<GridCoordinate> coordinates = CIRCLE_OFFSETS.findAll {
+        return new HashSet(CIRCLE_OFFSETS.findAll {
             it.key <= game.gridSize
         }.collectMany {
-            int listSize, List<GridCoordinate> adjustments ->
+            int listSize, Set<GridCoordinate> adjustments ->
                 adjustments.collect {
                     GridCoordinate adjustment ->
                         centerCoordinate.add(adjustment)
                 }
         }.findAll {
             GridCoordinate it -> gridSizeUtil.isValidCoordinate(game, it)
-        }
-        coordinates
+        })
     }
 }

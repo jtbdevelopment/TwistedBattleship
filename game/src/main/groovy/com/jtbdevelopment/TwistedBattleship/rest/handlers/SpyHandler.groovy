@@ -43,7 +43,7 @@ class SpyHandler extends AbstractSpecialMoveHandler {
     TBGame playMove(
             final Player<ObjectId> player,
             final TBGame game, final Player<ObjectId> targetedPlayer, final GridCoordinate coordinate) {
-        Collection<GridCoordinate> coordinates = gridCircleUtil.computeCircleCoordinates(game, coordinate)
+        Set<GridCoordinate> coordinates = gridCircleUtil.computeCircleCoordinates(game, coordinate)
         Map<GridCoordinate, GridCellState> spyResults = computeSpyCoordinateStates(game, targetedPlayer, coordinates)
         updatePlayerGrids(game, player, targetedPlayer, spyResults, coordinate)
         --game.playerDetails[player.id].spysRemaining
@@ -88,7 +88,7 @@ class SpyHandler extends AbstractSpecialMoveHandler {
 
     @SuppressWarnings("GrMethodMayBeStatic")
     protected Map<GridCoordinate, GridCellState> computeSpyCoordinateStates(
-            final TBGame game, final Player<ObjectId> targetedPlayer, final Collection<GridCoordinate> coordinates) {
+            final TBGame game, final Player<ObjectId> targetedPlayer, final Set<GridCoordinate> coordinates) {
         TBPlayerState targetedState = game.playerDetails[targetedPlayer.id]
         coordinates.collectEntries {
             GridCoordinate targetCoordinate ->

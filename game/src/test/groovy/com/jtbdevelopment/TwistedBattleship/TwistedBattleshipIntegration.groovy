@@ -425,6 +425,62 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
     }
 
     @Test
+    void testECMForTurnInGame() {
+        def P3 = createPlayerAPITarget(TEST_PLAYER3)
+        TBMaskedGame game = newGame(P3, STANDARD_PLAYERS_AND_FEATURES)
+        assert game != null
+        def P3G = createGameTarget(P3, game)
+        def P1G = createGameTarget(createPlayerAPITarget(TEST_PLAYER1), game)
+        def P2G = createGameTarget(createPlayerAPITarget(TEST_PLAYER2), game)
+
+        acceptGame(P1G)
+        acceptGame(P2G)
+        setup(P3G, P3POSITIONS)
+        setup(P1G, P1POSITIONS)
+        setup(P2G, P2POSITIONS)
+
+        //  Force turn to P2
+        TBGame dbGame = gameRepository.findOne(new ObjectId(game.idAsString))
+        dbGame.currentPlayer = TEST_PLAYER2.id
+        gameRepository.save(dbGame)
+        cacheManager.cacheNames.each {
+            cacheManager.getCache(it).clear()
+        }
+
+        game = fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 7))
+        game = fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 0))
+
+        //  Force turn to P1
+        dbGame = gameRepository.findOne(new ObjectId(game.idAsString))
+        dbGame.currentPlayer = TEST_PLAYER1.id
+        dbGame.remainingMoves = 5
+        gameRepository.save(dbGame)
+        cacheManager.cacheNames.each {
+            cacheManager.getCache(it).clear()
+        }
+
+        game = fire(P1G, TEST_PLAYER2, new GridCoordinate(7, 0))
+        assert GridCellState.KnownByHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 7)
+        assert GridCellState.KnownByHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 0)
+        game = ecm(P1G, TEST_PLAYER1, new GridCoordinate(8, 7))
+        assert 2 == game.remainingMoves
+        assert "TEST PLAYER1 deployed an ECM at (8,7)."
+        assert 1 == game.maskedPlayersState.ecmsRemaining
+        assert GridCellState.Unknown == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 7)
+        assert GridCellState.KnownByHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 0)
+
+
+        game = ecm(P1G, TEST_PLAYER1, new GridCoordinate(6, 0))
+        assert "TEST PLAYER1 deployed an ECM at (6,0)."
+        assert GamePhase.Playing == game.gamePhase
+        assert GridCellState.Unknown == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 7)
+        assert GridCellState.Unknown == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 0)
+        assert 0 == game.playersScore[TEST_PLAYER1.md5]
+        assert 0 == game.maskedPlayersState.ecmsRemaining
+        assert TEST_PLAYER1.md5 != game.currentPlayer
+    }
+
+    @Test
     void testCreatingInvalidGames() {
         def P3 = createConnection(TEST_PLAYER3).target(PLAYER_API)
         def entity = Entity.entity(
@@ -499,6 +555,10 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
 
     protected TBMaskedGame repair(WebTarget target, Player player, GridCoordinate coordinate) {
         makeMove(player, coordinate, target, "repair")
+    }
+
+    protected TBMaskedGame ecm(WebTarget target, Player player, GridCoordinate coordinate) {
+        makeMove(player, coordinate, target, "ecm")
     }
 
     protected TBMaskedGame makeMove(Player player, GridCoordinate coordinate, WebTarget target, String command) {

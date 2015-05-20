@@ -22,7 +22,7 @@ class GridCircleUtilTest extends GroovyTestCase {
                 new GridCoordinate(2, 4),
                 new GridCoordinate(3, 3),
                 new GridCoordinate(1, 3),
-        ] as Set == util.computeCircleCoordinates(new TBGame(gridSize: 10), new GridCoordinate(2, 3)) as Set
+        ] as Set == util.computeCircleCoordinates(new TBGame(gridSize: 10), new GridCoordinate(2, 3))
     }
 
     void testMediumGrid() {
@@ -40,7 +40,7 @@ class GridCircleUtilTest extends GroovyTestCase {
                 new GridCoordinate(3, 2),
                 new GridCoordinate(1, 2),
                 new GridCoordinate(1, 4)
-        ] as Set == util.computeCircleCoordinates(new TBGame(gridSize: 15), new GridCoordinate(2, 3)) as Set
+        ] as Set == util.computeCircleCoordinates(new TBGame(gridSize: 15), new GridCoordinate(2, 3))
     }
 
     void testLargeGrid() {
@@ -71,7 +71,7 @@ class GridCircleUtilTest extends GroovyTestCase {
                 new GridCoordinate(1, 1),
                 new GridCoordinate(0, 4),
                 new GridCoordinate(3, 1)
-        ] as Set == util.computeCircleCoordinates(new TBGame(gridSize: 20), new GridCoordinate(2, 3)) as Set
+        ] as Set == util.computeCircleCoordinates(new TBGame(gridSize: 20), new GridCoordinate(2, 3))
     }
 
     void testDrawGrid() {
