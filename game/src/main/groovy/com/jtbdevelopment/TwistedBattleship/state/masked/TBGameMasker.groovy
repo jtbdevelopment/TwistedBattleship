@@ -46,6 +46,7 @@ class TBGameMasker extends AbstractMultiPlayerGameMasker<ObjectId, GameFeature, 
         TBGame game = (TBGame) mpGame
         masked.generalMessage = game.generalMessage
         masked.remainingMoves = game.remainingMoves
+        masked.gridsize = game.gridSize
     }
 
     @Override
@@ -98,7 +99,7 @@ class TBGameMasker extends AbstractMultiPlayerGameMasker<ObjectId, GameFeature, 
     }
 
     Grid createConsolidatedView(final TBGame game, final TBMaskedGame masked) {
-        int size = gridSizeUtil.getSize(game)
+        int size = game.gridSize
         Grid consolidatedView = new Grid(size)
         (0..size - 1).each {
             int row ->

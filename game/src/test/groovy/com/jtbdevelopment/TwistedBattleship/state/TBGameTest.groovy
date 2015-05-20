@@ -10,6 +10,7 @@ class TBGameTest extends GroovyTestCase {
     void testInitialize() {
         assertNull game.gamePhase
         assert [:] == game.playerDetails
+        assert 0 == game.gridSize
         assertNull game.rematchTimestamp
         assertNull game.previousId
         assert "" == game.generalMessage

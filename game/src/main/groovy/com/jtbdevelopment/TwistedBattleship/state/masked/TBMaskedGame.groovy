@@ -16,5 +16,6 @@ class TBMaskedGame extends AbstractMaskedMultiPlayerGame<GameFeature> {
     TBMaskedPlayerState maskedPlayersState
     String generalMessage
     String currentPlayer
+    int gridsize
     int remainingMoves
 }

@@ -45,6 +45,7 @@ class GridSizeUtilTest extends GroovyTestCase {
         [GameFeature.Grid20x20, GameFeature.Grid10x10, GameFeature.Grid15x15].each {
             GameFeature size ->
                 TBGame game = new TBGame(features: [size])
+                game.gridSize = gridSizeUtil.getSize(game)
                 int max = gridSizeUtil.getSize(game)
                 (0..max - 1).each {
                     int row ->

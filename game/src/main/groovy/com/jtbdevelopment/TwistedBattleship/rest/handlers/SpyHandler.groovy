@@ -138,10 +138,8 @@ class SpyHandler extends AbstractSpecialMoveHandler {
 
     protected Collection<GridCoordinate> computeSpyCoordinates(
             final TBGame game, final GridCoordinate centerCoordinate) {
-        int size = gridSizeUtil.getSize(game)
-
         Collection<GridCoordinate> coordinates = SPY_CIRCLE.findAll {
-            it.key <= size
+            it.key <= game.gridSize
         }.collectMany {
             int listSize, List<GridCoordinate> adjustments ->
                 adjustments.collect {

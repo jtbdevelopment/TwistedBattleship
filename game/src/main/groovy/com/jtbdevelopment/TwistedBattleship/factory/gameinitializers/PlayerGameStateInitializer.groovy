@@ -26,7 +26,7 @@ class PlayerGameStateInitializer implements GameInitializer<TBGame> {
     @Override
     void initializeGame(final TBGame game) {
         int specialMoves = game.players.size() - 1
-        int sizeValue = util.getSize(game)
+        game.gridSize = util.getSize(game)
         game.currentPlayer = game.players[0].id
         game.movesPerTurn = game.features.contains(GameFeature.Single) ? 1 : Ship.values().size()
         game.remainingMoves = game.movesPerTurn
@@ -40,10 +40,10 @@ class PlayerGameStateInitializer implements GameInitializer<TBGame> {
                         evasiveManeuversRemaining: game.features.contains(GameFeature.EMEnabled) ? specialMoves : 0,
                         spysRemaining: game.features.contains(GameFeature.SpyEnabled) ? specialMoves : 0,
                         opponentGrids: opponents.collectEntries { Player o ->
-                            [(o.id), new Grid(sizeValue)]
+                            [(o.id), new Grid(game.gridSize)]
                         },
                         opponentViews: opponents.collectEntries { Player o ->
-                            [(o.id), new Grid(sizeValue)]
+                            [(o.id), new Grid(game.gridSize)]
                         }
                 )
         }

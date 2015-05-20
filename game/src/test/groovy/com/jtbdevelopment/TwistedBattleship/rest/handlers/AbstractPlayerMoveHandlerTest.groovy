@@ -121,7 +121,7 @@ class AbstractPlayerMoveHandlerTest extends MongoGameCoreTestCase {
         GamePhase.values().findAll { it != GamePhase.Playing }.each {
             GamePhase it ->
                 handler.gridSizeUtil = new GridSizeUtil()
-                TBGame game = new TBGame(currentPlayer: PONE.id, remainingMoves: MOVES_REQUIRED, features: [GameFeature.PerShip, GameFeature.Grid10x10], gamePhase: it, players: [PONE, PFOUR])
+                TBGame game = new TBGame(currentPlayer: PONE.id, remainingMoves: MOVES_REQUIRED, features: [GameFeature.PerShip, GameFeature.Grid10x10], gamePhase: it, players: [PONE, PFOUR], gridSize: 10)
                 shouldFail(GameIsNotInPlayModeException.class, {
                     handler.handleActionInternal(PONE, game, new Target(player: PFOUR.md5, coordinate: new GridCoordinate(0, 0)))
                 })
@@ -136,6 +136,7 @@ class AbstractPlayerMoveHandlerTest extends MongoGameCoreTestCase {
                 remainingMoves: MOVES_REQUIRED,
                 features: [GameFeature.PerShip, GameFeature.Grid10x10],
                 gamePhase: GamePhase.Playing,
+                gridSize: 10,
                 players: [PONE, PFOUR],
                 playerDetails: [
                         (PFOUR.id): [
@@ -158,6 +159,7 @@ class AbstractPlayerMoveHandlerTest extends MongoGameCoreTestCase {
                 features: [GameFeature.PerShip, GameFeature.Grid10x10],
                 gamePhase: GamePhase.Playing,
                 players: [PONE, PFOUR],
+                gridSize: 10,
                 playerDetails: [
                         (PFOUR.id): [
                                 isAlive: {

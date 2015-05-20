@@ -22,6 +22,7 @@ abstract class AbstractBaseHandlerTest extends MongoGameCoreTestCase {
     protected void setUp() throws Exception {
         game = new TBGame(
                 features: [GameFeature.Grid15x15, GameFeature.ActionsPerTurn, GameFeature.CriticalDisabled, GameFeature.ECMEnabled, GameFeature.EMEnabled, GameFeature.EREnabled, GameFeature.SpyEnabled],
+                gridSize: 15,
                 players: [PONE, PTWO, PTHREE, PFOUR])
         new PlayerGameStateInitializer(util: new GridSizeUtil()).initializeGame(game)
         game.gamePhase = GamePhase.Setup

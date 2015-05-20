@@ -109,41 +109,42 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
                         ] as Set,
                         players: [TEST_PLAYER2.md5, TEST_PLAYER3.md5, TEST_PLAYER1.md5],
                 ))
-        assert game != null
-        assert game.playerStates == [
+        assert game
+        assert 20 == game.gridsize
+        assert [
                 (TEST_PLAYER1.md5): PlayerState.Pending,
                 (TEST_PLAYER2.md5): PlayerState.Pending,
                 (TEST_PLAYER3.md5): PlayerState.Accepted
-        ]
-        assert game.playersAlive == [
+        ] == game.playerStates
+        assert [
                 (TEST_PLAYER1.md5): false,
                 (TEST_PLAYER2.md5): false,
                 (TEST_PLAYER3.md5): false
-        ]
-        assert game.playersSetup == [
+        ] == game.playersAlive
+        assert [
                 (TEST_PLAYER1.md5): false,
                 (TEST_PLAYER2.md5): false,
                 (TEST_PLAYER3.md5): false
-        ]
-        assert game.playersScore == [
+        ] == game.playersSetup
+        assert [
                 (TEST_PLAYER1.md5): 0,
                 (TEST_PLAYER2.md5): 0,
                 (TEST_PLAYER3.md5): 0
-        ]
-        assert game.maskedPlayersState.activeShipsRemaining == 0
-        assert game.maskedPlayersState.opponentGrids == [
+        ] == game.playersScore
+        assert 0 == game.maskedPlayersState.activeShipsRemaining
+        assert [
                 (TEST_PLAYER1.md5): new Grid(20),
                 (TEST_PLAYER2.md5): new Grid(20)
-        ]
-        assert game.maskedPlayersState.opponentViews == [
+        ] == game.maskedPlayersState.opponentGrids
+        assert [
                 (TEST_PLAYER1.md5): new Grid(20),
                 (TEST_PLAYER2.md5): new Grid(20)
-        ]
-        assert game.maskedPlayersState.spysRemaining == 0
-        assert game.maskedPlayersState.ecmsRemaining == 2
-        assert game.maskedPlayersState.emergencyRepairsRemaining == 2
-        assert game.maskedPlayersState.evasiveManeuversRemaining == 0
-        assert game.gamePhase == GamePhase.Challenged
+        ] == game.maskedPlayersState.opponentViews
+        assert 0 == game.maskedPlayersState.spysRemaining
+        assert 2 == game.maskedPlayersState.ecmsRemaining
+        assert 2 == game.maskedPlayersState.emergencyRepairsRemaining
+        assert 0 == game.maskedPlayersState.evasiveManeuversRemaining
+        assert GamePhase.Challenged == game.gamePhase
 
         //  Clear cache and force a load from db to confirm full round trip
         cacheManager.cacheNames.each {
@@ -177,21 +178,21 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
         def P3 = createPlayerAPITarget(TEST_PLAYER3)
         TBMaskedGame game = newGame(P3, STANDARD_PLAYERS_AND_FEATURES)
         def P1G = createGameTarget(createPlayerAPITarget(TEST_PLAYER1), game)
-        assert game != null
-        assert game.playerStates == [
+        assert game
+        assert [
                 (TEST_PLAYER1.md5): PlayerState.Pending,
                 (TEST_PLAYER2.md5): PlayerState.Pending,
                 (TEST_PLAYER3.md5): PlayerState.Accepted
-        ]
-        assert game.gamePhase == GamePhase.Challenged
+        ] == game.playerStates
+        assert GamePhase.Challenged == game.gamePhase
 
         game = rejectGame(P1G)
-        assert game.playerStates == [
+        assert [
                 (TEST_PLAYER1.md5): PlayerState.Rejected,
                 (TEST_PLAYER2.md5): PlayerState.Pending,
                 (TEST_PLAYER3.md5): PlayerState.Accepted
-        ]
-        assert game.gamePhase == GamePhase.Declined
+        ] == game.playerStates
+        assert GamePhase.Declined == game.gamePhase
     }
 
     @Test
@@ -203,69 +204,69 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
         acceptGame(P1G)
         acceptGame(P2G)
         game = quitGame(P1G)
-        assert game.playerStates == [
+        assert [
                 (TEST_PLAYER1.md5): PlayerState.Quit,
                 (TEST_PLAYER2.md5): PlayerState.Accepted,
                 (TEST_PLAYER3.md5): PlayerState.Accepted
-        ]
+        ] == game.playerStates
     }
 
     @Test
     void testSetupGame() {
         def P3 = createPlayerAPITarget(TEST_PLAYER3)
         TBMaskedGame game = newGame(P3, STANDARD_PLAYERS_AND_FEATURES)
-        assert game != null
+        assert game
         def P3G = createGameTarget(P3, game)
         def P1G = createGameTarget(createPlayerAPITarget(TEST_PLAYER1), game)
         def P2G = createGameTarget(createPlayerAPITarget(TEST_PLAYER2), game)
 
 
         game = acceptGame(P1G)
-        assert game != null
-        assert game.playerStates == [
+        assert game
+        assert [
                 (TEST_PLAYER1.md5): PlayerState.Accepted,
                 (TEST_PLAYER2.md5): PlayerState.Pending,
                 (TEST_PLAYER3.md5): PlayerState.Accepted
-        ]
-        assert game.gamePhase == GamePhase.Challenged
+        ] == game.playerStates
+        assert GamePhase.Challenged == game.gamePhase
 
         game = acceptGame(P2G)
-        assert game != null
-        assert game.playerStates == [
+        assert game
+        assert [
                 (TEST_PLAYER1.md5): PlayerState.Accepted,
                 (TEST_PLAYER2.md5): PlayerState.Accepted,
                 (TEST_PLAYER3.md5): PlayerState.Accepted
-        ]
-        assert game.playersSetup == [
+        ] == game.playerStates
+        assert [
                 (TEST_PLAYER1.md5): false,
                 (TEST_PLAYER2.md5): false,
                 (TEST_PLAYER3.md5): false
-        ]
-        assert game.gamePhase == GamePhase.Setup
+        ] == game.playersSetup
+        assert GamePhase.Setup == game.gamePhase
 
         game = setup(P3G, P3POSITIONS)
-        assert game.playersSetup == [
+        assert [
                 (TEST_PLAYER1.md5): false,
                 (TEST_PLAYER2.md5): false,
                 (TEST_PLAYER3.md5): true
-        ]
-        assert game.gamePhase == GamePhase.Setup
+        ] == game.playersSetup
+        assert GamePhase.Setup == game.gamePhase
 
         game = setup(P1G, P1POSITIONS)
-        assert game.playersSetup == [
+        assert [
                 (TEST_PLAYER1.md5): true,
                 (TEST_PLAYER2.md5): false,
                 (TEST_PLAYER3.md5): true
-        ]
-        assert game.gamePhase == GamePhase.Setup
+        ] == game.playersSetup
+        assert GamePhase.Setup == game.gamePhase
 
         game = setup(P2G, P2POSITIONS)
-        assert game.playersSetup == [
+        assert [
                 (TEST_PLAYER1.md5): true,
                 (TEST_PLAYER2.md5): true,
                 (TEST_PLAYER3.md5): true
-        ]
-        assert game.gamePhase == GamePhase.Playing
+        ] == game.playersSetup
+        assert GamePhase.Playing == game.gamePhase
         assert 5 == game.remainingMoves
         assert [TEST_PLAYER2.md5, TEST_PLAYER1.md5, TEST_PLAYER3.md5].contains(game.currentPlayer)
     }
@@ -274,7 +275,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
     void testFireForTurnInGame() {
         def P3 = createPlayerAPITarget(TEST_PLAYER3)
         TBMaskedGame game = newGame(P3, STANDARD_PLAYERS_AND_FEATURES)
-        assert game != null
+        assert game
         def P3G = createGameTarget(P3, game)
         def P1G = createGameTarget(createPlayerAPITarget(TEST_PLAYER1), game)
         def P2G = createGameTarget(createPlayerAPITarget(TEST_PLAYER2), game)

@@ -13,7 +13,7 @@ import com.jtbdevelopment.TwistedBattleship.state.grid.GridSizeUtil
  */
 class ShipPlacementValidatorTest extends GroovyTestCase {
     ShipPlacementValidator validator = new ShipPlacementValidator()
-    TBGame game = new TBGame(features: [GameFeature.Grid15x15])
+    TBGame game = new TBGame(features: [GameFeature.Grid15x15], gridSize: 15)
 
     @Override
     protected void setUp() throws Exception {

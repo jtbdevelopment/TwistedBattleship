@@ -25,7 +25,6 @@ class ShipPlacementValidator {
         }
 
         //  TODO - cleanup this code a bit
-        int maxPosition = gridSizeUtil.getSize(game)
         Set<GridCoordinate> used = [] as Set
         shipState.each {
             Ship ship, ShipState state ->
@@ -40,10 +39,7 @@ class ShipPlacementValidator {
                         }
                         used.add(coordinate)
 
-                        if (coordinate.row >= maxPosition ||
-                                coordinate.column >= maxPosition ||
-                                coordinate.row < 0 ||
-                                coordinate.column < 0) {
+                        if (!gridSizeUtil.isValidCoordinate(game, coordinate)) {
                             throw new ShipPlacementsNotValidException()
                         }
                 }

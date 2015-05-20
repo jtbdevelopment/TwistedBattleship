@@ -32,12 +32,13 @@ class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
                         return size
                 }
         ] as GridSizeUtil
-        assert game.playerDetails == [:]
+        assert [:] == game.playerDetails
         initializer.initializeGame(game)
-        assert game.playerDetails.size() == 3
-        assert game.currentPlayer == PONE.id
-        assert game.remainingMoves == 1
-        assert game.movesPerTurn == 1
+        assert size == game.gridSize
+        assert 3 == game.playerDetails.size()
+        assert PONE.id == game.currentPlayer
+        assert 1 == game.remainingMoves
+        assert 1 == game.movesPerTurn
         game.players.each {
             Player p ->
                 def expectedSpecials = 2
@@ -61,10 +62,11 @@ class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
                 }
         ] as GridSizeUtil
         initializer.initializeGame(game)
-        assert game.playerDetails.size() == 3
-        assert game.currentPlayer == PTWO.id
-        assert game.remainingMoves == Ship.values().size()
-        assert game.movesPerTurn == Ship.values().size()
+        assert size == game.gridSize
+        assert 3 == game.playerDetails.size()
+        assert PTWO.id == game.currentPlayer
+        assert Ship.values().size() == game.remainingMoves
+        assert Ship.values().size() == game.movesPerTurn
         game.players.each {
             Player p ->
                 validatePlayerStates(game, p, 0, size)
@@ -76,12 +78,12 @@ class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
         opponentIds.remove(p.id)
         TBPlayerState playerState = game.playerDetails[p.id]
         assert playerState
-        assert playerState.ecmsRemaining == expectedSpecials
-        assert playerState.evasiveManeuversRemaining == expectedSpecials
-        assert playerState.emergencyRepairsRemaining == expectedSpecials
-        assert playerState.spysRemaining == expectedSpecials
-        assert playerState.opponentGrids.keySet() == opponentIds
-        assert playerState.opponentGrids.values().each {
+        assert expectedSpecials == playerState.ecmsRemaining
+        assert expectedSpecials == playerState.evasiveManeuversRemaining
+        assert expectedSpecials == playerState.emergencyRepairsRemaining
+        assert expectedSpecials == playerState.spysRemaining
+        assert opponentIds == playerState.opponentGrids.keySet()
+        playerState.opponentGrids.values().each {
             Grid it ->
                 it.size == size
                 it.table.each {
@@ -92,8 +94,8 @@ class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
                         }
                 }
         }
-        assert playerState.opponentViews.keySet() == opponentIds
-        assert playerState.opponentViews.values().each {
+        assert opponentIds == playerState.opponentViews.keySet()
+        playerState.opponentViews.values().each {
             Grid it ->
                 it.size == size
                 it.table.each {

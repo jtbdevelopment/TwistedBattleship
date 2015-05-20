@@ -28,7 +28,7 @@ class GridSizeUtil {
     }
 
     boolean isValidCoordinate(final TBGame game, final GridCoordinate coordinate) {
-        int max = getSize(game) - 1
+        int max = game.gridSize - 1
         return !(coordinate.row < 0 || coordinate.column < 0 || coordinate.row > max || coordinate.column > max)
     }
 }
