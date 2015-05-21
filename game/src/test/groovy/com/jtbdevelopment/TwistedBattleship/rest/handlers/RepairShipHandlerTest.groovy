@@ -1,7 +1,7 @@
 package com.jtbdevelopment.TwistedBattleship.rest.handlers
 
 import com.jtbdevelopment.TwistedBattleship.exceptions.NoRepairActionsRemainException
-import com.jtbdevelopment.TwistedBattleship.exceptions.NoShipToRepairAtCoordinateException
+import com.jtbdevelopment.TwistedBattleship.exceptions.NoShipAtCoordinateException
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
@@ -37,7 +37,7 @@ class RepairShipHandlerTest extends AbstractBaseHandlerTest {
 
     void testValidatesShipExistsAtCoordinate() {
         game.playerDetails[PONE.id].emergencyRepairsRemaining = 1
-        shouldFail(NoShipToRepairAtCoordinateException.class, {
+        shouldFail(NoShipAtCoordinateException.class, {
             handler.validateMoveSpecific(PONE, game, PONE, new GridCoordinate(3, 1))
         })
     }
