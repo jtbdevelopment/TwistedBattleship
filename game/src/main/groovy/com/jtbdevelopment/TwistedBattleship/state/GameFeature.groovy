@@ -9,24 +9,24 @@ import groovy.transform.CompileStatic
 @CompileStatic
 enum GameFeature {
     GridSize(1, Grid10x10, 'Grid:', 'Playing grid size.'),
-    Grid10x10(1, '10x10', '10x10 grid', GridSize),
-    Grid15x15(2, '15x15', '15x15 grid', GridSize),
-    Grid20x20(3, '20x20', '20x20 grid', GridSize),
+    Grid10x10(1, '10x10', '10 x 10 square grid', GridSize),
+    Grid15x15(2, '15x15', '15 x 15 square grid', GridSize),
+    Grid20x20(3, '20x20', '20 x 20 square grid', GridSize),
 
     FogOfWar(2, SharedIntel, 'Fog of War:', 'How much information is shared between players.'),
-    SharedIntel(1, 'Shared', 'Players sees the results of other players actions on common opponents.', FogOfWar),
+    SharedIntel(1, 'Shared', 'Players share views on common opponents.', FogOfWar),
     IsolatedIntel(2, 'Isolated', 'Each player plays in isolation.', FogOfWar),
 
-    ECM(3, ECMEnabled, 'Electronic Countermeasures:', 'ECM allows player to re-hide an area of their grid from opponents.'),
-    ECMEnabled(1, 'Available', 'Players can use part of turn to re-hide a chosen portion of their grid.', ECM),
+    ECM(3, ECMEnabled, 'Electronic Countermeasures:', 'ECM devices allow player to re-hide an area of their grid from opponents.'),
+    ECMEnabled(1, 'Available', 'Players can use ECM device to re-fog a chosen portion of their grid.', ECM),
     ECMDisabled(2, 'Not Available', 'ECM option disabled.', ECM),
 
-    Spy(4, SpyEnabled, 'Spying:', "Allows player's drones to spy on opponent grids."),
-    SpyEnabled(1, 'Available', 'Players can use part of turn to get a targeted glimpse of an opponents grid.', Spy),
+    Spy(4, SpyEnabled, 'Spying:', "Allows player's drones to spy on opponents."),
+    SpyEnabled(1, 'Available', "Players can use spy drones to get a targeted glimpse of an opponent's grid.", Spy),
     SpyDisabled(2, 'Not Available', 'Spy drones disabled.', Spy),
 
     EvasiveManeuvers(5, EMEnabled, 'Evasive Maneuvers:', 'Allows defensive evasive maneuvers of a ship.'),
-    EMEnabled(1, 'Available', 'Players can move a ship a short distance, re-hiding the old and new positions and some random squares in the area.', EvasiveManeuvers),
+    EMEnabled(1, 'Available', 'Players can move a ship a short distance, re-fogging the old and new positions and some random squares in the area.', EvasiveManeuvers),
     EMDisabled(2, 'Not Available', 'Evasive maneuvers disabled.', EvasiveManeuvers),
 
     EmergencyRepairs(6, EREnabled, 'Emergency Repairs:', 'Allows a damaged ship to be partially repaired.'),

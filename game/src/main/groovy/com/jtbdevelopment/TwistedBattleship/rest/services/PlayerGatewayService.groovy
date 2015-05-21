@@ -2,6 +2,8 @@ package com.jtbdevelopment.TwistedBattleship.rest.services
 
 import com.jtbdevelopment.TwistedBattleship.rest.GameFeatureInfo
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
+import com.jtbdevelopment.TwistedBattleship.state.grid.GridCircleUtil
+import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.games.rest.services.AbstractPlayerGatewayService
 import groovy.transform.CompileStatic
 import org.bson.types.ObjectId
@@ -24,7 +26,7 @@ class PlayerGatewayService extends AbstractPlayerGatewayService<ObjectId> {
     @Path("features")
     @Produces(MediaType.APPLICATION_JSON)
     @SuppressWarnings("GrMethodMayBeStatic")
-    public List<GameFeatureInfo> featuresAndDescriptions() {
+    List<GameFeatureInfo> featuresAndDescriptions() {
         GameFeature.groupedFeatures.keySet().sort {
             GameFeature a, GameFeature b ->
                 return a.order - b.order
@@ -35,5 +37,13 @@ class PlayerGatewayService extends AbstractPlayerGatewayService<ObjectId> {
                         new GameFeatureInfo.Detail(option)
                 })
         }
+    }
+
+    @GET
+    @Path("circles")
+    @Produces(MediaType.APPLICATION_JSON)
+    @SuppressWarnings("GrMethodMayBeStatic")
+    Map<Integer, Set<GridCoordinate>> circleSizes() {
+        return GridCircleUtil.CIRCLE_OFFSETS
     }
 }

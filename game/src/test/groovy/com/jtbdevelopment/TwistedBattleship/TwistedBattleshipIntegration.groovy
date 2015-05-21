@@ -8,6 +8,7 @@ import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
+import com.jtbdevelopment.TwistedBattleship.state.grid.GridCircleUtil
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.TwistedBattleship.state.masked.TBMaskedGame
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
@@ -39,6 +40,15 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
     static void setup() {
         cacheManager = context.getBean(HazelcastCacheManager.class)
         gameRepository = context.getBean(GameRepository.class)
+    }
+
+    @Test
+    void testGetCircleSizes() {
+        def client = createAPITarget(TEST_PLAYER2)
+        def sizes = client.path("circles").request(MediaType.APPLICATION_JSON_TYPE).get(
+                new GenericType<Map<Integer, Set<GridCoordinate>>>() {
+                })
+        assert GridCircleUtil.CIRCLE_OFFSETS == sizes
     }
 
     @Test
