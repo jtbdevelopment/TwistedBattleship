@@ -85,7 +85,7 @@ class TBPlayerState implements Serializable {
     }
 
     Map<GridCoordinate, ShipState> getCoordinateShipMap() {
-        if (coordinateShipMap == null) {
+        if (coordinateShipMap == null || coordinateShipMap.isEmpty()) {
             computeCoordinateShipMap()
         }
         return coordinateShipMap

@@ -23,6 +23,12 @@ class GridCoordinateTest extends GroovyTestCase {
         assert 1 == g.column
     }
 
+    void testAddDirect() {
+        GridCoordinate g = gc1.add(1, 6)
+        assert 6 == g.row
+        assert 9 == g.column
+    }
+
     void testToString() {
         assert "(5,3)" == gc1.toString()
         assert "(5,3)" == gc2.toString()

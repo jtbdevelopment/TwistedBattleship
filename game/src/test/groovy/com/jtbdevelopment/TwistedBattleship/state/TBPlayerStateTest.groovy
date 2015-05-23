@@ -105,4 +105,24 @@ class TBPlayerStateTest extends GroovyTestCase {
         assert shipState.is(state.coordinateShipMap[new GridCoordinate(0, 1)])
         assert shipState.is(state.coordinateShipMap[new GridCoordinate(0, 2)])
     }
+
+    void testClearingMapCausesRecomputeOnNextFetch() {
+        def shipState = new ShipState(Ship.Submarine, new TreeSet<GridCoordinate>(
+                [new GridCoordinate(0, 0), new GridCoordinate(0, 1), new GridCoordinate(0, 2)]
+        ))
+        this.state.shipStates += [(Ship.Submarine): shipState]
+
+        def firstMapReference = state.coordinateShipMap
+        assert 3 == firstMapReference.size()
+        assert shipState.is(firstMapReference[new GridCoordinate(0, 0)])
+        assert shipState.is(firstMapReference[new GridCoordinate(0, 1)])
+        assert shipState.is(firstMapReference[new GridCoordinate(0, 2)])
+        firstMapReference.clear()
+        assert firstMapReference.isEmpty()
+
+        def secondMapReference = state.coordinateShipMap
+        assertFalse firstMapReference.is(secondMapReference)
+        assertFalse secondMapReference.isEmpty()
+        assert firstMapReference.isEmpty()
+    }
 }

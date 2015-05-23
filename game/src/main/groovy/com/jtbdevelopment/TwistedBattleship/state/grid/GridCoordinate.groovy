@@ -19,6 +19,10 @@ class GridCoordinate implements Comparable<GridCoordinate>, Serializable {
         this.column = column
     }
 
+    GridCoordinate add(final int row, final int column) {
+        new GridCoordinate(this.row + row, this.column + column)
+    }
+
     GridCoordinate add(final GridCoordinate other) {
         new GridCoordinate(this.row + other.row, this.column + other.column)
     }

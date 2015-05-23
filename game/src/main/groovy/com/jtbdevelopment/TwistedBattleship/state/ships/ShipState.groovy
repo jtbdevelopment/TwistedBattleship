@@ -19,6 +19,7 @@ class ShipState implements Serializable {
     protected ShipState() {
     }
 
+    //  TODO - why is this sortedSet?
     ShipState(final Ship ship,
               final SortedSet<GridCoordinate> shipGridCells) {
         this.ship = ship
