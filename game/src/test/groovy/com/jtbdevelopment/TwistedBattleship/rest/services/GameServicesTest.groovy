@@ -28,6 +28,7 @@ class GameServicesTest extends MongoGameCoreTestCase {
                 "spy": ["spy", [Target.class], [], [MediaType.APPLICATION_JSON]],
                 "repair": ["repair", [Target.class], [], [MediaType.APPLICATION_JSON]],
                 "ecm": ["ecm", [Target.class], [], [MediaType.APPLICATION_JSON]],
+                "move": ["move", [Target.class], [], [MediaType.APPLICATION_JSON]],
         ]
         stuff.each {
             String method, List<Object> details ->
@@ -163,5 +164,23 @@ class GameServicesTest extends MongoGameCoreTestCase {
                 }
         ] as ECMHandler
         assert maskedGame.is(services.ecm(target))
+    }
+
+    void testMove() {
+        TBMaskedGame maskedGame = new TBMaskedGame()
+        Target target = new Target(player: PONE.md5, coordinate: new GridCoordinate(10, 5))
+        ObjectId gameId = new ObjectId()
+        services.playerID.set(PONE.id)
+        services.gameID.set(gameId)
+        services.evasiveManeuverHandler = [
+                handleAction: {
+                    Serializable p, Serializable g, Target t ->
+                        assert PONE.id.is(p)
+                        assert gameId.is(g)
+                        assert target.is(t)
+                        maskedGame
+                }
+        ] as EvasiveManeuverHandler
+        assert maskedGame.is(services.move(target))
     }
 }

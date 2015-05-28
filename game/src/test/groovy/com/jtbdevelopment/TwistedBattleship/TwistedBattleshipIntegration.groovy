@@ -491,6 +491,79 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
     }
 
     @Test
+    void testMoveForTurnInGame() {
+        def P3 = createPlayerAPITarget(TEST_PLAYER3)
+        TBMaskedGame game = newGame(P3, STANDARD_PLAYERS_AND_FEATURES)
+        assert game != null
+        def P3G = createGameTarget(P3, game)
+        def P1G = createGameTarget(createPlayerAPITarget(TEST_PLAYER1), game)
+        def P2G = createGameTarget(createPlayerAPITarget(TEST_PLAYER2), game)
+
+        acceptGame(P1G)
+        acceptGame(P2G)
+        setup(P3G, P3POSITIONS)
+        setup(P1G, P1POSITIONS)
+        setup(P2G, P2POSITIONS)
+
+        //  Force turn to P2
+        TBGame dbGame = gameRepository.findOne(new ObjectId(game.idAsString))
+        dbGame.currentPlayer = TEST_PLAYER2.id
+        gameRepository.save(dbGame)
+        cacheManager.cacheNames.each {
+            cacheManager.getCache(it).clear()
+        }
+
+        game = fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 7))
+        game = fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 0))
+
+        //  Force turn to P1
+        dbGame = gameRepository.findOne(new ObjectId(game.idAsString))
+        dbGame.currentPlayer = TEST_PLAYER1.id
+        dbGame.remainingMoves = 5
+        gameRepository.save(dbGame)
+        cacheManager.cacheNames.each {
+            cacheManager.getCache(it).clear()
+        }
+
+        game = fire(P1G, TEST_PLAYER2, new GridCoordinate(7, 0))
+        assert GridCellState.KnownByHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 7)
+        assert GridCellState.KnownByHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 0)
+        assert [new GridCoordinate(5, 7),
+                new GridCoordinate(6, 7),
+                new GridCoordinate(7, 7),
+                new GridCoordinate(8, 7),
+                new GridCoordinate(9, 7),] == game.maskedPlayersState.shipStates[Ship.Carrier].shipGridCells
+        game = move(P1G, TEST_PLAYER1, new GridCoordinate(8, 7))
+        assert 2 == game.remainingMoves
+        assert "TEST PLAYER1 performed evasive maneuvers."
+        assert 1 == game.maskedPlayersState.evasiveManeuversRemaining
+        assert GridCellState.ObscuredHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 7)
+        assert GridCellState.KnownByHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 0)
+        assert [new GridCoordinate(5, 7),
+                new GridCoordinate(6, 7),
+                new GridCoordinate(7, 7),
+                new GridCoordinate(8, 7),
+                new GridCoordinate(9, 7),] != game.maskedPlayersState.shipStates[Ship.Carrier].shipGridCells
+
+
+        assert [new GridCoordinate(7, 0),
+                new GridCoordinate(8, 0),
+                new GridCoordinate(9, 0),] == game.maskedPlayersState.shipStates[Ship.Cruiser].shipGridCells
+        game = move(P1G, TEST_PLAYER1, new GridCoordinate(7, 0))
+        assert "TEST PLAYER1 performed evasive maneuvers."
+        assert [new GridCoordinate(7, 0),
+                new GridCoordinate(8, 0),
+                new GridCoordinate(9, 0),] != game.maskedPlayersState.shipStates[Ship.Cruiser].shipGridCells
+        assert GamePhase.Playing == game.gamePhase
+        assert GridCellState.ObscuredHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 7)
+        assert GridCellState.ObscuredHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 0)
+
+        assert 0 == game.playersScore[TEST_PLAYER1.md5]
+        assert 0 == game.maskedPlayersState.evasiveManeuversRemaining
+        assert TEST_PLAYER1.md5 != game.currentPlayer
+    }
+
+    @Test
     void testCreatingInvalidGames() {
         def P3 = createConnection(TEST_PLAYER3).target(PLAYER_API)
         def entity = Entity.entity(
@@ -557,6 +630,10 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
 
     protected TBMaskedGame fire(WebTarget target, Player player, GridCoordinate coordinate) {
         makeMove(player, coordinate, target, "fire")
+    }
+
+    protected TBMaskedGame move(WebTarget target, Player player, GridCoordinate coordinate) {
+        makeMove(player, coordinate, target, "move")
     }
 
     protected TBMaskedGame spy(WebTarget target, Player player, GridCoordinate coordinate) {

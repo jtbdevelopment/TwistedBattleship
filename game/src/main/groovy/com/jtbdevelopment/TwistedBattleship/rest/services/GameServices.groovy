@@ -39,6 +39,9 @@ class GameServices extends AbstractMultiPlayerGameServices<ObjectId> {
     @Autowired
     ECMHandler ecmHandler
 
+    @Autowired
+    EvasiveManeuverHandler evasiveManeuverHandler
+
     @PUT
     @Path("setup")
     @Produces(MediaType.APPLICATION_JSON)
@@ -83,5 +86,11 @@ class GameServices extends AbstractMultiPlayerGameServices<ObjectId> {
         ecmHandler.handleAction((ObjectId) playerID.get(), (ObjectId) gameID.get(), target)
     }
 
-    //  TODO - move
+    @PUT
+    @Path("move")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    Object move(final Target target) {
+        evasiveManeuverHandler.handleAction((ObjectId) playerID.get(), (ObjectId) gameID.get(), target)
+    }
 }

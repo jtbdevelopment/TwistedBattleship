@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component
  */
 @CompileStatic
 @Component
-class EmergencyManeuverHandler extends AbstractSpecialMoveHandler {
+class EvasiveManeuverHandler extends AbstractSpecialMoveHandler {
     @Autowired
     ShipRelocator shipRelocator
 
@@ -60,10 +60,10 @@ class EmergencyManeuverHandler extends AbstractSpecialMoveHandler {
         Set<GridCoordinate> fogCoordinates = fogCoordinatesGenerator.generateFogCoordinates(game, ship.shipGridCells, newCoordinates)
         ship.shipGridCells = newCoordinates
         playerState.coordinateShipMap.clear()
-        String message = player.displayName + " performed emergency maneuvers."
+        String message = player.displayName + " performed evasive maneuvers."
         playerState.lastActionMessage = message
         fogGrids(game, player, playerState, message, fogCoordinates)
-
+        --playerState.evasiveManeuversRemaining
         return game
     }
 

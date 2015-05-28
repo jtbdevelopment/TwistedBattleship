@@ -16,8 +16,8 @@ import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
  * Date: 5/21/15
  * Time: 6:41 AM
  */
-class EmergencyManeuverHandlerTest extends AbstractBaseHandlerTest {
-    EmergencyManeuverHandler handler = new EmergencyManeuverHandler()
+class EvasiveManeuverHandlerTest extends AbstractBaseHandlerTest {
+    EvasiveManeuverHandler handler = new EvasiveManeuverHandler()
 
     void testTargetSelf() {
         assert handler.targetSelf()
@@ -48,6 +48,7 @@ class EmergencyManeuverHandlerTest extends AbstractBaseHandlerTest {
 
     //  No need to really test isolated vs shared
     void testManeuver() {
+        assert 3 == game.playerDetails[PONE.id].evasiveManeuversRemaining
         game.playerDetails[PTWO.id].opponentGrids[PONE.id].set(0, 0, GridCellState.KnownShip)
         game.playerDetails[PTWO.id].opponentGrids[PONE.id].set(1, 0, GridCellState.KnownByHit)
         game.playerDetails[PTWO.id].opponentGrids[PONE.id].set(2, 0, GridCellState.KnownByOtherHit)
@@ -120,6 +121,9 @@ class EmergencyManeuverHandlerTest extends AbstractBaseHandlerTest {
         assert GridCellState.Unknown == game.playerDetails[PONE.id].opponentViews[PTHREE.id].get(0, 0)
         assert GridCellState.ObscuredRehit == game.playerDetails[PONE.id].opponentViews[PTHREE.id].get(1, 0)
         assert GridCellState.ObscuredHit == game.playerDetails[PONE.id].opponentViews[PTHREE.id].get(2, 0)
+
+        game.playerDetails.each { assert "1 performed evasive maneuvers." == it.value.lastActionMessage }
+        assert 2 == game.playerDetails[PONE.id].evasiveManeuversRemaining
     }
 
 }
