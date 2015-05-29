@@ -9,7 +9,6 @@ import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
-import com.jtbdevelopment.TwistedBattleship.state.grid.GridSizeUtil
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
 import com.jtbdevelopment.games.dao.AbstractPlayerRepository
@@ -96,14 +95,6 @@ class AbstractPlayerMoveHandlerTest extends MongoGameCoreTestCase {
             GameFeature size ->
                 TBGame game = new TBGame(currentPlayer: PONE.id, features: [size], remainingMoves: 5, gamePhase: GamePhase.Playing, players: [PONE, PTWO])
                 GridCoordinate coord = new GridCoordinate(0, 0)
-                handler.gridSizeUtil = [
-                        isValidCoordinate: {
-                            TBGame g, GridCoordinate c ->
-                                assert g.is(game)
-                                assert c.is(coord)
-                                return false
-                        }
-                ] as GridSizeUtil
                 shouldFail(CoordinateOutOfBoundsException.class, {
                     handler.handleActionInternal(PONE, game, new Target(player: PTWO.md5, coordinate: coord))
                 })
@@ -120,7 +111,6 @@ class AbstractPlayerMoveHandlerTest extends MongoGameCoreTestCase {
     void testExceptionForGameNotInPlayingPhase() {
         GamePhase.values().findAll { it != GamePhase.Playing }.each {
             GamePhase it ->
-                handler.gridSizeUtil = new GridSizeUtil()
                 TBGame game = new TBGame(currentPlayer: PONE.id, remainingMoves: MOVES_REQUIRED, features: [GameFeature.PerShip, GameFeature.Grid10x10], gamePhase: it, players: [PONE, PFOUR], gridSize: 10)
                 shouldFail(GameIsNotInPlayModeException.class, {
                     handler.handleActionInternal(PONE, game, new Target(player: PFOUR.md5, coordinate: new GridCoordinate(0, 0)))
@@ -130,7 +120,6 @@ class AbstractPlayerMoveHandlerTest extends MongoGameCoreTestCase {
     }
 
     void testExceptionForTargetingInactivePlayer() {
-        handler.gridSizeUtil = new GridSizeUtil()
         TBGame game = new TBGame(
                 currentPlayer: PONE.id,
                 remainingMoves: MOVES_REQUIRED,
@@ -152,7 +141,6 @@ class AbstractPlayerMoveHandlerTest extends MongoGameCoreTestCase {
     }
 
     void testExceptionForMoveSpecificValidation() {
-        handler.gridSizeUtil = new GridSizeUtil()
         TBGame game = new TBGame(
                 currentPlayer: PONE.id,
                 remainingMoves: MOVES_REQUIRED,
@@ -186,7 +174,6 @@ class AbstractPlayerMoveHandlerTest extends MongoGameCoreTestCase {
                                 (Ship.Battleship): new ShipState(Ship.Battleship, [] as SortedSet<GridCoordinate>)]),
                 ],
                 gamePhase: GamePhase.Playing)
-        handler.gridSizeUtil = new GridSizeUtil()
 
         assert initialGame.is(handler.rotateTurnBasedGame(initialGame))
         assert 1 == initialGame.remainingMoves
@@ -209,7 +196,6 @@ class AbstractPlayerMoveHandlerTest extends MongoGameCoreTestCase {
                                 (Ship.Battleship): new ShipState(Ship.Battleship, [] as SortedSet<GridCoordinate>)]),
                 ],
                 gamePhase: GamePhase.Playing)
-        handler.gridSizeUtil = new GridSizeUtil()
 
         assert initialGame.is(handler.rotateTurnBasedGame(initialGame))
         assert 1 == initialGame.remainingMoves
@@ -234,7 +220,6 @@ class AbstractPlayerMoveHandlerTest extends MongoGameCoreTestCase {
                                 (Ship.Battleship): new ShipState(Ship.Battleship, [] as SortedSet<GridCoordinate>)]),
                 ],
                 gamePhase: GamePhase.Playing)
-        handler.gridSizeUtil = new GridSizeUtil()
 
         assert initialGame.is(handler.rotateTurnBasedGame(initialGame))
         assert 3 == initialGame.remainingMoves
@@ -254,7 +239,6 @@ class AbstractPlayerMoveHandlerTest extends MongoGameCoreTestCase {
                                 (Ship.Battleship): new ShipState(Ship.Battleship, [] as SortedSet<GridCoordinate>)]),
                 ],
                 gamePhase: GamePhase.Playing)
-        handler.gridSizeUtil = new GridSizeUtil()
 
         assert initialGame.is(handler.rotateTurnBasedGame(initialGame))
         assert 0 == initialGame.remainingMoves

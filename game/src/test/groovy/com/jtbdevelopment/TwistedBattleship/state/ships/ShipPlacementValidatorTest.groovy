@@ -5,7 +5,6 @@ import com.jtbdevelopment.TwistedBattleship.exceptions.ShipPlacementsNotValidExc
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
-import com.jtbdevelopment.TwistedBattleship.state.grid.GridSizeUtil
 
 /**
  * Date: 4/30/15
@@ -14,11 +13,6 @@ import com.jtbdevelopment.TwistedBattleship.state.grid.GridSizeUtil
 class ShipPlacementValidatorTest extends GroovyTestCase {
     ShipPlacementValidator validator = new ShipPlacementValidator()
     TBGame game = new TBGame(features: [GameFeature.Grid15x15], gridSize: 15)
-
-    @Override
-    protected void setUp() throws Exception {
-        validator.gridSizeUtil = new GridSizeUtil()
-    }
 
     void testShipPositionsValid1() {
         validator.validateShipPlacementsForGame(game, [

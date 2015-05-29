@@ -2,14 +2,13 @@ package com.jtbdevelopment.TwistedBattleship.rest.handlers.helpers
 
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
-import com.jtbdevelopment.TwistedBattleship.state.grid.GridSizeUtil
 
 /**
  * Date: 5/27/15
  * Time: 6:38 PM
  */
 class FogCoordinatesGeneratorTest extends GroovyTestCase {
-    FogCoordinatesGenerator fogCoordinatesGenerator = new FogCoordinatesGenerator(gridSizeUtil: new GridSizeUtil())
+    FogCoordinatesGenerator fogCoordinatesGenerator = new FogCoordinatesGenerator()
 
     TBGame game = new TBGame(gridSize: 15)
 

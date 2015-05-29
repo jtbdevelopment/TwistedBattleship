@@ -4,13 +4,11 @@ import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
-import com.jtbdevelopment.TwistedBattleship.state.grid.GridSizeUtil
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.games.factory.GameInitializer
 import com.jtbdevelopment.games.players.Player
 import groovy.transform.CompileStatic
 import org.bson.types.ObjectId
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 /**
@@ -20,13 +18,16 @@ import org.springframework.stereotype.Component
 @CompileStatic
 @Component
 class PlayerGameStateInitializer implements GameInitializer<TBGame> {
-    @Autowired
-    GridSizeUtil util
+    private final static Map<GameFeature, Integer> sizeMap = [
+            (GameFeature.Grid10x10): 10,
+            (GameFeature.Grid15x15): 15,
+            (GameFeature.Grid20x20): 20
+    ]
 
     @Override
     void initializeGame(final TBGame game) {
         int specialMoves = game.players.size() - 1
-        game.gridSize = util.getSize(game)
+        game.gridSize = sizeMap[game.features.find { GameFeature it -> it.group == GameFeature.GridSize }]
         game.currentPlayer = game.players[0].id
         game.remainingMoves = game.features.contains(GameFeature.Single) ? 1 : Ship.values().size()
         game.players.each {

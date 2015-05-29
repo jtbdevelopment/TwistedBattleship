@@ -9,12 +9,6 @@ import com.jtbdevelopment.TwistedBattleship.state.TBGame
 class GridCircleUtilTest extends GroovyTestCase {
     GridCircleUtil util = new GridCircleUtil()
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp()
-        util.gridSizeUtil = new GridSizeUtil()
-    }
-
     void testSmallGrid() {
         assert [
                 new GridCoordinate(2, 2),

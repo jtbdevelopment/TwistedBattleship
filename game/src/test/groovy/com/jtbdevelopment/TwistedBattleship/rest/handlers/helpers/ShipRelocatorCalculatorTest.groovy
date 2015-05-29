@@ -2,7 +2,6 @@ package com.jtbdevelopment.TwistedBattleship.rest.handlers.helpers
 
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
-import com.jtbdevelopment.TwistedBattleship.state.grid.GridSizeUtil
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
 
@@ -11,7 +10,7 @@ import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
  * Time: 7:05 PM
  */
 class ShipRelocatorCalculatorTest extends GroovyTestCase {
-    ShipRelocatorCalculator relocator = new ShipRelocatorCalculator(gridSizeUtil: new GridSizeUtil())
+    ShipRelocatorCalculator relocator = new ShipRelocatorCalculator()
 
     TBGame game = new TBGame(gridSize: 15)
 

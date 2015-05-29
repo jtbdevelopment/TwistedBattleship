@@ -6,7 +6,6 @@ import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
-import com.jtbdevelopment.TwistedBattleship.state.grid.GridSizeUtil
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
 import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
@@ -24,7 +23,6 @@ class TBGameMaskerTest extends MongoGameCoreTestCase {
     TBGameMasker masker = new TBGameMasker()
 
     void testMaskingGame() {
-        masker.gridSizeUtil = new GridSizeUtil()
         TBGame game = new TBGame(
                 rematchTimestamp: ZonedDateTime.now(),
                 gamePhase: GamePhase.Playing,

@@ -4,7 +4,6 @@ import com.jtbdevelopment.TwistedBattleship.factory.gameinitializers.PlayerGameS
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
-import com.jtbdevelopment.TwistedBattleship.state.grid.GridSizeUtil
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipPlacementValidator
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
@@ -24,9 +23,9 @@ abstract class AbstractBaseHandlerTest extends MongoGameCoreTestCase {
                 features: [GameFeature.Grid15x15, GameFeature.ActionsPerTurn, GameFeature.CriticalDisabled, GameFeature.ECMEnabled, GameFeature.EMEnabled, GameFeature.EREnabled, GameFeature.SpyEnabled],
                 gridSize: 15,
                 players: [PONE, PTWO, PTHREE, PFOUR])
-        new PlayerGameStateInitializer(util: new GridSizeUtil()).initializeGame(game)
+        new PlayerGameStateInitializer().initializeGame(game)
         game.gamePhase = GamePhase.Setup
-        new SetupShipsHandler(shipPlacementValidator: new ShipPlacementValidator(gridSizeUtil: new GridSizeUtil())).handleActionInternal(
+        new SetupShipsHandler(shipPlacementValidator: new ShipPlacementValidator()).handleActionInternal(
                 PONE,
                 game,
                 [

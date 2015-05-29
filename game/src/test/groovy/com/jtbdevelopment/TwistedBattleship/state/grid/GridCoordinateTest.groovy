@@ -1,5 +1,7 @@
 package com.jtbdevelopment.TwistedBattleship.state.grid
 
+import com.jtbdevelopment.TwistedBattleship.state.TBGame
+
 /**
  * Date: 5/1/15
  * Time: 7:07 AM
@@ -71,5 +73,29 @@ class GridCoordinateTest extends GroovyTestCase {
         assert 0 < new GridCoordinate(2, 4).compareTo(new GridCoordinate(2, 0))
         assert 0 < new GridCoordinate(9, 1).compareTo(new GridCoordinate(6, 3))
         assert 0 < new GridCoordinate(1, 1).compareTo(new GridCoordinate(1, 0))
+    }
+
+    void testIsValidCoordinate() {
+        TBGame game = new TBGame(gridSize: 7)
+        assert gc1.isValidCoordinate(game)
+        assert gc3.isValidCoordinate(game)
+        assert gc5.isValidCoordinate(game)
+        assertFalse new GridCoordinate(-1, 5).isValidCoordinate(game)
+        assertFalse new GridCoordinate(5, -1).isValidCoordinate(game)
+        assertFalse new GridCoordinate(5, 7).isValidCoordinate(game)
+        assertFalse new GridCoordinate(7, 5).isValidCoordinate(game)
+        assertFalse new GridCoordinate(8, 5).isValidCoordinate(game)
+        assertFalse new GridCoordinate(5, 8).isValidCoordinate(game)
+
+        game.gridSize = 8
+        assert gc1.isValidCoordinate(game)
+        assert gc3.isValidCoordinate(game)
+        assert gc5.isValidCoordinate(game)
+        assertFalse new GridCoordinate(-1, 5).isValidCoordinate(game)
+        assertFalse new GridCoordinate(5, -1).isValidCoordinate(game)
+        assert new GridCoordinate(5, 7).isValidCoordinate(game)
+        assert new GridCoordinate(7, 5).isValidCoordinate(game)
+        assertFalse new GridCoordinate(8, 5).isValidCoordinate(game)
+        assertFalse new GridCoordinate(5, 8).isValidCoordinate(game)
     }
 }

@@ -2,9 +2,7 @@ package com.jtbdevelopment.TwistedBattleship.rest.handlers.helpers
 
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
-import com.jtbdevelopment.TwistedBattleship.state.grid.GridSizeUtil
 import groovy.transform.CompileStatic
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 /**
@@ -15,9 +13,6 @@ import org.springframework.stereotype.Component
 @Component
 class FogCoordinatesGenerator {
     Random generator = new Random()
-
-    @Autowired
-    GridSizeUtil gridSizeUtil
 
     private static final List<List<Integer>> FOG_OFFSET = [
             [-1, 0, -1],
@@ -44,7 +39,7 @@ class FogCoordinatesGenerator {
                                         newCoordinate.add(rowOffset, colOffset)
                                 }.findAll {
                                     GridCoordinate fogCoordinate ->
-                                        gridSizeUtil.isValidCoordinate(game, fogCoordinate)
+                                        fogCoordinate.isValidCoordinate(game)
                                 }
                         )
                 }

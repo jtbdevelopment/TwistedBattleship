@@ -2,7 +2,6 @@ package com.jtbdevelopment.TwistedBattleship.state.grid
 
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import groovy.transform.CompileStatic
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 /**
@@ -12,9 +11,6 @@ import org.springframework.stereotype.Component
 @Component
 @CompileStatic
 class GridCircleUtil {
-    @Autowired
-    GridSizeUtil gridSizeUtil
-
     //  Details are cumulative - use entries for 10 + 15 to get circle for grid size 15
     final static Map<Integer, Set<GridCoordinate>> CIRCLE_OFFSETS = [
             (10): [
@@ -61,7 +57,7 @@ class GridCircleUtil {
                         centerCoordinate.add(adjustment)
                 }
         }.findAll {
-            GridCoordinate it -> gridSizeUtil.isValidCoordinate(game, it)
+            GridCoordinate it -> it.isValidCoordinate(game)
         })
     }
 }

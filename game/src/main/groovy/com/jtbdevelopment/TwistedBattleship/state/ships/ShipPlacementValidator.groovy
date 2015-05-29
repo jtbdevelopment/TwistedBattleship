@@ -4,9 +4,7 @@ import com.jtbdevelopment.TwistedBattleship.exceptions.NotAllShipsSetupException
 import com.jtbdevelopment.TwistedBattleship.exceptions.ShipPlacementsNotValidException
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
-import com.jtbdevelopment.TwistedBattleship.state.grid.GridSizeUtil
 import groovy.transform.CompileStatic
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 /**
@@ -16,8 +14,6 @@ import org.springframework.stereotype.Component
 @CompileStatic
 @Component
 class ShipPlacementValidator {
-    @Autowired
-    GridSizeUtil gridSizeUtil
 
     public void validateShipPlacementsForGame(final TBGame game, Map<Ship, ShipState> shipState) {
         if (shipState.size() != Ship.values().size()) {
@@ -39,7 +35,7 @@ class ShipPlacementValidator {
                         }
                         used.add(coordinate)
 
-                        if (!gridSizeUtil.isValidCoordinate(game, coordinate)) {
+                        if (!coordinate.isValidCoordinate(game)) {
                             throw new ShipPlacementsNotValidException()
                         }
                 }

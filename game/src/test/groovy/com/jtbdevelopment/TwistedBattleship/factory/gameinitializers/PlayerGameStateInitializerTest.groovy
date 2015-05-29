@@ -5,7 +5,6 @@ import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
-import com.jtbdevelopment.TwistedBattleship.state.grid.GridSizeUtil
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
 import com.jtbdevelopment.games.players.Player
@@ -24,24 +23,35 @@ class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
                 players: [PONE, PTWO, PTHREE]
         )
 
-        int size = 11
-        initializer.util = [
-                getSize: {
-                    TBGame g ->
-                        assert game.is(g)
-                        return size
-                }
-        ] as GridSizeUtil
         assert [:] == game.playerDetails
         initializer.initializeGame(game)
-        assert size == game.gridSize
+        assert 15 == game.gridSize
         assert 3 == game.playerDetails.size()
         assert PONE.id == game.currentPlayer
         assert 1 == game.remainingMoves
         game.players.each {
             Player p ->
                 def expectedSpecials = 2
-                validatePlayerStates(game, p, expectedSpecials, size)
+                validatePlayerStates(game, p, expectedSpecials)
+        }
+    }
+
+    void testInitializeGameGrid10x10() {
+        TBGame game = new TBGame(
+                features: [GameFeature.Grid10x10, GameFeature.Single, GameFeature.CriticalEnabled, GameFeature.ECMEnabled, GameFeature.CriticalEnabled.EREnabled, GameFeature.SpyEnabled, GameFeature.CriticalEnabled.EMEnabled],
+                players: [PONE, PTWO, PTHREE]
+        )
+
+        assert [:] == game.playerDetails
+        initializer.initializeGame(game)
+        assert 10 == game.gridSize
+        assert 3 == game.playerDetails.size()
+        assert PONE.id == game.currentPlayer
+        assert 1 == game.remainingMoves
+        game.players.each {
+            Player p ->
+                def expectedSpecials = 2
+                validatePlayerStates(game, p, expectedSpecials)
         }
     }
 
@@ -52,26 +62,18 @@ class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
         )
 
         assert game.playerDetails == [:]
-        int size = 20
-        initializer.util = [
-                getSize: {
-                    TBGame g ->
-                        assert game.is(g)
-                        return size
-                }
-        ] as GridSizeUtil
         initializer.initializeGame(game)
-        assert size == game.gridSize
+        assert 20 == game.gridSize
         assert 3 == game.playerDetails.size()
         assert PTWO.id == game.currentPlayer
         assert Ship.values().size() == game.remainingMoves
         game.players.each {
             Player p ->
-                validatePlayerStates(game, p, 0, size)
+                validatePlayerStates(game, p, 0)
         }
     }
 
-    protected void validatePlayerStates(TBGame game, Player p, int expectedSpecials, int size) {
+    protected void validatePlayerStates(TBGame game, Player p, int expectedSpecials) {
         Set<ObjectId> opponentIds = game.players.collect { it.id } as Set
         opponentIds.remove(p.id)
         TBPlayerState playerState = game.playerDetails[p.id]
@@ -83,7 +85,7 @@ class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
         assert opponentIds == playerState.opponentGrids.keySet()
         playerState.opponentGrids.values().each {
             Grid it ->
-                it.size == size
+                it.size == game.gridSize
                 it.table.each {
                     GridCellState[] row ->
                         row.each {
@@ -95,7 +97,7 @@ class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
         assert opponentIds == playerState.opponentViews.keySet()
         playerState.opponentViews.values().each {
             Grid it ->
-                it.size == size
+                it.size == game.gridSize
                 it.table.each {
                     GridCellState[] row ->
                         row.each {

@@ -1,5 +1,6 @@
 package com.jtbdevelopment.TwistedBattleship.state.grid
 
+import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import groovy.transform.CompileStatic
 
 /**
@@ -25,6 +26,11 @@ class GridCoordinate implements Comparable<GridCoordinate>, Serializable {
 
     GridCoordinate add(final GridCoordinate other) {
         new GridCoordinate(this.row + other.row, this.column + other.column)
+    }
+
+    boolean isValidCoordinate(final TBGame game) {
+        int max = game.gridSize - 1
+        return !(row < 0 || column < 0 || row > max || column > max)
     }
 
     boolean equals(final o) {

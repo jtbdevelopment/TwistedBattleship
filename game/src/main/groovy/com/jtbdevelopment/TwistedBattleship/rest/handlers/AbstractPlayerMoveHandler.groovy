@@ -9,7 +9,6 @@ import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
-import com.jtbdevelopment.TwistedBattleship.state.grid.GridSizeUtil
 import com.jtbdevelopment.games.exceptions.input.GameIsNotInPlayModeException
 import com.jtbdevelopment.games.exceptions.input.PlayerOutOfTurnException
 import com.jtbdevelopment.games.players.Player
@@ -17,7 +16,6 @@ import com.jtbdevelopment.games.rest.handlers.AbstractGameActionHandler
 import com.jtbdevelopment.games.state.GamePhase
 import groovy.transform.CompileStatic
 import org.bson.types.ObjectId
-import org.springframework.beans.factory.annotation.Autowired
 
 /**
  * Date: 5/7/15
@@ -25,9 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired
  */
 @CompileStatic
 abstract class AbstractPlayerMoveHandler extends AbstractGameActionHandler<Target, TBGame> {
-    @Autowired
-    GridSizeUtil gridSizeUtil
-
     abstract boolean targetSelf()
 
     abstract int movesRequired(final TBGame game)
@@ -95,7 +90,7 @@ abstract class AbstractPlayerMoveHandler extends AbstractGameActionHandler<Targe
             throw new NotEnoughActionsForSpecialException()
         }
 
-        if (!gridSizeUtil.isValidCoordinate(game, coordinate)) {
+        if (!coordinate.isValidCoordinate(game)) {
             throw new CoordinateOutOfBoundsException()
         }
 
