@@ -20,7 +20,6 @@ class TBGame extends AbstractMongoMultiPlayerGame<GameFeature> {
     Map<ObjectId, TBPlayerState> playerDetails = [:]
     int gridSize
     ObjectId currentPlayer
-    int movesPerTurn
     int remainingMoves
     String generalMessage = ""
 }

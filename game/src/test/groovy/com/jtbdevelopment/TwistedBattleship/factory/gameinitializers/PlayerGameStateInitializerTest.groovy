@@ -38,7 +38,6 @@ class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
         assert 3 == game.playerDetails.size()
         assert PONE.id == game.currentPlayer
         assert 1 == game.remainingMoves
-        assert 1 == game.movesPerTurn
         game.players.each {
             Player p ->
                 def expectedSpecials = 2
@@ -66,7 +65,6 @@ class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
         assert 3 == game.playerDetails.size()
         assert PTWO.id == game.currentPlayer
         assert Ship.values().size() == game.remainingMoves
-        assert Ship.values().size() == game.movesPerTurn
         game.players.each {
             Player p ->
                 validatePlayerStates(game, p, 0, size)

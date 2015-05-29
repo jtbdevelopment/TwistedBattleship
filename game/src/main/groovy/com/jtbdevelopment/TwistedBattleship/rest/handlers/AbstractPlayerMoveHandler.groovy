@@ -5,6 +5,7 @@ import com.jtbdevelopment.TwistedBattleship.exceptions.CoordinateOutOfBoundsExce
 import com.jtbdevelopment.TwistedBattleship.exceptions.InvalidTargetPlayerException
 import com.jtbdevelopment.TwistedBattleship.exceptions.NotEnoughActionsForSpecialException
 import com.jtbdevelopment.TwistedBattleship.rest.Target
+import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
@@ -68,7 +69,11 @@ abstract class AbstractPlayerMoveHandler extends AbstractGameActionHandler<Targe
                         found = true
                     }
                 }
-                game.remainingMoves = game.movesPerTurn
+                if (game.features.contains(GameFeature.PerShip)) {
+                    game.remainingMoves = game.playerDetails[game.currentPlayer].activeShipsRemaining
+                } else {
+                    game.remainingMoves = 1
+                }
             }
         }
         return game

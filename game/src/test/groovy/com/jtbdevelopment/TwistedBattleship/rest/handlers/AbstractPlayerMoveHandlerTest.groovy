@@ -193,17 +193,18 @@ class AbstractPlayerMoveHandlerTest extends MongoGameCoreTestCase {
         assert PTHREE.id == initialGame.currentPlayer
     }
 
-    void testRotatesToNextAlivePlayerIfMovesZero() {
+    void testRotatesToNextAlivePlayerIfMovesZeroAndNotPerShip() {
         TBGame initialGame = new TBGame(
                 features: [GameFeature.Grid10x10],
-                movesPerTurn: 5,
                 remainingMoves: MOVES_REQUIRED,
                 currentPlayer: PTHREE.id,
                 players: [PONE, PTWO, PTHREE],
                 playerDetails: [
                         (PONE.id)  : new TBPlayerState(shipStates: [:]),
                         (PTWO.id)  : new TBPlayerState(shipStates: [
-                                (Ship.Battleship): new ShipState(Ship.Battleship, [] as SortedSet<GridCoordinate>)]),
+                                (Ship.Battleship): new ShipState(Ship.Battleship, [] as SortedSet<GridCoordinate>),
+                                (Ship.Cruiser)   : new ShipState(Ship.Cruiser, [] as SortedSet<GridCoordinate>)
+                        ]),
                         (PTHREE.id): new TBPlayerState(shipStates: [
                                 (Ship.Battleship): new ShipState(Ship.Battleship, [] as SortedSet<GridCoordinate>)]),
                 ],
@@ -211,14 +212,38 @@ class AbstractPlayerMoveHandlerTest extends MongoGameCoreTestCase {
         handler.gridSizeUtil = new GridSizeUtil()
 
         assert initialGame.is(handler.rotateTurnBasedGame(initialGame))
-        assert 5 == initialGame.remainingMoves
+        assert 1 == initialGame.remainingMoves
+        assert PTWO.id == initialGame.currentPlayer
+    }
+
+    void testRotatesToNextAlivePlayerIfMovesZeroAndPerShip() {
+        TBGame initialGame = new TBGame(
+                features: [GameFeature.Grid10x10, GameFeature.PerShip],
+                remainingMoves: MOVES_REQUIRED,
+                currentPlayer: PTHREE.id,
+                players: [PONE, PTWO, PTHREE],
+                playerDetails: [
+                        (PONE.id)  : new TBPlayerState(shipStates: [:]),
+                        (PTWO.id)  : new TBPlayerState(shipStates: [
+                                (Ship.Destroyer) : new ShipState(Ship.Destroyer, 0, [], []),
+                                (Ship.Battleship): new ShipState(Ship.Battleship, [] as SortedSet<GridCoordinate>),
+                                (Ship.Carrier)   : new ShipState(Ship.Carrier, [] as SortedSet<GridCoordinate>),
+                                (Ship.Cruiser)   : new ShipState(Ship.Cruiser, [] as SortedSet<GridCoordinate>)
+                        ]),
+                        (PTHREE.id): new TBPlayerState(shipStates: [
+                                (Ship.Battleship): new ShipState(Ship.Battleship, [] as SortedSet<GridCoordinate>)]),
+                ],
+                gamePhase: GamePhase.Playing)
+        handler.gridSizeUtil = new GridSizeUtil()
+
+        assert initialGame.is(handler.rotateTurnBasedGame(initialGame))
+        assert 3 == initialGame.remainingMoves
         assert PTWO.id == initialGame.currentPlayer
     }
 
     void testDoesNotRotatesToNextAlivePlayerIfMovesZeroButNoOtherAlivePlayers() {
         TBGame initialGame = new TBGame(
                 features: [GameFeature.Grid10x10],
-                movesPerTurn: 5,
                 remainingMoves: MOVES_REQUIRED,
                 currentPlayer: PTHREE.id,
                 players: [PONE, PTWO, PTHREE],

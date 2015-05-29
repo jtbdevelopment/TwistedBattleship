@@ -28,8 +28,7 @@ class PlayerGameStateInitializer implements GameInitializer<TBGame> {
         int specialMoves = game.players.size() - 1
         game.gridSize = util.getSize(game)
         game.currentPlayer = game.players[0].id
-        game.movesPerTurn = game.features.contains(GameFeature.Single) ? 1 : Ship.values().size()
-        game.remainingMoves = game.movesPerTurn
+        game.remainingMoves = game.features.contains(GameFeature.Single) ? 1 : Ship.values().size()
         game.players.each {
             Player<ObjectId> p ->
                 Set<Player> opponents = new HashSet<Player>(game.players)

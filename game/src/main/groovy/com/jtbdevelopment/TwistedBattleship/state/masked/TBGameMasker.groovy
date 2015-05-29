@@ -46,7 +46,7 @@ class TBGameMasker extends AbstractMultiPlayerGameMasker<ObjectId, GameFeature, 
         TBGame game = (TBGame) mpGame
         masked.generalMessage = game.generalMessage
         masked.remainingMoves = game.remainingMoves
-        masked.gridsize = game.gridSize
+        masked.gridSize = game.gridSize
     }
 
     @Override
