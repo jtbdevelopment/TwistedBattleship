@@ -3,6 +3,7 @@ package com.jtbdevelopment.TwistedBattleship.rest.handlers.helpers
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridSizeUtil
+import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
 import groovy.transform.CompileStatic
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -19,6 +20,7 @@ class ShipRelocatorCalculator {
 
     List<GridCoordinate> relocateShip(
             final TBGame game,
+            final ShipState state,
             final List<GridCoordinate> initialCoordinates,
             final Set<GridCoordinate> otherShipCoordinates,
             final boolean moveRows,
@@ -36,6 +38,10 @@ class ShipRelocatorCalculator {
                     if (!invalid) {
                         newCoordinates = attempt
                         newCoordinates.sort()
+                    }
+                    //  Ship must move
+                    if (state.shipGridCells == newCoordinates) {
+                        newCoordinates = null
                     }
                 }
         }

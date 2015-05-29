@@ -120,7 +120,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
                         players: [TEST_PLAYER2.md5, TEST_PLAYER3.md5, TEST_PLAYER1.md5],
                 ))
         assert game
-        assert 20 == game.gridsize
+        assert 20 == game.gridSize
         assert [
                 (TEST_PLAYER1.md5): PlayerState.Pending,
                 (TEST_PLAYER2.md5): PlayerState.Pending,
@@ -279,6 +279,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
         assert GamePhase.Playing == game.gamePhase
         assert 5 == game.remainingMoves
         assert [TEST_PLAYER2.md5, TEST_PLAYER1.md5, TEST_PLAYER3.md5].contains(game.currentPlayer)
+        assert "Begin!" == game.maskedPlayersState.lastActionMessage
     }
 
     @Test
@@ -561,6 +562,142 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
         assert 0 == game.playersScore[TEST_PLAYER1.md5]
         assert 0 == game.maskedPlayersState.evasiveManeuversRemaining
         assert TEST_PLAYER1.md5 != game.currentPlayer
+    }
+
+    @Test
+    void testCompleteSimpleGameThroughRematch() {
+        def P3 = createPlayerAPITarget(TEST_PLAYER3)
+        TBMaskedGame game = newGame(P3, new FeaturesAndPlayers(
+                features: [
+                        GameFeature.Grid15x15,
+                        GameFeature.SharedIntel,
+                        GameFeature.ECMEnabled,
+                        GameFeature.EREnabled,
+                        GameFeature.EMEnabled,
+                        GameFeature.CriticalDisabled,
+                        GameFeature.SpyEnabled,
+                        GameFeature.PerShip
+                ] as Set,
+                players: [TEST_PLAYER2.md5, TEST_PLAYER3.md5, TEST_PLAYER1.md5]
+        ))
+        assert game != null
+        def P3G = createGameTarget(P3, game)
+        def P1G = createGameTarget(createPlayerAPITarget(TEST_PLAYER1), game)
+        def P2G = createGameTarget(createPlayerAPITarget(TEST_PLAYER2), game)
+
+        acceptGame(P1G)
+        acceptGame(P2G)
+        setup(P3G, P3POSITIONS)
+        setup(P1G, P1POSITIONS)
+        setup(P2G, P2POSITIONS)
+
+        //  Force turn and order
+        TBGame dbGame = gameRepository.findOne(new ObjectId(game.idAsString))
+        dbGame.currentPlayer = TEST_PLAYER1.id
+        dbGame.players = [TEST_PLAYER1, TEST_PLAYER2, TEST_PLAYER3]
+        gameRepository.save(dbGame)
+        cacheManager.cacheNames.each {
+            cacheManager.getCache(it).clear()
+        }
+
+        fire(P1G, TEST_PLAYER3, new GridCoordinate(0, 0))
+        fire(P1G, TEST_PLAYER3, new GridCoordinate(0, 1))
+        fire(P1G, TEST_PLAYER3, new GridCoordinate(0, 2))
+        fire(P1G, TEST_PLAYER3, new GridCoordinate(0, 3))
+        game = fire(P1G, TEST_PLAYER3, new GridCoordinate(0, 4))
+        assert 10 == game.playersScore[TEST_PLAYER1.md5]
+
+        fire(P2G, TEST_PLAYER3, new GridCoordinate(1, 14))
+        fire(P2G, TEST_PLAYER3, new GridCoordinate(0, 14))
+        fire(P2G, TEST_PLAYER3, new GridCoordinate(2, 14))
+        fire(P2G, TEST_PLAYER3, new GridCoordinate(3, 14))
+        game = fire(P2G, TEST_PLAYER3, new GridCoordinate(4, 14))
+        assert 7 == game.playersScore[TEST_PLAYER2.md5]
+
+        fire(P3G, TEST_PLAYER1, new GridCoordinate(12, 12))
+        fire(P3G, TEST_PLAYER2, new GridCoordinate(7, 8))
+        game = fire(P3G, TEST_PLAYER2, new GridCoordinate(7, 7))
+        assert 1 == game.playersScore[TEST_PLAYER3.md5]
+
+        fire(P1G, TEST_PLAYER3, new GridCoordinate(1, 0))
+        fire(P1G, TEST_PLAYER3, new GridCoordinate(1, 1))
+        fire(P1G, TEST_PLAYER3, new GridCoordinate(1, 2))
+        fire(P1G, TEST_PLAYER3, new GridCoordinate(1, 3))
+        game = fire(P1G, TEST_PLAYER3, new GridCoordinate(1, 5))
+        assert 19 == game.playersScore[TEST_PLAYER1.md5]
+
+        fire(P2G, TEST_PLAYER3, new GridCoordinate(2, 0))
+        fire(P2G, TEST_PLAYER3, new GridCoordinate(2, 1))
+        fire(P2G, TEST_PLAYER3, new GridCoordinate(2, 2))
+        fire(P2G, TEST_PLAYER3, new GridCoordinate(2, 3))
+        game = fire(P2G, TEST_PLAYER3, new GridCoordinate(2, 4))
+        assert 15 == game.playersScore[TEST_PLAYER2.md5]
+
+        game = fire(P3G, TEST_PLAYER2, new GridCoordinate(7, 9))
+        assert 7 == game.playersScore[TEST_PLAYER3.md5]
+
+        fire(P1G, TEST_PLAYER3, new GridCoordinate(3, 2))
+        fire(P1G, TEST_PLAYER3, new GridCoordinate(3, 3))
+        game = fire(P1G, TEST_PLAYER3, new GridCoordinate(3, 4))
+        assert 27 == game.playersScore[TEST_PLAYER1.md5]
+        assert !game.playersAlive[TEST_PLAYER3.md5]
+        assert game.playersAlive[TEST_PLAYER2.md5]
+        assert game.playersAlive[TEST_PLAYER1.md5]
+        spy(P1G, TEST_PLAYER2, new GridCoordinate(2, 2))
+
+        fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 7))
+        fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 8))
+        fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 6))
+        game = fire(P2G, TEST_PLAYER1, new GridCoordinate(6, 7))
+        assert 17 == game.playersScore[TEST_PLAYER2.md5]
+
+        fire(P1G, TEST_PLAYER2, new GridCoordinate(14, 14))
+        fire(P1G, TEST_PLAYER2, new GridCoordinate(14, 13))
+        game = fire(P1G, TEST_PLAYER2, new GridCoordinate(14, 12))
+        assert 35 == game.playersScore[TEST_PLAYER1.md5]
+        repair(P1G, TEST_PLAYER1, new GridCoordinate(7, 7))
+
+        fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 7))
+        fire(P2G, TEST_PLAYER1, new GridCoordinate(6, 7))
+        game = fire(P2G, TEST_PLAYER1, new GridCoordinate(5, 7))
+        assert 20 == game.playersScore[TEST_PLAYER2.md5]
+
+        fire(P1G, TEST_PLAYER2, new GridCoordinate(0, 0))
+        fire(P1G, TEST_PLAYER2, new GridCoordinate(0, 1))
+        fire(P1G, TEST_PLAYER2, new GridCoordinate(0, 2))
+        fire(P1G, TEST_PLAYER2, new GridCoordinate(0, 3))
+        game = fire(P1G, TEST_PLAYER2, new GridCoordinate(0, 4))
+        assert 45 == game.playersScore[TEST_PLAYER1.md5]
+
+        fire(P2G, TEST_PLAYER1, new GridCoordinate(8, 7))
+        game = fire(P2G, TEST_PLAYER1, new GridCoordinate(9, 7))
+        assert 27 == game.playersScore[TEST_PLAYER2.md5]
+
+        fire(P1G, TEST_PLAYER2, new GridCoordinate(1, 13))
+        fire(P1G, TEST_PLAYER2, new GridCoordinate(0, 14))
+        fire(P1G, TEST_PLAYER2, new GridCoordinate(0, 13))
+        game = fire(P1G, TEST_PLAYER2, new GridCoordinate(0, 12))
+        assert 53 == game.playersScore[TEST_PLAYER1.md5]
+
+        game = fire(P2G, TEST_PLAYER1, new GridCoordinate(10, 7))
+        assert 27 == game.playersScore[TEST_PLAYER2.md5]
+
+        fire(P1G, TEST_PLAYER2, new GridCoordinate(14, 0))
+        fire(P1G, TEST_PLAYER2, new GridCoordinate(14, 1))
+        fire(P1G, TEST_PLAYER2, new GridCoordinate(14, 2))
+        game = fire(P1G, TEST_PLAYER2, new GridCoordinate(14, 3))
+        assert GamePhase.RoundOver == game.gamePhase
+        assert !game.playersAlive[TEST_PLAYER2.md5]
+        assert game.playersAlive[TEST_PLAYER1.md5]
+        assert 72 == game.playersScore[TEST_PLAYER1.md5]
+        assert "TEST PLAYER1 defeated all challengers!" == game.maskedPlayersState.lastActionMessage
+
+        TBMaskedGame newGame = rematchGame(P1G)
+        assert GamePhase.Challenged == newGame.gamePhase
+        assert game.id != newGame.id
+        P2G = createGameTarget(createPlayerAPITarget(TEST_PLAYER2), newGame)
+        newGame = rejectGame(P2G)
+        assert GamePhase.Declined == newGame.gamePhase
     }
 
     @Test

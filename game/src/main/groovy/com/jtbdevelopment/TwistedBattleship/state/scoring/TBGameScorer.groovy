@@ -18,7 +18,7 @@ class TBGameScorer implements GameScorer<TBGame> {
 
     @Override
     TBGame scoreGame(final TBGame game) {
-        //TODO
-        return null
+        game.playerDetails.findAll { it.value.alive}.each { it.value.scoreFromLiving += SCORE_FOR_VICTORY }
+        game
     }
 }

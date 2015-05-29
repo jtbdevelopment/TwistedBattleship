@@ -48,17 +48,17 @@ class ShipRelocator {
         List<Integer> adjustmentSequenceToTry = SHUFFLED_ADJUSTMENT_TRIALS[generator.nextInt(SHUFFLED_ADJUSTMENT_TRIALS.size() - 1)]
 
         List<GridCoordinate> initialCoordinates = getInitialCoordinates(ship, rotate)
-        List<GridCoordinate> newCoordinates = calculator.relocateShip(game, initialCoordinates, otherShipCoordinates, moveRows, adjustmentSequenceToTry)
+        List<GridCoordinate> newCoordinates = calculator.relocateShip(game, ship, initialCoordinates, otherShipCoordinates, moveRows, adjustmentSequenceToTry)
         if (newCoordinates == null) {
             //  try columns instead
-            newCoordinates = calculator.relocateShip(game, initialCoordinates, otherShipCoordinates, !moveRows, adjustmentSequenceToTry)
+            newCoordinates = calculator.relocateShip(game, ship, initialCoordinates, otherShipCoordinates, !moveRows, adjustmentSequenceToTry)
             if (newCoordinates == null) {
                 //  swap rotate flag and try rows again
                 initialCoordinates = getInitialCoordinates(ship, !rotate)
-                newCoordinates = calculator.relocateShip(game, initialCoordinates, otherShipCoordinates, moveRows, adjustmentSequenceToTry)
+                newCoordinates = calculator.relocateShip(game, ship, initialCoordinates, otherShipCoordinates, moveRows, adjustmentSequenceToTry)
                 if (newCoordinates == null) {
                     //  last attempt
-                    newCoordinates = calculator.relocateShip(game, initialCoordinates, otherShipCoordinates, !moveRows, adjustmentSequenceToTry)
+                    newCoordinates = calculator.relocateShip(game, ship, initialCoordinates, otherShipCoordinates, !moveRows, adjustmentSequenceToTry)
                     if (newCoordinates == null) {
                         throw new NoRoomForEmergencyManeuverException()
                     }

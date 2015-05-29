@@ -52,8 +52,9 @@ class ShipRelocatorTest extends GroovyTestCase {
         ] as ShipRotater
         relocator.calculator = [
                 relocateShip: {
-                    TBGame g, List<GridCoordinate> ic, Set<GridCoordinate> osc, boolean rows, List<Integer> t ->
+                    TBGame g, ShipState ss, List<GridCoordinate> ic, Set<GridCoordinate> osc, boolean rows, List<Integer> t ->
                         assert game.is(g)
+                        assert shipState.is(ss)
                         assert rotated.is(ic)
                         assert otherCoords == osc
                         assert rows
@@ -79,8 +80,9 @@ class ShipRelocatorTest extends GroovyTestCase {
         ] as Random
         relocator.calculator = [
                 relocateShip: {
-                    TBGame g, List<GridCoordinate> ic, Set<GridCoordinate> osc, boolean rows, List<Integer> t ->
+                    TBGame g, ShipState ss, List<GridCoordinate> ic, Set<GridCoordinate> osc, boolean rows, List<Integer> t ->
                         assert game.is(g)
+                        assert shipState.is(ss)
                         assert shipState.shipGridCells == ic
                         assert otherCoords == osc
                         assertFalse rows
@@ -93,7 +95,6 @@ class ShipRelocatorTest extends GroovyTestCase {
     }
 
     void testTrysAllVariantsWithInitiallySetToRotateAndMoveByRows() {
-        List<GridCoordinate> newcoords = [new GridCoordinate(-1, -1), new GridCoordinate(-15, 15)]
         List<GridCoordinate> rotated = [new GridCoordinate(4, 4), new GridCoordinate(3, 3)]
         relocator.generator = [
                 nextBoolean: {
@@ -115,8 +116,9 @@ class ShipRelocatorTest extends GroovyTestCase {
         int count = 0
         relocator.calculator = [
                 relocateShip: {
-                    TBGame g, List<GridCoordinate> ic, Set<GridCoordinate> osc, boolean rows, List<Integer> t ->
+                    TBGame g, ShipState ss, List<GridCoordinate> ic, Set<GridCoordinate> osc, boolean rows, List<Integer> t ->
                         assert game.is(g)
+                        assert shipState.is(ss)
                         assert otherCoords == osc
                         assert [0, 1, -2, -1, 2] == t
                         ++count
@@ -151,7 +153,6 @@ class ShipRelocatorTest extends GroovyTestCase {
     }
 
     void testTrysAllVariantsWithInitiallySetToNoRotateAndMoveByCols() {
-        List<GridCoordinate> newcoords = [new GridCoordinate(-1, -1), new GridCoordinate(-15, 15)]
         List<GridCoordinate> rotated = [new GridCoordinate(4, 4), new GridCoordinate(3, 3)]
         relocator.generator = [
                 nextBoolean: {
@@ -173,8 +174,9 @@ class ShipRelocatorTest extends GroovyTestCase {
         int count = 0
         relocator.calculator = [
                 relocateShip: {
-                    TBGame g, List<GridCoordinate> ic, Set<GridCoordinate> osc, boolean rows, List<Integer> t ->
+                    TBGame g, ShipState ss, List<GridCoordinate> ic, Set<GridCoordinate> osc, boolean rows, List<Integer> t ->
                         assert game.is(g)
+                        assert shipState.is(ss)
                         assert otherCoords == osc
                         assert [0, 1, -2, -1, 2] == t
                         ++count
