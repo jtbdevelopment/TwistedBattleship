@@ -6,7 +6,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers'])
+angular.module('starter', ['ionic', 'starter.controllers', 'config'])
 
     .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {
@@ -21,7 +21,31 @@ angular.module('starter', ['ionic', 'starter.controllers'])
             }
         });
     })
+    //  TODO - move interceptor to game core?
+    // Custom Interceptor for replacing outgoing URLs
+    .factory('httpEnvInterceptor', function (ENV) {
+        return {
+            'request': function (config) {
+                if (
+                    (
+                        //  TODO - this better
+                        config.url.includes("/api") ||
+                        config.url.includes("/auth") ||
+                        config.url.includes("/signout") ||
+                        config.url.includes("/livefeed") ||
+                        config.url.includes("/signin/authenticate")
+                    ) && !config.url.includes(ENV.apiEndpoint)) {
+                    config.url = ENV.apiEndpoint + config.url;
+                }
+                return config;
+            }
+        }
+    })
+    .config(function ($httpProvider) {
+        // Pre-process outgoing request URLs
+        $httpProvider.interceptors.push('httpEnvInterceptor');
 
+    })
     .config(function ($stateProvider, $urlRouterProvider) {
         $stateProvider
 
