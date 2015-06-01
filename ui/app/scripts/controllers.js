@@ -1,6 +1,12 @@
 'use strict';
 
 angular.module('starter.controllers', [])
+    .controller('CoreSignInCtrl', function ($scope) {
+        $scope.message = 'Initializing...';
+        $scope.showFacebook = false;
+        $scope.showManual = false;
+        $scope.facebookPermissions = '';
+    })
 
     .controller('AppCtrl', function ($scope, $ionicModal, $timeout) {
 
