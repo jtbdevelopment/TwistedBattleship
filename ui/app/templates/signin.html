@@ -1,0 +1,54 @@
+<ion-view>
+    <ion-content>
+        <div ng-controller="CoreSignInCtrl">
+            <div class="container">
+                <div class="row text-center">
+                    <div class="center">
+                        <p>{{message}}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container" ng-show="showFacebook">
+                <div class="row text-center">
+                    <div class="center">
+                        <fb:login-button scope="{{facebookPermissions}}"
+                                         onlogin="window.location.reload()"></fb:login-button>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="container" ng-show="showManual">
+                <div class="row text-center">
+                    <p>Don't want to login with Facebook?</p>
+
+                    <form id="signin" action="/signin/authenticate" method="post" class="form-group">
+                        <input id="_csrf" name="_csrf" type="hidden" value="{{csrf}}"/>
+
+                        <div class="form-group">
+                            <label for="login">Username</label>
+                            <input id="login" name="username" type="text" size="25"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input id="password" name="password" type="password" size="25"/>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" id="remember-me" name="remember-me"> Remember me
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-default">Sign in</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+    </ion-content>
+</ion-view>

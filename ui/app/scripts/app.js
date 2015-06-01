@@ -29,17 +29,17 @@ angular.module('starter', ['ionic', 'starter.controllers', 'config'])
                 if (
                     (
                         //  TODO - this better
-                        config.url.includes("/api") ||
-                        config.url.includes("/auth") ||
-                        config.url.includes("/signout") ||
-                        config.url.includes("/livefeed") ||
-                        config.url.includes("/signin/authenticate")
-                    ) && !config.url.includes(ENV.apiEndpoint)) {
+                        config.url.indexOf('/api') >= 0 ||
+                        config.url.indexOf('/auth') >= 0 ||
+                        config.url.indexOf('/signout') >= 0 ||
+                        config.url.indexOf('/livefeed') >= 0 ||
+                        config.url.indexOf('/signin/authenticate') >= 0
+                    ) && config.url.indexOf(ENV.apiEndpoint) < 0) {
                     config.url = ENV.apiEndpoint + config.url;
                 }
                 return config;
             }
-        }
+        };
     })
     .config(function ($httpProvider) {
         // Pre-process outgoing request URLs
@@ -55,7 +55,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'config'])
                 templateUrl: 'templates/menu.html',
                 controller: 'AppCtrl'
             })
-
+            .state('app.signin', {
+                url: '/signin',
+                views: {
+                    'menuContent': {
+                        templateUrl: 'templates/signin.html'
+                    }
+                }
+            })
             .state('app.search', {
                 url: '/search',
                 views: {
@@ -82,7 +89,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'config'])
                     }
                 }
             })
-
             .state('app.single', {
                 url: '/playlists/:playlistId',
                 views: {
@@ -93,5 +99,5 @@ angular.module('starter', ['ionic', 'starter.controllers', 'config'])
                 }
             });
         // if none of the above states are matched, use this as the fallback
-        $urlRouterProvider.otherwise('/app/playlists');
+        $urlRouterProvider.otherwise('/app/signin');
     });
