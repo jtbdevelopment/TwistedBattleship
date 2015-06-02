@@ -1,12 +1,73 @@
 'use strict';
 
-angular.module('starter.controllers', [])
-    .controller('CoreSignInCtrl', function ($scope) {
-        $scope.message = 'Initializing...';
-        $scope.showFacebook = false;
-        $scope.showManual = false;
-        $scope.facebookPermissions = '';
-    })
+angular.module('starter.controllers', ['ngCookies', 'coreGamesUi'])
+    //  TODO - finish and move to core
+    .controller('CoreMobileSignInCtrl',
+    ['$scope', '$window', '$cookies', '$http', '$state', 'jtbFacebook',
+        function ($scope, $window, $cookies, $http, $state, jtbFacebook) {
+            $scope.message = 'Initializing...';
+            $scope.showFacebook = false;
+            $scope.showManual = false;
+            $scope.csrf = $cookies['XSRF-TOKEN'];
+            $scope.facebookPermissions = '';
+
+            $scope.username = '';
+            $scope.password = '';
+            $scope.rememberme = false;
+
+            $scope.manualLogin = function () {
+                $http({
+                    transformRequest: function (obj) {
+                        var str = [];
+                        for (var p in obj) {
+                            str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
+                        }
+                        return str.join('&');
+                    },
+                    url: '/signin/authenticate',
+                    data: {
+                        noRedirect: 'true',
+                        username: $scope.username,
+                        password: $scope.password,
+                        'remember-me': $scope.rememberme
+                    },
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    method: 'POST'
+                }).success(function () {
+                    $state.go('app.games');
+                }).error(function () {
+                    $scope.message = 'Invalid username or password.';
+                });
+            };
+
+            function showLoginOptions() {
+                $scope.showFacebook = true;
+                $scope.showManual =
+                    $window.location.href.indexOf('localhost') > -1 ||
+                    $window.location.href.indexOf('-dev') > -1;
+                $scope.message = '';
+            }
+
+            //  TODO - test and probably revamp for mobile
+            function autoLogin() {
+                $scope.showFacebook = false;
+                $scope.showManual = false;
+                $scope.message = 'Logging in via Facebook';
+                $window.location = '/auth/facebook';
+            }
+
+            //  TODO - test and probably revamp for mobile
+            jtbFacebook.canAutoSignIn().then(function (details) {
+                $scope.facebookPermissions = details.permissions;
+                if (!details.auto) {
+                    showLoginOptions();
+                } else {
+                    autoLogin();
+                }
+            }, function () {
+                showLoginOptions();
+            });
+        }])
 
     .controller('AppCtrl', function ($scope, $ionicModal, $timeout) {
 

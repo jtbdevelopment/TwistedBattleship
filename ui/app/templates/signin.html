@@ -1,6 +1,6 @@
 <ion-view>
     <ion-content>
-        <div ng-controller="CoreSignInCtrl">
+        <div ng-controller="CoreMobileSignInCtrl">
             <div class="container">
                 <div class="row text-center">
                     <div class="center">
@@ -23,26 +23,29 @@
                 <div class="row text-center">
                     <p>Don't want to login with Facebook?</p>
 
-                    <form id="signin" action="/signin/authenticate" method="post" class="form-group">
+                    <form id="signin" class="form-group">
                         <input id="_csrf" name="_csrf" type="hidden" value="{{csrf}}"/>
 
                         <div class="form-group">
-                            <label for="login">Username</label>
-                            <input id="login" name="username" type="text" size="25"/>
+                            <label for="username">Username</label>
+                            <input id="username" name="username" type="text" size="25" ng-model="username"/>
                         </div>
                         <div class="form-group">
                             <label for="password">Password</label>
-                            <input id="password" name="password" type="password" size="25"/>
+                            <input id="password" name="password" type="password" size="25" ng-model="password"/>
                         </div>
                         <div class="form-group">
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" id="remember-me" name="remember-me"> Remember me
+                                    <input type="checkbox" id="remember-me" name="remember-me" ng-model="rememberme">
+                                    Remember me
                                 </label>
                             </div>
                         </div>
                         <div class="form-group">
-                            <button type="submit" class="btn btn-default">Sign in</button>
+                            <button type="submit" ng-click="manualLogin(user, password, rememberme)"
+                                    class="btn btn-default">Sign in
+                            </button>
                         </div>
                     </form>
                 </div>

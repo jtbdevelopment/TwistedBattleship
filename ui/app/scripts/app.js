@@ -23,7 +23,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'config'])
     })
     //  TODO - move interceptor to game core?
     // Custom Interceptor for replacing outgoing URLs
-    .factory('httpEnvInterceptor', function (ENV) {
+    .factory('httpEnvInterceptor', function ($q, ENV) {
         return {
             'request': function (config) {
                 if (
@@ -60,6 +60,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'config'])
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/signin.html'
+                    }
+                }
+            })
+            .state('app.games', {
+                url: '/games',
+                views: {
+                    'menuContent': {
+                        templateUrl: 'templates/games.html'
                     }
                 }
             })
