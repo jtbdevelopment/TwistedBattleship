@@ -67,7 +67,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'config'])
                 url: '/games',
                 views: {
                     'menuContent': {
-                        templateUrl: 'templates/games.html'
+                        templateUrl: 'templates/games.html',
+                        controller: 'MobileGameListCtrl'
                     }
                 }
             })

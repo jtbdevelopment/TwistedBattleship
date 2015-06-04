@@ -361,6 +361,7 @@ module.exports = function (grunt) {
                 basePath: '',
                 frameworks: ['mocha', 'chai'],
                 files: [
+                    '<%= yeoman.app %>/bower_components/angular/jquery.js',
                     '<%= yeoman.app %>/bower_components/angular/angular.js',
                     '<%= yeoman.app %>/bower_components/angular-mocks/angular-mocks.js',
                     '<%= yeoman.app %>/bower_components/angular-animate/angular-animate.js',
