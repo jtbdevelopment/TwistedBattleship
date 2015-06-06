@@ -17,6 +17,7 @@ class GameFeatureInfo {
         Detail(final GameFeature feature) {
             this.feature = feature
             this.description = feature.description
+            this.label = feature.label
         }
 
         boolean equals(final o) {
@@ -35,6 +36,7 @@ class GameFeatureInfo {
             return feature.hashCode()
         }
         GameFeature feature
+        String label
         String description
     }
 

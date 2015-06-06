@@ -11,9 +11,9 @@ var phasesAndIcons = {
     Quit: 'flag'
 };
 
-angular.module('starter.controllers').controller('MobileGameListCtrl',
-    ['$scope', '$location', '$animate', '$timeout', 'jtbGamePhaseService', 'jtbGameCache', //'twGameDetails',
-        function ($scope, $location, $animate, $timeout, jtbGamePhaseService, jtbGameCache/*, twGameDetails*/) {
+angular.module('tbs').controller('MobileGameListCtrl',
+    ['$scope', '$location', '$animate', '$timeout', '$state', 'jtbGamePhaseService', 'jtbGameCache', //'twGameDetails',
+        function ($scope, $location, $animate, $timeout, $state, jtbGamePhaseService, jtbGameCache/*, twGameDetails*/) {
             $scope.games = {};
             $scope.phasesInOrder = [];
             angular.forEach(phasesAndIcons, function (icon, phase) {
@@ -26,7 +26,12 @@ angular.module('starter.controllers').controller('MobileGameListCtrl',
                 $scope.games[phase].hideGames = false;
                 $scope.games[phase].label = '';
                 //$scope.phase = phase;
+                //  TODO
                 //$scope.gameDetails = twGameDetails;
+
+                $scope.createNew = function () {
+                    $state.go('app.create');
+                };
 
                 $scope.switchHideGames = function (phase) {
                     $scope.games[phase].hideGames = !$scope.games[phase].hideGames;

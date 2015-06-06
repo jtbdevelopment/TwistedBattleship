@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('starter.controllers', ['ngCookies', 'coreGamesUi'])
+angular.module('tbs')
     //  TODO - finish and move to core
     .controller('CoreMobileSignInCtrl',
     ['$scope', '$window', '$cookies', '$http', '$state', 'jtbFacebook',
@@ -34,6 +34,7 @@ angular.module('starter.controllers', ['ngCookies', 'coreGamesUi'])
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                     method: 'POST'
                 }).success(function () {
+                    //  TODO - get rid of back button
                     $state.go('app.games');
                 }).error(function () {
                     $scope.message = 'Invalid username or password.';

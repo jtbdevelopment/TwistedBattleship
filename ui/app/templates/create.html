@@ -1,0 +1,29 @@
+<ion-view>
+    <ion-nav-buttons side="right" ng-show="false">
+        <button class="button button-icon button-clear ion-">
+        </button>
+    </ion-nav-buttons>
+    <ion-content>
+        <div class="list">
+            <label class="item item-input item-select"
+                   ng-repeat="feature in featureData | propsFilter: { checkBox: 'false' }">
+                <i class="icon item-icon-right ion-help-circled"></i>
+
+                <div class="input-label">
+                    {{feature.feature.label}}
+                </div>
+                <select ng-data="currentOptions[feature.index]">
+                    <option ng-repeat="option in feature.options" value="{{option.feature}}">{{option.label}}</option>
+                </select>
+            </label>
+            <ion-toggle ng-repeat="feature in featureData | propsFilter: { checkBox: 'true' }"
+                        ng-model="currentOptons[feature.index]"
+                        ng-checked="currentOptions[feature.index]">
+                <i class="icon item-icon-right ion-help-circled"></i>
+                {{feature.feature.label}}
+            </ion-toggle>
+        </div>
+
+        <button class="button-full button-positive button" ng-disabled="!submitEnabled">Start</button>
+    </ion-content>
+</ion-view>

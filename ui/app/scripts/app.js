@@ -1,12 +1,6 @@
 'use strict';
 
-// Ionic Starter App
-
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-// 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'config'])
+angular.module('tbs', ['ionic', 'ngCookies', 'coreGamesUi', 'config'])
 
     .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {
@@ -49,6 +43,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'config'])
     .config(function ($stateProvider, $urlRouterProvider) {
         $stateProvider
 
+            //  TODO - menu
             .state('app', {
                 url: '/app',
                 abstract: true,
@@ -63,15 +58,26 @@ angular.module('starter', ['ionic', 'starter.controllers', 'config'])
                     }
                 }
             })
+            .state('app.create', {
+                url: '/create',
+                views: {
+                    'menuContent': {
+                        templateUrl: 'templates/create.html',
+                        controller: 'CreateGameCtrl'
+                    }
+                }
+            })
             .state('app.games', {
                 url: '/games',
                 views: {
                     'menuContent': {
-                        templateUrl: 'templates/games.html',
+                        templateUrl: 'templates/gamelist.html',
                         controller: 'MobileGameListCtrl'
                     }
                 }
             })
+
+            //  TODO - clean these out
             .state('app.search', {
                 url: '/search',
                 views: {
