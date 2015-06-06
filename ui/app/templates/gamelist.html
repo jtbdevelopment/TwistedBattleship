@@ -13,7 +13,7 @@
                 <span class="item-note">{{games[phase].games.length}}</span>
 
                 <div ng-hide="games[phase].hideGames">
-                    <ion-item ng-repeat="game in games[phase].games">
+                    <ion-item ng-repeat="game in games[phase].games | orderBy:['-lastUpdate', '-created']">
                         <!--  TODO - display  -->
                         {{game.id}}
                     </ion-item>

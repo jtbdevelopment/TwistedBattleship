@@ -22,6 +22,10 @@
                 <i class="icon item-icon-right ion-help-circled"></i>
                 {{feature.feature.label}}
             </ion-toggle>
+            <ion-item ng-repeat="player in playerChoices | orderBy:displayName">
+                <i class="icon item-icon-right ion-minus"></i>
+                {{player.displayName}}
+            </ion-item>
         </div>
 
         <button class="button-full button-positive button" ng-disabled="!submitEnabled">Start</button>
