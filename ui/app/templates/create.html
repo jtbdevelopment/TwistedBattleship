@@ -1,27 +1,50 @@
 <ion-view>
     <ion-nav-buttons side="right" ng-show="false">
-        <button class="button button-icon button-clear ion-">
+        <button class="button button-icon button-clear ion-help-circled" ng-click="showHelp(0)">
         </button>
     </ion-nav-buttons>
+    <script id="help-modal.html" type="text/ng-template">
+        <div class="modal">
+            <ion-header-bar>
+                <button class="button button-icon button-clear ion-chevron-left" ng-click="previousHelp()"></button>
+                <h1 class="title">Help on {{featureData[helpIndex].feature.label}}</h1>
+                <button class="button button-icon button-clear ion-chevron-right" ng-click="nextHelp()"></button>
+            </ion-header-bar>
+            <ion-content>
+                <div class="list">
+                    <label class="item">
+                        {{featureData[helpIndex].feature.description}}
+                    </label>
+                    <label class="item item-input" ng-repeat="option in featureData[helpIndex].options">
+                        <span class="input-label">{{option.label}}</span>
+                        <span class="item-note">{{option.description}}</span>
+                    </label>
+                </div>
+                <button class="button button-full button-positive" ng-click="closeHelp()">Close</button>
+            </ion-content>
+        </div>
+    </script>
     <ion-content>
         <div class="list">
-            <label class="item item-input item-select"
-                   ng-repeat="feature in featureData | propsFilter: { checkBox: 'false' }">
-                <i class="icon item-icon-right ion-help-circled"></i>
+            <div ng-repeat="feature in featureData | propsFilter: { checkBox: 'false' }">
+                <label class="item item-input item-select">
+                    <div class="input-label">
+                        {{feature.feature.label}}
+                    </div>
+                    <select ng-data="currentOptions[feature.index]">
+                        <option ng-repeat="option in feature.options" value="{{option.feature}}">{{option.label}}
+                        </option>
+                    </select>
+                </label>
+            </div>
 
-                <div class="input-label">
-                    {{feature.feature.label}}
-                </div>
-                <select ng-data="currentOptions[feature.index]">
-                    <option ng-repeat="option in feature.options" value="{{option.feature}}">{{option.label}}</option>
-                </select>
-            </label>
-            <ion-toggle ng-repeat="feature in featureData | propsFilter: { checkBox: 'true' }"
+            <div ng-repeat="feature in featureData | propsFilter: { checkBox: 'true' }">
+                <ion-toggle
                         ng-model="currentOptons[feature.index]"
                         ng-checked="currentOptions[feature.index]">
-                <i class="icon item-icon-right ion-help-circled"></i>
-                {{feature.feature.label}}
-            </ion-toggle>
+                    {{feature.feature.label}}
+                </ion-toggle>
+            </div>
             <ion-item ng-repeat="player in playerChoices | orderBy:displayName">
                 <i class="icon item-icon-right ion-minus"></i>
                 {{player.displayName}}

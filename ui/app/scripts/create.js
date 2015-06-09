@@ -8,6 +8,14 @@ angular.module('tbs').controller('CreateGameCtrl',
                 $scope.submitEnabled = ($scope.playerChoices.length > 1);
             }
 
+            $ionicModal.fromTemplateUrl('help-modal.html', {
+                scope: $scope,
+                animation: 'slide-in-up'
+            }).then(function (modal) {
+                $scope.modal = modal;
+                $scope.helpIndex = 0;
+            });
+
             $scope.alerts = [];
             $scope.featureData = [];
             $scope.currentOptions = [];
@@ -62,6 +70,29 @@ angular.module('tbs').controller('CreateGameCtrl',
             $scope.clearPlayers = function () {
                 $scope.playerChoices = [];
                 calcSubmitEnabled();
+            };
+
+            $scope.previousHelp = function () {
+                $scope.helpIndex--;
+                if ($scope.helpIndex < 0) {
+                    $scope.helpIndex = $scope.currentOptions.length - 1;
+                }
+            };
+
+            $scope.nextHelp = function () {
+                $scope.helpIndex++;
+                if ($scope.helpIndex == $scope.currentOptions.length) {
+                    $scope.helpIndex = 0;
+                }
+            };
+
+            $scope.showHelp = function () {
+                $scope.helpIndex = 0;
+                $scope.modal.show();
+            };
+
+            $scope.closeHelp = function () {
+                $scope.modal.hide();
             };
 
             $scope.createGame = function () {
