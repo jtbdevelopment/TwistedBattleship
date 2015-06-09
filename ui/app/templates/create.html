@@ -24,7 +24,7 @@
             </ion-content>
         </div>
     </script>
-    <ion-content>
+    <>
         <div class="list">
             <div ng-repeat="feature in featureData | propsFilter: { checkBox: 'false' }">
                 <label class="item item-input item-select">
@@ -45,12 +45,21 @@
                     {{feature.feature.label}}
                 </ion-toggle>
             </div>
-            <ion-item ng-repeat="player in playerChoices | orderBy:displayName">
-                <i class="icon item-icon-right ion-minus"></i>
-                {{player.displayName}}
-            </ion-item>
+            <label class="item item-input">
+                <div class="input-label">
+                    Opponents (Max 5):
+                </div>
+                <!-- TODO - seems to have caching bug on first load  -->
+                <ion-autocomplete ng-model="playerChoices"
+                                  items-method="queryFriends(query)"
+                                  selected-items-label="Selected Players:"
+                                  placeholder="Select opponents..."
+                                  item-value-key="md5"
+                                  item-view-value-key="displayName"
+                                  multiple-select="true">
+                </ion-autocomplete>
+            </label>
         </div>
-
-        <button class="button-full button-positive button" ng-disabled="!submitEnabled">Start</button>
+    <button class="button-full button-positive button" ng-disabled="!(submitEnabled)">Start</button>
     </ion-content>
 </ion-view>

@@ -5,7 +5,7 @@ angular.module('tbs').controller('CreateGameCtrl',
         function ($scope, jtbGameCache, tbsGameFeatureService, jtbPlayerService, $http, $location, $ionicModal/*, twAds*/) {
 
             function calcSubmitEnabled() {
-                $scope.submitEnabled = ($scope.playerChoices.length > 1);
+                $scope.submitEnabled = ($scope.playerChoices.length > 0) && ($scope.playerChoices.length < 6);
             }
 
             $ionicModal.fromTemplateUrl('help-modal.html', {
@@ -66,6 +66,16 @@ angular.module('tbs').controller('CreateGameCtrl',
             $scope.submitEnabled = false;
             $scope.playerChoices = [];
             $scope.$watchCollection('playerChoices', calcSubmitEnabled);
+            $scope.queryFriends = function (query) {
+                var match = [];
+                //  TODO - filter existing choices
+                angular.forEach($scope.friends, function (friend) {
+                    if (friend.displayName.search(new RegExp(query, 'i')) >= 0) {
+                        match.push(friend);
+                    }
+                });
+                return match;
+            };
 
             $scope.clearPlayers = function () {
                 $scope.playerChoices = [];
@@ -81,7 +91,7 @@ angular.module('tbs').controller('CreateGameCtrl',
 
             $scope.nextHelp = function () {
                 $scope.helpIndex++;
-                if ($scope.helpIndex == $scope.currentOptions.length) {
+                if ($scope.helpIndex === $scope.currentOptions.length) {
                     $scope.helpIndex = 0;
                 }
             };
