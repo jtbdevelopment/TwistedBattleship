@@ -105,6 +105,10 @@ angular.module('tbs').controller('CreateGameCtrl',
                 $scope.modal.hide();
             };
 
+            $scope.$on('$destroy', function () {
+                $scope.modal.remove();
+            });
+
             $scope.createGame = function () {
                 //  TODO
 //                twAds.showAdPopup().result.then(function () {
