@@ -4,9 +4,12 @@ angular.module('tbs').controller('CreateGameCtrl',
     ['$scope', 'jtbGameCache', 'tbsGameFeatureService', 'jtbPlayerService', '$http', '$location', '$ionicModal',// 'twAds',
         function ($scope, jtbGameCache, tbsGameFeatureService, jtbPlayerService, $http, $location, $ionicModal/*, twAds*/) {
 
-            function calcSubmitEnabled() {
-                $scope.submitEnabled = ($scope.playerChoices.length > 0) && ($scope.playerChoices.length < 6);
-            }
+            $scope.playerChoices = [];
+
+            $scope.playersChanged = function (callback) {
+                $scope.playerChoices = callback.selectedItems;
+                $scope.submitEnabled = $scope.playerChoices.length > 0 && $scope.playerChoices.length < 3;
+            };
 
             $ionicModal.fromTemplateUrl('help-modal.html', {
                 scope: $scope,
@@ -26,8 +29,12 @@ angular.module('tbs').controller('CreateGameCtrl',
                 angular.forEach($scope.featureData, function (feature) {
                     feature.index = count++;
                     var defaultOption = feature.options[0];
-                    $scope.currentOptions.push(defaultOption.feature.indexOf('Enabled') >= 0);
                     feature.checkBox = defaultOption.feature.indexOf('Enabled') >= 0 || defaultOption.feature.indexOf('Disabled') >= 0;
+                    if (feature.checkBox) {
+                        $scope.currentOptions.push(defaultOption.feature.indexOf('Enabled') >= 0);
+                    } else {
+                        $scope.currentOptions.push(defaultOption.feature);
+                    }
                 });
             }, function () {
                 //  TODO
@@ -62,10 +69,7 @@ angular.module('tbs').controller('CreateGameCtrl',
                 $location.path('/error');
             });
 
-            $scope.friend = {};
             $scope.submitEnabled = false;
-            $scope.playerChoices = [];
-            $scope.$watchCollection('playerChoices', calcSubmitEnabled);
             $scope.queryFriends = function (query) {
                 var match = [];
                 //  TODO - filter existing choices
@@ -75,11 +79,6 @@ angular.module('tbs').controller('CreateGameCtrl',
                     }
                 });
                 return match;
-            };
-
-            $scope.clearPlayers = function () {
-                $scope.playerChoices = [];
-                calcSubmitEnabled();
             };
 
             $scope.previousHelp = function () {
@@ -112,27 +111,33 @@ angular.module('tbs').controller('CreateGameCtrl',
             $scope.createGame = function () {
                 //  TODO
 //                twAds.showAdPopup().result.then(function () {
-                var featureNames = ['wordPhraseSetter', 'desiredPlayerCount', 'thieving', 'drawGallows', 'drawFace', 'gamePace', 'winners'];
-                var featureSet = [];
-                featureSet = featureSet.concat(featureNames.map(function (name) {
-                        var data = $scope[name];
-                        if ((angular.isDefined(data)) && (data !== '')) {
-                            return data;
+                var features = [];
+                angular.forEach($scope.featureData, function (feature) {
+                    if (feature.checkBox) {
+                        var defaultOption = feature.options[0];
+                        if (
+                            ($scope.currentOptions[feature.index] && defaultOption.feature.indexOf('Enabled') >= 0) ||
+                            (!$scope.currentOptions[feature.index] && defaultOption.feature.indexOf('Enabled') === -1)
+                        ) {
+                            features.push(defaultOption.feature);
+                        } else {
+                            features.push(feature.options[1].feature);
                         }
-                        return '';
+                    } else {
+                        features.push($scope.currentOptions[feature.index]);
                     }
-                ).filter(function (item) {
-                        return item !== '';
-                    }));
+                });
 
                 var players = $scope.playerChoices.map(function (player) {
                     return player.md5;
                 });
-                var playersAndFeatures = {'players': players, 'features': featureSet};
+                var playersAndFeatures = {'players': players, 'features': features};
                 $http.post(jtbPlayerService.currentPlayerBaseURL() + '/new', playersAndFeatures).success(function (data) {
                     jtbGameCache.putUpdatedGame(data);
-                    $location.path('/show/' + data.id);
+                    //TODO
+                    //$location.path('/show/' + data.id);
                 }).error(function (data, status, headers, config) {
+                    //  TODO
                     $scope.alerts.push({type: 'danger', msg: 'Error creating game:' + data});
                     console.error(data + status + headers + config);
                 });

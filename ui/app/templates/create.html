@@ -31,7 +31,7 @@
                     <div class="input-label">
                         {{feature.feature.label}}
                     </div>
-                    <select ng-data="currentOptions[feature.index]">
+                    <select ng-model="currentOptions[feature.index]">
                         <option ng-repeat="option in feature.options" value="{{option.feature}}">{{option.label}}
                         </option>
                     </select>
@@ -39,9 +39,7 @@
             </div>
 
             <div ng-repeat="feature in featureData | propsFilter: { checkBox: 'true' }">
-                <ion-toggle
-                        ng-model="currentOptons[feature.index]"
-                        ng-checked="currentOptions[feature.index]">
+                <ion-toggle ng-model="currentOptions[feature.index]">
                     {{feature.feature.label}}
                 </ion-toggle>
             </div>
@@ -50,16 +48,21 @@
                     Opponents (Max 5):
                 </div>
                 <!-- TODO - seems to have caching bug on first load  -->
+                <!-- TODO - why do we need callbacks - why isn't scope working directly?  -->
                 <ion-autocomplete ng-model="playerChoices"
                                   items-method="queryFriends(query)"
                                   selected-items-label="Selected Players:"
                                   placeholder="Select opponents..."
                                   item-value-key="md5"
                                   item-view-value-key="displayName"
+                                  items-clicked-method="playersChanged(callback)"
+                                  items-removed-method="playersChanged(callback)"
                                   multiple-select="true">
                 </ion-autocomplete>
             </label>
         </div>
-    <button class="button-full button-positive button" ng-disabled="!(submitEnabled)">Start</button>
+        <button class="button-full button-positive button" ng-disabled="!(submitEnabled)" ng-click="createGame()">
+            Start
+        </button>
     </ion-content>
 </ion-view>
