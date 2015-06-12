@@ -2,11 +2,13 @@
 <widget id="com.example.TwistedBattleship" version="0.0.1" xmlns="http://www.w3.org/ns/widgets">
     <name>TwistedBattleship</name>
     <description>
-        A sample Apache Cordova application that responds to the deviceready event.
+        Twisted Battleship - variations on a classic!
     </description>
+    <!--  TODO -->
     <author email="dev@cordova.apache.org" href="http://cordova.io">
         Apache Cordova Team
     </author>
     <content src="index.html"/>
+    <!--  TODO -->
     <access origin="*"/>
 </widget>

@@ -44,7 +44,15 @@ module.exports = function (grunt) {
                     ENV: {
                         name: 'development',
                         apiEndpoint: 'http://localhost:8100'
-                        //apiEndpoint: 'https://localhost:9999'
+                    }
+                }
+            },
+            ripple: {
+                constants: {
+                    ENV: {
+                        name: 'development',
+//                        apiEndpoint: 'http://localhost:8100'
+                        apiEndpoint: 'http://localhost:9998'
                     }
                 }
             },
@@ -447,7 +455,7 @@ module.exports = function (grunt) {
     // over to <%= yeoman.dist %>/. Last step is running cordova prepare so we can refresh the ripple
     // browser tab to see the changes. Technically ripple runs `cordova prepare` on browser
     // refreshes, but at this time you would need to re-run the emulator to see changes.
-    grunt.registerTask('ripple', ['wiredep', 'newer:copy:app', 'ripple-emulator']);
+    grunt.registerTask('ripple', ['ngconstant:ripple', 'wiredep', 'newer:copy:app', 'prepare', 'ripple-emulator']);
     grunt.registerTask('ripple-emulator', function () {
         grunt.config.set('watch', {
             all: {
@@ -456,6 +464,7 @@ module.exports = function (grunt) {
             }
         });
 
+        process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
         var cmd = path.resolve('./node_modules/ripple-emulator/bin', 'ripple');
         var child = spawn(cmd, ['emulate']);
         child.stdout.on('data', function (data) {
