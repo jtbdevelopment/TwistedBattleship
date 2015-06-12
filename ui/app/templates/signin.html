@@ -9,49 +9,30 @@
                 </div>
             </div>
 
-            <div class="container" ng-show="showFacebook">
-                <div class="row text-center">
-                    <div class="center">
-                        <fb:login-button scope="{{facebookPermissions}}"
-                                         onlogin="window.location.reload()"></fb:login-button>
-                    </div>
-                </div>
+            <div class="list" ng-show="showFacebook">
+                <span class="item item-button">
+                    <fb:login-button scope="{{facebookPermissions}}"
+                                     onlogin="window.location.reload()"></fb:login-button>
+                </span>
             </div>
 
-
-            <div class="container" ng-show="showManual">
-                <div class="row text-center">
-                    <p>Don't want to login with Facebook?</p>
-
-                    <form id="signin" class="form-group">
-                        <input id="_csrf" name="_csrf" type="hidden" value="{{csrf}}"/>
-
-                        <div class="form-group">
-                            <label for="username">Username</label>
-                            <input id="username" name="username" type="text" size="25" ng-model="username"/>
-                        </div>
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <input id="password" name="password" type="password" size="25" ng-model="password"/>
-                        </div>
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" id="remember-me" name="remember-me" ng-model="rememberme">
-                                    Remember me
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <button type="submit" ng-click="manualLogin(user, password, rememberme)"
-                                    class="btn btn-default">Sign in
-                            </button>
-                        </div>
-                    </form>
-                </div>
+            <div class="list" ng-show="showManual">
+                <span class="item item-divider">Don't want to login with Facebook?</span>
+                <label class="item item-input">
+                    <span class="input-label">Email</span>
+                    <input id="username" name="username" type="text" size="25" ng-model="username"/>
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Password</span>
+                    <input id="password" name="password" type="password" size="25" ng-model="password"/>
+                </label>
+                <ion-checkbox ng-model="rememberme">
+                    Remember Me?
+                </ion-checkbox>
+                <button class="button-full button-positive button" ng-click="manualLogin()">
+                    Login
+                </button>
             </div>
-
         </div>
-
     </ion-content>
 </ion-view>

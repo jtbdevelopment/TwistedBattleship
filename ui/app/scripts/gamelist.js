@@ -14,8 +14,8 @@ var phasesAndIcons = {
 //  TODO - on-enter refresh
 
 angular.module('tbs').controller('MobileGameListCtrl',
-    ['$scope', '$location', '$animate', '$timeout', '$state', 'jtbGamePhaseService', 'jtbGameCache', 'tbsGameDetails',
-        function ($scope, $location, $animate, $timeout, $state, jtbGamePhaseService, jtbGameCache, tbsGameDetails) {
+    ['$rootScope', '$scope', '$location', '$animate', '$timeout', '$state', 'jtbGamePhaseService', 'jtbGameCache', 'tbsGameDetails',
+        function ($rootScope, $scope, $location, $animate, $timeout, $state, jtbGamePhaseService, jtbGameCache, tbsGameDetails) {
             $scope.games = {};
             $scope.phasesInOrder = [];
             $scope.gameDetails = tbsGameDetails;
@@ -52,7 +52,12 @@ angular.module('tbs').controller('MobileGameListCtrl',
                 angular.forEach($scope.games, function (phaseData, phase) {
                     phaseData.games = jtbGameCache.getGamesForPhase(phase);
                 });
+                $scope.$broadcast('scroll.refreshComplete');
             }
+
+            $scope.refreshGames = function () {
+                $rootScope.$broadcast('refreshGames', '');
+            };
 
             $scope.$on('gameCachesLoaded', function () {
                 loadGames();

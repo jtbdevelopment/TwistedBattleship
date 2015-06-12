@@ -79,22 +79,13 @@ angular.module('tbs', ['ionic', 'ngCookies', 'coreGamesUi', 'config', 'ion-autoc
                 url: '/games/:gameId',
                 views: {
                     'menuContent': {
-                        templateUrl: 'templates/game.html',
+                        templateUrl: 'templates/game.html'//,
 //  TODO
 //                        controller: 'MobileGameListCtrl'
                     }
                 }
-            })
-
-            //  TODO - clean these out
-            .state('app.search', {
-                url: '/search',
-                views: {
-                    'menuContent': {
-                        templateUrl: 'templates/search.html'
-                    }
-                }
             });
+
         // if none of the above states are matched, use this as the fallback
         $urlRouterProvider.otherwise('/app/signin');
     });
