@@ -3,8 +3,8 @@
 angular.module('tbs')
     //  TODO - finish and move to core
     .controller('CoreMobileSignInCtrl',
-    ['$scope', '$window', '$cookies', '$http', '$state', 'jtbFacebook',
-        function ($scope, $window, $cookies, $http, $state, jtbFacebook) {
+    ['$scope', '$window', '$cookies', '$http', '$state', '$cacheFactory', 'jtbFacebook',
+        function ($scope, $window, $cookies, $http, $state, $cacheFactory, jtbFacebook) {
             $scope.message = 'Initializing...';
             $scope.showFacebook = false;
             $scope.showManual = false;
@@ -16,6 +16,7 @@ angular.module('tbs')
             $scope.rememberme = false;
 
             $scope.manualLogin = function () {
+                clearHttpCache();
                 $http({
                     transformRequest: function (obj) {
                         var str = [];
@@ -59,6 +60,7 @@ angular.module('tbs')
 
             //  TODO - test and probably revamp for mobile
             jtbFacebook.canAutoSignIn().then(function (details) {
+                clearHttpCache();
                 $scope.facebookPermissions = details.permissions;
                 if (!details.auto) {
                     showLoginOptions();
@@ -68,6 +70,10 @@ angular.module('tbs')
             }, function () {
                 showLoginOptions();
             });
+
+            function clearHttpCache() {
+                $cacheFactory.get('$http').removeAll();
+            }
         }])
 
     .controller('AppCtrl', function ($scope, $ionicModal, $timeout) {

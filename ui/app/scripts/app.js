@@ -17,7 +17,7 @@ angular.module('tbs', ['ionic', 'ngCookies', 'coreGamesUi', 'config', 'ion-autoc
     })
     //  TODO - move interceptor to game core?
     // Custom Interceptor for replacing outgoing URLs
-    .factory('httpEnvInterceptor', function ($q, ENV) {
+    .factory('httpEnvInterceptor', function ($q, $cacheFactory, ENV) {
         return {
             'request': function (config) {
                 if (

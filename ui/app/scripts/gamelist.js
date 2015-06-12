@@ -11,6 +11,8 @@ var phasesAndIcons = {
     Quit: 'flag'
 };
 
+//  TODO - on-enter refresh
+
 angular.module('tbs').controller('MobileGameListCtrl',
     ['$scope', '$location', '$animate', '$timeout', '$state', 'jtbGamePhaseService', 'jtbGameCache', 'tbsGameDetails',
         function ($scope, $location, $animate, $timeout, $state, jtbGamePhaseService, jtbGameCache, tbsGameDetails) {
@@ -37,6 +39,7 @@ angular.module('tbs').controller('MobileGameListCtrl',
             };
 
             jtbGamePhaseService.phases().then(function (phases) {
+                console.warn(phases);
                 angular.forEach(phases, function (values, phase) {
                     $scope.games[phase].label = values[1];
                 });

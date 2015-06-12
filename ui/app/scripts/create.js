@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('tbs').controller('CreateGameCtrl',
-    ['$scope', 'jtbGameCache', 'tbsGameFeatureService', 'jtbPlayerService', '$http', '$location', '$ionicModal',// 'twAds',
-        function ($scope, jtbGameCache, tbsGameFeatureService, jtbPlayerService, $http, $location, $ionicModal/*, twAds*/) {
+    ['$scope', 'jtbGameCache', 'tbsGameFeatureService', 'jtbPlayerService', '$http', '$state', '$location', '$ionicModal',// 'twAds',
+        function ($scope, jtbGameCache, tbsGameFeatureService, jtbPlayerService, $http, $state, $location, $ionicModal/*, twAds*/) {
 
             $scope.playerChoices = [];
 
@@ -134,6 +134,7 @@ angular.module('tbs').controller('CreateGameCtrl',
                 var playersAndFeatures = {'players': players, 'features': features};
                 $http.post(jtbPlayerService.currentPlayerBaseURL() + '/new', playersAndFeatures).success(function (data) {
                     jtbGameCache.putUpdatedGame(data);
+                    $state.go('app.game', {gameId: data.id});
                     //TODO
                     //$location.path('/show/' + data.id);
                 }).error(function (data, status, headers, config) {
