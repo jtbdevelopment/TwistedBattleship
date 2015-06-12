@@ -16,32 +16,32 @@ enum GameFeature {
     Grid20x20(3, '20x20', '20 x 20 square grid', GridSize),
 
     FogOfWar(2, SharedIntel, 'Fog of War', 'How much information is shared between players?'),
-    SharedIntel(1, 'Shared', 'Players can see the results of all actions taken by all players.', FogOfWar),
-    IsolatedIntel(2, 'Isolated', 'Each player can only see the impact of their own actions and the defensive actions of each target.', FogOfWar),
+    SharedIntel(1, 'Shared Intel', 'Players can see the results of all actions taken by all players.', FogOfWar),
+    IsolatedIntel(2, 'Isolated Views', 'Each player can only see the impact of their own actions and the defensive actions of each target.', FogOfWar),
 
     ECM(3, ECMEnabled, 'Electronic Countermeasures', 'ECM devices allow player to scramble opponent views of their ocean.  Bigger grids hide bigger areas.'),
-    ECMEnabled(1, 'Available', 'Players can use ECM device to cloak their grid.', ECM),
-    ECMDisabled(2, 'Not Available', 'ECM option disabled.', ECM),
+    ECMEnabled(1, 'ECMs', 'Players can use ECM device to cloak their grid.', ECM),
+    ECMDisabled(2, '', 'ECM option disabled.', ECM),
 
     Spy(4, SpyEnabled, 'Spying', "Allows player's drones to spy on opponents."),
-    SpyEnabled(1, 'Available', "Players can use spy drones to get a glimpse of an area of an opponent's grid.  Bigger grids show more area.", Spy),
-    SpyDisabled(2, 'Not Available', 'Spy drones disabled.', Spy),
+    SpyEnabled(1, 'Spying', "Players can use spy drones to get a glimpse of an area of an opponent's grid.  Bigger grids show more area.", Spy),
+    SpyDisabled(2, '', 'Spy drones disabled.', Spy),
 
     EvasiveManeuvers(5, EMEnabled, 'Evasive Maneuvers', 'Allows defensive evasive maneuvers of a ship.'),
-    EMEnabled(1, 'Available', 'The captain will take emegency evasive actions, moving a few spaces away and possibly turning 90 degrees.  This also scrambles opponent records of the area somewhat randomly.', EvasiveManeuvers),
-    EMDisabled(2, 'Not Available', 'Evasive maneuvers disabled.', EvasiveManeuvers),
+    EMEnabled(1, 'Evasive Maneuvers', 'The captain will take emegency evasive actions, moving a few spaces away and possibly turning 90 degrees.  This also scrambles opponent records of the area somewhat randomly.', EvasiveManeuvers),
+    EMDisabled(2, '', 'Evasive maneuvers disabled.', EvasiveManeuvers),
 
     EmergencyRepairs(6, EREnabled, 'Emergency Repairs', 'Allows a damaged ship to be repaired.'),
-    EREnabled(1, 'Available', 'Ship crew are able to salvage parts to repair a ship to full sea-worthiness.', EmergencyRepairs),
-    ERDisabled(2, 'Not Available', 'Emergency repairs disabled.', EmergencyRepairs),
+    EREnabled(1, 'Repairs', 'Ship crew are able to salvage parts to repair a ship to full sea-worthiness.', EmergencyRepairs),
+    ERDisabled(2, '', 'Emergency repairs disabled.', EmergencyRepairs),
 
     ActionsPerTurn(7, PerShip, 'Actions Per Turn', 'How many actions can a player take per turn?'),
-    Single(2, 'Single', 'A player can fire a single shot or take a single special action (ECM, Spying, etc) per turn.', ActionsPerTurn),
+    Single(2, 'Single Action', 'A player can fire a single shot or take a single special action (ECM, Spying, etc) per turn.', ActionsPerTurn),
     PerShip(1, 'Per Ship', 'A player has as many action points as they have ships.  Firing takes 1 action point, specials (ECM, Spying, etc.) take 2.', ActionsPerTurn),
 
     Critical(8, CriticalEnabled, 'Critical Hits', 'Allow duds and critical hits (NOT IMPLEMENTED CURRENTLY).'),
-    CriticalEnabled(1, 'Enabled', 'Small chance a hit can damage an adjacent boat segment OR be a dud missile and do no damage.', Critical),
-    CriticalDisabled(2, 'Disabled', 'No critical hits or duds.', Critical)
+    CriticalEnabled(1, 'Criticals', 'Small chance a hit can damage an adjacent boat segment OR be a dud missile and do no damage.', Critical),
+    CriticalDisabled(2, '', 'No critical hits or duds.', Critical)
 
     final GameFeature group
     final String label

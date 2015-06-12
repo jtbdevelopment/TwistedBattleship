@@ -76,6 +76,16 @@ angular.module('tbs', ['ionic', 'ngCookies', 'coreGamesUi', 'config', 'ion-autoc
                     }
                 }
             })
+            .state('app.game', {
+                url: '/games/:gameId',
+                views: {
+                    'menuContent': {
+                        templateUrl: 'templates/game.html',
+//  TODO
+//                        controller: 'MobileGameListCtrl'
+                    }
+                }
+            })
 
             //  TODO - clean these out
             .state('app.search', {
