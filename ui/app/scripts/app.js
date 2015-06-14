@@ -14,7 +14,7 @@ angular.module('tbs', ['ionic', 'ngCookies', 'coreGamesUi', 'config', 'ion-autoc
                 StatusBar.styleDefault();
             }
             //  TODO - this is not setting it for endpoint domain
-            $cookies['mobile.jtbdevelopment'] = 'true';
+            $cookies['jtbdevelopment.twistedbattleship'] = 'true';
         });
     })
     //  TODO - move interceptor to game core?
