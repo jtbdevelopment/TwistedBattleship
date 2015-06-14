@@ -43,6 +43,7 @@ module.exports = function (grunt) {
                 constants: {
                     ENV: {
                         name: 'development',
+                        domain: 'localhost',
                         apiEndpoint: 'http://localhost:8100'
                     }
                 }
@@ -50,8 +51,8 @@ module.exports = function (grunt) {
             ripple: {
                 constants: {
                     ENV: {
-                        name: 'development',
-//                        apiEndpoint: 'http://localhost:8100'
+                        name: 'ripple',
+                        domain: 'localhost',
                         apiEndpoint: 'http://localhost:9998'
                     }
                 }
@@ -59,7 +60,9 @@ module.exports = function (grunt) {
             production: {
                 constants: {
                     ENV: {
+                        //  TODO
                         name: 'production',
+                        domain: 'yoursite.com',
                         apiEndpoint: 'http://api.yoursite.com/'
                     }
                 }
@@ -464,7 +467,7 @@ module.exports = function (grunt) {
             }
         });
 
-        process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+        process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
         var cmd = path.resolve('./node_modules/ripple-emulator/bin', 'ripple');
         var child = spawn(cmd, ['emulate']);
         child.stdout.on('data', function (data) {

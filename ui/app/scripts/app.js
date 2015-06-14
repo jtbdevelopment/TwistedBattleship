@@ -2,7 +2,7 @@
 
 angular.module('tbs', ['ionic', 'ngCookies', 'coreGamesUi', 'config', 'ion-autocomplete'])
 
-    .run(function ($ionicPlatform) {
+    .run(function ($ionicPlatform, $cookies) {
         $ionicPlatform.ready(function () {
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
             // for form inputs)
@@ -13,6 +13,8 @@ angular.module('tbs', ['ionic', 'ngCookies', 'coreGamesUi', 'config', 'ion-autoc
                 // org.apache.cordova.statusbar required
                 StatusBar.styleDefault();
             }
+            //  TODO - this is not setting it for endpoint domain
+            $cookies['mobile.jtbdevelopment'] = 'true';
         });
     })
     //  TODO - move interceptor to game core?

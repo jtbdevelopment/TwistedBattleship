@@ -25,7 +25,6 @@ angular.module('tbs').controller('MobileGameListCtrl',
                 $scope.games[phase].games = [];
                 $scope.games[phase].icon = icon;
                 $scope.games[phase].style = phase.toLowerCase() + 'Button';
-                //  TODO - needed?
                 $scope.games[phase].hideGames = false;
                 $scope.games[phase].label = '';
             });
@@ -83,6 +82,10 @@ angular.module('tbs').controller('MobileGameListCtrl',
                  }
                  }, 1);
                  */
+            });
+
+            $scope.$on('$ionicView.enter', function () {
+                $rootScope.$broadcast('refreshGames', '');
             });
         }
     ]);

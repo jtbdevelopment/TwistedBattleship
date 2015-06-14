@@ -3,8 +3,8 @@
 angular.module('tbs')
     //  TODO - finish and move to core
     .controller('CoreMobileSignInCtrl',
-    ['$scope', '$window', '$cookies', '$http', '$state', '$cacheFactory', 'jtbFacebook',
-        function ($scope, $window, $cookies, $http, $state, $cacheFactory, jtbFacebook) {
+    ['$scope', '$window', '$cookies', '$http', '$state', '$cacheFactory', '$ionicHistory', 'jtbFacebook',
+        function ($scope, $window, $cookies, $http, $state, $cacheFactory, $ionicHistory, jtbFacebook) {
             $scope.message = 'Initializing...';
             $scope.showFacebook = false;
             $scope.showManual = false;
@@ -27,7 +27,6 @@ angular.module('tbs')
                     },
                     url: '/signin/authenticate',
                     data: {
-                        noRedirect: 'true',
                         username: $scope.username,
                         password: $scope.password,
                         'remember-me': $scope.rememberme
@@ -35,8 +34,10 @@ angular.module('tbs')
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                     method: 'POST'
                 }).success(function () {
-                    //  TODO - get rid of back button
-                    $state.go('app.games');
+                    $ionicHistory.nextViewOptions({
+                        disableBack: true
+                    });
+                    $state.go('app.games', {}, {reload: true});
                 }).error(function () {
                     $scope.message = 'Invalid username or password.';
                 });
@@ -50,15 +51,14 @@ angular.module('tbs')
                 $scope.message = '';
             }
 
-            //  TODO - test and probably revamp for mobile
             function autoLogin() {
                 $scope.showFacebook = false;
                 $scope.showManual = false;
                 $scope.message = 'Logging in via Facebook';
+                clearHttpCache();
                 $window.location = '/auth/facebook';
             }
 
-            //  TODO - test and probably revamp for mobile
             jtbFacebook.canAutoSignIn().then(function (details) {
                 clearHttpCache();
                 $scope.facebookPermissions = details.permissions;
