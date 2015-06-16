@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('tbs')
+angular.module('tbs.controllers')
     //  TODO - finish and move to core
     //  TODO - investigate cordova facebook plugin instead of custom
     //  TODO - move modals out of html?

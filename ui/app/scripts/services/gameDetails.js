@@ -1,7 +1,7 @@
 'use strict';
 
 //  TODO - review each is used
-angular.module('tbs').factory('tbsGameDetails',
+angular.module('tbs.services').factory('tbsGameDetails',
     function () {
         var iconMap = {
             'SpyEnabled': 'eye',

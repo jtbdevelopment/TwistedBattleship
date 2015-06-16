@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('tbs').controller('CreateGameCtrl',
-    ['$scope', 'jtbGameCache', 'tbsGameFeatureService', 'jtbPlayerService', 'jtbFacebook', '$http', '$state', '$location', '$ionicModal',// 'twAds',
-        function ($scope, jtbGameCache, tbsGameFeatureService, jtbPlayerService, jtbFacebook, $http, $state, $location, $ionicModal/*, twAds*/) {
+angular.module('tbs.controllers').controller('CreateGameCtrl',
+    ['$scope', 'jtbGameCache', 'jtbGameFeatureService', 'jtbPlayerService', 'jtbFacebook', '$http', '$state', '$location', '$ionicModal',// 'twAds',
+        function ($scope, jtbGameCache, jtbGameFeatureService, jtbPlayerService, jtbFacebook, $http, $state, $location, $ionicModal/*, twAds*/) {
 
             $scope.playerChoices = [];
 
@@ -28,7 +28,7 @@ angular.module('tbs').controller('CreateGameCtrl',
             $scope.alerts = [];
             $scope.featureData = [];
             $scope.currentOptions = [];
-            tbsGameFeatureService.features().then(function (data) {
+            jtbGameFeatureService.features().then(function (data) {
                 $scope.featureData = data;
                 $scope.currentOptions = [];
                 var count = 0;

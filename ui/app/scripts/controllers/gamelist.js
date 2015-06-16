@@ -13,7 +13,7 @@ var phasesAndIcons = {
 
 //  TODO - on-enter refresh
 
-angular.module('tbs').controller('MobileGameListCtrl',
+angular.module('tbs.controllers').controller('MobileGameListCtrl',
     ['$rootScope', '$scope', '$location', '$animate', '$timeout', '$state', 'jtbGamePhaseService', 'jtbGameCache', 'tbsGameDetails',
         function ($rootScope, $scope, $location, $animate, $timeout, $state, jtbGamePhaseService, jtbGameCache, tbsGameDetails) {
             $scope.games = {};
