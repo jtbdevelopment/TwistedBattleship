@@ -36,11 +36,13 @@ angular.module('tbs')
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                     method: 'POST'
                 }).success(function () {
+                    clearHttpCache();
                     $ionicHistory.nextViewOptions({
                         disableBack: true
                     });
                     $state.go('app.games', {}, {reload: true});
                 }).error(function () {
+                    clearHttpCache();
                     $scope.message = 'Invalid username or password.';
                 });
             };
@@ -58,6 +60,7 @@ angular.module('tbs')
                 $scope.showManual = false;
                 $scope.message = 'Logging in via Facebook';
                 clearHttpCache();
+                //  TODO - make $http instead?
                 $window.location = '/auth/facebook';
             }
 
