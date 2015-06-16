@@ -27,7 +27,7 @@ describe('Service: gameFeatures', function () {
     });
 
     it('sets features to error results', function () {
-        var features;
+        var features = undefined;
         httpBackend.expectGET('/api/features').respond(500);
         var errorCalled = false;
         service.features().then(function (data) {
