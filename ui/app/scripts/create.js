@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('tbs').controller('CreateGameCtrl',
-    ['$scope', 'jtbGameCache', 'tbsGameFeatureService', 'jtbPlayerService', '$http', '$state', '$location', '$ionicModal',// 'twAds',
-        function ($scope, jtbGameCache, tbsGameFeatureService, jtbPlayerService, $http, $state, $location, $ionicModal/*, twAds*/) {
+    ['$scope', 'jtbGameCache', 'tbsGameFeatureService', 'jtbPlayerService', 'jtbFacebook', '$http', '$state', '$location', '$ionicModal',// 'twAds',
+        function ($scope, jtbGameCache, tbsGameFeatureService, jtbPlayerService, jtbFacebook, $http, $state, $location, $ionicModal/*, twAds*/) {
 
             $scope.playerChoices = [];
 
@@ -15,8 +15,14 @@ angular.module('tbs').controller('CreateGameCtrl',
                 scope: $scope,
                 animation: 'slide-in-up'
             }).then(function (modal) {
-                $scope.modal = modal;
+                $scope.helpModal = modal;
                 $scope.helpIndex = 0;
+            });
+            $ionicModal.fromTemplateUrl('invite-modal.html', {
+                scope: $scope,
+                animation: 'slide-in-up'
+            }).then(function (modal) {
+                $scope.inviteModal = modal;
             });
 
             $scope.alerts = [];
@@ -43,7 +49,7 @@ angular.module('tbs').controller('CreateGameCtrl',
 
             $scope.friends = [];
             //  TODO
-            $scope.invitableFBFriends = [];
+            $scope.invitableFriends = [];
             jtbPlayerService.currentPlayerFriends().then(function (data) {
                 angular.forEach(data.maskedFriends, function (displayName, hash) {
                     var friend = {
@@ -61,8 +67,11 @@ angular.module('tbs').controller('CreateGameCtrl',
                         if (angular.isDefined(friend.picture) && angular.isDefined(friend.picture.url)) {
                             invite.url = friend.picture.url;
                         }
-                        $scope.invitableFBFriends.push(invite);
+                        $scope.invitableFriends.push(invite);
                     });
+                } else {
+                    $scope.invitableFriends.push({id: 'anid1', name: 'a friend!'});
+                    $scope.invitableFriends.push({id: 'anid2', name: 'another friend!'});
                 }
             }, function () {
                 //  TODO
@@ -70,6 +79,18 @@ angular.module('tbs').controller('CreateGameCtrl',
             });
 
             $scope.submitEnabled = false;
+
+            $scope.queryInvitableFriends = function (query) {
+                var match = [];
+                //  TODO - filter existing choices
+                angular.forEach($scope.invitableFriends, function (friend) {
+                    if (friend.name.search(new RegExp(query, 'i')) >= 0) {
+                        match.push(friend);
+                    }
+                });
+                return match;
+            };
+
             $scope.queryFriends = function (query) {
                 var match = [];
                 //  TODO - filter existing choices
@@ -97,15 +118,31 @@ angular.module('tbs').controller('CreateGameCtrl',
 
             $scope.showHelp = function () {
                 $scope.helpIndex = 0;
-                $scope.modal.show();
+                $scope.helpModal.show();
             };
 
             $scope.closeHelp = function () {
-                $scope.modal.hide();
+                $scope.helpModal.hide();
+            };
+
+            $scope.friendsToInvite = [];
+            $scope.showInviteFriends = function () {
+                $scope.inviteModal.show();
+            };
+
+            //  TODO - similar scope issue to playerChoices
+            $scope.inviteFriends = function (friendsToInvite) {
+                jtbFacebook.inviteFriends(friendsToInvite);
+                $scope.inviteModal.hide();
+            };
+
+            $scope.cancelInviteFriends = function () {
+                $scope.inviteModal.hide();
             };
 
             $scope.$on('$destroy', function () {
-                $scope.modal.remove();
+                $scope.helpModal.remove();
+                $scope.inviteModal.remove();
             });
 
             $scope.createGame = function () {
@@ -153,7 +190,7 @@ angular.module('tbs').controller('CreateGameCtrl',
                     size: 'lg',
                     resolve: {
                         invitableFriends: function () {
-                            return $scope.invitableFBFriends;
+                            return $scope.invitableFriends;
                         }
                     }
                 });
