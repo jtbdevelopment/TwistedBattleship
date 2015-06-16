@@ -392,7 +392,7 @@ module.exports = function (grunt) {
                 ],
                 autoWatch: false,
                 reporters: ['dots', 'coverage'],
-                port: 8080,
+                port: 8085,
                 singleRun: false,
                 preprocessors: {
                     // Update this if you change the yeoman config path

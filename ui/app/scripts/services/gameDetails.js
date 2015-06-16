@@ -116,64 +116,72 @@ angular.module('tbs.services').factory('tbsGameDetails',
                 return 'help';
             },
 
-            gameStateIconForPlayer: function (game, md5) {
-                switch (this.gameEndForPlayer(game, md5)) {
-                    case 'Winner!':
-                        return 'ribbon-a';
-                    case 'Defeated!':
-                        return 'sad-outline';
-                    case 'Still Playing.':
-                        return 'load-a';
+            gameEndIconForPlayer: function (game, md5) {
+                if (checkParams(game, md5)) {
+                    switch (this.gameEndForPlayer(game, md5)) {
+                        case 'Winner!':
+                            return 'ribbon-a';
+                        case 'Defeated!':
+                            return 'sad-outline';
+                        case 'Still Playing.':
+                            return 'load-a';
+                    }
                 }
                 return 'help';
             },
 
             gameDescription: function (game) {
-                var t = '';
-                //  TODO - sort for consistency?
-                if (angular.isDefined(game)) {
-                    angular.forEach(game.features, function (feature) {
-                        //  TODO - almost certainly need feature cache for this
-                        if (feature.label !== '') {
-                            if (t !== '') {
-                                t += ', ';
+                if (checkParams(game, 'DUMMY')) {
+                    var t = '';
+                    //  TODO - sort for consistency?
+                    if (angular.isDefined(game)) {
+                        angular.forEach(game.features, function (feature) {
+                            //  TODO - almost certainly need feature cache for this
+                            if (feature.label !== '') {
+                                if (t !== '') {
+                                    t += ', ';
+                                }
+                                t += feature.label;
                             }
-                            t += feature.label;
-                        }
-                    });
+                        });
+                    }
+                    return t;
                 }
-                return t;
+                return 'Game details missing!';
             },
 
             shortGameDescription: function (game) {
-                var result = {
-                    sizeText: '',
-                    actionsText: '',
-                    icons: []
-                };
-                if (angular.isDefined(game)) {
-                    angular.forEach(game.features, function (feature) {
-                        switch (feature) {
-                            case 'Grid10x10':
-                            case 'Grid15x15':
-                            case 'Grid20x20':
-                                result.sizeText = feature.replace('Grid', '');
-                                break;
-                            case 'PerShip':
-                                result.actionsText = 'Multiple';
-                                break;
-                            case 'Single':
-                                result.actionsText = 'Single';
-                                break;
-                            default:
-                                if (angular.isDefined(iconMap[feature])) {
-                                    result.icons.push(iconMap[feature]);
-                                }
-                                break;
-                        }
-                    });
+                if (checkParams(game, 'DUMMY')) {
+                    var result = {
+                        sizeText: '',
+                        actionsText: '',
+                        icons: []
+                    };
+                    if (angular.isDefined(game)) {
+                        angular.forEach(game.features, function (feature) {
+                            switch (feature) {
+                                case 'Grid10x10':
+                                case 'Grid15x15':
+                                case 'Grid20x20':
+                                    result.sizeText = feature.replace('Grid', '');
+                                    break;
+                                case 'PerShip':
+                                    result.actionsText = 'Multiple';
+                                    break;
+                                case 'Single':
+                                    result.actionsText = 'Single';
+                                    break;
+                                default:
+                                    if (angular.isDefined(iconMap[feature])) {
+                                        result.icons.push(iconMap[feature]);
+                                    }
+                                    break;
+                            }
+                        });
+                    }
+                    return result;
                 }
-                return result;
+                return 'Game details missing!';
             }
         };
     }
