@@ -51,7 +51,7 @@ angular.module('tbs.services').factory('tbsGameDetails',
                     return false;
                 }
 
-                return game.playersSetup[md5];
+                return game.playersSetup[md5] == false;
             },
 
             gameEndForPlayer: function (game, md5) {
@@ -150,35 +150,37 @@ angular.module('tbs.services').factory('tbsGameDetails',
                 return 'Game details missing!';
             },
 
-            shortGameDescription: function (game) {
-                if (checkParams(game, 'DUMMY')) {
+            shortGameDescription: function (game, md5) {
+                if (checkParams(game, md5)) {
                     var result = {
                         sizeText: '',
                         actionsText: '',
-                        icons: []
+                        icons: [],
+                        playerAction: false
                     };
-                    if (angular.isDefined(game)) {
-                        angular.forEach(game.features, function (feature) {
-                            switch (feature) {
-                                case 'Grid10x10':
-                                case 'Grid15x15':
-                                case 'Grid20x20':
-                                    result.sizeText = feature.replace('Grid', '');
-                                    break;
-                                case 'PerShip':
-                                    result.actionsText = 'Multiple';
-                                    break;
-                                case 'Single':
-                                    result.actionsText = 'Single';
-                                    break;
-                                default:
-                                    if (angular.isDefined(iconMap[feature])) {
-                                        result.icons.push(iconMap[feature]);
-                                    }
-                                    break;
-                            }
-                        });
-                    }
+                    angular.forEach(game.features, function (feature) {
+                        switch (feature) {
+                            case 'Grid10x10':
+                            case 'Grid15x15':
+                            case 'Grid20x20':
+                                result.sizeText = feature.replace('Grid', '');
+                                break;
+                            case 'PerShip':
+                                result.actionsText = 'Multiple';
+                                break;
+                            case 'Single':
+                                result.actionsText = 'Single';
+                                break;
+                            default:
+                                if (angular.isDefined(iconMap[feature])) {
+                                    result.icons.push(iconMap[feature]);
+                                }
+                                break;
+                        }
+                    });
+                    result.playerAction = this.playerChallengeResponseNeeded(game, md5) == true ||
+                        this.playerSetupEntryRequired(game, md5) == true ||
+                        this.playerCanPlay(game, md5) == true;
                     return result;
                 }
                 return 'Game details missing!';

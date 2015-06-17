@@ -29,7 +29,7 @@ describe('Service: gameDetails', function () {
         },
         featureData: {},
         features: ['Grid10x10', 'ECMEnabled', 'SpyingEnabled', 'EREnabled', 'EMEnabled', 'SharedIntel', 'Single', 'CriticalEnabled'],
-        playersScores: {'md1': 1, 'md2': 0, 'md3': -1, 'md4': 3, 'md5': 2},
+        playersScore: {'md1': 1, 'md2': 0, 'md3': -1, 'md4': 3, 'md5': 2},
         playersSetup: {'md1': true, 'md2': false, 'md3': false, 'md4': true, 'md5': false},
         playersAlive: {'md1': false, 'md2': false, 'md3': true, 'md4': true, 'md5': false},
         currentPlayer: 'md2'
@@ -120,7 +120,7 @@ describe('Service: gameDetails', function () {
     it('test player response needed for setup phases', function () {
         game.gamePhase = 'Setup';
         angular.forEach(players, function (player) {
-            expect(service.playerSetupEntryRequired(game, player)).to.equal(player === 'md1' || player === 'md4');
+            expect(service.playerSetupEntryRequired(game, player)).to.equal(!(player === 'md1' || player === 'md4'));
         });
     });
 
@@ -188,16 +188,40 @@ describe('Service: gameDetails', function () {
         expect(service.gameEndIconForPlayer({}, '  ')).to.equal('help');
     });
 
+    it('test player score', function () {
+        expect(service.gameScoreForPlayer(game, 'md1')).to.equal(1);
+        expect(service.gameScoreForPlayer(game, 'md2')).to.equal(0);
+        expect(service.gameScoreForPlayer(game, 'md3')).to.equal(-1);
+        expect(service.gameScoreForPlayer(game, 'md4')).to.equal(3);
+        expect(service.gameScoreForPlayer(game, 'md5')).to.equal(2);
+    });
+
     it('test player score - bad parameters', function () {
         expect(service.gameScoreForPlayer()).to.equal('');
         expect(service.gameScoreForPlayer({})).to.equal('');
         expect(service.gameScoreForPlayer({}, '  ')).to.equal('');
     });
 
+    it('test player profile', function () {
+        expect(service.profileForPlayer(game, 'md1')).to.equal('someprofile');
+        expect(service.profileForPlayer(game, 'md2')).to.equal('anotherprofile');
+        expect(service.profileForPlayer(game, 'md3')).to.equal('');
+        expect(service.profileForPlayer(game, 'md4')).to.equal('');
+        expect(service.profileForPlayer(game, 'md5')).to.equal('');
+    });
+
     it('test player profile - bad parameters', function () {
         expect(service.profileForPlayer()).to.equal('');
         expect(service.profileForPlayer({})).to.equal('');
         expect(service.profileForPlayer({}, '  ')).to.equal('');
+    });
+
+    it('test player image', function () {
+        expect(service.imageForPlayer(game, 'md1')).to.equal('someimagelink');
+        expect(service.imageForPlayer(game, 'md2')).to.equal('anotherlink');
+        expect(service.imageForPlayer(game, 'md3')).to.equal(null);
+        expect(service.imageForPlayer(game, 'md4')).to.equal(null);
+        expect(service.imageForPlayer(game, 'md5')).to.equal(null);
     });
 
     it('test player image - bad parameters', function () {
@@ -208,6 +232,78 @@ describe('Service: gameDetails', function () {
 
     it('test game description bad game', function () {
         expect(service.gameDescription()).to.equal('Game details missing!');
+    });
+
+
+    it('test short game description - general', function () {
+        expect(service.shortGameDescription(game, 'md1')).to.deep.equal({
+            sizeText: '10x10',
+            actionsText: 'Single',
+            icons: ["eye-disabled", "wrench", "shuffle", "images", "alert"],
+            playerAction: false
+        });
+
+        game.features = ['Grid15x15', 'ECMDisabled', 'SpyingEnabled', 'EREnabled', 'EMEnabled', 'SharedIntel', 'Single', 'CriticalDisabled'];
+        expect(service.shortGameDescription(game, 'md1')).to.deep.equal({
+            sizeText: '15x15',
+            actionsText: 'Single',
+            icons: ["wrench", "shuffle", "images"],
+            playerAction: false
+        });
+
+
+        game.features = ['Grid20x20', 'ECMEnabled', 'IsolatedIntel', 'PerShip'];
+        expect(service.shortGameDescription(game, 'md1')).to.deep.equal({
+            sizeText: '20x20',
+            actionsText: 'Multiple',
+            icons: ["eye-disabled", "image"],
+            playerAction: false
+        });
+
+    });
+
+    it('test short game description - playerAction', function () {
+        game.gamePhase = 'Setup';
+        expect(service.shortGameDescription(game, 'md1')).to.deep.equal({
+            sizeText: '10x10',
+            actionsText: 'Single',
+            icons: ["eye-disabled", "wrench", "shuffle", "images", "alert"],
+            playerAction: false
+        });
+        expect(service.shortGameDescription(game, 'md2')).to.deep.equal({
+            sizeText: '10x10',
+            actionsText: 'Single',
+            icons: ["eye-disabled", "wrench", "shuffle", "images", "alert"],
+            playerAction: true
+        });
+
+        game.gamePhase = 'Challenged';
+        expect(service.shortGameDescription(game, 'md1')).to.deep.equal({
+            sizeText: '10x10',
+            actionsText: 'Single',
+            icons: ["eye-disabled", "wrench", "shuffle", "images", "alert"],
+            playerAction: true
+        });
+        expect(service.shortGameDescription(game, 'md2')).to.deep.equal({
+            sizeText: '10x10',
+            actionsText: 'Single',
+            icons: ["eye-disabled", "wrench", "shuffle", "images", "alert"],
+            playerAction: false
+        });
+
+        game.gamePhase = 'Playing';
+        expect(service.shortGameDescription(game, 'md1')).to.deep.equal({
+            sizeText: '10x10',
+            actionsText: 'Single',
+            icons: ["eye-disabled", "wrench", "shuffle", "images", "alert"],
+            playerAction: false
+        });
+        expect(service.shortGameDescription(game, 'md2')).to.deep.equal({
+            sizeText: '10x10',
+            actionsText: 'Single',
+            icons: ["eye-disabled", "wrench", "shuffle", "images", "alert"],
+            playerAction: true
+        });
     });
 
     it('test short game description bad game', function () {
