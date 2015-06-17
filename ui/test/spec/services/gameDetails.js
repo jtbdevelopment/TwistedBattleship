@@ -4,17 +4,100 @@ describe('Service: gameDetails', function () {
     // load the controller's module
     beforeEach(module('tbs.services'));
 
+    var phases = ['Challenged', 'Declined', 'Quit', 'Setup', 'Playing', 'RoundOver', 'NextRoundStarted'];
+    var players = ['md1', 'md2', 'md3', 'md4', 'md5'];
+
+    var game;
+    var gameBase = {
+        id: 'id',
+        players: {'md1': 'P1', 'md2': 'P2', 'md3': 'P3', 'md4': 'P4', 'md5': 'P5'},
+        playerStates: {
+            md1: 'Pending',
+            md2: 'Accepted',
+            md3: 'Declined',
+            md4: 'Quit',
+            md5: 'Accepted',
+            md6: 'Rejected'
+        },
+        playerImages: {
+            md1: 'someimagelink',
+            md2: 'anotherlink'
+        },
+        playerProfiles: {
+            md1: 'someprofile',
+            md2: 'anotherprofile'
+        },
+        featureData: {},
+        features: ['Grid10x10', 'ECMEnabled', 'SpyingEnabled', 'EREnabled', 'EMEnabled', 'SharedIntel', 'Single', 'CriticalEnabled'],
+        playersScores: {'md1': 1, 'md2': 0, 'md3': -1, 'md4': 3, 'md5': 2},
+        playersSetup: {'md1': true, 'md2': false, 'md3': false, 'md4': true, 'md5': false},
+        playersAlive: {'md1': false, 'md2': false, 'md3': true, 'md4': true, 'md5': false},
+        currentPlayer: 'md2'
+    };
+
     var service;
 
     // Initialize the controller and a mock scope
     beforeEach(inject(function ($injector) {
+        game = angular.copy(gameBase);
         service = $injector.get('tbsGameDetails');
     }));
+
+    it('player icon based on state', function () {
+        expect(service.stateIconForPlayer(game, 'md1')).to.equal('speakerphone');
+        expect(service.stateIconForPlayer(game, 'md2')).to.equal('thumbsup');
+        expect(service.stateIconForPlayer(game, 'md3')).to.equal('help');
+        expect(service.stateIconForPlayer(game, 'md4')).to.equal('flag');
+        expect(service.stateIconForPlayer(game, 'md5')).to.equal('thumbsup');
+        expect(service.stateIconForPlayer(game, 'md6')).to.equal('thumbsdown');
+    });
+
+    it('test state icon - bad parameters', function () {
+        expect(service.stateIconForPlayer()).to.equal('help');
+        expect(service.stateIconForPlayer({})).to.equal('help');
+        expect(service.stateIconForPlayer({}, '  ')).to.equal('help');
+    });
+
+    it('test player response needed for non challenged phases', function () {
+        angular.forEach(phases, function (phase) {
+            if (phase !== 'Challenged') {
+                game.gamePhase = phase;
+                angular.forEach(players, function (player) {
+                    expect(service.playerChallengeResponseNeeded(game, player)).to.equal(false);
+                });
+            }
+        });
+    });
+
+    it('test player response needed for challenged phases', function () {
+        game.gamePhase = 'Challenged';
+        angular.forEach(players, function (player) {
+            expect(service.playerChallengeResponseNeeded(game, player)).to.equal(player === 'md1');
+        });
+    });
 
     it('test player response needed - bad parameters', function () {
         expect(service.playerChallengeResponseNeeded()).to.equal(false);
         expect(service.playerChallengeResponseNeeded({})).to.equal(false);
         expect(service.playerChallengeResponseNeeded({}, '  ')).to.equal(false);
+    });
+
+    it('test player response needed for non play phases', function () {
+        angular.forEach(phases, function (phase) {
+            if (phase !== 'Playing') {
+                game.gamePhase = phase;
+                angular.forEach(players, function (player) {
+                    expect(service.playerCanPlay(game, player)).to.equal(false);
+                });
+            }
+        });
+    });
+
+    it('test player response needed for playing phases', function () {
+        game.gamePhase = 'Playing';
+        angular.forEach(players, function (player) {
+            expect(service.playerCanPlay(game, player)).to.equal(player === 'md2');
+        });
     });
 
     it('test player can play - bad parameters', function () {
@@ -57,12 +140,6 @@ describe('Service: gameDetails', function () {
         expect(service.imageForPlayer()).to.equal(null);
         expect(service.imageForPlayer({})).to.equal(null);
         expect(service.imageForPlayer({}, '  ')).to.equal(null);
-    });
-
-    it('test state icon - bad parameters', function () {
-        expect(service.stateIconForPlayer()).to.equal('help');
-        expect(service.stateIconForPlayer({})).to.equal('help');
-        expect(service.stateIconForPlayer({}, '  ')).to.equal('help');
     });
 
     it('test game description bad game', function () {
