@@ -106,16 +106,80 @@ describe('Service: gameDetails', function () {
         expect(service.playerCanPlay({}, '  ')).to.equal(false);
     });
 
+    it('test player setup needed for non setup phases', function () {
+        angular.forEach(phases, function (phase) {
+            if (phase !== 'Setup') {
+                game.gamePhase = phase;
+                angular.forEach(players, function (player) {
+                    expect(service.playerSetupEntryRequired(game, player)).to.equal(false);
+                });
+            }
+        });
+    });
+
+    it('test player response needed for setup phases', function () {
+        game.gamePhase = 'Setup';
+        angular.forEach(players, function (player) {
+            expect(service.playerSetupEntryRequired(game, player)).to.equal(player === 'md1' || player === 'md4');
+        });
+    });
+
     it('test player setup required - bad parameters', function () {
         expect(service.playerSetupEntryRequired()).to.equal(false);
         expect(service.playerSetupEntryRequired({})).to.equal(false);
         expect(service.playerSetupEntryRequired({}, '  ')).to.equal(false);
     });
 
+    it('test player end for non end phases', function () {
+        angular.forEach(phases, function (phase) {
+            if (phase !== 'Playing' && phase !== 'RoundOver' && phase !== 'NextRoundStarted') {
+                game.gamePhase = phase;
+                angular.forEach(players, function (player) {
+                    expect(service.gameEndForPlayer(game, player)).to.equal('');
+                });
+            }
+        });
+    });
+
+    it('test player end needed for end phases', function () {
+        angular.forEach(phases, function (phase) {
+            if (phase === 'Playing' || phase === 'RoundOver' || phase === 'NextRoundStarted') {
+                game.gamePhase = phase;
+                var alive = (phase === 'Playing') ? 'Still Playing.' : 'Winner!';
+                angular.forEach(players, function (player) {
+                    expect(service.gameEndForPlayer(game, player)).to.equal((player === 'md4' || player === 'md3') ? alive : 'Defeated!');
+                });
+            }
+        });
+    });
+
     it('test player end - bad parameters', function () {
         expect(service.gameEndForPlayer()).to.equal('');
         expect(service.gameEndForPlayer({})).to.equal('');
         expect(service.gameEndForPlayer({}, '  ')).to.equal('');
+    });
+
+    it('test player end icon for non end phases', function () {
+        angular.forEach(phases, function (phase) {
+            if (phase !== 'Playing' && phase !== 'RoundOver' && phase !== 'NextRoundStarted') {
+                game.gamePhase = phase;
+                angular.forEach(players, function (player) {
+                    expect(service.gameEndIconForPlayer(game, player)).to.equal('help');
+                });
+            }
+        });
+    });
+
+    it('test player end needed for end phases', function () {
+        angular.forEach(phases, function (phase) {
+            if (phase === 'Playing' || phase === 'RoundOver' || phase === 'NextRoundStarted') {
+                game.gamePhase = phase;
+                var alive = (phase === 'Playing') ? 'load-a' : 'ribbon-a';
+                angular.forEach(players, function (player) {
+                    expect(service.gameEndIconForPlayer(game, player)).to.equal((player === 'md4' || player === 'md3') ? alive : 'sad-outline');
+                });
+            }
+        });
     });
 
     it('test player end icon - bad parameters', function () {

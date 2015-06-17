@@ -63,7 +63,7 @@ angular.module('tbs.services').factory('tbsGameDetails',
                     return '';
                 }
 
-                if (game.maskedPlayersState.playersAlive[md5]) {
+                if (game.playersAlive[md5] == false) {
                     return 'Defeated!';
                 } else {
                     if (game.gamePhase === 'Playing') {
