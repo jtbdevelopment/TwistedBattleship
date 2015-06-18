@@ -230,11 +230,6 @@ describe('Service: gameDetails', function () {
         expect(service.imageForPlayer({}, '  ')).to.equal(null);
     });
 
-    it('test game description bad game', function () {
-        expect(service.gameDescription()).to.equal('Game details missing!');
-    });
-
-
     it('test short game description - general', function () {
         expect(service.shortGameDescription(game, 'md1')).to.deep.equal({
             sizeText: '10x10',

@@ -2,7 +2,7 @@
 
 //  TODO - review each is used
 angular.module('tbs.services').factory('tbsGameDetails',
-    ['jtbGameFeatureService', function (jtbGameFeatureService) {
+    function () {
         var iconMap = {
             'SpyEnabled': 'eye',
             'ECMEnabled': 'eye-disabled',
@@ -12,18 +12,6 @@ angular.module('tbs.services').factory('tbsGameDetails',
             'EREnabled': 'wrench',
             'EMEnabled': 'shuffle'
         };
-
-        var featureMap = {};
-
-        jtbGameFeatureService.features().then(function (data) {
-            angular.forEach(data, function (group) {
-                angular.forEach(group.options, function (option) {
-                    featureMap[option.feature] = option.label;
-                });
-            })
-        }, function () {
-            //  TODO
-        });
 
         function checkParams(game, md5) {
             return !(angular.isUndefined(game) || angular.isUndefined(md5) || md5.trim() === '');
@@ -63,7 +51,7 @@ angular.module('tbs.services').factory('tbsGameDetails',
                     return false;
                 }
 
-                return game.playersSetup[md5] == false;
+                return game.playersSetup[md5] === false;
             },
 
             gameEndForPlayer: function (game, md5) {
@@ -75,7 +63,7 @@ angular.module('tbs.services').factory('tbsGameDetails',
                     return '';
                 }
 
-                if (game.playersAlive[md5] == false) {
+                if (game.playersAlive[md5] === false) {
                     return 'Defeated!';
                 } else {
                     if (game.gamePhase === 'Playing') {
@@ -142,25 +130,6 @@ angular.module('tbs.services').factory('tbsGameDetails',
                 return 'help';
             },
 
-            gameDescription: function (game) {
-                if (checkParams(game, 'DUMMY')) {
-                    var t = '';
-                    //  TODO - sort for consistency?
-                    if (angular.isDefined(game)) {
-                        angular.forEach(game.features, function (feature) {
-                            if (featureMap[feature] !== '') {
-                                if (t !== '') {
-                                    t += ', ';
-                                }
-                                t += featureMap[feature];
-                            }
-                        });
-                    }
-                    return t;
-                }
-                return 'Game details missing!';
-            },
-
             shortGameDescription: function (game, md5) {
                 if (checkParams(game, md5)) {
                     var result = {
@@ -189,15 +158,14 @@ angular.module('tbs.services').factory('tbsGameDetails',
                                 break;
                         }
                     });
-                    result.playerAction = this.playerChallengeResponseNeeded(game, md5) == true ||
-                        this.playerSetupEntryRequired(game, md5) == true ||
-                        this.playerCanPlay(game, md5) == true;
+                    result.playerAction = this.playerChallengeResponseNeeded(game, md5) === true ||
+                        this.playerSetupEntryRequired(game, md5) === true ||
+                        this.playerCanPlay(game, md5) === true;
                     return result;
                 }
                 return 'Game details missing!';
             }
         };
     }
-    ]
 );
 
