@@ -1,0 +1,23 @@
+<ion-view>
+    <ion-content>
+        <div class="list">
+            <div class="item item-divider item-complex">
+                <strong>Grid:</strong> <dfn>{{gridSize}}</dfn>
+                <strong>Moves:</strong> <dfn>{{moves}}</dfn>
+                <strong>Intel:</strong> <dfn>{{intel}}</dfn>
+                <strong>ECMs:</strong> <i class="icon ion-{{ecmEnabled}}"></i>
+                <strong>Spies:</strong> <i class="icon ion-{{spyingEnabled}}"></i>
+                <strong>Repairs:</strong> <i class="icon ion-{{repairsEnabled}}"></i>
+                <strong>Evasive:</strong> <i class="icon ion-{{moveEnabled}}"></i>
+            </div>
+            <div class="item item-avatar item-button-right" ng-repeat="(md5, name) in game.players | orderBy:name">
+                <!--  TODO - default image  -->
+                <img ng-src="{{gameDetails.imageForPlayer(game, md5) ? gameDetails.imageForPlayer(game, md5) : 'images/XXX.png'}}">
+                {{name}}
+                <button class="button button-{{game.playerStates[md5] == 'Pending' ? 'energized' : game.playerStates[md5] == 'Accepted' ? 'balanced': 'assertive'}}">
+                    <i class="icon ion-{{game.playerStates[md5] == 'Pending' ? 'help-circled' : game.playerStates[md5] == 'Accepted' ? 'checkmark-circled': 'close-circled'}}"></i>
+                </button>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

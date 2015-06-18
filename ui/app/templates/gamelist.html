@@ -17,7 +17,7 @@
                 <div ng-hide="games[phase].hideGames">
                     <ion-item ng-repeat="game in games[phase].games | orderBy:['-lastUpdate', '-created']"
                               ng-init="detail = gameDetails.shortGameDescription(game, md5)"
-                              href="#/app/games/{{game.id}}">
+                              href="#/app/games/{{game.gamePhase.toLowerCase()}}/{{game.id}}">
                         <span ng-repeat="(key, value) in game.players">{{value}}, </span>
                         {{detail.sizeText}}, {{detail.actionsText}}
                         <i ng-repeat="icon in detail.icons" class="icon ion-{{icon}} game-icon"></i>

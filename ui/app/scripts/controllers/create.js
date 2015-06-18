@@ -8,7 +8,7 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
 
             $scope.playersChanged = function (callback) {
                 $scope.playerChoices = callback.selectedItems;
-                $scope.submitEnabled = $scope.playerChoices.length > 0 && $scope.playerChoices.length < 3;
+                $scope.submitEnabled = $scope.playerChoices.length > 0 && $scope.playerChoices.length < 6;
             };
 
             $ionicModal.fromTemplateUrl('help-modal.html', {

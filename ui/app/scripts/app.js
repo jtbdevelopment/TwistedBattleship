@@ -72,8 +72,17 @@ angular.module('tbs', ['ionic', 'ngCookies', 'tbs.controllers', 'config', 'ion-a
                 url: '/games',
                 views: {
                     'menuContent': {
-                        templateUrl: 'templates/gamelist.html',
+                        templateUrl: 'templates/gameList.html',
                         controller: 'MobileGameListCtrl'
+                    }
+                }
+            })
+            .state('app.challenged', {
+                url: '/games/challenged/:gameId',
+                views: {
+                    'menuContent': {
+                        templateUrl: 'templates/challenged.html',
+                        controller: 'ChallengedCtrl'
                     }
                 }
             })
