@@ -2,7 +2,7 @@
 
 //  TODO - review each is used
 angular.module('tbs.services').factory('tbsGameDetails',
-    function () {
+    ['jtbGameFeatureService', function (jtbGameFeatureService) {
         var iconMap = {
             'SpyEnabled': 'eye',
             'ECMEnabled': 'eye-disabled',
@@ -12,6 +12,18 @@ angular.module('tbs.services').factory('tbsGameDetails',
             'EREnabled': 'wrench',
             'EMEnabled': 'shuffle'
         };
+
+        var featureMap = {};
+
+        jtbGameFeatureService.features().then(function (data) {
+            angular.forEach(data, function (group) {
+                angular.forEach(group.options, function (option) {
+                    featureMap[option.feature] = option.label;
+                });
+            })
+        }, function () {
+            //  TODO
+        });
 
         function checkParams(game, md5) {
             return !(angular.isUndefined(game) || angular.isUndefined(md5) || md5.trim() === '');
@@ -136,12 +148,11 @@ angular.module('tbs.services').factory('tbsGameDetails',
                     //  TODO - sort for consistency?
                     if (angular.isDefined(game)) {
                         angular.forEach(game.features, function (feature) {
-                            //  TODO - almost certainly need feature cache for this
-                            if (feature.label !== '') {
+                            if (featureMap[feature] !== '') {
                                 if (t !== '') {
                                     t += ', ';
                                 }
-                                t += feature.label;
+                                t += featureMap[feature];
                             }
                         });
                     }
@@ -187,5 +198,6 @@ angular.module('tbs.services').factory('tbsGameDetails',
             }
         };
     }
+    ]
 );
 

@@ -16,11 +16,15 @@
 
                 <div ng-hide="games[phase].hideGames">
                     <ion-item ng-repeat="game in games[phase].games | orderBy:['-lastUpdate', '-created']"
-                              ng-init="detail = gameDetails.shortGameDescription(game)"
+                              ng-init="detail = gameDetails.shortGameDescription(game, md5)"
                               href="#/app/games/{{game.id}}">
                         <span ng-repeat="(key, value) in game.players">{{value}}, </span>
-                        {{detail.sizeText}}, {{detail.actionsText}} <i ng-repeat="icon in detail.icons"
-                                                                       class="icon ion-{{icon}} game-icon"></i>
+                        {{detail.sizeText}}, {{detail.actionsText}}
+                        <i ng-repeat="icon in detail.icons" class="icon ion-{{icon}} game-icon"></i>
+                        <!--  TODO make play more obvious  -->
+                        <!--  TODO - game cache not completely clearing on relogin to diff player  -->
+                        <i class="icon ion-play" ng-show="{{detail.playerAction}}"></i>
+                        <i class="icon ion-pause" ng-hide="{{detail.playerAction}}"></i>
                     </ion-item>
                 </div>
             </div>
