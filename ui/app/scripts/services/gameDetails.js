@@ -93,11 +93,12 @@ angular.module('tbs.services').factory('tbsGameDetails',
 
             imageForPlayer: function (game, md5) {
                 if (checkParams(game, md5)) {
-                    if (angular.isDefined(game.playerImages[md5])) {
+                    if (angular.isDefined(game.playerImages[md5]) && game.playerImages[md5] !== null) {
                         return game.playerImages[md5];
                     }
                 }
-                return null;
+                //  TODO
+                return 'images/ionic.png';
             },
 
             stateIconForPlayer: function (game, md5) {
@@ -130,6 +131,18 @@ angular.module('tbs.services').factory('tbsGameDetails',
                 return 'help';
             },
 
+            shortenGridSize: function (game) {
+                var val = '';
+                if (checkParams(game, 'DUMMY')) {
+                    angular.forEach(game.features, function (feature) {
+                        if (feature.indexOf('Grid') == 0) {
+                            val = feature.replace('Grid', '');
+                        }
+                    });
+                }
+                return val;
+            },
+
             shortGameDescription: function (game, md5) {
                 if (checkParams(game, md5)) {
                     var result = {
@@ -138,13 +151,9 @@ angular.module('tbs.services').factory('tbsGameDetails',
                         icons: [],
                         playerAction: false
                     };
+                    result.sizeText = this.shortenGridSize(game);
                     angular.forEach(game.features, function (feature) {
                         switch (feature) {
-                            case 'Grid10x10':
-                            case 'Grid15x15':
-                            case 'Grid20x20':
-                                result.sizeText = feature.replace('Grid', '');
-                                break;
                             case 'PerShip':
                                 result.actionsText = 'Multiple';
                                 break;

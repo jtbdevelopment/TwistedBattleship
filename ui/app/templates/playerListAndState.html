@@ -1,0 +1,48 @@
+<ion-view>
+    <ion-content>
+        <div class="list">
+            <div class="item item-divider">
+                <strong>Grid:</strong> <dfn>{{gridSize}}</dfn>
+                <strong>Moves:</strong> <dfn>{{moves}}</dfn>
+                <strong>Intel:</strong> <dfn>{{intel}}</dfn>
+                <strong>ECMs:</strong> <i class="icon ion-{{ecmEnabled}}"></i>
+                <strong>Spies:</strong> <i class="icon ion-{{spyingEnabled}}"></i>
+                <strong>Repairs:</strong> <i class="icon ion-{{repairsEnabled}}"></i>
+                <strong>Evasive:</strong> <i class="icon ion-{{moveEnabled}}"></i>
+            </div>
+            <!--div class="item item-avatar item-button-right item-icon-right">
+                <img ng-src="{{gameDetails.imageForPlayer(game, player.md5)}}">
+                {{player.displayName}}
+                <button class="button button-clear button-positive">
+                    <i class="icon ion-close-circled"></i>
+                </button>
+            </div-->
+            <div class="item item-avatar item-icon-right">
+                <img ng-src="{{gameDetails.imageForPlayer(game, player.md5)}}">
+                {{player.displayName}}
+                <span class="{{statusColor(player.md5)}}">
+                    <i class="icon ion-{{statusIcon(player.md5)}}"></i>
+                </span>
+            </div>
+            <div class="item" ng-show="{{showActions}}">
+                <div class="row">
+                    <button class="button button-balanced col" ng-click="accept()"
+                            ng-show="gameDetails.playerChallengeResponseNeeded(game, player.md5)">
+                        <i class="icon ion-checkmark-circled"></i>
+                    </button>
+                    <button class="button button-assertive col" ng-click="reject()">
+                        <i class="icon ion-close-circled"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="item item-avatar item-icon-right"
+                 ng-repeat="(md5, name) in game.players | orderBy:name" ng-hide="md5 === player.md5">
+                <img ng-src="{{gameDetails.imageForPlayer(game, p.md5)}}">
+                {{name}}
+                <span class="{{statusColor(md5)}}">
+                    <i class="icon ion-{{statusIcon(md5)}}"></i>
+                </span>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

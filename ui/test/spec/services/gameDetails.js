@@ -21,7 +21,8 @@ describe('Service: gameDetails', function () {
         },
         playerImages: {
             md1: 'someimagelink',
-            md2: 'anotherlink'
+            md2: 'anotherlink',
+            md3: null
         },
         playerProfiles: {
             md1: 'someprofile',
@@ -219,15 +220,15 @@ describe('Service: gameDetails', function () {
     it('test player image', function () {
         expect(service.imageForPlayer(game, 'md1')).to.equal('someimagelink');
         expect(service.imageForPlayer(game, 'md2')).to.equal('anotherlink');
-        expect(service.imageForPlayer(game, 'md3')).to.equal(null);
-        expect(service.imageForPlayer(game, 'md4')).to.equal(null);
-        expect(service.imageForPlayer(game, 'md5')).to.equal(null);
+        expect(service.imageForPlayer(game, 'md3')).to.equal('images/ionic.png');
+        expect(service.imageForPlayer(game, 'md4')).to.equal('images/ionic.png');
+        expect(service.imageForPlayer(game, 'md5')).to.equal('images/ionic.png');
     });
 
     it('test player image - bad parameters', function () {
-        expect(service.imageForPlayer()).to.equal(null);
-        expect(service.imageForPlayer({})).to.equal(null);
-        expect(service.imageForPlayer({}, '  ')).to.equal(null);
+        expect(service.imageForPlayer()).to.equal('images/ionic.png');
+        expect(service.imageForPlayer({})).to.equal('images/ionic.png');
+        expect(service.imageForPlayer({}, '  ')).to.equal('images/ionic.png');
     });
 
     it('test short game description - general', function () {

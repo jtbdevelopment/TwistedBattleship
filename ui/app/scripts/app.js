@@ -81,8 +81,26 @@ angular.module('tbs', ['ionic', 'ngCookies', 'tbs.controllers', 'config', 'ion-a
                 url: '/games/challenged/:gameId',
                 views: {
                     'menuContent': {
-                        templateUrl: 'templates/challenged.html',
-                        controller: 'ChallengedCtrl'
+                        templateUrl: 'templates/playerListAndState.html',
+                        controller: 'PlayerListAndStateCtrl'
+                    }
+                }
+            })
+            .state('app.declined', {
+                url: '/games/declined/:gameId',
+                views: {
+                    'menuContent': {
+                        templateUrl: 'templates/playerListAndState.html',
+                        controller: 'PlayerListAndStateCtrl'
+                    }
+                }
+            })
+            .state('app.quit', {
+                url: '/games/quit/:gameId',
+                views: {
+                    'menuContent': {
+                        templateUrl: 'templates/playerListAndState.html',
+                        controller: 'PlayerListAndStateCtrl'
                     }
                 }
             })

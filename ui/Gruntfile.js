@@ -375,6 +375,8 @@ module.exports = function (grunt) {
                 files: [
                     '<%= yeoman.app %>/bower_components/angular/jquery.js',
                     '<%= yeoman.app %>/bower_components/angular/angular.js',
+                    '<%= yeoman.app %>/<%= yeoman.scripts %>/services/services.js',
+                    '<%= yeoman.app %>/<%= yeoman.scripts %>/controllers/controllers.js',
                     '<%= yeoman.app %>/bower_components/angular-cookies/angular-cookies.js',
                     '<%= yeoman.app %>/bower_components/angular-resource/angular-resource.js',
                     '<%= yeoman.app %>/bower_components/jtb-core-games-ui/dist/core-games-ui.js',
@@ -385,7 +387,6 @@ module.exports = function (grunt) {
                     '<%= yeoman.app %>/bower_components/angular-ui-router/release/angular-ui-router.js',
                     '<%= yeoman.app %>/bower_components/ionic/release/js/ionic.js',
                     '<%= yeoman.app %>/bower_components/ionic/release/js/ionic-angular.js',
-                    '<%= yeoman.app %>/<%= yeoman.scripts %>/services/services.js',
                     '<%= yeoman.app %>/<%= yeoman.scripts %>/**/*.js',
                     '<%= yeoman.test %>/mock/**/*.js',
                     '<%= yeoman.test %>/spec/**/*.js'
