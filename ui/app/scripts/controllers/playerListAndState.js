@@ -1,10 +1,11 @@
 'use strict';
 
+var yes = 'checkmark';
+var no = 'close';
+
 angular.module('tbs.controllers').controller('PlayerListAndStateCtrl',
-    ['$scope', 'tbsGameDetails', 'jtbGameCache', 'jtbGameFeatureService', 'jtbPlayerService', 'jtbFacebook', '$http', '$state', '$location', '$ionicModal',// 'twAds',
-        function ($scope, tbsGameDetails, jtbGameCache, jtbGameFeatureService, jtbPlayerService, jtbFacebook, $http, $state, $location, $ionicModal/*, twAds*/) {
-            var yes = 'checkmark';
-            var no = 'close';
+    ['$scope', 'tbsGameDetails', 'jtbGameCache', 'jtbPlayerService', '$http', '$state', // 'twAds',
+        function ($scope, tbsGameDetails, jtbGameCache, jtbPlayerService, $http, $state/*, twAds*/) {
 
             $scope.gameID = $state.params.gameId;
             $scope.gameDetails = tbsGameDetails;
@@ -38,8 +39,8 @@ angular.module('tbs.controllers').controller('PlayerListAndStateCtrl',
 
             $scope.statusColor = function (md5) {
                 if (angular.isDefined(md5)) {
-                    return $scope.game.playerStates[md5] == 'Pending' ? 'energized' :
-                        $scope.game.playerStates[md5] == 'Accepted' ? 'balanced' :
+                    return $scope.game.playerStates[md5] === 'Pending' ? 'energized' :
+                        $scope.game.playerStates[md5] === 'Accepted' ? 'balanced' :
                             'assertive';
                 }
                 return '';

@@ -135,7 +135,7 @@ angular.module('tbs.services').factory('tbsGameDetails',
                 var val = '';
                 if (checkParams(game, 'DUMMY')) {
                     angular.forEach(game.features, function (feature) {
-                        if (feature.indexOf('Grid') == 0) {
+                        if (feature.indexOf('Grid') === 0) {
                             val = feature.replace('Grid', '');
                         }
                     });
