@@ -305,6 +305,10 @@ describe('Service: gameDetails', function () {
     it('test short game description bad game', function () {
         expect(service.shortGameDescription()).to.equal('Game details missing!');
     });
+
+    it('test shorten grid description bad game', function () {
+        expect(service.shortenGridSize()).to.equal('');
+    });
 });
 
 
