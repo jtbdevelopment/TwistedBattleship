@@ -1,30 +1,12 @@
 'use strict';
 
+var MAX_OPPONENTS = 5;
+
 angular.module('tbs.controllers').controller('CreateGameCtrl',
     ['friends', 'features', '$scope', 'jtbGameCache', 'jtbPlayerService', 'jtbFacebook', '$http', '$state', '$location', '$ionicModal',// 'twAds',
         function (friends, features, $scope, jtbGameCache, jtbPlayerService, jtbFacebook, $http, $state, $location, $ionicModal/*, twAds*/) {
 
             $scope.playerChoices = [];
-
-            $scope.playersChanged = function (callback) {
-                $scope.playerChoices = callback.selectedItems;
-                $scope.submitEnabled = $scope.playerChoices.length > 0 && $scope.playerChoices.length < 6;
-            };
-
-            $ionicModal.fromTemplateUrl('help-modal.html', {
-                scope: $scope,
-                animation: 'slide-in-up'
-            }).then(function (modal) {
-                $scope.helpModal = modal;
-                $scope.helpIndex = 0;
-            });
-            $ionicModal.fromTemplateUrl('invite-modal.html', {
-                scope: $scope,
-                animation: 'slide-in-up'
-            }).then(function (modal) {
-                $scope.inviteModal = modal;
-            });
-
             $scope.alerts = [];
             $scope.featureData = [];
             $scope.currentOptions = [];
@@ -41,17 +23,6 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
                     $scope.currentOptions.push(defaultOption.feature);
                 }
             });
-
-            $scope.friends = [];
-            //  TODO
-            $scope.invitableFriends = [];
-            angular.forEach(friends.maskedFriends, function (displayName, hash) {
-                var friend = {
-                    md5: hash,
-                    displayName: displayName
-                };
-                $scope.friends.push(friend);
-            });
             if (jtbPlayerService.currentPlayer().source === 'facebook') {
                 angular.forEach(friends.invitableFriends, function (friend) {
                     var invite = {
@@ -63,12 +34,36 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
                     }
                     $scope.invitableFriends.push(invite);
                 });
-            } else {
-                $scope.invitableFriends.push({id: 'anid1', name: 'a friend!'});
-                $scope.invitableFriends.push({id: 'anid2', name: 'another friend!'});
             }
-
             $scope.submitEnabled = false;
+            $scope.friends = [];
+            $scope.invitableFriends = [];
+            angular.forEach(friends.maskedFriends, function (displayName, hash) {
+                var friend = {
+                    md5: hash,
+                    displayName: displayName
+                };
+                $scope.friends.push(friend);
+            });
+
+            $ionicModal.fromTemplateUrl('help-modal.html', {
+                scope: $scope,
+                animation: 'slide-in-up'
+            }).then(function (modal) {
+                $scope.helpModal = modal;
+                $scope.helpIndex = 0;
+            });
+            $ionicModal.fromTemplateUrl('invite-modal.html', {
+                scope: $scope,
+                animation: 'slide-in-up'
+            }).then(function (modal) {
+                $scope.inviteModal = modal;
+            });
+
+            $scope.playersChanged = function (callback) {
+                $scope.playerChoices = callback.selectedItems;
+                $scope.submitEnabled = $scope.playerChoices.length > 0 && $scope.playerChoices.length <= MAX_OPPONENTS;
+            };
 
             $scope.queryInvitableFriends = function (query) {
                 var match = [];
