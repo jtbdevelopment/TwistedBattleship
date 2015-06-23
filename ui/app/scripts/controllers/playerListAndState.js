@@ -10,27 +10,23 @@ angular.module('tbs.controllers').controller('PlayerListAndStateCtrl',
             $scope.gameID = $state.params.gameId;
             $scope.gameDetails = tbsGameDetails;
             $scope.player = {};
-            $scope.showActions = false;
-
-            function initialize() {
-                $scope.game = jtbGameCache.getGameForID($scope.gameID);
-                $scope.showActions = $scope.game.gamePhase === 'Challenged';
-                $scope.player = angular.copy(jtbPlayerService.currentPlayer(), $scope.player);
-                $scope.ecmEnabled = $scope.game.features.indexOf('ECMEnabled') >= 0 ? yes : no;
-                $scope.spyingEnabled = $scope.game.features.indexOf('SpyEnabled') >= 0 ? yes : no;
-                $scope.repairsEnabled = $scope.game.features.indexOf('EREnabled') >= 0 ? yes : no;
-                $scope.moveEnabled = $scope.game.features.indexOf('EMEnabled') >= 0 ? yes : no;
-                $scope.criticalsEnabled = $scope.game.features.indexOf('CriticalEnabled') >= 0 ? yes : no;
-                $scope.gridSize = tbsGameDetails.shortenGridSize($scope.game);
-                $scope.intel = $scope.game.features.indexOf('IsolatedIntel') >= 0 ? 'Isolated' : 'Shared';
-                $scope.moves = $scope.game.features.indexOf('Single') >= 0 ? '1' : 'Per Ship';
-            }
+            $scope.game = jtbGameCache.getGameForID($scope.gameID);
+            $scope.showActions = $scope.game.gamePhase === 'Challenged';
+            $scope.player = angular.copy(jtbPlayerService.currentPlayer(), $scope.player);
+            $scope.ecmEnabled = $scope.game.features.indexOf('ECMEnabled') >= 0 ? yes : no;
+            $scope.spyingEnabled = $scope.game.features.indexOf('SpyEnabled') >= 0 ? yes : no;
+            $scope.repairsEnabled = $scope.game.features.indexOf('EREnabled') >= 0 ? yes : no;
+            $scope.moveEnabled = $scope.game.features.indexOf('EMEnabled') >= 0 ? yes : no;
+            $scope.criticalsEnabled = $scope.game.features.indexOf('CriticalEnabled') >= 0 ? yes : no;
+            $scope.gridSize = tbsGameDetails.shortenGridSize($scope.game);
+            $scope.intel = $scope.game.features.indexOf('IsolatedIntel') >= 0 ? 'Isolated' : 'Shared';
+            $scope.moves = $scope.game.features.indexOf('Single') >= 0 ? '1' : 'Per Ship';
 
             function updateGame(updatedGame) {
                 var currentPhase = $scope.game.gamePhase;
                 $scope.game = updatedGame;
                 jtbGameCache.putUpdatedGame(updatedGame);
-                if ($scope.game !== currentPhase) {
+                if ($scope.game.gamePhase !== currentPhase) {
                     $state.go('app.' + $scope.game.gamePhase.toLowerCase(), {gameID: $scope.gameID});
                 } else {
                     $state.go('app.games');
@@ -85,7 +81,6 @@ angular.module('tbs.controllers').controller('PlayerListAndStateCtrl',
 //                });
             };
 
-            initialize();
         }
     ]
 );
