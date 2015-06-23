@@ -14,8 +14,8 @@ var phasesAndIcons = {
 //  TODO - on-enter refresh
 
 angular.module('tbs.controllers').controller('MobileGameListCtrl',
-    ['$rootScope', '$scope', '$location', '$animate', '$timeout', '$state', 'jtbPlayerService', 'jtbGamePhaseService', 'jtbGameCache', 'tbsGameDetails',
-        function ($rootScope, $scope, $location, $animate, $timeout, $state, jtbPlayerService, jtbGamePhaseService, jtbGameCache, tbsGameDetails) {
+    ['$rootScope', '$scope', '$location', '$animate', '$timeout', '$state', 'jtbPlayerService', 'jtbGameCache', 'tbsGameDetails', 'phases',
+        function ($rootScope, $scope, $location, $animate, $timeout, $state, jtbPlayerService, jtbGameCache, tbsGameDetails, phases) {
             $scope.games = {};
             $scope.phasesInOrder = [];
             $scope.gameDetails = tbsGameDetails;
@@ -30,6 +30,10 @@ angular.module('tbs.controllers').controller('MobileGameListCtrl',
                 $scope.games[phase].label = '';
             });
 
+            angular.forEach(phases, function (values, phase) {
+                $scope.games[phase].label = values[1];
+            });
+
             $scope.createNew = function () {
                 $state.go('app.create');
             };
@@ -37,16 +41,6 @@ angular.module('tbs.controllers').controller('MobileGameListCtrl',
             $scope.switchHideGames = function (phase) {
                 $scope.games[phase].hideGames = !$scope.games[phase].hideGames;
             };
-
-            jtbGamePhaseService.phases().then(function (phases) {
-                console.warn(phases);
-                angular.forEach(phases, function (values, phase) {
-                    $scope.games[phase].label = values[1];
-                });
-            }, function () {
-                //  TODO
-                $location.path('/error');
-            });
 
             function loadGames() {
                 angular.forEach($scope.games, function (phaseData, phase) {
@@ -84,10 +78,6 @@ angular.module('tbs.controllers').controller('MobileGameListCtrl',
                  }
                  }, 1);
                  */
-            });
-
-            $scope.$on('$ionicView.enter', function () {
-                $rootScope.$broadcast('refreshGames', '');
             });
         }
     ]);

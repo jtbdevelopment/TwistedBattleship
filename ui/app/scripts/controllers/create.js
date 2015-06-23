@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('tbs.controllers').controller('CreateGameCtrl',
-    ['$scope', 'jtbGameCache', 'jtbGameFeatureService', 'jtbPlayerService', 'jtbFacebook', '$http', '$state', '$location', '$ionicModal',// 'twAds',
-        function ($scope, jtbGameCache, jtbGameFeatureService, jtbPlayerService, jtbFacebook, $http, $state, $location, $ionicModal/*, twAds*/) {
+    ['friends', 'features', '$scope', 'jtbGameCache', 'jtbPlayerService', 'jtbFacebook', '$http', '$state', '$location', '$ionicModal',// 'twAds',
+        function (friends, features, $scope, jtbGameCache, jtbPlayerService, jtbFacebook, $http, $state, $location, $ionicModal/*, twAds*/) {
 
             $scope.playerChoices = [];
 
@@ -28,55 +28,45 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
             $scope.alerts = [];
             $scope.featureData = [];
             $scope.currentOptions = [];
-            jtbGameFeatureService.features().then(function (data) {
-                $scope.featureData = data;
-                $scope.currentOptions = [];
-                var count = 0;
-                angular.forEach($scope.featureData, function (feature) {
-                    feature.index = count++;
-                    var defaultOption = feature.options[0];
-                    feature.checkBox = defaultOption.feature.indexOf('Enabled') >= 0 || defaultOption.feature.indexOf('Disabled') >= 0;
-                    if (feature.checkBox) {
-                        $scope.currentOptions.push(defaultOption.feature.indexOf('Enabled') >= 0);
-                    } else {
-                        $scope.currentOptions.push(defaultOption.feature);
-                    }
-                });
-            }, function () {
-                //  TODO
-                $location.path('/error');
+            $scope.featureData = features;
+            $scope.currentOptions = [];
+            var count = 0;
+            angular.forEach($scope.featureData, function (feature) {
+                feature.index = count++;
+                var defaultOption = feature.options[0];
+                feature.checkBox = defaultOption.feature.indexOf('Enabled') >= 0 || defaultOption.feature.indexOf('Disabled') >= 0;
+                if (feature.checkBox) {
+                    $scope.currentOptions.push(defaultOption.feature.indexOf('Enabled') >= 0);
+                } else {
+                    $scope.currentOptions.push(defaultOption.feature);
+                }
             });
 
             $scope.friends = [];
             //  TODO
             $scope.invitableFriends = [];
-            jtbPlayerService.currentPlayerFriends().then(function (data) {
-                angular.forEach(data.maskedFriends, function (displayName, hash) {
-                    var friend = {
-                        md5: hash,
-                        displayName: displayName
-                    };
-                    $scope.friends.push(friend);
-                });
-                if (jtbPlayerService.currentPlayer().source === 'facebook') {
-                    angular.forEach(data.invitableFriends, function (friend) {
-                        var invite = {
-                            id: friend.id,
-                            name: friend.name
-                        };
-                        if (angular.isDefined(friend.picture) && angular.isDefined(friend.picture.url)) {
-                            invite.url = friend.picture.url;
-                        }
-                        $scope.invitableFriends.push(invite);
-                    });
-                } else {
-                    $scope.invitableFriends.push({id: 'anid1', name: 'a friend!'});
-                    $scope.invitableFriends.push({id: 'anid2', name: 'another friend!'});
-                }
-            }, function () {
-                //  TODO
-                $location.path('/error');
+            angular.forEach(friends.maskedFriends, function (displayName, hash) {
+                var friend = {
+                    md5: hash,
+                    displayName: displayName
+                };
+                $scope.friends.push(friend);
             });
+            if (jtbPlayerService.currentPlayer().source === 'facebook') {
+                angular.forEach(friends.invitableFriends, function (friend) {
+                    var invite = {
+                        id: friend.id,
+                        name: friend.name
+                    };
+                    if (angular.isDefined(friend.picture) && angular.isDefined(friend.picture.url)) {
+                        invite.url = friend.picture.url;
+                    }
+                    $scope.invitableFriends.push(invite);
+                });
+            } else {
+                $scope.invitableFriends.push({id: 'anid1', name: 'a friend!'});
+                $scope.invitableFriends.push({id: 'anid2', name: 'another friend!'});
+            }
 
             $scope.submitEnabled = false;
 

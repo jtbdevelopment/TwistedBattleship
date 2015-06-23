@@ -64,7 +64,15 @@ angular.module('tbs', ['ionic', 'ngCookies', 'tbs.controllers', 'config', 'ion-a
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/create.html',
-                        controller: 'CreateGameCtrl'
+                        controller: 'CreateGameCtrl',
+                        resolve: {
+                            features: function (jtbGameFeatureService) {
+                                return jtbGameFeatureService.features();
+                            },
+                            friends: function (jtbPlayerService) {
+                                return jtbPlayerService.currentPlayerFriends();
+                            }
+                        }
                     }
                 }
             })
@@ -73,7 +81,12 @@ angular.module('tbs', ['ionic', 'ngCookies', 'tbs.controllers', 'config', 'ion-a
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/gameList.html',
-                        controller: 'MobileGameListCtrl'
+                        controller: 'MobileGameListCtrl',
+                        resolve: {
+                            phases: function (jtbGamePhaseService) {
+                                return jtbGamePhaseService.phases();
+                            }
+                        }
                     }
                 }
             })
