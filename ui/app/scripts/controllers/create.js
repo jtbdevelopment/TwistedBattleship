@@ -12,6 +12,10 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
             $scope.currentOptions = [];
             $scope.featureData = features;
             $scope.currentOptions = [];
+            $scope.friends = [];
+            $scope.invitableFriends = [];
+            $scope.submitEnabled = false;
+
             var count = 0;
             angular.forEach($scope.featureData, function (feature) {
                 feature.index = count++;
@@ -22,6 +26,13 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
                 } else {
                     $scope.currentOptions.push(defaultOption.feature);
                 }
+            });
+            angular.forEach(friends.maskedFriends, function (displayName, hash) {
+                var friend = {
+                    md5: hash,
+                    displayName: displayName
+                };
+                $scope.friends.push(friend);
             });
             if (jtbPlayerService.currentPlayer().source === 'facebook') {
                 angular.forEach(friends.invitableFriends, function (friend) {
@@ -35,16 +46,6 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
                     $scope.invitableFriends.push(invite);
                 });
             }
-            $scope.submitEnabled = false;
-            $scope.friends = [];
-            $scope.invitableFriends = [];
-            angular.forEach(friends.maskedFriends, function (displayName, hash) {
-                var friend = {
-                    md5: hash,
-                    displayName: displayName
-                };
-                $scope.friends.push(friend);
-            });
 
             $ionicModal.fromTemplateUrl('help-modal.html', {
                 scope: $scope,

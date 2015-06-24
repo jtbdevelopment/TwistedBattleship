@@ -5,8 +5,8 @@ angular.module('tbs.controllers')
     //  TODO - investigate cordova facebook plugin instead of custom
     //  TODO - move modals out of html?
     .controller('CoreMobileSignInCtrl',
-    ['$scope', '$window', '$cookies', '$http', '$state', '$cacheFactory', '$ionicHistory', '$rootScope', 'jtbFacebook',
-        function ($scope, $window, $cookies, $http, $state, $cacheFactory, $ionicHistory, $rootScope, jtbFacebook) {
+    ['$scope', '$window', '$cookies', '$http', '$state', '$cacheFactory', '$ionicHistory', '$rootScope', 'jtbFacebook', 'ENV',
+        function ($scope, $window, $cookies, $http, $state, $cacheFactory, $ionicHistory, $rootScope, jtbFacebook, ENV) {
             $scope.message = 'Initializing...';
             $scope.showFacebook = false;
             $scope.showManual = false;
@@ -63,7 +63,7 @@ angular.module('tbs.controllers')
                 clearHttpCache();
                 //  TODO - make $http instead?
                 //  TODO - forsce a refresh games in here
-                $window.location = '/auth/facebook';
+                $window.location = ENV.apiEndpoint + '/auth/facebook';
             }
 
             jtbFacebook.canAutoSignIn().then(function (details) {
