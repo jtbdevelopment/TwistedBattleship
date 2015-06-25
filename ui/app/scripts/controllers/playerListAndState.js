@@ -7,7 +7,7 @@ angular.module('tbs.controllers').controller('PlayerListAndStateCtrl',
     ['$scope', 'tbsGameDetails', 'jtbGameCache', 'jtbPlayerService', '$http', '$state', // 'twAds',
         function ($scope, tbsGameDetails, jtbGameCache, jtbPlayerService, $http, $state/*, twAds*/) {
 
-            $scope.gameID = $state.params.gameId;
+            $scope.gameID = $state.params.gameID;
             $scope.gameDetails = tbsGameDetails;
             $scope.player = {};
             $scope.game = jtbGameCache.getGameForID($scope.gameID);

@@ -25,6 +25,7 @@ angular.module('tbs', ['ionic', 'ngCookies', 'tbs.controllers', 'config', 'ion-a
                 if (
                     (
                         //  TODO - this better
+                        //  TODO - live feed not impacted
                         config.url.indexOf('/api') >= 0 ||
                         config.url.indexOf('/auth') >= 0 ||
                         config.url.indexOf('/signout') >= 0 ||
@@ -91,7 +92,7 @@ angular.module('tbs', ['ionic', 'ngCookies', 'tbs.controllers', 'config', 'ion-a
                 }
             })
             .state('app.challenged', {
-                url: '/games/challenged/:gameId',
+                url: '/games/challenged/:gameID',
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/playerListAndState.html',
@@ -100,7 +101,7 @@ angular.module('tbs', ['ionic', 'ngCookies', 'tbs.controllers', 'config', 'ion-a
                 }
             })
             .state('app.declined', {
-                url: '/games/declined/:gameId',
+                url: '/games/declined/:gameID',
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/playerListAndState.html',
@@ -109,7 +110,7 @@ angular.module('tbs', ['ionic', 'ngCookies', 'tbs.controllers', 'config', 'ion-a
                 }
             })
             .state('app.quit', {
-                url: '/games/quit/:gameId',
+                url: '/games/quit/:gameID',
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/playerListAndState.html',
@@ -118,7 +119,7 @@ angular.module('tbs', ['ionic', 'ngCookies', 'tbs.controllers', 'config', 'ion-a
                 }
             })
             .state('app.game', {
-                url: '/games/:gameId',
+                url: '/games/:gameID',
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/game.html'//,

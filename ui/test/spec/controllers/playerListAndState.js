@@ -14,7 +14,7 @@ describe('Controller: playerListAndState', function () {
     var state = {
         goTrack: {},
         params: {
-            gameId: gameID
+            gameID: gameID
         },
         go: function (dest, params) {
             this.goTrack.dest = dest;
