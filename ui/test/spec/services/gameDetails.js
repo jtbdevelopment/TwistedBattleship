@@ -30,6 +30,7 @@ describe('Service: gameDetails', function () {
         },
         featureData: {},
         features: ['Grid10x10', 'ECMEnabled', 'SpyingEnabled', 'EREnabled', 'EMEnabled', 'SharedIntel', 'Single', 'CriticalEnabled'],
+        gridSize: 10,
         playersScore: {'md1': 1, 'md2': 0, 'md3': -1, 'md4': 3, 'md5': 2},
         playersSetup: {'md1': true, 'md2': false, 'md3': false, 'md4': true, 'md5': false},
         playersAlive: {'md1': false, 'md2': false, 'md3': true, 'md4': true, 'md5': false},
@@ -240,6 +241,7 @@ describe('Service: gameDetails', function () {
         });
 
         game.features = ['Grid15x15', 'ECMDisabled', 'SpyingEnabled', 'EREnabled', 'EMEnabled', 'SharedIntel', 'Single', 'CriticalDisabled'];
+        game.gridSize = 15;
         expect(service.shortGameDescription(game, 'md1')).to.deep.equal({
             sizeText: '15x15',
             actionsText: 'Single',
@@ -249,6 +251,7 @@ describe('Service: gameDetails', function () {
 
 
         game.features = ['Grid20x20', 'ECMEnabled', 'IsolatedIntel', 'PerShip'];
+        game.gridSize = 20;
         expect(service.shortGameDescription(game, 'md1')).to.deep.equal({
             sizeText: '20x20',
             actionsText: 'Multiple',

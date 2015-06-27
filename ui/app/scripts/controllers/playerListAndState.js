@@ -8,9 +8,9 @@ angular.module('tbs.controllers').controller('PlayerListAndStateCtrl',
         function ($scope, tbsGameDetails, jtbGameCache, jtbPlayerService, $http, $state/*, twAds*/) {
 
             $scope.gameID = $state.params.gameID;
+            $scope.game = jtbGameCache.getGameForID($scope.gameID);
             $scope.gameDetails = tbsGameDetails;
             $scope.player = {};
-            $scope.game = jtbGameCache.getGameForID($scope.gameID);
             $scope.showActions = $scope.game.gamePhase === 'Challenged';
             $scope.player = angular.copy(jtbPlayerService.currentPlayer(), $scope.player);
             $scope.ecmEnabled = $scope.game.features.indexOf('ECMEnabled') >= 0 ? yes : no;

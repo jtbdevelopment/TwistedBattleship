@@ -18,6 +18,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 ])
 class TBGame extends AbstractMongoMultiPlayerGame<GameFeature> {
     Map<ObjectId, TBPlayerState> playerDetails = [:]
+    //  TODO support non-symmetrical
     int gridSize
     ObjectId currentPlayer
     int remainingMoves

@@ -134,11 +134,7 @@ angular.module('tbs.services').factory('tbsGameDetails',
             shortenGridSize: function (game) {
                 var val = '';
                 if (checkParams(game, 'DUMMY')) {
-                    angular.forEach(game.features, function (feature) {
-                        if (feature.indexOf('Grid') === 0) {
-                            val = feature.replace('Grid', '');
-                        }
-                    });
+                    return game.gridSize + 'x' + game.gridSize;
                 }
                 return val;
             },

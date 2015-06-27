@@ -21,6 +21,7 @@ angular.module('tbs', ['ionic', 'ngCookies', 'tbs.controllers', 'config', 'ion-a
     // Custom Interceptor for replacing outgoing URLs
     .factory('httpEnvInterceptor', function ($q, $cacheFactory, ENV) {
         return {
+            //  TODO - handle 401 redirect here now?
             'request': function (config) {
                 if (
                     (
@@ -35,6 +36,9 @@ angular.module('tbs', ['ionic', 'ngCookies', 'tbs.controllers', 'config', 'ion-a
                     config.url = ENV.apiEndpoint + config.url;
                 }
                 return config;
+            },
+            'response': function (response) {
+                return response;
             }
         };
     })
@@ -118,16 +122,16 @@ angular.module('tbs', ['ionic', 'ngCookies', 'tbs.controllers', 'config', 'ion-a
                     }
                 }
             })
-            .state('app.game', {
-                url: '/games/:gameID',
+            .state('app.setup', {
+                url: '/games/setup/:gameID',
                 views: {
                     'menuContent': {
-                        templateUrl: 'templates/game.html'//,
-//  TODO
-//                        controller: 'MobileGameListCtrl'
+                        templateUrl: 'templates/setup.html',
+                        controller: 'SetupGameCtrl'
                     }
                 }
-            });
+            })
+        ;
 
         // if none of the above states are matched, use this as the fallback
         $urlRouterProvider.otherwise('/app/signin');
