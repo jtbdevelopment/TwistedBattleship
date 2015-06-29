@@ -1,5 +1,5 @@
 {
-  "height": 1100,
+  "height": 1000,
   "layers": [
     {
       "data": [
@@ -114,7 +114,7 @@
       "y": 0
     }
   ],
-  "width": 1100,
+  "width": 1000,
   "orientation": "orthogonal",
   "properties": {
   },

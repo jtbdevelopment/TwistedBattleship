@@ -16,6 +16,8 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
             function preload() {
                 $scope.phaser.load.tilemap('grid', '/templates/gamefiles/10x10.json', null, Phaser.Tilemap.TILED_JSON);
                 $scope.phaser.load.image('tile', '/images/default/tile.png');
+                $scope.phaser.load.image('destroyer', '/images/default/destroyer.png');
+                $scope.phaser.load.image('knownbyhit', '/images/default/knownbyhit.png');
             }
 
 
@@ -24,9 +26,12 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                 map.addTilesetImage('tile');
                 var layer = map.createLayer('base grid');
                 layer.resizeWorld();
-                //$scope.phaser.scale.scaleMode = Phaser.ScaleManager.USER_SCALE;
-                $scope.phaser.camera.scale.x = 0.50;
-                $scope.phaser.camera.scale.y = 0.50;
+                var ship = $scope.phaser.add.sprite(0, 0, 'destroyer', 0);
+                ship.inputEnabled = true;
+                ship.input.enableDrag();
+                //layer.resizeWorld();                //$scope.phaser.scale.scaleMode = Phaser.ScaleManager.USER_SCALE;
+                //$scope.phaser.camera.scale.x = 0.50;
+                //$scope.phaser.camera.scale.y = 0.50;
             }
 
 
