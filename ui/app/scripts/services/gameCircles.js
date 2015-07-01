@@ -2,7 +2,7 @@
 
 angular.module('tbs.services').factory('tbsCircles', ['$http', function ($http) {
     return {
-        features: function () {
+        circles: function () {
             return $http.get('/api/circles', {cache: true}).then(function (response) {
                 return response.data;
             });

@@ -14,25 +14,25 @@ describe('Service: gameShips', function () {
         service = $injector.get('tbsCircles');
     }));
 
-    it('sets features to http results', function () {
-        var features = null;
+    it('sets circles to http results', function () {
+        var circles = null;
         httpBackend.expectGET(url).respond(result);
-        service.features().then(function (data) {
-            features = data;
+        service.circles().then(function (data) {
+            circles = data;
         }, function (error) {
-            features = error;
+            circles = error;
         });
         httpBackend.flush();
 
-        expect(features).to.deep.equal(result);
+        expect(circles).to.deep.equal(result);
     });
 
-    it('sets features to error results', function () {
-        var features = undefined;
+    it('sets circles to error results', function () {
+        var circles = undefined;
         httpBackend.expectGET(url).respond(500);
         var errorCalled = false;
-        service.features().then(function (data) {
-            features = data;
+        service.circles().then(function (data) {
+            circles = data;
         }, function (error) {
             expect(error).to.not.be.an('undefined');
             errorCalled = true;
@@ -40,27 +40,27 @@ describe('Service: gameShips', function () {
         httpBackend.flush();
 
         expect(errorCalled).to.equal(true);
-        expect(features).to.be.an('undefined');
+        expect(circles).to.be.an('undefined');
     });
 
     it('multiple calls only one http result', function () {
-        var features = null;
+        var circles = null;
         httpBackend.expectGET(url).respond(result);
-        service.features().then(function (data) {
-            features = data;
+        service.circles().then(function (data) {
+            circles = data;
         }, function (error) {
-            features = error;
+            circles = error;
         });
         httpBackend.flush();
 
-        expect(features).to.deep.equal(result);
+        expect(circles).to.deep.equal(result);
 
-        service.features().then(function (data) {
-            features = data;
+        service.circles().then(function (data) {
+            circles = data;
         }, function (error) {
-            features = error;
+            circles = error;
         });
 
-        expect(features).to.deep.equal(result);
+        expect(circles).to.deep.equal(result);
     });
 });

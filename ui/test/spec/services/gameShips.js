@@ -18,25 +18,25 @@ describe('Service: gameShips', function () {
         service = $injector.get('tbsShips');
     }));
 
-    it('sets features to http results', function () {
-        var features = null;
+    it('sets ships to http results', function () {
+        var ships = null;
         httpBackend.expectGET(url).respond(result);
-        service.features().then(function (data) {
-            features = data;
+        service.ships().then(function (data) {
+            ships = data;
         }, function (error) {
-            features = error;
+            ships = error;
         });
         httpBackend.flush();
 
-        expect(features).to.deep.equal(result);
+        expect(ships).to.deep.equal(result);
     });
 
-    it('sets features to error results', function () {
-        var features = undefined;
+    it('sets ships to error results', function () {
+        var ships = undefined;
         httpBackend.expectGET(url).respond(500);
         var errorCalled = false;
-        service.features().then(function (data) {
-            features = data;
+        service.ships().then(function (data) {
+            ships = data;
         }, function (error) {
             expect(error).to.not.be.an('undefined');
             errorCalled = true;
@@ -44,27 +44,27 @@ describe('Service: gameShips', function () {
         httpBackend.flush();
 
         expect(errorCalled).to.equal(true);
-        expect(features).to.be.an('undefined');
+        expect(ships).to.be.an('undefined');
     });
 
     it('multiple calls only one http result', function () {
-        var features = null;
+        var ships = null;
         httpBackend.expectGET(url).respond(result);
-        service.features().then(function (data) {
-            features = data;
+        service.ships().then(function (data) {
+            ships = data;
         }, function (error) {
-            features = error;
+            ships = error;
         });
         httpBackend.flush();
 
-        expect(features).to.deep.equal(result);
+        expect(ships).to.deep.equal(result);
 
-        service.features().then(function (data) {
-            features = data;
+        service.ships().then(function (data) {
+            ships = data;
         }, function (error) {
-            features = error;
+            ships = error;
         });
 
-        expect(features).to.deep.equal(result);
+        expect(ships).to.deep.equal(result);
     });
 });

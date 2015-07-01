@@ -1,31 +1,41 @@
 'use strict';
 
 angular.module('tbs.controllers').controller('SetupGameCtrl',
-    ['$scope', 'jtbGameCache', 'jtbPlayerService', 'jtbFacebook', '$http', '$state', '$location', '$ionicModal', '$ionicSideMenuDelegate', // 'twAds',
-        function ($scope, jtbGameCache, jtbPlayerService, jtbFacebook, $http, $state, $location, $ionicModal, $ionicSideMenuDelegate /*, twAds*/) {
+    ['$scope', 'jtbGameCache', 'jtbPlayerService', 'jtbFacebook', '$http', '$state', '$location', '$ionicModal', '$ionicSideMenuDelegate', 'tbsShips', // 'twAds',
+        function ($scope, jtbGameCache, jtbPlayerService, jtbFacebook, $http, $state, $location, $ionicModal, $ionicSideMenuDelegate, tbsShips /*, twAds*/) {
             $ionicSideMenuDelegate.canDragContent(false);
             $scope.theme = 'default';
             $scope.gameID = $state.params.gameID;
             $scope.game = jtbGameCache.getGameForID($scope.gameID);
             $scope.ships = [];
+            $scope.shipInfo = [];
 
             $scope.gameWidth = 1000; // //$scope.game.gridSize * 100
             $scope.gameHeight = 1000; // //$scope.game.gridSize * 100
             $scope.gameScale = 0.5;
             $scope.movingShip = null;
 
-            $scope.phaser = new Phaser.Game(
-                $scope.gameWidth,
-                $scope.gameHeight,
-                Phaser.AUTO,
-                'phaser',
-                {preload: preload, create: create});
-            function preload() {
-                $scope.phaser.load.tilemap('grid', '/templates/gamefiles/10x10.json', null, Phaser.Tilemap.TILED_JSON);
-                $scope.phaser.load.image('tile', '/images/default/tile.png');
-                $scope.phaser.load.image('destroyer', '/images/default/destroyer.png');
-                $scope.phaser.load.image('submarine', '/images/default/submarine.png');
-            }
+            tbsShips.ships().then(
+                function (ships) {
+                    $scope.shipInfo = ships;
+                    $scope.phaser = new Phaser.Game(
+                        $scope.gameWidth,
+                        $scope.gameHeight,
+                        Phaser.AUTO,
+                        'phaser',
+                        {preload: preload, create: create});
+                    function preload() {
+                        $scope.phaser.load.tilemap('grid', '/templates/gamefiles/10x10.json', null, Phaser.Tilemap.TILED_JSON);
+                        $scope.phaser.load.image('tile', '/images/default/tile.png');
+                        $scope.phaser.load.image('destroyer', '/images/default/destroyer.png');
+                        $scope.phaser.load.image('submarine', '/images/default/submarine.png');
+                    }
+                },
+                function () {
+                    //  TODO
+                }
+            );
+
 
 
             function create() {
