@@ -2,6 +2,7 @@ package com.jtbdevelopment.TwistedBattleship
 
 import com.jtbdevelopment.TwistedBattleship.dao.GameRepository
 import com.jtbdevelopment.TwistedBattleship.rest.GameFeatureInfo
+import com.jtbdevelopment.TwistedBattleship.rest.ShipInfo
 import com.jtbdevelopment.TwistedBattleship.rest.Target
 import com.jtbdevelopment.TwistedBattleship.rest.services.messages.FeaturesAndPlayers
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
@@ -49,6 +50,15 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
                 new GenericType<Map<Integer, Set<GridCoordinate>>>() {
                 })
         assert GridCircleUtil.CIRCLE_OFFSETS == sizes
+    }
+
+    @Test
+    void testGetShips() {
+        def client = createAPITarget(TEST_PLAYER3)
+        def ships = client.path("ships").request(MediaType.APPLICATION_JSON_TYPE).get(
+                new GenericType<List<ShipInfo>>() {
+                })
+        assert Ship.values().collect { Ship it -> new ShipInfo(it) } == ships
     }
 
     @Test

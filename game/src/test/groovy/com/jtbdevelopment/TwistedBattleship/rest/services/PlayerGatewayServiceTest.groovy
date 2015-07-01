@@ -1,8 +1,10 @@
 package com.jtbdevelopment.TwistedBattleship.rest.services
 
 import com.jtbdevelopment.TwistedBattleship.rest.GameFeatureInfo
+import com.jtbdevelopment.TwistedBattleship.rest.ShipInfo
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCircleUtil
+import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import groovy.transform.TypeChecked
 
 import javax.ws.rs.GET
@@ -88,6 +90,32 @@ class PlayerGatewayServiceTest extends GroovyTestCase {
         )
         assert gameServices.isAnnotationPresent(Path.class)
         assert gameServices.getAnnotation(Path.class).value() == "circles"
+        assert gameServices.isAnnotationPresent(GET.class)
+        assert gameServices.isAnnotationPresent(Produces.class)
+        assert gameServices.getAnnotation(Produces.class).value() == [MediaType.APPLICATION_JSON]
+        def params = gameServices.parameterAnnotations
+        assert params.length == 0
+    }
+
+    void testGetShips() {
+        def ships = [
+                new ShipInfo(Ship.Battleship),
+                new ShipInfo(Ship.Carrier),
+                new ShipInfo(Ship.Cruiser),
+                new ShipInfo(Ship.Destroyer),
+                new ShipInfo(Ship.Submarine)
+        ]
+        assert ships.containsAll(playerGatewayService.ships())
+        assert playerGatewayService.ships().containsAll(ships)
+    }
+
+    void testGetShipsAnnotations() {
+        def gameServices = PlayerGatewayService.getMethod("ships", [] as Class[])
+        assert (gameServices.annotations.size() == 3 ||
+                (gameServices.isAnnotationPresent(TypeChecked.TypeCheckingInfo) && gameServices.annotations.size() == 4)
+        )
+        assert gameServices.isAnnotationPresent(Path.class)
+        assert gameServices.getAnnotation(Path.class).value() == "ships"
         assert gameServices.isAnnotationPresent(GET.class)
         assert gameServices.isAnnotationPresent(Produces.class)
         assert gameServices.getAnnotation(Produces.class).value() == [MediaType.APPLICATION_JSON]
