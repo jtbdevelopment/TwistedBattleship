@@ -19,6 +19,130 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
             $scope.movingShip = null;
             $scope.movingPointerRelativeToShip = {x: 0, y: 0};
 
+
+            function create() {
+                var map = $scope.phaser.add.tilemap('grid');
+                map.addTilesetImage('tile');
+                var layer = map.createLayer('base grid');
+                layer.resizeWorld();
+                var row = 0;
+                angular.forEach($scope.shipInfo, function (shipInfo) {
+                    var halfShipGridLength = (GRID_SIZE * shipInfo.gridSize) / 2;
+                    var centerX = 400 + halfShipGridLength;
+                    var centerY = (row * GRID_SIZE) + HALF_GRID;
+                    var ship = $scope.phaser.add.sprite(centerX, centerY, shipInfo.ship, 0);
+                    ship.anchor.setTo(0.5, 0.5);
+
+                    var shipData = {
+                        sprite: ship,
+                        info: shipInfo,
+                        horizontal: true,
+                        vertical: false
+                    };
+                    computeShipCorners(shipData);
+                    console.log('ship ' + shipData.info.ship + ' ' + shipData.startX + '/' + shipData.startY + ' to ' + shipData.endX + '/' + shipData.endY);
+                    $scope.ships.push(shipData);
+                    row = row + 1;
+                });
+                $scope.phaser.width = $scope.gameWidth * $scope.gameScale;
+                $scope.phaser.height = $scope.gameHeight * $scope.gameScale;
+                $scope.phaser.world.resize($scope.gameWidth * $scope.gameScale, $scope.gameHeight * $scope.gameScale);
+
+                $scope.phaser.input.onTap.add(onTap);
+                $scope.phaser.input.addMoveCallback(onMove);
+                $scope.phaser.input.onDown.add(onDown);
+                $scope.phaser.input.onUp.add(onUp);
+
+            }
+
+            function computeShipCorners(shipData) {
+                var halfShip = (GRID_SIZE * shipData.info.gridSize) / 2;
+                shipData.centerX = shipData.sprite.x;
+                shipData.centerY = shipData.sprite.y;
+                if (shipData.horizontal) {
+                    shipData.startX = shipData.centerX - halfShip;
+                    shipData.startY = shipData.centerY - HALF_GRID;
+                    shipData.endX = shipData.centerX + halfShip - 1;
+                    shipData.endY = shipData.centerY + HALF_GRID - 1;
+                } else {
+                    shipData.startY = shipData.centerY - halfShip;
+                    shipData.startX = shipData.centerX - HALF_GRID;
+                    shipData.endY = shipData.centerY + halfShip - 1;
+                    shipData.endX = shipData.centerX + HALF_GRID - 1;
+                }
+            }
+
+            function onUp() {
+                if ($scope.movingShip !== null) {
+                    var xMod = $scope.movingShip.startX % GRID_SIZE;
+                    var yMod = $scope.movingShip.startY % GRID_SIZE;
+                    if (xMod !== 0) {
+                        if (xMod < HALF_GRID) {
+                            $scope.movingShip.sprite.x = $scope.movingShip.sprite.x - xMod;
+                        } else {
+                            $scope.movingShip.sprite.x = $scope.movingShip.sprite.x - xMod + GRID_SIZE;
+                        }
+                    }
+                    if (yMod !== 0) {
+                        if (yMod < HALF_GRID) {
+                            $scope.movingShip.sprite.y = $scope.movingShip.sprite.y - yMod;
+                        } else {
+                            $scope.movingShip.sprite.y = $scope.movingShip.sprite.y - yMod + GRID_SIZE;
+                        }
+                    }
+                    computeShipCorners($scope.movingShip);
+                    $scope.movingShip.sprite.tint = 0xffffff;
+                    $scope.movingShip = null;
+                }
+            }
+
+            function onMove() {
+                if ($scope.movingShip !== null) {
+                    var x = $scope.phaser.input.mousePointer.x / $scope.gameScale;
+                    var y = $scope.phaser.input.mousePointer.y / $scope.gameScale;
+                    $scope.movingShip.sprite.x = x + $scope.movingPointerRelativeToShip.x;
+                    $scope.movingShip.sprite.y = y + $scope.movingPointerRelativeToShip.y;
+                    computeShipCorners($scope.movingShip);
+                }
+            }
+
+            function onDown() {
+                var x = $scope.phaser.input.mousePointer.x / $scope.gameScale;
+                var y = $scope.phaser.input.mousePointer.y / $scope.gameScale;
+                for (var i = 0; i < $scope.ships.length; ++i) {
+                    if (x >= $scope.ships[i].startX && y >= $scope.ships[i].startY && x < $scope.ships[i].endX && y < $scope.ships[i].endY) {
+                        $scope.movingShip = $scope.ships[i];
+                        break;
+                    }
+                }
+                if ($scope.movingShip !== null) {
+                    $scope.movingPointerRelativeToShip.x = $scope.movingShip.centerX - x;
+                    $scope.movingPointerRelativeToShip.y = $scope.movingShip.centerY - y;
+                    $scope.movingShip.sprite.tint = 0x00ff00;
+                }
+            }
+
+            function onTap(pointer, double) {
+                if (double) {
+                    var ship = null;
+                    var x = $scope.phaser.input.mousePointer.x / $scope.gameScale;
+                    var y = $scope.phaser.input.mousePointer.y / $scope.gameScale;
+                    for (var i = 0; i < $scope.ships.length; ++i) {
+                        if (x >= $scope.ships[i].startX && y >= $scope.ships[i].startY && x < $scope.ships[i].endX && y < $scope.ships[i].endY) {
+                            ship = $scope.ships[i];
+                            break;
+                        }
+                    }
+
+                    if (ship) {
+                        ship.vertical = !(ship.vertical);
+                        ship.horizontal = !(ship.horizontal);
+                        computeShipCorners(ship);
+                        ship.sprite.angle = ship.vertical ? 90 : 0;
+                    }
+                }
+            }
+
             tbsShips.ships().then(
                 function (ships) {
                     $scope.shipInfo = ships;
@@ -45,124 +169,6 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                 }
             );
 
-
-            function create() {
-                var map = $scope.phaser.add.tilemap('grid');
-                map.addTilesetImage('tile');
-                var layer = map.createLayer('base grid');
-                layer.resizeWorld();
-                var row = 0;
-                angular.forEach($scope.shipInfo, function (shipInfo) {
-                    var halfShipGridLength = (GRID_SIZE * shipInfo.gridSize) / 2;
-                    var centerX = 400 + halfShipGridLength;
-                    var centerY = (row * GRID_SIZE) + HALF_GRID;
-                    var ship = $scope.phaser.add.sprite(centerX, centerY, shipInfo.ship, 0);
-                    ship.anchor.setTo(0.5, 0.5);
-
-                    var shipData = {
-                        sprite: ship,
-                        info: shipInfo,
-                        centerX: centerX,
-                        centerY: centerY,
-                        horizontal: true,
-                        vertical: false
-                    };
-                    computeShipCorners(shipData);
-                    console.log('ship ' + shipData.info.ship + ' ' + shipData.startX + '/' + shipData.startY + ' to ' + shipData.endX + '/' + shipData.endY);
-                    $scope.ships.push(shipData);
-                    row = row + 1;
-                });
-                $scope.phaser.width = $scope.gameWidth * $scope.gameScale;
-                $scope.phaser.height = $scope.gameHeight * $scope.gameScale;
-                $scope.phaser.world.resize($scope.gameWidth * $scope.gameScale, $scope.gameHeight * $scope.gameScale);
-
-                $scope.phaser.input.onTap.add(onTap);
-                $scope.phaser.input.addMoveCallback(onMove);
-                $scope.phaser.input.onDown.add(onDown);
-                $scope.phaser.input.onUp.add(onUp);
-
-            }
-
-            function computeShipCorners(shipData) {
-                var halfShip = (GRID_SIZE * shipData.info.gridSize) / 2;
-                if (shipData.horizontal) {
-                    shipData.startX = shipData.centerX - halfShip;
-                    shipData.startY = shipData.centerY - HALF_GRID;
-                    shipData.endX = shipData.centerX + halfShip;
-                    shipData.endY = shipData.centerY + HALF_GRID;
-                } else {
-                    shipData.startY = shipData.centerY - halfShip;
-                    shipData.startX = shipData.centerX - HALF_GRID;
-                    shipData.endY = shipData.centerY + halfShip;
-                    shipData.endX = shipData.centerX + HALF_GRID;
-                }
-            }
-
-            function onUp() {
-                if ($scope.movingShip != null) {
-                    var x = $scope.phaser.input.mousePointer.x / $scope.gameScale;
-                    var y = $scope.phaser.input.mousePointer.y / $scope.gameScale;
-                    console.log('dropped ' + $scope.movingShip.info.ship + ' at ' + x + '/' + y + '(' + $scope.phaser.input.mousePointer.x + '/' + $scope.phaser.input.mousePointer.y + ')');
-                    console.log($scope.movingShip.info.ship + ' at ' + $scope.movingShip.startX + '/' + $scope.movingShip.startY + ' to ' + $scope.movingShip.endX + '/' + $scope.movingShip.endY + ')');
-                    $scope.movingShip.sprite.tint = 0xffffff;
-                    $scope.movingShip = null;
-                }
-            }
-
-            function onMove() {
-                if ($scope.movingShip != null) {
-                    var x = $scope.phaser.input.mousePointer.x / $scope.gameScale;
-                    var y = $scope.phaser.input.mousePointer.y / $scope.gameScale;
-                    var centerX = x + $scope.movingPointerRelativeToShip.x;
-                    var centerY = y + $scope.movingPointerRelativeToShip.y;
-                    $scope.movingShip.sprite.x = centerX;
-                    $scope.movingShip.sprite.y = centerY;
-                    $scope.movingShip.centerX = centerX;
-                    $scope.movingShip.centerY = centerY;
-                    computeShipCorners($scope.movingShip);
-                }
-            }
-
-            function onDown() {
-                var x = $scope.phaser.input.mousePointer.x / $scope.gameScale;
-                var y = $scope.phaser.input.mousePointer.y / $scope.gameScale;
-                for (var i = 0; i < $scope.ships.length; ++i) {
-                    if (x >= $scope.ships[i].startX && y >= $scope.ships[i].startY && x < $scope.ships[i].endX && y < $scope.ships[i].endY) {
-                        $scope.movingShip = $scope.ships[i];
-                        break;
-                    }
-                }
-                if ($scope.movingShip != null) {
-                    $scope.movingPointerRelativeToShip.x = $scope.movingShip.centerX - x;
-                    $scope.movingPointerRelativeToShip.y = $scope.movingShip.centerY - y;
-                    $scope.movingShip.sprite.tint = 0xff00ff;
-                    console.log('picked up ' + $scope.movingShip.info.ship + ' at ' + x + '/' + y + '(' + $scope.phaser.input.mousePointer.x + '/' + $scope.phaser.input.mousePointer.y + ')');
-                }
-            }
-
-            function onTap(pointer, double) {
-                if (double) {
-                    var ship = null;
-                    var x = $scope.phaser.input.mousePointer.x / $scope.gameScale;
-                    var y = $scope.phaser.input.mousePointer.y / $scope.gameScale;
-                    for (var i = 0; i < $scope.ships.length; ++i) {
-                        if (x >= $scope.ships[i].startX && y >= $scope.ships[i].startY && x < $scope.ships[i].endX && y < $scope.ships[i].endY) {
-                            ship = $scope.ships[i];
-                            break;
-                        }
-                    }
-
-                    if (ship) {
-                        console.log('double tapped ' + ship.info.ship + ' at ' + x + '/' + y + '(' + $scope.phaser.input.mousePointer.x + '/' + $scope.phaser.input.mousePointer.y + ')');
-                        console.log(ship.info.ship + ' at ' + ship.startX + '/' + ship.startY + ' to ' + ship.endX + '/' + ship.endY + ')');
-                        ship.vertical = !(ship.vertical);
-                        ship.horizontal = !(ship.horizontal);
-                        computeShipCorners(ship);
-                        ship.sprite.angle = ship.vertical ? 90 : 0;
-                        console.log(ship.info.ship + ' at ' + ship.startX + '/' + ship.startY + ' to ' + ship.endX + '/' + ship.endY + ')');
-                    }
-                }
-            }
         }
     ]
 );
