@@ -9,12 +9,12 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
             $ionicSideMenuDelegate.canDragContent(false);
             $scope.theme = 'default';
             $scope.gameID = $state.params.gameID;
-//            $scope.game = jtbGameCache.getGameForID($scope.gameID);
+            $scope.game = jtbGameCache.getGameForID($scope.gameID);
             $scope.ships = [];
             $scope.shipInfo = [];
 
-            $scope.gameWidth = 1000; // //$scope.game.gridSize * GRID_SIZE
-            $scope.gameHeight = 1000; // //$scope.game.gridSize * GRID_SIZE
+            $scope.gameWidth = $scope.game.gridSize * GRID_SIZE;
+            $scope.gameHeight = $scope.game.gridSize * GRID_SIZE;
             $scope.gameScale = 0.5;
             $scope.movingShip = null;
             $scope.movingPointerRelativeToShip = {x: 0, y: 0};
@@ -40,7 +40,6 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                         vertical: false
                     };
                     computeShipCorners(shipData);
-                    console.log('ship ' + shipData.info.ship + ' ' + shipData.startX + '/' + shipData.startY + ' to ' + shipData.endX + '/' + shipData.endY);
                     $scope.ships.push(shipData);
                     row = row + 1;
                 });
@@ -161,6 +160,19 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                 }
             }
 
+            function preload() {
+                var json = $scope.gameHeight === 1000 ? '10x10.json' : $scope.gameHeight === 2000 ? '20x20.json' : '15x15.json';
+                $scope.phaser.load.tilemap('grid', '/templates/gamefiles/' + json, null, Phaser.Tilemap.TILED_JSON);
+                $scope.phaser.load.image('tile', '/images/default/tile.png');
+                $scope.phaser.load.image('Destroyer', '/images/default/destroyer.png');
+                $scope.phaser.load.image('Submarine', '/images/default/submarine.png');
+
+                // TODO
+                $scope.phaser.load.image('Carrier', '/images/default/destroyer.png');
+                $scope.phaser.load.image('Battleship', '/images/default/destroyer.png');
+                $scope.phaser.load.image('Cruiser', '/images/default/destroyer.png');
+            }
+
             tbsShips.ships().then(
                 function (ships) {
                     $scope.shipInfo = ships;
@@ -170,17 +182,6 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                         Phaser.AUTO,
                         'phaser',
                         {preload: preload, create: create});
-                    function preload() {
-                        $scope.phaser.load.tilemap('grid', '/templates/gamefiles/10x10.json', null, Phaser.Tilemap.TILED_JSON);
-                        $scope.phaser.load.image('tile', '/images/default/tile.png');
-                        $scope.phaser.load.image('Destroyer', '/images/default/destroyer.png');
-                        $scope.phaser.load.image('Submarine', '/images/default/submarine.png');
-
-                        // TODO
-                        $scope.phaser.load.image('Carrier', '/images/default/destroyer.png');
-                        $scope.phaser.load.image('Battleship', '/images/default/destroyer.png');
-                        $scope.phaser.load.image('Cruiser', '/images/default/destroyer.png');
-                    }
                 },
                 function () {
                     //  TODO
