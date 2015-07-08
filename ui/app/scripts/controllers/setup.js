@@ -72,25 +72,42 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                 }
             }
 
+            function roundPosition(shipData) {
+                var xMod = shipData.startX % GRID_SIZE;
+                if (xMod !== 0) {
+                    if (xMod < HALF_GRID) {
+                        shipData.sprite.x = shipData.sprite.x - xMod;
+                    } else {
+                        shipData.sprite.x = shipData.sprite.x - xMod + GRID_SIZE;
+                    }
+                }
+                var yMod = shipData.startY % GRID_SIZE;
+                if (yMod !== 0) {
+                    if (yMod < HALF_GRID) {
+                        shipData.sprite.y = shipData.sprite.y - yMod;
+                    } else {
+                        shipData.sprite.y = shipData.sprite.y - yMod + GRID_SIZE;
+                    }
+                }
+                computeShipCorners(shipData);
+                if (shipData.startX < 0) {
+                    shipData.sprite.x -= shipData.startX;
+                }
+                if (shipData.endX >= $scope.gameWidth) {
+                    shipData.sprite.x -= (shipData.endX - $scope.gameWidth + 1);
+                }
+                if (shipData.startY < 0) {
+                    shipData.sprite.y -= shipData.startY;
+                }
+                if (shipData.endY >= $scope.gameHeight) {
+                    shipData.sprite.y -= (shipData.endY - $scope.gameHeight + 1);
+                }
+                computeShipCorners(shipData);
+            }
+
             function onUp() {
                 if ($scope.movingShip !== null) {
-                    var xMod = $scope.movingShip.startX % GRID_SIZE;
-                    var yMod = $scope.movingShip.startY % GRID_SIZE;
-                    if (xMod !== 0) {
-                        if (xMod < HALF_GRID) {
-                            $scope.movingShip.sprite.x = $scope.movingShip.sprite.x - xMod;
-                        } else {
-                            $scope.movingShip.sprite.x = $scope.movingShip.sprite.x - xMod + GRID_SIZE;
-                        }
-                    }
-                    if (yMod !== 0) {
-                        if (yMod < HALF_GRID) {
-                            $scope.movingShip.sprite.y = $scope.movingShip.sprite.y - yMod;
-                        } else {
-                            $scope.movingShip.sprite.y = $scope.movingShip.sprite.y - yMod + GRID_SIZE;
-                        }
-                    }
-                    computeShipCorners($scope.movingShip);
+                    roundPosition($scope.movingShip);
                     $scope.movingShip.sprite.tint = 0xffffff;
                     $scope.movingShip = null;
                 }
@@ -138,6 +155,7 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                         ship.vertical = !(ship.vertical);
                         ship.horizontal = !(ship.horizontal);
                         computeShipCorners(ship);
+                        roundPosition(ship);
                         ship.sprite.angle = ship.vertical ? 90 : 0;
                     }
                 }
