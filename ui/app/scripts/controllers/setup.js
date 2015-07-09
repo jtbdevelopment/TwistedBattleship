@@ -42,11 +42,7 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                 $scope.ships.push(shipData);
             }
 
-            function create() {
-                var map = $scope.phaser.add.tilemap('grid');
-                map.addTilesetImage('tile');
-                var layer = map.createLayer('base grid');
-                layer.resizeWorld();
+            function placeShips() {
                 angular.forEach($scope.game.maskedPlayersState.shipStates, function (value, key) {
                     var shipInfo = $scope.shipInfo.find(function (info) {
                         return info.ship === key;
@@ -63,6 +59,14 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                         row = row + 1;
                     });
                 }
+            }
+
+            function create() {
+                var map = $scope.phaser.add.tilemap('grid');
+                map.addTilesetImage('tile');
+                var layer = map.createLayer('base grid');
+                layer.resizeWorld();
+                placeShips();
                 $scope.phaser.width = $scope.gameWidth * $scope.gameScale;
                 $scope.phaser.height = $scope.gameHeight * $scope.gameScale;
                 $scope.phaser.world.resize($scope.gameWidth * $scope.gameScale, $scope.gameHeight * $scope.gameScale);
@@ -71,7 +75,6 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                 $scope.phaser.input.addMoveCallback(onMove);
                 $scope.phaser.input.onDown.add(onDown);
                 $scope.phaser.input.onUp.add(onUp);
-
             }
 
             function computeShipCorners(shipData) {
