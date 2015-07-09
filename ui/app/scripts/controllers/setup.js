@@ -19,30 +19,50 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
             $scope.movingShip = null;
             $scope.movingPointerRelativeToShip = {x: 0, y: 0};
 
+            function placeShip(horizontal, row, column, shipInfo) {
+                var centerX, centerY;
+                if (horizontal) {
+                    centerY = (row * GRID_SIZE) + HALF_GRID;
+                    centerX = (column * GRID_SIZE) + (shipInfo.gridSize * HALF_GRID)
+                } else {
+                    centerX = (column * GRID_SIZE) + HALF_GRID;
+                    centerY = (row * GRID_SIZE) + (shipInfo.gridSize * HALF_GRID)
+                }
+                var ship = $scope.phaser.add.sprite(centerX, centerY, shipInfo.ship, 0);
+                ship.anchor.setTo(0.5, 0.5);
+                ship.angle = horizontal ? 0 : 90;
+
+                var shipData = {
+                    sprite: ship,
+                    info: shipInfo,
+                    horizontal: horizontal,
+                    vertical: !horizontal
+                };
+                computeShipCorners(shipData);
+                $scope.ships.push(shipData);
+            }
 
             function create() {
                 var map = $scope.phaser.add.tilemap('grid');
                 map.addTilesetImage('tile');
                 var layer = map.createLayer('base grid');
                 layer.resizeWorld();
-                var row = 0;
-                angular.forEach($scope.shipInfo, function (shipInfo) {
-                    var halfShipGridLength = (GRID_SIZE * shipInfo.gridSize) / 2;
-                    var centerX = 400 + halfShipGridLength;
-                    var centerY = (row * GRID_SIZE) + HALF_GRID;
-                    var ship = $scope.phaser.add.sprite(centerX, centerY, shipInfo.ship, 0);
-                    ship.anchor.setTo(0.5, 0.5);
-
-                    var shipData = {
-                        sprite: ship,
-                        info: shipInfo,
-                        horizontal: true,
-                        vertical: false
-                    };
-                    computeShipCorners(shipData);
-                    $scope.ships.push(shipData);
-                    row = row + 1;
+                angular.forEach($scope.game.maskedPlayersState.shipStates, function (value, key) {
+                    var shipInfo = $scope.shipInfo.find(function (info) {
+                        return info.ship === key;
+                    });
+                    var horizontal = value.shipGridCells[0].y == value.shipGridCells[1].y;
+                    var row = value.shipGridCells[0].y;
+                    var column = value.shipGridCells[0].x;
+                    placeShip(horizontal, row, column, shipInfo);
                 });
+                if ($scope.ships.length == 0) {
+                    var row = 0;
+                    angular.forEach($scope.shipInfo, function (shipInfo) {
+                        placeShip(true, row, 4, shipInfo);
+                        row = row + 1;
+                    });
+                }
                 $scope.phaser.width = $scope.gameWidth * $scope.gameScale;
                 $scope.phaser.height = $scope.gameHeight * $scope.gameScale;
                 $scope.phaser.world.resize($scope.gameWidth * $scope.gameScale, $scope.gameHeight * $scope.gameScale);
