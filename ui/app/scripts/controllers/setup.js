@@ -102,12 +102,44 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                     shipData.sprite.y -= (shipData.endY - $scope.gameHeight + 1);
                 }
                 computeShipCorners(shipData);
+                checkOverlap();
+            }
+
+            function checkOverlap() {
+                var overlap = false;
+                var overlaps = [];
+                angular.forEach($scope.ships, function () {
+                    overlaps.push(false);
+                });
+
+                for (var i = 0; i < $scope.ships.length; ++i) {
+                    var outerShip = $scope.ships[i];
+                    for (var j = i + 1; j < $scope.ships.length; ++j) {
+                        var innerShip = $scope.ships[j];
+                        if (outerShip.startX > innerShip.endX ||
+                            outerShip.endX < innerShip.startX ||
+                            outerShip.startY > innerShip.endY ||
+                            outerShip.endY < innerShip.startY) {
+                            continue;
+                        }
+
+                        overlap = true;
+                        overlaps[i] = true;
+                        overlaps[j] = true;
+                    }
+                    if (overlaps[i] === true) {
+                        $scope.ships[i].sprite.tint = 0xff0000;
+                    } else {
+                        $scope.ships[i].sprite.tint = 0xffffff;
+                    }
+                }
+                //  TODO - set overlap button
             }
 
             function onUp() {
                 if ($scope.movingShip !== null) {
-                    roundPosition($scope.movingShip);
                     $scope.movingShip.sprite.tint = 0xffffff;
+                    roundPosition($scope.movingShip);
                     $scope.movingShip = null;
                 }
             }
