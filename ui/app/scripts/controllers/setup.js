@@ -76,6 +76,10 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                 $scope.phaser.input.addMoveCallback(onMove);
                 $scope.phaser.input.onDown.add(onDown);
                 $scope.phaser.input.onUp.add(onUp);
+
+                //  TODO  - look at more
+                //$scope.phaser.scale.fullScreenScaleMode = Phaser.ScaleManager.NO_SCALE;
+                //$scope.phaser.scale.startFullScreen(false);
             }
 
             function computeShipCorners(shipData) {
@@ -218,6 +222,7 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                         ship.horizontal = !(ship.horizontal);
                         computeShipCorners(ship);
                         roundPosition(ship);
+                        checkOverlap();
                         ship.sprite.angle = ship.vertical ? 90 : 0;
                     }
                 }
