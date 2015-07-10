@@ -18,15 +18,16 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
             $scope.gameScale = 0.5;
             $scope.movingShip = null;
             $scope.movingPointerRelativeToShip = {x: 0, y: 0};
+            $scope.submitEnabled = false;
 
             function placeShip(horizontal, row, column, shipInfo) {
                 var centerX, centerY;
                 if (horizontal) {
                     centerY = (row * GRID_SIZE) + HALF_GRID;
-                    centerX = (column * GRID_SIZE) + (shipInfo.gridSize * HALF_GRID)
+                    centerX = (column * GRID_SIZE) + (shipInfo.gridSize * HALF_GRID);
                 } else {
                     centerX = (column * GRID_SIZE) + HALF_GRID;
-                    centerY = (row * GRID_SIZE) + (shipInfo.gridSize * HALF_GRID)
+                    centerY = (row * GRID_SIZE) + (shipInfo.gridSize * HALF_GRID);
                 }
                 var ship = $scope.phaser.add.sprite(centerX, centerY, shipInfo.ship, 0);
                 ship.anchor.setTo(0.5, 0.5);
@@ -47,12 +48,12 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                     var shipInfo = $scope.shipInfo.find(function (info) {
                         return info.ship === key;
                     });
-                    var horizontal = value.shipGridCells[0].y == value.shipGridCells[1].y;
+                    var horizontal = value.shipGridCells[0].y === value.shipGridCells[1].y;
                     var row = value.shipGridCells[0].y;
                     var column = value.shipGridCells[0].x;
                     placeShip(horizontal, row, column, shipInfo);
                 });
-                if ($scope.ships.length == 0) {
+                if ($scope.ships.length === 0) {
                     var row = 0;
                     angular.forEach($scope.shipInfo, function (shipInfo) {
                         placeShip(true, row, 4, shipInfo);
@@ -94,6 +95,25 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                 }
             }
 
+            function moveOutOfBoundShip(shipData) {
+                if (shipData.startX < 0) {
+                    shipData.sprite.x -= shipData.startX;
+                    computeShipCorners(shipData);
+                }
+                if (shipData.endX >= $scope.gameWidth) {
+                    shipData.sprite.x -= (shipData.endX - $scope.gameWidth + 1);
+                    computeShipCorners(shipData);
+                }
+                if (shipData.startY < 0) {
+                    shipData.sprite.y -= shipData.startY;
+                    computeShipCorners(shipData);
+                }
+                if (shipData.endY >= $scope.gameHeight) {
+                    shipData.sprite.y -= (shipData.endY - $scope.gameHeight + 1);
+                    computeShipCorners(shipData);
+                }
+            }
+
             function roundPosition(shipData) {
                 var xMod = shipData.startX % GRID_SIZE;
                 if (xMod !== 0) {
@@ -112,24 +132,11 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                     }
                 }
                 computeShipCorners(shipData);
-                if (shipData.startX < 0) {
-                    shipData.sprite.x -= shipData.startX;
-                }
-                if (shipData.endX >= $scope.gameWidth) {
-                    shipData.sprite.x -= (shipData.endX - $scope.gameWidth + 1);
-                }
-                if (shipData.startY < 0) {
-                    shipData.sprite.y -= shipData.startY;
-                }
-                if (shipData.endY >= $scope.gameHeight) {
-                    shipData.sprite.y -= (shipData.endY - $scope.gameHeight + 1);
-                }
-                computeShipCorners(shipData);
-                checkOverlap();
+                moveOutOfBoundShip(shipData);
             }
 
             function checkOverlap() {
-                var overlap = false;
+                var overlapExists = false;
                 var overlaps = [];
                 angular.forEach($scope.ships, function () {
                     overlaps.push(false);
@@ -146,7 +153,7 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                             continue;
                         }
 
-                        overlap = true;
+                        overlapExists = true;
                         overlaps[i] = true;
                         overlaps[j] = true;
                     }
@@ -156,13 +163,14 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                         $scope.ships[i].sprite.tint = 0xffffff;
                     }
                 }
-                //  TODO - set overlap button
+                $scope.submitEnabled = !overlapExists;
             }
 
             function onUp() {
                 if ($scope.movingShip !== null) {
                     $scope.movingShip.sprite.tint = 0xffffff;
                     roundPosition($scope.movingShip);
+                    checkOverlap();
                     $scope.movingShip = null;
                 }
             }
@@ -177,7 +185,7 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                 }
             }
 
-            function onDown() {
+            function onDown(pointer) {
                 var x = $scope.phaser.input.mousePointer.x / $scope.gameScale;
                 var y = $scope.phaser.input.mousePointer.y / $scope.gameScale;
                 for (var i = 0; i < $scope.ships.length; ++i) {
