@@ -1,22 +1,7 @@
 <ion-view>
     <ion-content>
         <div class="list">
-            <div class="item item-divider">
-                <strong>Grid:</strong> <dfn>{{gridSize}}</dfn>
-                <strong>Moves:</strong> <dfn>{{moves}}</dfn>
-                <strong>Intel:</strong> <dfn>{{intel}}</dfn>
-                <strong>ECMs:</strong> <i class="icon ion-{{ecmEnabled}}"></i>
-                <strong>Spies:</strong> <i class="icon ion-{{spyingEnabled}}"></i>
-                <strong>Repairs:</strong> <i class="icon ion-{{repairsEnabled}}"></i>
-                <strong>Evasive:</strong> <i class="icon ion-{{moveEnabled}}"></i>
-            </div>
-            <!--div class="item item-avatar item-button-right item-icon-right">
-                <img ng-src="{{gameDetails.imageForPlayer(game, player.md5)}}">
-                {{player.displayName}}
-                <button class="button button-clear button-positive">
-                    <i class="icon ion-close-circled"></i>
-                </button>
-            </div-->
+            <game-summary-bar></game-summary-bar>
             <div class="item item-avatar item-icon-right">
                 <img ng-src="{{gameDetails.imageForPlayer(game, player.md5)}}">
                 {{player.displayName}}

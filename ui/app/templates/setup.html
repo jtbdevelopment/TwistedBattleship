@@ -1,13 +1,33 @@
 <ion-view hide-nav-bar="true">
     <ion-content has-bouncing="false">
         <div class="list">
+            <game-summary-bar></game-summary-bar>
             <button class="button button-positive button-block" ng-disabled="submitDisabled" ng-click="submit()">
                 Submit
             </button>
         </div>
         <div class="row">
-            <div id="details" class="col-25">
-
+            <div id="player-details" class="col-25">
+                <div class="item">
+                    <!-- TODO -- quit  -->
+                    <div class="row">
+                        <button class="button button-balanced col" ng-click="accept()"
+                                ng-show="gameDetails.playerChallengeResponseNeeded(game, player.md5)">
+                            <i class="icon ion-checkmark-circled"></i>
+                        </button>
+                        <button class="button button-assertive col" ng-click="reject()">
+                            <i class="icon ion-close-circled"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="item item-avatar item-icon-right"
+                     ng-repeat="(md5, name) in game.players | orderBy:name" ng-hide="md5 === player.md5">
+                    <img ng-src="{{gameDetails.imageForPlayer(game, p.md5)}}">
+                    {{name}}
+                <span class="{{statusColor(md5)}}">
+                    <i class="icon ion-{{statusIcon(md5)}}"></i>
+                </span>
+                </div>
             </div>
             <div id="phaser" class="col-75">
 

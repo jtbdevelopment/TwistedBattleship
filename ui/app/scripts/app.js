@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('tbs', ['ionic', 'ngCookies', 'tbs.controllers', 'config', 'ion-autocomplete'])
+angular.module('tbs', ['ionic', 'ngCookies', 'tbs.controllers', 'tbs.directives', 'config', 'ion-autocomplete'])
 
     .run(function ($ionicPlatform, $cookies) {
         $ionicPlatform.ready(function () {
