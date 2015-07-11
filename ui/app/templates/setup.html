@@ -1,19 +1,17 @@
 <ion-view hide-nav-bar="true">
     <ion-content has-bouncing="false">
         <div class="list">
-            <div class="item">
-                <div class="row">
-                    <button class="button button-balanced col" ng-click="accept()">
-                        <i class="icon ion-checkmark-circled"></i>
-                    </button>
-                    <button class="button button-assertive col" ng-click="reject()">
-                        <i class="icon ion-close-circled"></i>
-                    </button>
-                </div>
-            </div>
+            <button class="button button-positive button-block" ng-disabled="submitDisabled" ng-click="submit()">
+                Submit
+            </button>
         </div>
-        <div id="phaser">
+        <div class="row">
+            <div id="details" class="col-25">
 
+            </div>
+            <div id="phaser" class="col-75">
+
+            </div>
         </div>
     </ion-content>
 </ion-view>

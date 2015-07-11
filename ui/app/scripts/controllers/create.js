@@ -158,8 +158,6 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
                 $http.post(jtbPlayerService.currentPlayerBaseURL() + '/new', playersAndFeatures).success(function (data) {
                     jtbGameCache.putUpdatedGame(data);
                     $state.go('app.game', {gameID: data.id});
-                    //TODO
-                    //$location.path('/show/' + data.id);
                 }).error(function (data, status, headers, config) {
                     //  TODO
                     $scope.alerts.push({type: 'danger', msg: 'Error creating game:' + data});
