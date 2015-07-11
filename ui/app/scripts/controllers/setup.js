@@ -74,9 +74,9 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                     var shipInfo = $scope.shipInfo.find(function (info) {
                         return info.ship === key;
                     });
-                    var horizontal = value.shipGridCells[0].y === value.shipGridCells[1].y;
-                    var row = value.shipGridCells[0].y;
-                    var column = value.shipGridCells[0].x;
+                    var horizontal = value.shipGridCells[0].row === value.shipGridCells[1].row;
+                    var row = value.shipGridCells[0].row;
+                    var column = value.shipGridCells[0].column;
                     placeShip(horizontal, row, column, shipInfo);
                 });
                 if ($scope.ships.length === 0) {
