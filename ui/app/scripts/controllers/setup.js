@@ -10,8 +10,8 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
             $scope.theme = 'default';
             $scope.gameID = $state.params.gameID;
             $scope.game = jtbGameCache.getGameForID($scope.gameID);
-            $scope.ships = [];
-            $scope.shipInfo = [];
+            $scope.shipsOnGrid = [];
+            $scope.generalShipInfo = [];
 
             $scope.gameWidth = $scope.game.gridSize * GRID_SIZE;
             $scope.gameHeight = $scope.game.gridSize * GRID_SIZE;
@@ -22,16 +22,17 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
 
             $scope.submit = function () {
                 var info = {};
-                angular.forEach($scope.ships, function (ship) {
+                angular.forEach($scope.shipsOnGrid, function (ship) {
                     var cells = [];
                     var startX = ship.startX / GRID_SIZE;
                     var startY = ship.startY / GRID_SIZE;
+                    var i = 0;
                     if (ship.horizontal) {
-                        for (var i = 0; i < ship.info.gridSize; ++i) {
+                        for (i = 0; i < ship.info.gridSize; ++i) {
                             cells.push({column: startX + i, row: startY});
                         }
                     } else {
-                        for (var i = 0; i < ship.info.gridSize; ++i) {
+                        for (i = 0; i < ship.info.gridSize; ++i) {
                             cells.push({column: startX, row: startY + i});
                         }
                     }
@@ -60,18 +61,18 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                 ship.anchor.setTo(0.5, 0.5);
                 ship.angle = horizontal ? 0 : 90;
 
-                var shipData = {
+                var shipOnGrid = {
                     sprite: ship,
                     info: shipInfo,
                     horizontal: horizontal
                 };
-                computeShipCorners(shipData);
-                $scope.ships.push(shipData);
+                computeShipCorners(shipOnGrid);
+                $scope.shipsOnGrid.push(shipOnGrid);
             }
 
             function placeShips() {
                 angular.forEach($scope.game.maskedPlayersState.shipStates, function (value, key) {
-                    var shipInfo = $scope.shipInfo.find(function (info) {
+                    var shipInfo = $scope.generalShipInfo.find(function (info) {
                         return info.ship === key;
                     });
                     var horizontal = value.shipGridCells[0].row === value.shipGridCells[1].row;
@@ -79,9 +80,9 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                     var column = value.shipGridCells[0].column;
                     placeShip(horizontal, row, column, shipInfo);
                 });
-                if ($scope.ships.length === 0) {
+                if ($scope.shipsOnGrid.length === 0) {
                     var row = 0;
-                    angular.forEach($scope.shipInfo, function (shipInfo) {
+                    angular.forEach($scope.generalShipInfo, function (shipInfo) {
                         placeShip(true, row, 4, shipInfo);
                         row = row + 1;
                     });
@@ -169,14 +170,14 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
             function checkOverlap() {
                 var overlapExists = false;
                 var overlaps = [];
-                angular.forEach($scope.ships, function () {
+                angular.forEach($scope.shipsOnGrid, function () {
                     overlaps.push(false);
                 });
 
-                for (var i = 0; i < $scope.ships.length; ++i) {
-                    var outerShip = $scope.ships[i];
-                    for (var j = i + 1; j < $scope.ships.length; ++j) {
-                        var innerShip = $scope.ships[j];
+                for (var i = 0; i < $scope.shipsOnGrid.length; ++i) {
+                    var outerShip = $scope.shipsOnGrid[i];
+                    for (var j = i + 1; j < $scope.shipsOnGrid.length; ++j) {
+                        var innerShip = $scope.shipsOnGrid[j];
                         if (outerShip.startX > innerShip.endX ||
                             outerShip.endX < innerShip.startX ||
                             outerShip.startY > innerShip.endY ||
@@ -189,9 +190,9 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                         overlaps[j] = true;
                     }
                     if (overlaps[i] === true) {
-                        $scope.ships[i].sprite.tint = 0xff0000;
+                        $scope.shipsOnGrid[i].sprite.tint = 0xff0000;
                     } else {
-                        $scope.ships[i].sprite.tint = 0xffffff;
+                        $scope.shipsOnGrid[i].sprite.tint = 0xffffff;
                     }
                 }
                 $scope.submitDisabled = overlapExists;
@@ -217,15 +218,19 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                 }
             }
 
+            function findShipByAdjustedCoordinates(x, y) {
+                for (var i = 0; i < $scope.shipsOnGrid.length; ++i) {
+                    if (x >= $scope.shipsOnGrid[i].startX && y >= $scope.shipsOnGrid[i].startY && x < $scope.shipsOnGrid[i].endX && y < $scope.shipsOnGrid[i].endY) {
+                        return $scope.shipsOnGrid[i];
+                    }
+                }
+                return null;
+            }
+
             function onDown(pointer) {
                 var x = $scope.phaser.input.mousePointer.x / $scope.gameScale;
                 var y = $scope.phaser.input.mousePointer.y / $scope.gameScale;
-                for (var i = 0; i < $scope.ships.length; ++i) {
-                    if (x >= $scope.ships[i].startX && y >= $scope.ships[i].startY && x < $scope.ships[i].endX && y < $scope.ships[i].endY) {
-                        $scope.movingShip = $scope.ships[i];
-                        break;
-                    }
-                }
+                $scope.movingShip = findShipByAdjustedCoordinates(x, y);
                 if ($scope.movingShip !== null) {
                     $scope.movingPointerRelativeToShip.x = $scope.movingShip.centerX - x;
                     $scope.movingPointerRelativeToShip.y = $scope.movingShip.centerY - y;
@@ -235,15 +240,9 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
 
             function onTap(pointer, double) {
                 if (double) {
-                    var ship = null;
                     var x = $scope.phaser.input.mousePointer.x / $scope.gameScale;
                     var y = $scope.phaser.input.mousePointer.y / $scope.gameScale;
-                    for (var i = 0; i < $scope.ships.length; ++i) {
-                        if (x >= $scope.ships[i].startX && y >= $scope.ships[i].startY && x < $scope.ships[i].endX && y < $scope.ships[i].endY) {
-                            ship = $scope.ships[i];
-                            break;
-                        }
-                    }
+                    var ship = findShipByAdjustedCoordinates(x, y);
 
                     if (ship) {
                         ship.horizontal = !(ship.horizontal);
@@ -270,7 +269,7 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
 
             tbsShips.ships().then(
                 function (ships) {
-                    $scope.shipInfo = ships;
+                    $scope.generalShipInfo = ships;
                     $scope.phaser = new Phaser.Game(
                         $scope.gameWidth,
                         $scope.gameHeight,
