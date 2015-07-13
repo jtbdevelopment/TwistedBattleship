@@ -1,8 +1,5 @@
 'use strict';
 
-var yes = 'checkmark';
-var no = 'close';
-
 angular.module('tbs.controllers').controller('PlayerListAndStateCtrl',
     ['$scope', 'tbsGameDetails', 'jtbGameCache', 'jtbPlayerService', '$http', '$state', // 'twAds',
         function ($scope, tbsGameDetails, jtbGameCache, jtbPlayerService, $http, $state/*, twAds*/) {

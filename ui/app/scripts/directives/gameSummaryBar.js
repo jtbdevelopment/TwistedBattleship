@@ -1,5 +1,8 @@
 'use strict';
 
+var yes = 'checkmark';
+var no = 'close';
+
 angular.module('tbs.directives', []).directive('gameSummaryBar', [
         'jtbGameCache', 'tbsGameDetails',
         function (jtbGameCache, tbsGameDetails) {
@@ -20,7 +23,7 @@ angular.module('tbs.directives', []).directive('gameSummaryBar', [
                         $scope.gridSize = tbsGameDetails.shortenGridSize($scope.game);
                         $scope.intel = $scope.game.features.indexOf('IsolatedIntel') >= 0 ? 'Isolated' : 'Shared';
                         $scope.moves = $scope.game.features.indexOf('Single') >= 0 ? '1' : 'Per Ship';
-                    }
+                    };
                 }
             };
         }

@@ -4,14 +4,15 @@ var GRID_SIZE = 100;
 var HALF_GRID = GRID_SIZE / 2;
 
 angular.module('tbs.controllers').controller('SetupGameCtrl',
-    ['$scope', 'jtbGameCache', 'jtbPlayerService', 'jtbFacebook', '$http', '$state', '$location', '$ionicModal', '$ionicSideMenuDelegate', 'tbsShips', // 'twAds',
-        function ($scope, jtbGameCache, jtbPlayerService, jtbFacebook, $http, $state, $location, $ionicModal, $ionicSideMenuDelegate, tbsShips /*, twAds*/) {
+    ['$scope', 'tbsGameDetails', 'jtbGameCache', 'jtbPlayerService', 'jtbFacebook', '$http', '$state', '$location', '$ionicModal', '$ionicSideMenuDelegate', 'tbsShips', // 'twAds',
+        function ($scope, tbsGameDetails, jtbGameCache, jtbPlayerService, jtbFacebook, $http, $state, $location, $ionicModal, $ionicSideMenuDelegate, tbsShips /*, twAds*/) {
             $ionicSideMenuDelegate.canDragContent(false);
             $scope.theme = 'default';
             $scope.gameID = $state.params.gameID;
             $scope.game = jtbGameCache.getGameForID($scope.gameID);
             $scope.shipsOnGrid = [];
             $scope.generalShipInfo = [];
+            $scope.gameDetails = tbsGameDetails;
 
             $scope.gameWidth = $scope.game.gridSize * GRID_SIZE;
             $scope.gameHeight = $scope.game.gridSize * GRID_SIZE;

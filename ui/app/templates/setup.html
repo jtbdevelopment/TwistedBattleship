@@ -2,34 +2,31 @@
     <ion-content has-bouncing="false">
         <div class="list">
             <game-summary-bar></game-summary-bar>
-            <button class="button button-positive button-block" ng-disabled="submitDisabled" ng-click="submit()">
-                Submit
-            </button>
         </div>
         <div class="row">
-            <div id="player-details" class="col-25">
+            <div class="list col-20">
+                <div class="item">
+                    <button class="button button-positive button-block ion-checkmark" ng-disabled="submitDisabled"
+                            ng-click="submit()">
+                        Submit
+                    </button>
+                </div>
                 <div class="item">
                     <!-- TODO -- quit  -->
-                    <div class="row">
-                        <button class="button button-balanced col" ng-click="accept()"
-                                ng-show="gameDetails.playerChallengeResponseNeeded(game, player.md5)">
-                            <i class="icon ion-checkmark-circled"></i>
-                        </button>
-                        <button class="button button-assertive col" ng-click="reject()">
-                            <i class="icon ion-close-circled"></i>
-                        </button>
-                    </div>
+                    <button class="button button-full button-assertive ion-flag" ng-click="quit()">
+                        Quit
+                    </button>
                 </div>
                 <div class="item item-avatar item-icon-right"
-                     ng-repeat="(md5, name) in game.players | orderBy:name" ng-hide="md5 === player.md5">
-                    <img ng-src="{{gameDetails.imageForPlayer(game, p.md5)}}">
+                     ng-repeat="(md5, name) in game.players | orderBy:name">
+                    <img ng-src="{{gameDetails.imageForPlayer(game, md5)}}">
                     {{name}}
-                <span class="{{statusColor(md5)}}">
-                    <i class="icon ion-{{statusIcon(md5)}}"></i>
+                <span class="{{gameDetails.playerSetupEntryRequired(game, md5) ? 'assertive' : 'balanced'}}">
+                    <i class="icon ion-{{gameDetails.playerSetupEntryRequired(game, md5) ? 'close' : 'checkmark'}}"></i>
                 </span>
                 </div>
             </div>
-            <div id="phaser" class="col-75">
+            <div id="phaser" class="col-80">
 
             </div>
         </div>
