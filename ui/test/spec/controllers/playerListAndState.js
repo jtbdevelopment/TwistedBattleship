@@ -49,6 +49,9 @@ describe('Controller: playerListAndState', function () {
             return '';
         }
     };
+    var actions = {
+        //  TODO
+    };
     beforeEach(inject(function ($rootScope, $httpBackend) {
         rootScope = $rootScope;
         http = $httpBackend;
@@ -65,6 +68,7 @@ describe('Controller: playerListAndState', function () {
             ctrl = $controller('PlayerListAndStateCtrl', {
                 $scope: scope,
                 tbsGameDetails: gameDetails,
+                tbsActions: actions,
                 jtbGameCache: gameCache,
                 jtbPlayerService: playerService,
                 $state: state
@@ -75,6 +79,7 @@ describe('Controller: playerListAndState', function () {
             expect(scope.showActions).to.equal(true);
             expect(scope.game).to.deep.equal(game);
             expect(scope.player).to.deep.equal(player);
+            /*  TODO - move to bar test
             expect(scope.intel).to.equal('Shared');
             expect(scope.moves).to.equal('Per Ship');
             expect(scope.ecmEnabled).to.equal('close');
@@ -83,6 +88,7 @@ describe('Controller: playerListAndState', function () {
             expect(scope.moveEnabled).to.equal('close');
             expect(scope.criticalsEnabled).to.equal('close');
             expect(scope.gridSize).to.equal(shortGrid);
+             */
             expect(scope.gameID).to.equal(gameID);
         });
     });
@@ -94,6 +100,7 @@ describe('Controller: playerListAndState', function () {
             ctrl = $controller('PlayerListAndStateCtrl', {
                 $scope: scope,
                 tbsGameDetails: gameDetails,
+                tbsActions: actions,
                 jtbGameCache: gameCache,
                 jtbPlayerService: playerService,
                 $state: state
@@ -104,6 +111,7 @@ describe('Controller: playerListAndState', function () {
             expect(scope.showActions).to.equal(true);
             expect(scope.game).to.deep.equal(game);
             expect(scope.player).to.deep.equal(player);
+            /*  TODO - move to bar test
             expect(scope.intel).to.equal('Isolated');
             expect(scope.moves).to.equal('1');
             expect(scope.ecmEnabled).to.equal('checkmark');
@@ -112,6 +120,7 @@ describe('Controller: playerListAndState', function () {
             expect(scope.moveEnabled).to.equal('checkmark');
             expect(scope.criticalsEnabled).to.equal('checkmark');
             expect(scope.gridSize).to.equal(shortGrid);
+             */
         });
 
         it('test status colors', function () {
@@ -132,6 +141,7 @@ describe('Controller: playerListAndState', function () {
             expect(scope.statusIcon('md5')).to.equal('close-circled');
         });
 
+        /*  TODO - move to tbsActions
         it('accept game, but it stays challenged', function () {
             var newGame = {};
             angular.copy(game, newGame);
@@ -183,6 +193,7 @@ describe('Controller: playerListAndState', function () {
             expect(gameCache.updatedGame).to.deep.equal({});
             expect(state.goTrack).to.deep.equal({});
         });
+         */
     });
 
     angular.forEach(['Declined', 'Quit'], function (phase) {
@@ -192,6 +203,7 @@ describe('Controller: playerListAndState', function () {
                 ctrl = $controller('PlayerListAndStateCtrl', {
                     $scope: scope,
                     tbsGameDetails: gameDetails,
+                    tbsActions: actions,
                     jtbGameCache: gameCache,
                     jtbPlayerService: playerService,
                     $state: state

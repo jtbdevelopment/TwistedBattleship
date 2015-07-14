@@ -1,11 +1,12 @@
+/*global Phaser:false */
 'use strict';
 
 var GRID_SIZE = 100;
 var HALF_GRID = GRID_SIZE / 2;
 
 angular.module('tbs.controllers').controller('SetupGameCtrl',
-    ['$scope', 'tbsGameDetails', 'jtbGameCache', 'jtbPlayerService', 'jtbFacebook', '$http', '$state', '$location', '$ionicModal', '$ionicSideMenuDelegate', 'tbsShips', // 'twAds',
-        function ($scope, tbsGameDetails, jtbGameCache, jtbPlayerService, jtbFacebook, $http, $state, $location, $ionicModal, $ionicSideMenuDelegate, tbsShips /*, twAds*/) {
+    ['$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', 'jtbFacebook', '$http', '$state', '$location', '$ionicModal', '$ionicSideMenuDelegate', 'tbsShips', // 'twAds',
+        function ($scope, tbsGameDetails, tbsActions, jtbGameCache, jtbPlayerService, jtbFacebook, $http, $state, $location, $ionicModal, $ionicSideMenuDelegate, tbsShips /*, twAds*/) {
             $ionicSideMenuDelegate.canDragContent(false);
             $scope.theme = 'default';
             $scope.gameID = $state.params.gameID;
@@ -20,6 +21,10 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
             $scope.movingShip = null;
             $scope.movingPointerRelativeToShip = {x: 0, y: 0};
             $scope.submitDisabled = true;
+
+            $scope.quit = function () {
+                tbsActions.quit($scope);
+            };
 
             $scope.submit = function () {
                 var info = {};
@@ -40,13 +45,7 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                     info[ship.info.ship] = cells;
                 });
 
-                $http.put(jtbPlayerService.currentPlayerBaseURL() + '/game/' + $scope.gameID + '/setup', info).success(function (data) {
-                    jtbGameCache.putUpdatedGame(data);
-                    $state.go('app.game', {gameID: data.id});
-                }).error(function (data, status, headers, config) {
-                    //  TODO
-                    console.error(data + status + headers + config);
-                });
+                tbsActions.setup($scope, info);
             };
 
             function placeShip(horizontal, row, column, shipInfo) {
@@ -228,7 +227,7 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                 return null;
             }
 
-            function onDown(pointer) {
+            function onDown() {
                 var x = $scope.phaser.input.mousePointer.x / $scope.gameScale;
                 var y = $scope.phaser.input.mousePointer.y / $scope.gameScale;
                 $scope.movingShip = findShipByAdjustedCoordinates(x, y);
