@@ -9,22 +9,23 @@ angular.module('tbs.services').factory('tbsShipGrid',
 
             var theme;
             var game;
-            var shipsOnGrid, shipLocations;
+            var shipsOnGrid = [], shipLocations = [];
             var gameWidth, gameHeight, gameScale;
             var phaser;
+
             var postCreateFunction;
 
             function preload() {
                 var json = gameHeight === 1000 ? '10x10.json' : gameHeight === 2000 ? '20x20.json' : '15x15.json';
                 phaser.load.tilemap('grid', '/templates/gamefiles/' + json, null, Phaser.Tilemap.TILED_JSON);
-                phaser.load.image('tile', '/images/default/tile.png');
-                phaser.load.image('Destroyer', '/images/default/destroyer.png');
-                phaser.load.image('Submarine', '/images/default/submarine.png');
+                phaser.load.image('tile', '/images/' + theme + '/tile.png');
+                phaser.load.image('Destroyer', '/images/' + theme + '/destroyer.png');
+                phaser.load.image('Submarine', '/images/' + theme + '/submarine.png');
 
                 // TODO
-                phaser.load.image('Carrier', '/images/default/destroyer.png');
-                phaser.load.image('Battleship', '/images/default/destroyer.png');
-                phaser.load.image('Cruiser', '/images/default/destroyer.png');
+                phaser.load.image('Carrier', '/images/' + theme + '/destroyer.png');
+                phaser.load.image('Battleship', '/images/' + theme + '/destroyer.png');
+                phaser.load.image('Cruiser', '/images/' + theme + '/destroyer.png');
             }
 
             function create() {
@@ -87,6 +88,9 @@ angular.module('tbs.services').factory('tbsShipGrid',
             }
 
             function placeShips() {
+                angular.forEach(shipsOnGrid, function (ship) {
+                    ship.sprite.destroy();
+                });
                 shipsOnGrid = [];
                 angular.forEach(shipLocations, function (shipLocation) {
                     placeShip(shipLocation.horizontal, shipLocation.row, shipLocation.column, shipLocation.shipInfo);
@@ -149,10 +153,6 @@ angular.module('tbs.services').factory('tbsShipGrid',
                         }
                     }
                     return null;
-                },
-
-                phaser: function () {
-                    return phaser;
                 },
 
                 onMove: function (cb) {
