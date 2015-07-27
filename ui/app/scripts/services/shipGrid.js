@@ -10,6 +10,7 @@ angular.module('tbs.services').factory('tbsShipGrid',
             var theme;
             var game;
             var shipsOnGrid = [], shipLocations = [];
+            var cellMarkers = [], markersOnGrid = [];
             var gameWidth, gameHeight, gameScale;
             var phaser;
 
@@ -19,6 +20,20 @@ angular.module('tbs.services').factory('tbsShipGrid',
                 var json = gameHeight === 1000 ? '10x10.json' : gameHeight === 2000 ? '20x20.json' : '15x15.json';
                 phaser.load.tilemap('grid', '/templates/gamefiles/' + json, null, Phaser.Tilemap.TILED_JSON);
                 phaser.load.image('tile', '/images/' + theme + '/tile.png');
+                angular.forEach([
+                    'knownbyhit',
+                    'knownbymiss',
+                    'knownbyothermiss',
+                    'knownbyotherhit',
+                    'knownbyrehit',
+                    'knownship',
+                    'knownempty',
+                    'obscuredempty',
+                    'obscuredship',
+                    'unknown'
+                ], function (state) {
+                    phaser.load.image(state, '/images/' + theme + '/' + state + '.png');
+                });
                 phaser.load.image('Destroyer', '/images/' + theme + '/destroyer.png');
                 phaser.load.image('Submarine', '/images/' + theme + '/submarine.png');
 
@@ -38,6 +53,7 @@ angular.module('tbs.services').factory('tbsShipGrid',
                 phaser.world.resize(gameWidth * gameScale, gameHeight * gameScale);
 
                 placeShips();
+                placeCellMarkers();
 
                 //  TODO  - look at more
                 //phaser.scale.fullScreenScaleMode = Phaser.ScaleManager.NO_SCALE;
@@ -63,6 +79,28 @@ angular.module('tbs.services').factory('tbsShipGrid',
                     shipData.endY = shipData.centerY + halfShip - 1;
                     shipData.endX = shipData.centerX + HALF_CELL_SIZE - 1;
                 }
+            }
+
+            function placeCellMarkers() {
+                angular.forEach(markersOnGrid, function (markersOnGridRow) {
+                    angular.forEach(markersOnGridRow, function (markersOnGridCell) {
+                        markersOnGridCell.destroy();
+                    });
+                });
+                markersOnGrid = [];
+                var row = 0;
+                angular.forEach(cellMarkers, function (cellMarkerRow) {
+                    var rowArray = [];
+                    markersOnGrid.push(rowArray);
+                    var col = 0;
+                    angular.forEach(cellMarkerRow, function (cellMarkerCell) {
+                        var type = angular.lowercase(cellMarkerCell);
+                        var marker = phaser.add.sprite(row * CELL_SIZE, col * CELL_SIZE, type, 0);
+                        rowArray.push(marker);
+                        ++col;
+                    });
+                    ++row;
+                });
             }
 
             function placeShip(horizontal, row, column, shipInfo) {
@@ -98,8 +136,8 @@ angular.module('tbs.services').factory('tbsShipGrid',
             }
 
             return {
-                initialize: function (loadedGame, initialShipLocations, postCreateCB) {
-                    theme = 'default';
+                initialize: function (useTheme, loadedGame, initialShipLocations, postCreateCB) {
+                    theme = useTheme;
                     game = loadedGame;
                     gameWidth = game.gridSize * CELL_SIZE;
                     gameHeight = game.gridSize * CELL_SIZE;
@@ -114,8 +152,13 @@ angular.module('tbs.services').factory('tbsShipGrid',
                         {preload: preload, create: create});
                 },
 
-                placeShips: function (initialShipLocations) {
-                    shipLocations = initialShipLocations;
+                placeShips: function (newShipLocations) {
+                    shipLocations = newShipLocations;
+                    placeShips();
+                },
+
+                placeCellMarkers: function (newCellMarkers) {
+                    cellMarkers = newCellMarkers;
                     placeShips();
                 },
 
@@ -131,6 +174,9 @@ angular.module('tbs.services').factory('tbsShipGrid',
                 },
                 cellSize: function () {
                     return CELL_SIZE;
+                },
+                halfCellSize: function () {
+                    return HALF_CELL_SIZE;
                 },
                 computeShipCorners: function (shipData) {
                     computeShipCorners(shipData);

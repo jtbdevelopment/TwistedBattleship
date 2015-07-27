@@ -1,24 +1,17 @@
 'use strict';
 
-var GRID_SIZE = 100;
-var HALF_GRID = GRID_SIZE / 2;
-
 angular.module('tbs.controllers').controller('SetupGameCtrl',
-    ['$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', 'jtbFacebook', '$http', '$state', '$location', '$ionicModal', '$ionicSideMenuDelegate', 'tbsShips', 'tbsShipGrid', // 'twAds',
-        function ($scope, tbsGameDetails, tbsActions, jtbGameCache, jtbPlayerService, jtbFacebook, $http, $state, $location, $ionicModal, $ionicSideMenuDelegate, tbsShips, tbsShipGrid /*, twAds*/) {
+    ['$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', '$ionicSideMenuDelegate', 'tbsShips', 'tbsShipGrid', // 'twAds',
+        function ($scope, tbsGameDetails, tbsActions, jtbGameCache, jtbPlayerService, $state, $ionicSideMenuDelegate, tbsShips, tbsShipGrid /*, twAds*/) {
             $ionicSideMenuDelegate.canDragContent(false);
             $scope.theme = 'default';
             $scope.gameID = $state.params.gameID;
             $scope.game = jtbGameCache.getGameForID($scope.gameID);
             $scope.gameDetails = tbsGameDetails;
 
-            $scope.gameWidth = $scope.game.gridSize * GRID_SIZE;
-            $scope.gameHeight = $scope.game.gridSize * GRID_SIZE;
-            $scope.gameScale = 0.5;
             $scope.movingShip = null;
             $scope.movingPointerRelativeToShip = {x: 0, y: 0};
             $scope.submitDisabled = true;
-            $scope.shipLocations = [];
 
             $scope.quit = function () {
                 tbsActions.quit($scope);
@@ -51,35 +44,35 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                     shipData.sprite.x -= shipData.startX;
                     tbsShipGrid.computeShipCorners(shipData);
                 }
-                if (shipData.endX >= $scope.gameWidth) {
-                    shipData.sprite.x -= (shipData.endX - $scope.gameWidth + 1);
+                if (shipData.endX >= tbsShipGrid.gameWidth()) {
+                    shipData.sprite.x -= (shipData.endX - tbsShipGrid.gameWidth() + 1);
                     tbsShipGrid.computeShipCorners(shipData);
                 }
                 if (shipData.startY < 0) {
                     shipData.sprite.y -= shipData.startY;
                     tbsShipGrid.computeShipCorners(shipData);
                 }
-                if (shipData.endY >= $scope.gameHeight) {
-                    shipData.sprite.y -= (shipData.endY - $scope.gameHeight + 1);
+                if (shipData.endY >= tbsShipGrid.gameHeight()) {
+                    shipData.sprite.y -= (shipData.endY - tbsShipGrid.gameHeight() + 1);
                     tbsShipGrid.computeShipCorners(shipData);
                 }
             }
 
             function roundPosition(shipData) {
-                var xMod = shipData.startX % GRID_SIZE;
+                var xMod = shipData.startX % tbsShipGrid.cellSize();
                 if (xMod !== 0) {
-                    if (xMod < HALF_GRID) {
+                    if (xMod < tbsShipGrid.halfCellSize()) {
                         shipData.sprite.x = shipData.sprite.x - xMod;
                     } else {
-                        shipData.sprite.x = shipData.sprite.x - xMod + GRID_SIZE;
+                        shipData.sprite.x = shipData.sprite.x - xMod + tbsShipGrid.cellSize();
                     }
                 }
-                var yMod = shipData.startY % GRID_SIZE;
+                var yMod = shipData.startY % tbsShipGrid.cellSize();
                 if (yMod !== 0) {
-                    if (yMod < HALF_GRID) {
+                    if (yMod < tbsShipGrid.halfCellSize()) {
                         shipData.sprite.y = shipData.sprite.y - yMod;
                     } else {
-                        shipData.sprite.y = shipData.sprite.y - yMod + GRID_SIZE;
+                        shipData.sprite.y = shipData.sprite.y - yMod + tbsShipGrid.cellSize();
                     }
                 }
                 tbsShipGrid.computeShipCorners(shipData);
@@ -184,7 +177,7 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
 
             tbsShips.ships().then(
                 function (generalShipInfo) {
-                    tbsShipGrid.initialize($scope.game, computeShipLocations(generalShipInfo), function () {
+                    tbsShipGrid.initialize($scope.theme, $scope.game, computeShipLocations(generalShipInfo), function () {
                         tbsShipGrid.onDown(onDown);
                         tbsShipGrid.onMove(onMove);
                         tbsShipGrid.onTap(onTap);
