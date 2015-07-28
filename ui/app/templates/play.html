@@ -10,12 +10,12 @@
                         Quit
                     </button>
                 </div>
-                <div class="item item-avatar item-icon-right"
+                <div class="item item-avatar item-icon-right {{showing == md5 ? 'energized' : ''}}"
                      ng-repeat="(md5, name) in game.players | orderBy:name">
                     <img ng-src="{{gameDetails.imageForPlayer(game, md5)}}">
                     {{name}}
-                <span class="{{gameDetails.playerSetupEntryRequired(game, md5) ? 'assertive' : 'balanced'}}">
-                    <i class="icon ion-{{gameDetails.playerSetupEntryRequired(game, md5) ? 'close' : 'checkmark'}}"></i>
+                <span class="{{gameDetails.playerCanPlay(game, md5) ? 'assertive' : 'balanced'}}">
+                    <i class="icon ion-{{gameDetails.playerCanPlay(game, md5) ? 'pause' : 'alert'}}"></i>
                 </span>
                 </div>
             </div>

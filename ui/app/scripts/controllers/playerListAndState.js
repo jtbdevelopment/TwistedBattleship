@@ -7,8 +7,8 @@ angular.module('tbs.controllers').controller('PlayerListAndStateCtrl',
             $scope.gameID = $state.params.gameID;
             $scope.game = jtbGameCache.getGameForID($scope.gameID);
             $scope.gameDetails = tbsGameDetails;
-            $scope.player = {};
             $scope.showActions = $scope.game.gamePhase === 'Challenged';
+            $scope.player = {};
             $scope.player = angular.copy(jtbPlayerService.currentPlayer(), $scope.player);
 
             $scope.statusColor = function (md5) {

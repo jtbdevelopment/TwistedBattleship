@@ -8,6 +8,9 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
             $scope.gameID = $state.params.gameID;
             $scope.game = jtbGameCache.getGameForID($scope.gameID);
             $scope.gameDetails = tbsGameDetails;
+            $scope.player = {};
+            $scope.player = angular.copy(jtbPlayerService.currentPlayer(), $scope.player);
+            $scope.showing = $scope.player.md5;
 
             $scope.quit = function () {
                 tbsActions.quit($scope);
