@@ -4,11 +4,21 @@
             <game-summary-bar></game-summary-bar>
         </div>
         <div class="row">
+            <span>Messages: {{game.generalMessage}}</span>
+        </div>
+        <div class="row">
             <div class="list col-20">
-                <div class="item">
-                    <button class="button button-full button-assertive ion-flag" ng-click="quit()">
-                        Quit
-                    </button>
+                <div class="item" ng-show="showing == player.md5 && gameDetails.playerCanPlay(game, player.md5)">
+                    <div class="button-bar">
+                        <button class="button button-assertive ion-flag" ng-click="quit()">Quit</button>
+                        <button class="button button-assertive ion-flag" ng-click="quit()">Quit</button>
+                    </div>
+                </div>
+                <div class="item" ng-show="showing != player.md5 && gameDetails.playerCanPlay(game, player.md5)">
+                    <div class="button-bar">
+                        <button class="button button-assertive ion-flag" ng-click="quit()">Quit</button>
+                        <button class="button button-assertive ion-flag" ng-click="quit()">Quit</button>
+                    </div>
                 </div>
                 <!--  TODO - highlight entire item  -->
                 <div class="item item-avatar item-icon-right {{showing == md5 ? 'energized' : ''}}"
@@ -16,7 +26,7 @@
                     <img ng-src="{{gameDetails.imageForPlayer(game, md5)}}">
                     {{name}}
                 <span class="{{gameDetails.playerCanPlay(game, md5) ? 'assertive' : 'balanced'}}">
-                    <i class="icon ion-{{gameDetails.playerCanPlay(game, md5) ? 'pause' : 'alert'}}"></i>
+                    <i class="icon ion-{{gameDetails.playerCanPlay(game, md5) ? 'alert' : 'pause'}}"></i>
                 </span>
                 </div>
             </div>
