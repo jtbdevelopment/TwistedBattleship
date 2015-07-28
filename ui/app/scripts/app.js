@@ -131,6 +131,15 @@ angular.module('tbs', ['ionic', 'ngCookies', 'tbs.controllers', 'tbs.directives'
                     }
                 }
             })
+            .state('app.playing', {
+                url: '/games/playing/:gameID',
+                views: {
+                    'menuContent': {
+                        templateUrl: 'templates/play.html',
+                        controller: 'PlayGameCtrl'
+                    }
+                }
+            })
         ;
 
         // if none of the above states are matched, use this as the fallback

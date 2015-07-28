@@ -177,7 +177,7 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
 
             tbsShips.ships().then(
                 function (generalShipInfo) {
-                    tbsShipGrid.initialize($scope.theme, $scope.game, computeShipLocations(generalShipInfo), function () {
+                    tbsShipGrid.initialize($scope.theme, $scope.game, computeShipLocations(generalShipInfo), [], function () {
                         tbsShipGrid.onDown(onDown);
                         tbsShipGrid.onMove(onMove);
                         tbsShipGrid.onTap(onTap);

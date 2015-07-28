@@ -136,13 +136,14 @@ angular.module('tbs.services').factory('tbsShipGrid',
             }
 
             return {
-                initialize: function (useTheme, loadedGame, initialShipLocations, postCreateCB) {
+                initialize: function (useTheme, loadedGame, initialShipLocations, initialCellMarkers, postCreateCB) {
                     theme = useTheme;
                     game = loadedGame;
                     gameWidth = game.gridSize * CELL_SIZE;
                     gameHeight = game.gridSize * CELL_SIZE;
                     gameScale = 0.5;
                     shipLocations = initialShipLocations;
+                    cellMarkers = initialCellMarkers;
                     postCreateFunction = postCreateCB;
                     phaser = new Phaser.Game(
                         gameWidth,
