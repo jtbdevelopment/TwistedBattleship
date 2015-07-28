@@ -11,16 +11,28 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
             $scope.player = {};
             $scope.player = angular.copy(jtbPlayerService.currentPlayer(), $scope.player);
             $scope.showing = $scope.player.md5;
+            $scope.generalShipInfo = [];
 
             $scope.quit = function () {
                 tbsActions.quit($scope);
             };
 
-            function computeShipLocations(generalShipInfo) {
+            $scope.changePlayer = function (md5) {
+                if (md5 === $scope.player.md5) {
+                    tbsShipGrid.placeShips(computeShipLocations());
+                    tbsShipGrid.placeCellMarkers($scope.game.maskedPlayersState.consolidatedOpponentView.table);
+                } else {
+                    tbsShipGrid.placeShips([]);
+                    tbsShipGrid.placeCellMarkers($scope.game.maskedPlayersState.opponentGrids[md5].table);
+                }
+                $scope.showing = md5;
+            };
+
+            function computeShipLocations() {
                 //  TODO - overlap with setup
                 var shipLocations = [];
                 angular.forEach($scope.game.maskedPlayersState.shipStates, function (value, key) {
-                    var shipInfo = generalShipInfo.find(function (info) {
+                    var shipInfo = $scope.generalShipInfo.find(function (info) {
                         return info.ship === key;
                     });
                     var horizontal = value.shipGridCells[0].row === value.shipGridCells[1].row;
@@ -33,7 +45,9 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
 
             tbsShips.ships().then(
                 function (generalShipInfo) {
-                    tbsShipGrid.initialize($scope.theme, $scope.game, computeShipLocations(generalShipInfo), $scope.game.maskedPlayersState.consolidatedOpponentView.table, function () {
+                    $scope.generalShipInfo = generalShipInfo;
+                    tbsShipGrid.initialize($scope.theme, $scope.game, [], [], function () {
+                        $scope.changePlayer($scope.showing);
                     });
                 },
                 function () {

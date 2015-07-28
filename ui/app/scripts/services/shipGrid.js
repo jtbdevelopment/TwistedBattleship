@@ -160,7 +160,7 @@ angular.module('tbs.services').factory('tbsShipGrid',
 
                 placeCellMarkers: function (newCellMarkers) {
                     cellMarkers = newCellMarkers;
-                    placeShips();
+                    placeCellMarkers();
                 },
 
                 currentShipsOnGrid: function () {
