@@ -48,6 +48,7 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
                     $scope.generalShipInfo = generalShipInfo;
                     tbsShipGrid.initialize($scope.theme, $scope.game, [], [], function () {
                         $scope.changePlayer($scope.showing);
+                        tbsShipGrid.activateHighlighting();
                     });
                 },
                 function () {

@@ -11,6 +11,7 @@ angular.module('tbs.services').factory('tbsShipGrid',
             var game;
             var shipsOnGrid = [], shipLocations = [];
             var cellMarkers = [], markersOnGrid = [];
+            var highlightSprite = null, highlightX, highlightY;
             var gameWidth, gameHeight, gameScale;
             var phaser;
 
@@ -18,8 +19,15 @@ angular.module('tbs.services').factory('tbsShipGrid',
 
             function preload() {
                 var json = gameHeight === 1000 ? '10x10.json' : gameHeight === 2000 ? '20x20.json' : '15x15.json';
+                if (highlightSprite !== null) {
+                    highlightSprite.destroy();
+                }
+                highlightSprite = null;
+                highlightX = -1;
+                highlightY = -1;
                 phaser.load.tilemap('grid', '/templates/gamefiles/' + json, null, Phaser.Tilemap.TILED_JSON);
                 phaser.load.image('tile', '/images/' + theme + '/tile.png');
+                phaser.load.image('highlight', '/images/' + theme + '/highlight.png');
                 angular.forEach([
                     'knownbyhit',
                     'knownbymiss',
@@ -125,6 +133,27 @@ angular.module('tbs.services').factory('tbsShipGrid',
                 shipsOnGrid.push(shipOnGrid);
             }
 
+            function currentMouseCoordinates() {
+                var x = phaser.input.mousePointer.x / gameScale;
+                var y = phaser.input.mousePointer.y / gameScale;
+                return {x: x, y: y};
+            }
+
+            function highlightCell() {
+                var coords = currentMouseCoordinates();
+                var y = Math.floor(coords.y / CELL_SIZE) * CELL_SIZE;
+                var x = Math.floor(coords.x / CELL_SIZE) * CELL_SIZE;
+                if (highlightSprite === null) {
+                    highlightSprite = phaser.add.sprite(x, y, 'highlight', 0);
+                }
+                if (y !== highlightY || x !== highlightX) {
+                    highlightSprite.x = x;
+                    highlightSprite.y = y;
+                    highlightX = x;
+                    highlightY = y;
+                }
+            }
+
             function placeShips() {
                 angular.forEach(shipsOnGrid, function (ship) {
                     ship.sprite.destroy();
@@ -184,12 +213,15 @@ angular.module('tbs.services').factory('tbsShipGrid',
                 },
 
                 currentMouseCoordinates: function () {
-                    var x = phaser.input.mousePointer.x / gameScale;
-                    var y = phaser.input.mousePointer.y / gameScale;
-                    return {x: x, y: y};
+                    return currentMouseCoordinates();
                 },
+
+                activateHighlighting: function () {
+                    this.onTap(highlightCell);
+                },
+
                 findShipByMouseCoordinates: function () {
-                    var coords = this.currentMouseCoordinates();
+                    var coords = currentMouseCoordinates();
                     for (var i = 0; i < shipsOnGrid.length; ++i) {
                         var shipOnGrid = shipsOnGrid[i];
                         if (coords.x >= shipOnGrid.startX &&
