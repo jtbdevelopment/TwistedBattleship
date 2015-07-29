@@ -60,7 +60,8 @@
             <div ng-repeat="feature in featureData | propsFilter: { checkBox: 'false' }">
                 <label class="item item-input item-select">
                     <div class="input-label">
-                        {{feature.feature.label}}
+                        {{feature.feature.label}} <i
+                            class="icon balanced ion-{{gameDetails.iconForFeature(currentOptions[feature.index])}}"></i>
                     </div>
                     <select ng-model="currentOptions[feature.index]">
                         <option ng-repeat="option in feature.options" value="{{option.feature}}">{{option.label}}
@@ -71,7 +72,8 @@
 
             <div ng-repeat="feature in featureData | propsFilter: { checkBox: 'true' }">
                 <ion-toggle ng-model="currentOptions[feature.index]">
-                    {{feature.feature.label}}
+                    {{feature.feature.label}} <i
+                        class="icon ion-{{gameDetails.iconForFeature(feature.options[0].feature)}} {{currentOptions[feature.index] ? 'balanced' : 'assertive'}}"></i>
                 </ion-toggle>
             </div>
             <label class="item item-input">

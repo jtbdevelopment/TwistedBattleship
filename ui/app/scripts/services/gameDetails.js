@@ -10,7 +10,9 @@ angular.module('tbs.services').factory('tbsGameDetails',
             'SharedIntel': 'images',
             'IsolatedIntel': 'image',
             'EREnabled': 'wrench',
-            'EMEnabled': 'shuffle'
+            'EMEnabled': 'shuffle',
+            'Single': 'chatbox',
+            'PerShip': 'chatboxes'
         };
 
         function checkParams(game, md5) {
@@ -18,6 +20,10 @@ angular.module('tbs.services').factory('tbsGameDetails',
         }
 
         return {
+            iconForFeature: function (feature) {
+                return iconMap[feature];
+            },
+
             playerChallengeResponseNeeded: function (game, md5) {
                 if (!checkParams(game, md5)) {
                     return false;
@@ -148,7 +154,7 @@ angular.module('tbs.services').factory('tbsGameDetails',
                         playerAction: false
                     };
                     result.sizeText = this.shortenGridSize(game);
-                    angular.forEach(game.features, function (feature) {
+                    angular.forEach(game.features.sort(), function (feature) {
                         switch (feature) {
                             case 'PerShip':
                                 result.actionsText = 'Multiple';

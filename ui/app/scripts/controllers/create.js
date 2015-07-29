@@ -3,8 +3,8 @@
 var MAX_OPPONENTS = 5;
 
 angular.module('tbs.controllers').controller('CreateGameCtrl',
-    ['friends', 'features', '$scope', 'jtbGameCache', 'jtbPlayerService', 'jtbFacebook', '$http', '$state', '$location', '$ionicModal',// 'twAds',
-        function (friends, features, $scope, jtbGameCache, jtbPlayerService, jtbFacebook, $http, $state, $location, $ionicModal/*, twAds*/) {
+    ['friends', 'features', '$scope', 'jtbGameCache', 'jtbPlayerService', 'jtbFacebook', '$http', '$state', '$location', 'tbsGameDetails', '$ionicModal',// 'twAds',
+        function (friends, features, $scope, jtbGameCache, jtbPlayerService, jtbFacebook, $http, $state, $location, tbsGameDetails, $ionicModal/*, twAds*/) {
 
             $scope.playerChoices = [];
             $scope.alerts = [];
@@ -15,6 +15,7 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
             $scope.friends = [];
             $scope.invitableFriends = [];
             $scope.submitEnabled = false;
+            $scope.gameDetails = tbsGameDetails;
 
             var count = 0;
             angular.forEach($scope.featureData, function (feature) {

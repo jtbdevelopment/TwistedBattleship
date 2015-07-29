@@ -74,6 +74,11 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
                                 new GameFeatureInfo.Detail(GameFeature.Grid15x15),
                                 new GameFeatureInfo.Detail(GameFeature.Grid20x20),
                         ]),
+                new GameFeatureInfo(GameFeature.ActionsPerTurn,
+                        [
+                                new GameFeatureInfo.Detail(GameFeature.PerShip),
+                                new GameFeatureInfo.Detail(GameFeature.Single),
+                        ]),
                 new GameFeatureInfo(GameFeature.FogOfWar,
                         [
                                 new GameFeatureInfo.Detail(GameFeature.SharedIntel),
@@ -99,16 +104,13 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
                                 new GameFeatureInfo.Detail(GameFeature.EREnabled),
                                 new GameFeatureInfo.Detail(GameFeature.ERDisabled),
                         ]),
-                new GameFeatureInfo(GameFeature.ActionsPerTurn,
-                        [
-                                new GameFeatureInfo.Detail(GameFeature.PerShip),
-                                new GameFeatureInfo.Detail(GameFeature.Single),
-                        ]),
+                /*
                 new GameFeatureInfo(GameFeature.Critical,
                         [
                                 new GameFeatureInfo.Detail(GameFeature.CriticalEnabled),
                                 new GameFeatureInfo.Detail(GameFeature.CriticalDisabled),
                         ]),
+                        */
         ]
     }
 
@@ -123,7 +125,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
                                 GameFeature.ECMEnabled,
                                 GameFeature.EREnabled,
                                 GameFeature.EMDisabled,
-                                GameFeature.CriticalEnabled,
+                                //GameFeature.CriticalEnabled,
                                 GameFeature.SpyDisabled,
                                 GameFeature.PerShip
                         ] as Set,
@@ -584,7 +586,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
                         GameFeature.ECMEnabled,
                         GameFeature.EREnabled,
                         GameFeature.EMEnabled,
-                        GameFeature.CriticalDisabled,
+                        //GameFeature.CriticalDisabled,
                         GameFeature.SpyEnabled,
                         GameFeature.PerShip
                 ] as Set,
@@ -742,7 +744,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
                                 GameFeature.ECMDisabled,  // Double
                                 GameFeature.EREnabled,
                                 GameFeature.EMDisabled,
-                                GameFeature.CriticalEnabled,
+                                //GameFeature.CriticalEnabled,
                                 GameFeature.SpyDisabled,
                                 GameFeature.PerShip
                         ] as Set,
@@ -900,7 +902,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
                     GameFeature.ECMEnabled,
                     GameFeature.EREnabled,
                     GameFeature.EMEnabled,
-                    GameFeature.CriticalEnabled,
+                    //GameFeature.CriticalEnabled,
                     GameFeature.SpyEnabled,
                     GameFeature.PerShip
             ] as Set,

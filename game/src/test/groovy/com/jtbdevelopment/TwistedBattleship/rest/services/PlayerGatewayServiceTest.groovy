@@ -27,6 +27,11 @@ class PlayerGatewayServiceTest extends GroovyTestCase {
                                 new GameFeatureInfo.Detail(GameFeature.Grid15x15),
                                 new GameFeatureInfo.Detail(GameFeature.Grid20x20),
                         ]),
+                new GameFeatureInfo(GameFeature.ActionsPerTurn,
+                        [
+                                new GameFeatureInfo.Detail(GameFeature.PerShip),
+                                new GameFeatureInfo.Detail(GameFeature.Single),
+                        ]),
                 new GameFeatureInfo(GameFeature.FogOfWar,
                         [
                                 new GameFeatureInfo.Detail(GameFeature.SharedIntel),
@@ -52,16 +57,13 @@ class PlayerGatewayServiceTest extends GroovyTestCase {
                                 new GameFeatureInfo.Detail(GameFeature.EREnabled),
                                 new GameFeatureInfo.Detail(GameFeature.ERDisabled),
                         ]),
-                new GameFeatureInfo(GameFeature.ActionsPerTurn,
-                        [
-                                new GameFeatureInfo.Detail(GameFeature.PerShip),
-                                new GameFeatureInfo.Detail(GameFeature.Single),
-                        ]),
+                /*
                 new GameFeatureInfo(GameFeature.Critical,
                         [
                                 new GameFeatureInfo.Detail(GameFeature.CriticalEnabled),
                                 new GameFeatureInfo.Detail(GameFeature.CriticalDisabled),
                         ]),
+                        */
         ]
     }
 
