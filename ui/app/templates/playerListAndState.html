@@ -1,7 +1,9 @@
 <ion-view>
+    <ion-header-bar>
+        <game-summary-bar></game-summary-bar>
+    </ion-header-bar>
     <ion-content>
         <div class="list">
-            <game-summary-bar></game-summary-bar>
             <div class="item item-avatar item-icon-right">
                 <img ng-src="{{gameDetails.imageForPlayer(game, player.md5)}}">
                 {{player.displayName}}
