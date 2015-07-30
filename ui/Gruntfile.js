@@ -73,27 +73,51 @@ module.exports = function (grunt) {
         watch: {
             bower: {
                 files: ['bower.json'],
-                tasks: ['wiredep', 'newer:copy:app']
+                tasks: ['wiredep', 'newer:copy:app'],
+                options: {
+                    interval: 1000,
+                    spawn: false
+                }
             },
             html: {
                 files: ['<%= yeoman.app %>/**/*.html'],
-                tasks: ['newer:copy:app']
+                tasks: ['newer:copy:app'],
+                options: {
+                    interval: 1000,
+                    spawn: false
+                }
             },
             json: {
-                files: ['<%= yeoman.app %>/**/*.json'],
-                tasks: ['newer:copy:app']
+                files: ['<%= yeoman.app %>/templates/**/*.json'],
+                tasks: ['newer:copy:app'],
+                options: {
+                    interval: 1000,
+                    spawn: false
+                }
             },
             js: {
                 files: ['<%= yeoman.app %>/<%= yeoman.scripts %>/**/*.js'],
-                tasks: ['newer:copy:app', 'newer:jshint:all']
+                tasks: ['newer:copy:app', 'newer:jshint:all'],
+                options: {
+                    interval: 1000,
+                    spawn: false
+                }
             },
             compass: {
                 files: ['<%= yeoman.app %>/<%= yeoman.styles %>/**/*.{scss,sass}'],
-                tasks: ['compass:server', 'autoprefixer', 'newer:copy:tmp']
+                tasks: ['compass:server', 'autoprefixer', 'newer:copy:tmp'],
+                options: {
+                    interval: 1000,
+                    spawn: false
+                }
             },
             gruntfile: {
                 files: ['Gruntfile.js'],
-                tasks: ['ngconstant:development', 'newer:copy:app']
+                tasks: ['ngconstant:development', 'newer:copy:app'],
+                options: {
+                    interval: 1000,
+                    spawn: false
+                }
             }
         },
 
