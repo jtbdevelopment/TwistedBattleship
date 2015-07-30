@@ -1,20 +1,40 @@
+<!--  TODO - help -->
+<!--  TODO - eliminate dead people -->
 <ion-view hide-nav-bar="true">
     <ion-header-bar>
         <game-summary-bar></game-summary-bar>
     </ion-header-bar>
     <ion-header-bar class="bar-subheader">
-        <h1 class="title">{{game.generalMessage}}</h1>
+        <h1 class="title">
+            ECMS: {{game.maskedPlayersState.ecmsRemaining}}
+            Spies: {{game.maskedPlayersState.spysRemaining}}
+            Repairs: {{game.maskedPlayersState.emergencyRepairsRemaining}}
+            Evasives: {{game.maskedPlayersState.evasiveManeuversRemaining}}
+            {{game.generalMessage}}
+        </h1>
     </ion-header-bar>
     <ion-content has-bouncing="false">
         <div class="row">
             <div class="list col-20">
+                <div class="item" ng-show="!gameDetails.playerCanPlay(game, player.md5)">
+                    Current Turn: <span class="item-note">{{game.players[game.currentPlayer]}}</span>
+                </div>
+                <div class="item">
+                    Moves Remaining: <span class="badge">{{game.remainingMoves}}</span>
+                </div>
                 <div class="item" ng-show="showing == player.md5 && gameDetails.playerCanPlay(game, player.md5)">
                     <div class="button-bar">
-                        <button class="button ion-{{gameDetails.iconForFeature('ECMEnabled')}}" ng-click="ecm()"> ECM
+                        <button class="button ion-{{gameDetails.iconForFeature('ECMEnabled')}}"
+                                ng-disabled="!gameDetails.ecmPossible(game, player.md5)"
+                                ng-click="ecm()">
+                            ECM
                         </button>
-                        <button class="button ion-{{gameDetails.iconForFeature('EMEnabled')}}" ng-click="move()"> Move
+                        <button class="button ion-{{gameDetails.iconForFeature('EMEnabled')}}"
+                                ng-disabled="!gameDetails.evasiveMovePossible(game, player.md5)"
+                                ng-click="move()"> Move
                         </button>
-                        <button class="button ion-{{gameDetails.iconForFeature('EREnabled')}}" ng-click="repair()">
+                        <button class="button ion-{{gameDetails.iconForFeature('EREnabled')}}"
+                                ng-disabled="!gameDetails.repairPossible(game, player.md5)" ng-click="repair()">
                             Fix
                         </button>
                     </div>
@@ -22,7 +42,8 @@
                 <div class="item" ng-show="showing != player.md5 && gameDetails.playerCanPlay(game, player.md5)">
                     <div class="button-bar">
                         <button class="button ion-navigate" ng-click="fire()"> Fire</button>
-                        <button class="button ion-{{gameDetails.iconForFeature('SpyEnabled')}}" ng-click="spy()"> Spy
+                        <button class="button ion-{{gameDetails.iconForFeature('SpyEnabled')}}"
+                                ng-disabled="!gameDetails.repairPossible(game, player.md5)" ng-click="spy()"> Spy
                         </button>
                     </div>
                 </div>

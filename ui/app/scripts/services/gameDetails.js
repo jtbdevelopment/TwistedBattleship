@@ -24,6 +24,34 @@ angular.module('tbs.services').factory('tbsGameDetails',
                 return iconMap[feature];
             },
 
+            ecmPossible: function (game, md5) {
+                if (!this.playerCanPlay(game, md5)) {
+                    return false;
+                }
+                return game.maskedPlayersState.ecmsRemaining > 0 && game.remainingMoves >= game.movesForSpecials;
+            },
+
+            spyPossible: function (game, md5) {
+                if (!this.playerCanPlay(game, md5)) {
+                    return false;
+                }
+                return game.maskedPlayersState.spysRemaining > 0 && game.remainingMoves >= game.movesForSpecials;
+            },
+
+            repairPossible: function (game, md5) {
+                if (!this.playerCanPlay(game, md5)) {
+                    return false;
+                }
+                return game.maskedPlayersState.emergencyRepairsRemaining > 0 && game.remainingMoves >= game.movesForSpecials;
+            },
+
+            evasiveMovePossible: function (game, md5) {
+                if (!this.playerCanPlay(game, md5)) {
+                    return false;
+                }
+                return game.maskedPlayersState.evasiveManeuversRemaining > 0 && game.remainingMoves >= game.movesForSpecials;
+            },
+
             playerChallengeResponseNeeded: function (game, md5) {
                 if (!checkParams(game, md5)) {
                     return false;
