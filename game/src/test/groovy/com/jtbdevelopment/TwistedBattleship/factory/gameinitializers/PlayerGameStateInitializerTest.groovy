@@ -29,6 +29,27 @@ class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
         assert 3 == game.playerDetails.size()
         assert PONE.id == game.currentPlayer
         assert 1 == game.remainingMoves
+        assert 1 == game.movesForSpecials
+        game.players.each {
+            Player p ->
+                def expectedSpecials = 2
+                validatePlayerStates(game, p, expectedSpecials)
+        }
+    }
+
+    void testInitializePerShipGame() {
+        TBGame game = new TBGame(
+                features: [GameFeature.Grid15x15, GameFeature.PerShip, /*GameFeature.CriticalEnabled,*/ GameFeature.ECMEnabled, GameFeature.EREnabled, GameFeature.SpyEnabled, GameFeature.EMEnabled],
+                players: [PONE, PTWO, PTHREE]
+        )
+
+        assert [:] == game.playerDetails
+        initializer.initializeGame(game)
+        assert 15 == game.gridSize
+        assert 3 == game.playerDetails.size()
+        assert PONE.id == game.currentPlayer
+        assert 5 == game.remainingMoves
+        assert 2 == game.movesForSpecials
         game.players.each {
             Player p ->
                 def expectedSpecials = 2
@@ -48,6 +69,7 @@ class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
         assert 3 == game.playerDetails.size()
         assert PONE.id == game.currentPlayer
         assert 1 == game.remainingMoves
+        assert 1 == game.movesForSpecials
         game.players.each {
             Player p ->
                 def expectedSpecials = 2

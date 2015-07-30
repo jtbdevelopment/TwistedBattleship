@@ -1,6 +1,5 @@
 package com.jtbdevelopment.TwistedBattleship.rest.handlers
 
-import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import groovy.transform.CompileStatic
 
@@ -12,6 +11,6 @@ import groovy.transform.CompileStatic
 abstract class AbstractSpecialMoveHandler extends AbstractPlayerMoveHandler {
     @Override
     int movesRequired(final TBGame game) {
-        return game.features.contains(GameFeature.PerShip) ? 2 : 1
+        return game.movesForSpecials
     }
 }

@@ -133,6 +133,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
                 ))
         assert game
         assert 20 == game.gridSize
+        assert 2 == game.movesForSpecials
         assert [
                 (TEST_PLAYER1.md5): PlayerState.Pending,
                 (TEST_PLAYER2.md5): PlayerState.Pending,

@@ -4,7 +4,6 @@ import com.jtbdevelopment.TwistedBattleship.exceptions.NoEmergencyManeuverAction
 import com.jtbdevelopment.TwistedBattleship.exceptions.NoShipAtCoordinateException
 import com.jtbdevelopment.TwistedBattleship.rest.handlers.helpers.FogCoordinatesGenerator
 import com.jtbdevelopment.TwistedBattleship.rest.handlers.helpers.ShipRelocator
-import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
@@ -24,9 +23,9 @@ class EvasiveManeuverHandlerTest extends AbstractBaseHandlerTest {
     }
 
     void testMovesRequired() {
-        TBGame game = new TBGame()
+        TBGame game = new TBGame(movesForSpecials: 1)
         assert 1 == handler.movesRequired(game)
-        game.features.add(GameFeature.PerShip)
+        game = new TBGame(movesForSpecials: 2)
         assert 2 == handler.movesRequired(game)
     }
 

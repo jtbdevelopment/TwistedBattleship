@@ -19,4 +19,5 @@ class TBMaskedGame extends AbstractMaskedMultiPlayerGame<GameFeature> {
     //  TODO support non-symmetrical
     int gridSize
     int remainingMoves
+    int movesForSpecials
 }

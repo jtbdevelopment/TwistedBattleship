@@ -30,6 +30,7 @@ class TBGameMaskerTest extends MongoGameCoreTestCase {
                 gridSize: 10,
                 players: [PONE, PTWO, PTHREE],
                 currentPlayer: PTHREE.id,
+                movesForSpecials: -2,
                 remainingMoves: 4,
                 initiatingPlayer: PTHREE.id,
                 generalMessage: "All hands on deck!",
@@ -82,6 +83,7 @@ class TBGameMaskerTest extends MongoGameCoreTestCase {
         TBMaskedGame maskedGame = masker.maskGameForPlayer(game, PONE)
         assert maskedGame
         assert game.gridSize == maskedGame.gridSize
+        assert game.movesForSpecials == maskedGame.movesForSpecials
         assert "All hands on deck!" == maskedGame.generalMessage
         assert [(PONE.md5): true, (PTWO.md5): false, (PTHREE.md5): false] == maskedGame.playersAlive
         assert [(PONE.md5): 70, (PTWO.md5): 40, (PTHREE.md5): 20] == maskedGame.playersScore

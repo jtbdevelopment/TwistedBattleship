@@ -39,9 +39,9 @@ class SpyHandlerTest extends AbstractBaseHandlerTest {
     }
 
     void testMovesRequired() {
-        TBGame game = new TBGame()
+        TBGame game = new TBGame(movesForSpecials: 1)
         assert 1 == handler.movesRequired(game)
-        game.features.add(GameFeature.PerShip)
+        game = new TBGame(movesForSpecials: 2)
         assert 2 == handler.movesRequired(game)
     }
 

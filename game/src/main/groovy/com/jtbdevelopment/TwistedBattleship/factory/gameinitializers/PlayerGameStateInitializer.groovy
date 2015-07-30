@@ -30,6 +30,7 @@ class PlayerGameStateInitializer implements GameInitializer<TBGame> {
         game.gridSize = sizeMap[game.features.find { GameFeature it -> it.group == GameFeature.GridSize }]
         game.currentPlayer = game.players[0].id
         game.remainingMoves = game.features.contains(GameFeature.Single) ? 1 : Ship.values().size()
+        game.movesForSpecials = game.features.contains(GameFeature.PerShip) ? 2 : 1
         game.players.each {
             Player<ObjectId> p ->
                 Set<Player> opponents = new HashSet<Player>(game.players)
