@@ -13,6 +13,14 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
             $scope.showing = $scope.player.md5;
             $scope.generalShipInfo = [];
 
+            $scope.fire = function () {
+                var cell = tbsShipGrid.selectedCell();
+                if (cell.x === -1 || cell.y === -1) {
+                    //  TODO
+                }
+                tbsActions.fire($scope, $scope.showing, cell);
+            };
+
             $scope.quit = function () {
                 tbsActions.quit($scope);
             };

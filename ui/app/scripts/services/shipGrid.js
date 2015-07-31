@@ -103,7 +103,7 @@ angular.module('tbs.services').factory('tbsShipGrid',
                     var col = 0;
                     angular.forEach(cellMarkerRow, function (cellMarkerCell) {
                         var type = angular.lowercase(cellMarkerCell);
-                        var marker = phaser.add.sprite(row * CELL_SIZE, col * CELL_SIZE, type, 0);
+                        var marker = phaser.add.sprite(col * CELL_SIZE, row * CELL_SIZE, type, 0);
                         rowArray.push(marker);
                         ++col;
                     });
@@ -149,8 +149,8 @@ angular.module('tbs.services').factory('tbsShipGrid',
                 if (y !== highlightY || x !== highlightX) {
                     highlightSprite.x = x;
                     highlightSprite.y = y;
-                    highlightX = x;
-                    highlightY = y;
+                    highlightX = x / CELL_SIZE;
+                    highlightY = y / CELL_SIZE;
                 }
             }
 
@@ -208,16 +208,20 @@ angular.module('tbs.services').factory('tbsShipGrid',
                 halfCellSize: function () {
                     return HALF_CELL_SIZE;
                 },
+
+                activateHighlighting: function () {
+                    this.onTap(highlightCell);
+                },
+                selectedCell: function () {
+                    return {x: highlightX, y: highlightY};
+                },
+
                 computeShipCorners: function (shipData) {
                     computeShipCorners(shipData);
                 },
 
                 currentMouseCoordinates: function () {
                     return currentMouseCoordinates();
-                },
-
-                activateHighlighting: function () {
-                    this.onTap(highlightCell);
                 },
 
                 findShipByMouseCoordinates: function () {
