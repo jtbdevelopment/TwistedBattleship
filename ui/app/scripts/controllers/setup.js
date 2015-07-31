@@ -190,6 +190,9 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                 }
             );
 
+            $scope.$on('$ionicView.leave', function () {
+                tbsShipGrid.stop();
+            });
         }
     ]
 );
