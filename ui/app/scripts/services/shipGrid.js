@@ -16,6 +16,7 @@ angular.module('tbs.services').factory('tbsShipGrid',
             var phaser;
 
             var postCreateFunction;
+            var highlightCallback;
 
             function preload() {
                 var json = gameHeight === 1000 ? '10x10.json' : gameHeight === 2000 ? '20x20.json' : '15x15.json';
@@ -23,6 +24,7 @@ angular.module('tbs.services').factory('tbsShipGrid',
                     highlightSprite.destroy();
                 }
                 highlightSprite = null;
+                highlightCallback = null;
                 highlightX = -1;
                 highlightY = -1;
                 phaser.load.tilemap('grid', '/templates/gamefiles/' + json, null, Phaser.Tilemap.TILED_JSON);
@@ -152,6 +154,22 @@ angular.module('tbs.services').factory('tbsShipGrid',
                     highlightX = x / CELL_SIZE;
                     highlightY = y / CELL_SIZE;
                 }
+                if (highlightCallback !== null) {
+                    highlightCallback();
+                }
+            }
+
+            function findShipByCoordinates(coords) {
+                for (var i = 0; i < shipsOnGrid.length; ++i) {
+                    var shipOnGrid = shipsOnGrid[i];
+                    if (coords.x >= shipOnGrid.startX &&
+                        coords.y >= shipOnGrid.startY &&
+                        coords.x < shipOnGrid.endX &&
+                        coords.y < shipOnGrid.endY) {
+                        return shipOnGrid;
+                    }
+                }
+                return null;
             }
 
             function placeShips() {
@@ -209,11 +227,15 @@ angular.module('tbs.services').factory('tbsShipGrid',
                     return HALF_CELL_SIZE;
                 },
 
-                activateHighlighting: function () {
+                activateHighlighting: function (highlightCB) {
+                    highlightCallback = highlightCB;
                     this.onTap(highlightCell);
                 },
                 selectedCell: function () {
                     return {x: highlightX, y: highlightY};
+                },
+                selectedShip: function () {
+                    return findShipByCoordinates({x: highlightX * CELL_SIZE, y: highlightY * CELL_SIZE});
                 },
 
                 computeShipCorners: function (shipData) {
@@ -225,17 +247,7 @@ angular.module('tbs.services').factory('tbsShipGrid',
                 },
 
                 findShipByMouseCoordinates: function () {
-                    var coords = currentMouseCoordinates();
-                    for (var i = 0; i < shipsOnGrid.length; ++i) {
-                        var shipOnGrid = shipsOnGrid[i];
-                        if (coords.x >= shipOnGrid.startX &&
-                            coords.y >= shipOnGrid.startY &&
-                            coords.x < shipOnGrid.endX &&
-                            coords.y < shipOnGrid.endY) {
-                            return shipOnGrid;
-                        }
-                    }
-                    return null;
+                    return findShipByCoordinates(currentMouseCoordinates());
                 },
 
                 onMove: function (cb) {

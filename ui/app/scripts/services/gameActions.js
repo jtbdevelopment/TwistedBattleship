@@ -18,14 +18,28 @@ angular.module('tbs.services').factory('tbsActions',
             }
 
             function gameURL($scope) {
-                return jtbPlayerService.currentPlayerBaseURL() + '/game/' + $scope.gameID;
+                return jtbPlayerService.currentPlayerBaseURL() + '/game/' + $scope.gameID + '/';
+            }
+
+            function createTarget(opponent, cell) {
+                return {player: opponent, coordinate: {row: cell.y, column: cell.x}};
+            }
+
+            function makeMove($scope, action, opponent, cell) {
+                $http.put(gameURL($scope) + action, createTarget(opponent, cell)).success(function (data) {
+                    updateGame($scope, data);
+                    $scope.changePlayer($scope.showing);
+                }).error(function (data, status, headers, config) {
+                    //  TODO
+                    console.error(data + status + headers + config);
+                });
             }
 
             return {
                 accept: function ($scope) {
 //  TODO
 //                twAds.showAdPopup().result.then(function () {
-                    $http.put(gameURL($scope) + '/accept').success(function (data) {
+                    $http.put(gameURL($scope) + 'accept').success(function (data) {
                         updateGame($scope, data);
                         //twGameDisplay.processGameUpdateForScope($scope, data);
                     }).error(function (data, status, headers, config) {
@@ -40,7 +54,7 @@ angular.module('tbs.services').factory('tbsActions',
 //  TODO
 //                var modal = showConfirmDialog();
                     //               modal.result.then(function () {
-                    $http.put(gameURL($scope) + '/reject').success(function (data) {
+                    $http.put(gameURL($scope) + 'reject').success(function (data) {
                         updateGame($scope, data);
                         //twGameDisplay.processGameUpdateForScope($scope, data);
                     }).error(function (data, status, headers, config) {
@@ -55,7 +69,7 @@ angular.module('tbs.services').factory('tbsActions',
 //  TODO
 //                var modal = showConfirmDialog();
                     //               modal.result.then(function () {
-                    $http.put(gameURL($scope) + '/quit').success(function (data) {
+                    $http.put(gameURL($scope) + 'quit').success(function (data) {
                         updateGame($scope, data);
                         //twGameDisplay.processGameUpdateForScope($scope, data);
                     }).error(function (data, status, headers, config) {
@@ -67,7 +81,7 @@ angular.module('tbs.services').factory('tbsActions',
                 },
 
                 setup: function ($scope, positions) {
-                    $http.put(gameURL($scope) + '/setup', positions).success(function (data) {
+                    $http.put(gameURL($scope) + 'setup', positions).success(function (data) {
                         updateGame($scope, data);
                     }).error(function (data, status, headers, config) {
                         //  TODO
@@ -76,15 +90,23 @@ angular.module('tbs.services').factory('tbsActions',
                 },
 
                 fire: function ($scope, opponent, cell) {
-                    var target = {player: opponent, coordinate: {row: cell.y, column: cell.x}};
-                    $http.put(gameURL($scope) + '/fire', target).success(function (data) {
-                        updateGame($scope, data);
-                        console.log(JSON.stringify(data.maskedPlayersState.lastActionMessage));
-                        tbsShipGrid.placeCellMarkers(data.maskedPlayersState.opponentGrids[$scope.showing].table);
-                    }).error(function (data, status, headers, config) {
-                        //  TODO
-                        console.error(data + status + headers + config);
-                    });
+                    makeMove($scope, 'fire', opponent, cell);
+                },
+
+                spy: function ($scope, opponent, cell) {
+                    makeMove($scope, 'spy', opponent, cell);
+                },
+
+                repair: function ($scope, opponent, cell) {
+                    makeMove($scope, 'repair', opponent, cell);
+                },
+
+                move: function ($scope, opponent, cell) {
+                    makeMove($scope, 'move', opponent, cell);
+                },
+
+                ecm: function ($scope, opponent, cell) {
+                    makeMove($scope, 'ecm', opponent, cell);
                 }
             };
         }

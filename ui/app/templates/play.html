@@ -31,11 +31,12 @@
                             ECM
                         </button>
                         <button class="button ion-{{gameDetails.iconForFeature('EMEnabled')}}"
-                                ng-disabled="!gameDetails.evasiveMovePossible(game, player.md5)"
+                                ng-disabled="!(gameDetails.evasiveMovePossible(game, player.md5) && shipHighlighted)"
                                 ng-click="move()"> Move
                         </button>
                         <button class="button ion-{{gameDetails.iconForFeature('EREnabled')}}"
-                                ng-disabled="!gameDetails.repairPossible(game, player.md5)" ng-click="repair()">
+                                ng-disabled="!(gameDetails.repairPossible(game, player.md5) && shipHighlighted)"
+                                ng-click="repair()">
                             Fix
                         </button>
                     </div>
@@ -44,7 +45,7 @@
                     <div class="button-bar">
                         <button class="button ion-navigate" ng-click="fire()"> Fire</button>
                         <button class="button ion-{{gameDetails.iconForFeature('SpyEnabled')}}"
-                                ng-disabled="!gameDetails.repairPossible(game, player.md5)" ng-click="spy()"> Spy
+                                ng-disabled="!gameDetails.spyPossible(game, player.md5)" ng-click="spy()"> Spy
                         </button>
                     </div>
                 </div>

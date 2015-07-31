@@ -12,6 +12,7 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
             $scope.player = angular.copy(jtbPlayerService.currentPlayer(), $scope.player);
             $scope.showing = $scope.player.md5;
             $scope.generalShipInfo = [];
+            $scope.shipHighlighted = false;
 
             $scope.fire = function () {
                 var cell = tbsShipGrid.selectedCell();
@@ -19,6 +20,38 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
                     //  TODO
                 }
                 tbsActions.fire($scope, $scope.showing, cell);
+            };
+
+            $scope.move = function () {
+                var cell = tbsShipGrid.selectedCell();
+                if (cell.x === -1 || cell.y === -1) {
+                    //  TODO
+                }
+                tbsActions.move($scope, $scope.showing, cell);
+            };
+
+            $scope.spy = function () {
+                var cell = tbsShipGrid.selectedCell();
+                if (cell.x === -1 || cell.y === -1) {
+                    //  TODO
+                }
+                tbsActions.spy($scope, $scope.showing, cell);
+            };
+
+            $scope.repair = function () {
+                var cell = tbsShipGrid.selectedCell();
+                if (cell.x === -1 || cell.y === -1) {
+                    //  TODO
+                }
+                tbsActions.repair($scope, $scope.showing, cell);
+            };
+
+            $scope.ecm = function () {
+                var cell = tbsShipGrid.selectedCell();
+                if (cell.x === -1 || cell.y === -1) {
+                    //  TODO
+                }
+                tbsActions.ecm($scope, $scope.showing, cell);
             };
 
             $scope.quit = function () {
@@ -51,12 +84,17 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
                 return shipLocations;
             }
 
+            function highlightCallback() {
+                $scope.shipHighlighted = (tbsShipGrid.selectedShip() !== null);
+                $scope.$apply();
+            }
+
             tbsShips.ships().then(
                 function (generalShipInfo) {
                     $scope.generalShipInfo = generalShipInfo;
                     tbsShipGrid.initialize($scope.theme, $scope.game, [], [], function () {
                         $scope.changePlayer($scope.showing);
-                        tbsShipGrid.activateHighlighting();
+                        tbsShipGrid.activateHighlighting(highlightCallback);
                     });
                 },
                 function () {
