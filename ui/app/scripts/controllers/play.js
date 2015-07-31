@@ -14,7 +14,6 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
             $scope.generalShipInfo = [];
             $scope.shipHighlighted = false;
 
-
             $scope.fire = function () {
                 var cell = tbsShipGrid.selectedCell();
                 if (cell.x === -1 || cell.y === -1) {
@@ -103,6 +102,9 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
                 }
             );
 
+            $scope.$on('$ionicView.leave', function () {
+                tbsShipGrid.stop();
+            });
             $scope.$on('gameUpdated', function (event, oldGame, newGame) {
                 if ($scope.gameID === newGame.id) {
                     $scope.game = newGame;
