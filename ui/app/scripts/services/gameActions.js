@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('tbs.services').factory('tbsActions',
-    ['$http', '$state', 'jtbGameCache', 'jtbPlayerService', 'tbsShipGrid',
-        function ($http, $state, jtbGameCache, jtbPlayerService, tbsShipGrid) {
+    ['$http', '$state', 'jtbGameCache', 'jtbPlayerService',
+        function ($http, $state, jtbGameCache, jtbPlayerService) {
             function updateGame($scope, updatedGame) {
                 var currentPhase = $scope.game.gamePhase;
                 $scope.game = updatedGame;
@@ -28,7 +28,6 @@ angular.module('tbs.services').factory('tbsActions',
             function makeMove($scope, action, opponent, cell) {
                 $http.put(gameURL($scope) + action, createTarget(opponent, cell)).success(function (data) {
                     updateGame($scope, data);
-                    $scope.changePlayer($scope.showing);
                 }).error(function (data, status, headers, config) {
                     //  TODO
                     console.error(data + status + headers + config);
