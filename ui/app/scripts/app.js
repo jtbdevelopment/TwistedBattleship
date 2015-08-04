@@ -37,6 +37,16 @@ angular.module('tbs', ['ionic', 'ngCookies', 'tbs.controllers', 'tbs.directives'
                 }
                 return config;
             },
+            //  TODO?
+            'responseError': function (rejection) {
+                console.log('responseError:' + JSON.stringify(rejection));
+                $q.reject(rejection);
+            },
+            //  TODO
+            'requestError': function (rejection) {
+                console.log('requestError:' + JSON.stringify(rejection));
+                $q.reject(rejection);
+            },
             'response': function (response) {
                 return response;
             }

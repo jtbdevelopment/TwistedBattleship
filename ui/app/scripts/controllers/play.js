@@ -1,5 +1,9 @@
 'use strict';
 
+var ALL = 'ALL';
+var VIEWING_SELF = 'Viewing Self';
+var VIEWING_OPPONENT = 'Viewing Opponent';
+
 angular.module('tbs.controllers').controller('PlayGameCtrl',
     ['$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', '$ionicSideMenuDelegate', 'tbsShips', 'tbsShipGrid', // 'twAds',
         function ($scope, tbsGameDetails, tbsActions, jtbGameCache, jtbPlayerService, $state, $ionicSideMenuDelegate, tbsShips, tbsShipGrid /*, twAds*/) {
@@ -10,9 +14,14 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
             $scope.gameDetails = tbsGameDetails;
             $scope.player = {};
             $scope.player = angular.copy(jtbPlayerService.currentPlayer(), $scope.player);
-            $scope.showing = $scope.player.md5;
+            $scope.showing = ALL;
+            $scope.showingSelf = true;
+            $scope.switchViewText = VIEWING_SELF;
+
             $scope.generalShipInfo = [];
             $scope.shipHighlighted = false;
+
+            //  TODO - disable actions on 'ALL'
 
             $scope.fire = function () {
                 var cell = tbsShipGrid.selectedCell();
@@ -59,14 +68,33 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
             };
 
             $scope.changePlayer = function (md5) {
-                if (md5 === $scope.player.md5) {
+                if (md5 === ALL) {
                     tbsShipGrid.placeShips(computeShipLocations());
                     tbsShipGrid.placeCellMarkers($scope.game.maskedPlayersState.consolidatedOpponentView.table);
                 } else {
-                    tbsShipGrid.placeShips([]);
-                    tbsShipGrid.placeCellMarkers($scope.game.maskedPlayersState.opponentGrids[md5].table);
+                    if ($scope.showingSelf) {
+                        tbsShipGrid.placeShips(computeShipLocations());
+                        tbsShipGrid.placeCellMarkers($scope.game.maskedPlayersState.opponentViews[md5].table);
+                    } else {
+                        tbsShipGrid.placeShips([]);
+                        tbsShipGrid.placeCellMarkers($scope.game.maskedPlayersState.opponentGrids[md5].table);
+                    }
                 }
                 $scope.showing = md5;
+            };
+
+            $scope.switchView = function () {
+                $scope.showingSelf = !($scope.showingSelf);
+                if (!$scope.showingSelf && $scope.showing === ALL) {
+                    var keys = Object.keys($scope.game.players);
+                    if (keys[0] === $scope.player.md5) {
+                        $scope.showing = keys[1];
+                    } else {
+                        $scope.showing = keys[0];
+                    }
+                }
+                $scope.changePlayer($scope.showing);
+                $scope.switchViewText = $scope.showingSelf ? VIEWING_SELF : VIEWING_OPPONENT;
             };
 
             function computeShipLocations() {

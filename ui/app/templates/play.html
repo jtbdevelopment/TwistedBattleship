@@ -23,44 +23,52 @@
                 <div class="item">
                     Moves Remaining: <span class="badge">{{game.remainingMoves}}</span>
                 </div>
-                <div class="item" ng-show="showing == player.md5 && gameDetails.playerCanPlay(game, player.md5)">
+                <div class="item" ng-show="showingSelf && gameDetails.playerCanPlay(game, player.md5)">
                     <div class="button-bar">
-                        <button class="button ion-{{gameDetails.iconForFeature('ECMEnabled')}}"
+                        <button class="button icon-left ion-{{gameDetails.iconForFeature('ECMEnabled')}}"
                                 ng-disabled="!gameDetails.ecmPossible(game, player.md5)"
                                 ng-click="ecm()">
                             ECM
                         </button>
-                        <button class="button ion-{{gameDetails.iconForFeature('EMEnabled')}}"
+                        <button class="button icon-left ion-{{gameDetails.iconForFeature('EMEnabled')}}"
                                 ng-disabled="!(gameDetails.evasiveMovePossible(game, player.md5) && shipHighlighted)"
                                 ng-click="move()"> Move
                         </button>
-                        <button class="button ion-{{gameDetails.iconForFeature('EREnabled')}}"
+                        <button class="button icon-left ion-{{gameDetails.iconForFeature('EREnabled')}}"
                                 ng-disabled="!(gameDetails.repairPossible(game, player.md5) && shipHighlighted)"
                                 ng-click="repair()">
                             Fix
                         </button>
                     </div>
                 </div>
-                <div class="item" ng-show="showing != player.md5 && gameDetails.playerCanPlay(game, player.md5)">
+                <div class="item" ng-show="!showingSelf && gameDetails.playerCanPlay(game, player.md5)">
                     <div class="button-bar">
-                        <button class="button ion-navigate" ng-click="fire()"> Fire</button>
-                        <button class="button ion-{{gameDetails.iconForFeature('SpyEnabled')}}"
+                        <button class="button icon-left ion-disc" ng-click="fire()"> Fire</button>
+                        <button class="button icon-left ion-{{gameDetails.iconForFeature('SpyEnabled')}}"
                                 ng-disabled="!gameDetails.spyPossible(game, player.md5)" ng-click="spy()"> Spy
                         </button>
                     </div>
                 </div>
+                <div class="item">
+                    <div class="button-bar">
+                        <button class="button button-positive icon-left ion-toggle-filled" ng-click="switchView()">
+                            {{switchViewText}}
+                        </button>
+                    </div>
+                </div>
                 <!--  TODO - highlight entire item  -->
-                <div class="item item-avatar item-icon-right {{showing == md5 ? 'energized' : ''}}"
-                     ng-repeat="(md5, name) in game.players | orderBy:name" ng-click="changePlayer(md5)">
+                <div class="item item-avatar {{showing == md5 ? 'energized' : ''}}"
+                     ng-repeat="(md5, name) in game.players | orderBy:name" ng-click="changePlayer(md5)"
+                     ng-hide="md5 === player.md5">
                     <img ng-src="{{gameDetails.imageForPlayer(game, md5)}}">
-                    {{name}}<span class="badge">{{game.playersScore[md5]}}</span>
-                <span class="{{gameDetails.playerCanPlay(game, md5) ? 'assertive' : 'balanced'}}">
-                    <i class="icon ion-{{gameDetails.playerCanPlay(game, md5) ? 'play' : 'pause'}}"></i>
-                </span>
+                    {{name}}<span class="badge">Score: {{game.playersScore[md5]}}</span>
+                </div>
+                <div class="item {{showing == 'ALL' ? 'energized' : ''}}" ng-show="showingSelf"
+                     ng-click="changePlayer('ALL')">Composite
                 </div>
                 <div class="item">
                     <div class="button-bar">
-                        <button class="button button-assertive ion-flag" ng-click="quit()"> Quit</button>
+                        <button class="button button-assertive icon-left ion-flag" ng-click="quit()"> Quit</button>
                     </div>
                 </div>
             </div>
