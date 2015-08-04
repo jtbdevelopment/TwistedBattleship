@@ -1,3 +1,3 @@
 'use strict';
 
-angular.module('tbs.services', []);
+angular.module('tbs.services', ['coreGamesUi']);

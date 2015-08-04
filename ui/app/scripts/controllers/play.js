@@ -1,8 +1,8 @@
 'use strict';
 
 var ALL = 'ALL';
-var VIEWING_SELF = 'Viewing Self';
-var VIEWING_OPPONENT = 'Viewing Opponent';
+var VIEWING_SELF = 'You seen by:';
+var VIEWING_OPPONENT = 'Your opponent(s):';
 
 angular.module('tbs.controllers').controller('PlayGameCtrl',
     ['$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', '$ionicSideMenuDelegate', 'tbsShips', 'tbsShipGrid', // 'twAds',
@@ -21,14 +21,12 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
             $scope.generalShipInfo = [];
             $scope.shipHighlighted = false;
 
-            //  TODO - disable actions on 'ALL'
-
             $scope.fire = function () {
                 var cell = tbsShipGrid.selectedCell();
                 if (cell.x === -1 || cell.y === -1) {
                     //  TODO
                 }
-                tbsActions.fire($scope, $scope.showing, cell);
+                tbsActions.fire($scope, $scope.showingSelf ? $scope.player.md5 : $scope.showing, cell);
             };
 
             $scope.move = function () {
@@ -36,7 +34,7 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
                 if (cell.x === -1 || cell.y === -1) {
                     //  TODO
                 }
-                tbsActions.move($scope, $scope.showing, cell);
+                tbsActions.move($scope, $scope.showingSelf ? $scope.player.md5 : $scope.showing, cell);
             };
 
             $scope.spy = function () {
@@ -44,7 +42,7 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
                 if (cell.x === -1 || cell.y === -1) {
                     //  TODO
                 }
-                tbsActions.spy($scope, $scope.showing, cell);
+                tbsActions.spy($scope, $scope.showingSelf ? $scope.player.md5 : $scope.showing, cell);
             };
 
             $scope.repair = function () {
@@ -52,7 +50,7 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
                 if (cell.x === -1 || cell.y === -1) {
                     //  TODO
                 }
-                tbsActions.repair($scope, $scope.showing, cell);
+                tbsActions.repair($scope, $scope.showingSelf ? $scope.player.md5 : $scope.showing, cell);
             };
 
             $scope.ecm = function () {
@@ -60,7 +58,7 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
                 if (cell.x === -1 || cell.y === -1) {
                     //  TODO
                 }
-                tbsActions.ecm($scope, $scope.showing, cell);
+                tbsActions.ecm($scope, $scope.showingSelf ? $scope.player.md5 : $scope.showing, cell);
             };
 
             $scope.quit = function () {

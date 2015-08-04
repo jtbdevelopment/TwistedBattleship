@@ -11,17 +11,19 @@
             Repairs: {{game.maskedPlayersState.emergencyRepairsRemaining}}
             Evasives: {{game.maskedPlayersState.evasiveManeuversRemaining}}
             {{game.generalMessage}}
-            {{game.maskedPlayersState.lastActionMessage}}
         </h1>
     </ion-header-bar>
     <ion-content has-bouncing="false">
         <div class="row">
             <div class="list col-20">
                 <div class="item">
-                    Current Turn: <span class="item-note">{{game.players[game.currentPlayer]}}</span>
+                    Current Turn: <span class="badge">{{game.players[game.currentPlayer]}}</span>
                 </div>
                 <div class="item">
                     Moves Remaining: <span class="badge">{{game.remainingMoves}}</span>
+                </div>
+                <div class="item">
+                    Your Score: <span class="badge">{{game.playersScore[player.md5]}}</span>
                 </div>
                 <div class="item" ng-show="showingSelf && gameDetails.playerCanPlay(game, player.md5)">
                     <div class="button-bar">
@@ -57,14 +59,16 @@
                     </div>
                 </div>
                 <!--  TODO - highlight entire item  -->
+                <div class="item item-avatar {{showing == 'ALL' ? 'energized' : ''}}" ng-show="showingSelf"
+                     ng-click="changePlayer('ALL')">
+                    <img ng-src="{{gameDetails.imageForPlayer(game, 'ALL')}}">
+                    Combined Opponents
+                </div>
                 <div class="item item-avatar {{showing == md5 ? 'energized' : ''}}"
                      ng-repeat="(md5, name) in game.players | orderBy:name" ng-click="changePlayer(md5)"
                      ng-hide="md5 === player.md5">
                     <img ng-src="{{gameDetails.imageForPlayer(game, md5)}}">
                     {{name}}<span class="badge">Score: {{game.playersScore[md5]}}</span>
-                </div>
-                <div class="item {{showing == 'ALL' ? 'energized' : ''}}" ng-show="showingSelf"
-                     ng-click="changePlayer('ALL')">Composite
                 </div>
                 <div class="item">
                     <div class="button-bar">
