@@ -62,8 +62,12 @@ angular.module('tbs.controllers')
                 $scope.message = 'Logging in via Facebook';
                 clearHttpCache();
                 //  TODO - make $http instead?
-                //  TODO - forsce a refresh games in here
+                //  TODO - force a refresh games in here/reload all
                 $window.location = ENV.apiEndpoint + '/auth/facebook';
+            }
+
+            function clearHttpCache() {
+                $cacheFactory.get('$http').removeAll();
             }
 
             jtbFacebook.canAutoSignIn().then(function (details) {
@@ -78,9 +82,17 @@ angular.module('tbs.controllers')
                 showLoginOptions();
             });
 
-            function clearHttpCache() {
-                $cacheFactory.get('$http').removeAll();
-            }
+            $scope.fbLogin = function () {
+                jtbFacebook.initiateFBLogin().then(function (details) {
+                    if (!details.auto) {
+                        showLoginOptions();
+                    } else {
+                        autoLogin();
+                    }
+                }, function () {
+                    showLoginOptions();
+                });
+            };
         }
     ]
 );

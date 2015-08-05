@@ -10,10 +10,8 @@
             </div>
 
             <div class="list" ng-show="showFacebook">
-                <span class="item item-button">
-                    <fb:login-button scope="{{facebookPermissions}}"
-                                     onlogin="window.location.reload()"></fb:login-button>
-                </span>
+                <a class="item item-button" href="#" ng-click="fbLogin()"><img
+                        ng-src="/images/sign-in-with-facebook.png"/></a>
             </div>
 
             <div class="list" ng-show="showManual">
