@@ -66,13 +66,9 @@ angular.module('tbs', ['ionic', 'ngCookies', 'tbs.controllers', 'tbs.directives'
                 abstract: true,
                 templateUrl: 'templates/menu.html'
             })
-            .state('app.signin', {
+            .state('signin', {
                 url: '/signin',
-                views: {
-                    'menuContent': {
-                        templateUrl: 'templates/signin.html'
-                    }
-                }
+                templateUrl: 'templates/signin.html'
             })
             .state('app.create', {
                 url: '/create',
@@ -153,5 +149,5 @@ angular.module('tbs', ['ionic', 'ngCookies', 'tbs.controllers', 'tbs.directives'
         ;
 
         // if none of the above states are matched, use this as the fallback
-        $urlRouterProvider.otherwise('/app/signin');
+        $urlRouterProvider.otherwise('/signin');
     });
