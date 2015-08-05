@@ -5,8 +5,8 @@ var VIEWING_SELF = 'You seen by:';
 var VIEWING_OPPONENT = 'Your opponent(s):';
 
 angular.module('tbs.controllers').controller('PlayGameCtrl',
-    ['$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', '$ionicSideMenuDelegate', 'tbsShips', 'tbsShipGrid', // 'twAds',
-        function ($scope, tbsGameDetails, tbsActions, jtbGameCache, jtbPlayerService, $state, $ionicSideMenuDelegate, tbsShips, tbsShipGrid /*, twAds*/) {
+    ['$rootScope', '$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', '$ionicSideMenuDelegate', 'tbsShips', 'tbsShipGrid', '$ionicModal', // 'twAds',
+        function ($rootScope, $scope, tbsGameDetails, tbsActions, jtbGameCache, jtbPlayerService, $state, $ionicSideMenuDelegate, tbsShips, tbsShipGrid, $ionicModal /*, twAds*/) {
             $ionicSideMenuDelegate.canDragContent(false);
             $scope.theme = 'default';
             $scope.gameID = $state.params.gameID;
@@ -20,6 +20,17 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
 
             $scope.generalShipInfo = [];
             $scope.shipHighlighted = false;
+
+            $scope.modalScope = $rootScope.$new();
+            $ionicModal.fromTemplateUrl('templates/messageBox.html', {
+                scope: $scope.modalScope,
+                animation: 'slide-in-up'
+            }).then(function (modal) {
+                $scope.modal = modal;
+                $scope.modalScope.close = function () {
+                    $scope.modal.hide();
+                };
+            });
 
             $scope.fire = function () {
                 var cell = tbsShipGrid.selectedCell();
@@ -131,10 +142,19 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
             $scope.$on('$ionicView.leave', function () {
                 tbsShipGrid.stop();
             });
+            $scope.$on('$destroy', function () {
+                $scope.modal.remove();
+            });
+
             $scope.$on('gameUpdated', function (event, oldGame, newGame) {
                 if ($scope.gameID === newGame.id) {
                     $scope.game = newGame;
                     $scope.changePlayer($scope.showing);
+                    var message = $scope.game.maskedPlayersState.lastActionMessage;
+                    if (angular.isDefined(message) && message !== '') {
+                        $scope.modalScope.lastMessage = message;
+                        $scope.modal.show();
+                    }
                 }
             });
         }

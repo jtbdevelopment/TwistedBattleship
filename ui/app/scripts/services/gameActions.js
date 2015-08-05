@@ -1,17 +1,23 @@
 'use strict';
 
 angular.module('tbs.services').factory('tbsActions',
-    ['$http', '$state', 'jtbGameCache', 'jtbPlayerService',
-        function ($http, $state, jtbGameCache, jtbPlayerService) {
+    ['$http', '$state', 'jtbGameCache', 'jtbPlayerService', '$ionicHistory',
+        function ($http, $state, jtbGameCache, jtbPlayerService, $ionicHistory) {
             function updateGame($scope, updatedGame) {
                 var currentPhase = $scope.game.gamePhase;
                 $scope.game = updatedGame;
                 jtbGameCache.putUpdatedGame(updatedGame);
                 //  TODO - review this concept
                 if ($scope.game.gamePhase !== currentPhase) {
+                    $ionicHistory.nextViewOptions({
+                        disableBack: true
+                    });
                     $state.go('app.' + $scope.game.gamePhase.toLowerCase(), {gameID: $scope.gameID});
                 } else {
                     if ($scope.game.gamePhase !== 'Playing') {
+                        $ionicHistory.nextViewOptions({
+                            disableBack: true
+                        });
                         $state.go('app.games');
                     }
                 }

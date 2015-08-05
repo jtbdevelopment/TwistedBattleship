@@ -3,8 +3,8 @@
 var MAX_OPPONENTS = 5;
 
 angular.module('tbs.controllers').controller('CreateGameCtrl',
-    ['friends', 'features', '$scope', 'jtbGameCache', 'jtbPlayerService', 'jtbFacebook', '$http', '$state', '$location', 'tbsGameDetails', '$ionicModal',// 'twAds',
-        function (friends, features, $scope, jtbGameCache, jtbPlayerService, jtbFacebook, $http, $state, $location, tbsGameDetails, $ionicModal/*, twAds*/) {
+    ['friends', 'features', '$scope', 'jtbGameCache', 'jtbPlayerService', 'jtbFacebook', '$http', '$state', '$location', 'tbsGameDetails', '$ionicModal', '$ionicHistory',// 'twAds',
+        function (friends, features, $scope, jtbGameCache, jtbPlayerService, jtbFacebook, $http, $state, $location, tbsGameDetails, $ionicModal, $ionicHistory/*, twAds*/) {
 
             $scope.playerChoices = [];
             $scope.alerts = [];
@@ -158,6 +158,9 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
                 var playersAndFeatures = {'players': players, 'features': features};
                 $http.post(jtbPlayerService.currentPlayerBaseURL() + '/new', playersAndFeatures).success(function (data) {
                     jtbGameCache.putUpdatedGame(data);
+                    $ionicHistory.nextViewOptions({
+                        disableBack: true
+                    });
                     $state.go('app.challenged', {gameID: data.id});
                 }).error(function (data, status, headers, config) {
                     //  TODO
