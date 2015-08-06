@@ -1,20 +1,21 @@
 <!--  TODO - help -->
 <ion-view>
-    <ion-header-bar>
+    <ion-footer-bar>
         <game-summary-bar></game-summary-bar>
-    </ion-header-bar>
-    <ion-content has-bouncing="false">
+    </ion-footer-bar>
+    <ion-content has-bouncing="false" overflow-scroll="true">
         <div class="row">
             <div class="list col-20">
                 <div class="item">
-                    <button class="button button-positive button-block ion-checkmark" ng-disabled="submitDisabled"
+                    <button class="button button-positive button-block icon-left ion-checkmark"
+                            ng-disabled="submitDisabled"
                             ng-click="submit()">
                         Save
                     </button>
                 </div>
                 <div class="item">
-                    <button class="button button-full button-assertive ion-flag" ng-click="quit()">
-                        Quit
+                    <button class="button button-full button-assertive icon-left ion-flag" ng-click="quit()">
+                        Surrender
                     </button>
                 </div>
                 <div class="item item-avatar item-icon-right"

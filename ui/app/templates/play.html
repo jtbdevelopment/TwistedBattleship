@@ -1,9 +1,9 @@
 <!--  TODO - help -->
 <!--  TODO - eliminate dead people -->
-<ion-view hide-nav-bar="false">
-    <ion-header-bar>
+<ion-view>
+    <ion-footer-bar>
         <game-summary-bar></game-summary-bar>
-    </ion-header-bar>
+    </ion-footer-bar>
     <ion-header-bar class="bar-subheader">
         <h1 class="title">
             ECMS: {{game.maskedPlayersState.ecmsRemaining}}
@@ -72,7 +72,7 @@
                 </div>
                 <div class="item">
                     <div class="button-bar">
-                        <button class="button button-assertive icon-left ion-flag" ng-click="quit()"> Quit</button>
+                        <button class="button button-assertive icon-left ion-flag" ng-click="quit()"> Surrender</button>
                     </div>
                 </div>
             </div>
