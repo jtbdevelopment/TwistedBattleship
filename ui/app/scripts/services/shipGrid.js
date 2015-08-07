@@ -1,6 +1,12 @@
 /*global Phaser:false */
 'use strict';
 
+var defaultScale = {
+    10: 0.5,
+    15: 0.4,
+    20: 0.3
+};
+
 angular.module('tbs.services').factory('tbsShipGrid',
     [
         function () {
@@ -202,7 +208,7 @@ angular.module('tbs.services').factory('tbsShipGrid',
                     game = loadedGame;
                     gameWidth = game.gridSize * CELL_SIZE;
                     gameHeight = game.gridSize * CELL_SIZE;
-                    gameScale = 0.5;
+                    gameScale = defaultScale[game.gridSize];
                     shipLocations = initialShipLocations;
                     cellMarkers = initialCellMarkers;
                     postCreateFunction = postCreateCB;

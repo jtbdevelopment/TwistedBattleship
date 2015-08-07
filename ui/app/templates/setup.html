@@ -3,21 +3,9 @@
     <ion-footer-bar>
         <game-summary-bar></game-summary-bar>
     </ion-footer-bar>
-    <ion-content has-bouncing="false" overflow-scroll="true">
+    <ion-content has-bouncing="false">
         <div class="row">
             <div class="list col-20">
-                <div class="item">
-                    <button class="button button-positive button-block icon-left ion-checkmark"
-                            ng-disabled="submitDisabled"
-                            ng-click="submit()">
-                        Save
-                    </button>
-                </div>
-                <div class="item">
-                    <button class="button button-full button-assertive icon-left ion-flag" ng-click="quit()">
-                        Surrender
-                    </button>
-                </div>
                 <div class="item item-avatar item-icon-right"
                      ng-repeat="(md5, name) in game.players | orderBy:name">
                     <img ng-src="{{gameDetails.imageForPlayer(game, md5)}}">
@@ -26,6 +14,29 @@
                     <i class="icon ion-{{gameDetails.playerSetupEntryRequired(game, md5) ? 'close' : 'checkmark'}}"></i>
                 </span>
                 </div>
+
+                <div class="item item-divider"></div>
+
+                <div class="item action-item">
+                    <div class="button-bar">
+                        <button class="button button-positive icon-left ion-edit"
+                                ng-disabled="submitDisabled"
+                                ng-click="submit()">
+                            Save
+                        </button>
+                    </div>
+                </div>
+
+                <div class="item item-divider"></div>
+
+                <div class="item action-item">
+                    <div class="button-bar">
+                        <button class="button button-assertive icon-left ion-flag" ng-click="quit()">
+                            Surrender
+                        </button>
+                    </div>
+                </div>
+
             </div>
             <div id="phaser" class="col-80">
 

@@ -1,1 +1,48 @@
-// Your application styles go here
+.game-icon {
+  padding-left: 5px;
+}
+
+.list {
+  .action-item {
+    padding: 0;
+  }
+}
+
+//  Default theme - http://www.colorschemer.com/schemes/viewscheme.php?id=9133
+
+.default-theme {
+  $paler_green: #CDE6CC;
+  $darker_green: #8AC488;
+  $medium_green: #9BE199;
+  $paler_blue: #9BE1E7;
+  $medium_blue: #9BCFE7;
+  $darker_blue: #88B8C4;
+  $boatgray: #708090;
+
+  background-color: $paler_green;
+  .bar-header {
+    background-color: $medium_blue;
+  }
+  .gameState {
+    .list {
+      .newGame {
+        background-color: $medium_green;
+        color: black;
+      }
+      .item {
+        .item-content {
+          background-color: $medium_blue;
+        }
+      }
+      .item-divider {
+        #background-color: $darker_blue;
+        background-color: $boatgray;
+        color: white;
+        .badge {
+          background-color: $paler_blue;
+          color: black;
+        }
+      }
+    }
+  }
+}
