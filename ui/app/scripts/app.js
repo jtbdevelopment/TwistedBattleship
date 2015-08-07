@@ -91,7 +91,7 @@ angular.module('tbs', ['ionic', 'ngCookies', 'tbs.controllers', 'tbs.directives'
                 url: '/games',
                 views: {
                     'menuContent': {
-                        templateUrl: 'templates/gameList.html',
+                        templateUrl: 'templates/gamelist.html',
                         controller: 'MobileGameListCtrl',
                         resolve: {
                             phases: function (jtbGamePhaseService) {
