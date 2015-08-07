@@ -4,16 +4,18 @@
     <ion-footer-bar>
         <game-summary-bar></game-summary-bar>
     </ion-footer-bar>
-    <ion-header-bar class="bar-subheader">
-        <h1 class="title">
-            ECMS: {{game.maskedPlayersState.ecmsRemaining}}
-            Spies: {{game.maskedPlayersState.spysRemaining}}
-            Repairs: {{game.maskedPlayersState.emergencyRepairsRemaining}}
-            Evasives: {{game.maskedPlayersState.evasiveManeuversRemaining}}
-            {{game.generalMessage}}
-        </h1>
-    </ion-header-bar>
     <ion-content has-bouncing="false">
+        <div class="row">
+            <div class="col-50">
+                <h5 class="text-center">General: {{game.generalMessage}}</h5>
+            </div>
+            <div class="col-50">
+                <h5 class="text-center">Last Move: {{game.maskedPlayersState.lastActionMessage}}</h5>
+            </div>
+        </div>
+        <div class="row">
+
+        </div>
         <div class="row">
             <div class="list col-20">
                 <div class="item">
@@ -25,52 +27,79 @@
                 <div class="item">
                     Your Score: <span class="badge">{{game.playersScore[player.md5]}}</span>
                 </div>
-                <div class="item" ng-show="showingSelf && gameDetails.playerCanPlay(game, player.md5)">
+                <div class="item item-divider"></div>
+                <div class="item action-item">
                     <div class="button-bar">
-                        <button class="button icon-left ion-{{gameDetails.iconForFeature('ECMEnabled')}}"
-                                ng-disabled="!gameDetails.ecmPossible(game, player.md5)"
-                                ng-click="ecm()">
-                            ECM
-                        </button>
-                        <button class="button icon-left ion-{{gameDetails.iconForFeature('EMEnabled')}}"
-                                ng-disabled="!(gameDetails.evasiveMovePossible(game, player.md5) && shipHighlighted)"
-                                ng-click="move()"> Move
-                        </button>
-                        <button class="button icon-left ion-{{gameDetails.iconForFeature('EREnabled')}}"
-                                ng-disabled="!(gameDetails.repairPossible(game, player.md5) && shipHighlighted)"
-                                ng-click="repair()">
-                            Fix
-                        </button>
-                    </div>
-                </div>
-                <div class="item" ng-show="!showingSelf && gameDetails.playerCanPlay(game, player.md5)">
-                    <div class="button-bar">
-                        <button class="button icon-left ion-disc" ng-click="fire()"> Fire</button>
-                        <button class="button icon-left ion-{{gameDetails.iconForFeature('SpyEnabled')}}"
-                                ng-disabled="!gameDetails.spyPossible(game, player.md5)" ng-click="spy()"> Spy
-                        </button>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="button-bar">
-                        <button class="button button-positive icon-left ion-toggle-filled" ng-click="switchView()">
+                        <button class="button button-positive icon-left ion-toggle-filled"
+                                ng-click="switchView()">
                             {{switchViewText}}
                         </button>
                     </div>
                 </div>
-                <!--  TODO - highlight entire item  -->
-                <div class="item item-avatar {{showing == 'ALL' ? 'energized' : ''}}" ng-show="showingSelf"
+                <div class="item item-avatar {{showing == 'ALL' ? 'item-energized' : ''}}" ng-show="showingSelf"
                      ng-click="changePlayer('ALL')">
                     <img ng-src="{{gameDetails.imageForPlayer(game, 'ALL')}}">
                     Combined Opponents
                 </div>
-                <div class="item item-avatar {{showing == md5 ? 'energized' : ''}}"
+                <div class="item item-avatar {{showing == md5 ? 'item-energized' : ''}}"
                      ng-repeat="(md5, name) in game.players | orderBy:name" ng-click="changePlayer(md5)"
                      ng-hide="md5 === player.md5">
                     <img ng-src="{{gameDetails.imageForPlayer(game, md5)}}">
                     {{name}}<span class="badge">Score: {{game.playersScore[md5]}}</span>
                 </div>
-                <div class="item">
+                <div class="item item-divider"></div>
+                <div ng-show="showingSelf && gameDetails.playerCanPlay(game, player.md5)">
+                    <div class="item action-item">
+                        <div class="button-bar">
+                            <button class="button button-balanced icon-left ion-{{gameDetails.iconForFeature('ECMEnabled')}}"
+                                    ng-disabled="!gameDetails.ecmPossible(game, player.md5)"
+                                    ng-click="ecm()">
+                                ECM
+                            </button>
+                            <span class="badge badge-assertive">{{game.maskedPlayersState.ecmsRemaining}}</span>
+                        </div>
+                    </div>
+                    <div class="item action-item">
+                        <div class="button-bar">
+                            <button class="button button-balanced icon-left ion-{{gameDetails.iconForFeature('EMEnabled')}}"
+                                    ng-disabled="!(gameDetails.evasiveMovePossible(game, player.md5) && shipHighlighted)"
+                                    ng-click="move()">
+                                Evade
+                            </button>
+                            <span class="badge badge-assertive">{{game.maskedPlayersState.emergencyRepairsRemaining}}</span>
+                        </div>
+                    </div>
+                    <div class="item action-item">
+                        <div class="button-bar">
+                            <button class="button button-balanced icon-left ion-{{gameDetails.iconForFeature('EREnabled')}}"
+                                    ng-disabled="!(gameDetails.repairPossible(game, player.md5) && shipHighlighted)"
+                                    ng-click="repair()">
+                                Repair
+                            </button>
+                            <span class="badge badge-assertive">{{game.maskedPlayersState.emergencyRepairsRemaining}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div ng-show="!showingSelf && gameDetails.playerCanPlay(game, player.md5)">
+                    <div class="item action-item">
+                        <div class="button-bar">
+                            <button class="button button-balanced icon-left ion-disc" ng-click="fire()">
+                                Fire
+                            </button>
+                        </div>
+                    </div>
+                    <div class="item action-item">
+                        <div class="button-bar">
+                            <button class="button button-balanced icon-left ion-{{gameDetails.iconForFeature('SpyEnabled')}}"
+                                    ng-disabled="!gameDetails.spyPossible(game, player.md5)" ng-click="spy()">
+                                Spy
+                            </button>
+                            <span class="badge badge-assertive">{{game.maskedPlayersState.spysRemaining}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="item item-divider"></div>
+                <div class="item action-item">
                     <div class="button-bar">
                         <button class="button button-assertive icon-left ion-flag" ng-click="quit()"> Surrender</button>
                     </div>

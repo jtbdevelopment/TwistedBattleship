@@ -1,7 +1,7 @@
 'use strict';
 
 var ALL = 'ALL';
-var VIEWING_SELF = 'You seen by:';
+var VIEWING_SELF = 'Yourself viewed by:';
 var VIEWING_OPPONENT = 'Your opponent(s):';
 
 angular.module('tbs.controllers').controller('PlayGameCtrl',
