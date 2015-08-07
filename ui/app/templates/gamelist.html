@@ -2,16 +2,16 @@
     <ion-content>
         <!--  TODO - refresh -->
         <ion-refresher pulling-text="Pull to refresh" on-refresh="refreshGames()"></ion-refresher>
-        <ion-list>
-            <ion-item ng-click="createNew()">
+        <ion-list class="gameState">
+            <ion-item class="newGame" ng-click="createNew()">
                 <i class="icon ion-plus"></i>
-                New Challenge
+                New Game
             </ion-item>
             <div ng-repeat="phase in phasesInOrder">
                 <div class="item item-divider" ng-click="switchHideGames(phase)">
                     <i class="icon ion-{{games[phase].icon}}"></i>
                     {{games[phase].label}}
-                    <span class="item-note">{{games[phase].games.length}}</span>
+                    <span class="badge badge-positive">{{games[phase].games.length}}</span>
                 </div>
 
                 <div ng-hide="games[phase].hideGames">
