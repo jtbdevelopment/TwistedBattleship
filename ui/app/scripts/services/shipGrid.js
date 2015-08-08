@@ -57,11 +57,11 @@ angular.module('tbs.services').factory('tbsShipGrid',
                 });
                 phaser.load.image('Destroyer', '/images/' + theme + '/destroyer.png');
                 phaser.load.image('Submarine', '/images/' + theme + '/submarine.png');
+                phaser.load.image('Battleship', '/images/' + theme + '/battleship.png');
+                phaser.load.image('Cruiser', '/images/' + theme + '/cruiser.png');
 
                 // TODO
                 phaser.load.image('Carrier', '/images/' + theme + '/destroyer.png');
-                phaser.load.image('Battleship', '/images/' + theme + '/destroyer.png');
-                phaser.load.image('Cruiser', '/images/' + theme + '/cruiser.png');
             }
 
             function create() {
