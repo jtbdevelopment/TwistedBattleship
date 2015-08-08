@@ -19,7 +19,7 @@
   $darker_blue: #88B8C4;
   $boatgray: #708090;
 
-  background-color: $paler_green;
+  background-color: $paler_blue;
   .bar-header {
     background-color: $medium_blue;
   }
@@ -35,7 +35,6 @@
         }
       }
       .item-divider {
-        #background-color: $darker_blue;
         background-color: $boatgray;
         color: white;
         .badge {
@@ -45,4 +44,24 @@
       }
     }
   }
+
+  .tbsModal {
+    .scroll-content {
+      background-color: $paler_blue;
+    }
+    .button {
+      background-color: $paler_green;
+    }
+
+    .button-positive {
+      background-color: $darker_green;
+    }
+  }
+
+  .inviteFriends {
+    .item {
+      background-color: $paler_blue;
+    }
+  }
 }
+
