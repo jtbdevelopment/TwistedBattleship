@@ -46,15 +46,12 @@ angular.module('tbs.services').factory('tbsShipGrid',
                     'knownempty',
                     'obscuredempty',
                     'obscuredship',
+                    'obscuredotherhit',
+                    'obscuredothermiss',
+                    'obscuredrehit',
+                    'obscuredmiss',
+                    'obscuredhit',
                     'unknown'
-                    /*  missing images
-                     ObscuredOtherHit(20),
-                     ObscuredOtherMiss(20),
-                     ObscuredRehit(25),
-                     ObscuredMiss(30),
-                     ObscuredHit(30),
-
-                     */
                 ], function (state) {
                     phaser.load.image(state, '/images/' + theme + '/' + state + '.png');
                 });
