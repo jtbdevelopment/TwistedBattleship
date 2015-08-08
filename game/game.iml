@@ -49,7 +49,7 @@
     <orderEntry type="library" name="Maven: com.amazonaws:aws-java-sdk-core:1.9.39" level="project" />
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient:4.3.4" level="project" />
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore:4.3.2" level="project" />
-    <orderEntry type="library" name="Maven: joda-time:joda-time:2.8" level="project" />
+    <orderEntry type="library" name="Maven: joda-time:joda-time:2.8.1" level="project" />
     <orderEntry type="library" name="Maven: com.amazonaws:aws-java-sdk-ec2:1.9.39" level="project" />
     <orderEntry type="library" name="Maven: com.jtbdevelopment.core-common:core-spring-web-hazelcast:1.4" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.session:spring-session:1.0.0.RELEASE" level="project" />
