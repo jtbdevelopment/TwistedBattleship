@@ -52,7 +52,8 @@
                                 </div>
                                 <!-- TODO - seems to have caching bug on first load - confirmed ion-autocomplete bug - take update -->
                                 <!-- TODO - why do we need callbacks - why isn't scope working directly?  -->
-                                <ion-autocomplete ng-model="friendsToInvite"
+                                <ion-autocomplete template-url="templates/autocompleteTemplate.html"
+                                                  ng-model="friendsToInvite"
                                                   items-method="queryInvitableFriends(query)"
                                                   selected-items-label="Selected Friends:"
                                                   placeholder="Select friends..."
@@ -98,7 +99,8 @@
                 </div>
                 <!-- TODO - seems to have caching bug on first load  -->
                 <!-- TODO - why do we need callbacks - why isn't scope working directly?  -->
-                <ion-autocomplete ng-model="playerChoices"
+                <ion-autocomplete template-url="templates/autocompleteTemplate.html"
+                                  ng-model="playerChoices"
                                   items-method="queryFriends(query)"
                                   selected-items-label="Selected Players:"
                                   placeholder="Select opponents..."

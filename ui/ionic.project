@@ -22,5 +22,10 @@
       "path": "/signin",
       "proxyUrl": "http://localhost:9998/signin"
     }
+  ],
+  "watchPatterns": [
+    "www/**/*",
+    "!www/lib/**/*",
+    "!www/bower_components/**/*"
   ]
 }

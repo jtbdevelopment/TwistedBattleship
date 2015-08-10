@@ -50,18 +50,24 @@
       background-color: $paler_blue;
     }
     .button {
-      background-color: $paler_green;
+      background-color: $medium_blue;
     }
 
     .button-positive {
       background-color: $darker_green;
     }
-  }
 
-  .inviteFriends {
     .item {
       background-color: $paler_blue;
     }
+
+    input {
+      border-radius: 4px;
+      padding-left: 2px;
+      background-color: white;
+      margin-right: 15px;
+    }
   }
+
 }
 
