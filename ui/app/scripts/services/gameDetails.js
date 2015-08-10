@@ -12,7 +12,10 @@ angular.module('tbs.services').factory('tbsGameDetails',
             'EREnabled': 'wrench',
             'EMEnabled': 'shuffle',
             'Single': 'chatbox',
-            'PerShip': 'chatboxes'
+            'PerShip': 'chatboxes',
+            'Grid10x10': 'crop',
+            'Grid15x15': 'crop',
+            'Grid20x20': 'crop'
         };
 
         function checkParams(game, md5) {

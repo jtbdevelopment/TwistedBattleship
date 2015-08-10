@@ -19,48 +19,7 @@
   $darker_blue: #88B8C4;
   $boatgray: #808080;
 
-  background-color: $paler_blue;
-  .bar-header {
-    background-color: $medium_blue;
-  }
-  .gameState {
-    .list {
-      .newGame {
-        background-color: $medium_green;
-        color: black;
-      }
-      .item {
-        .item-content {
-          background-color: $medium_blue;
-        }
-      }
-      .item-divider {
-        background-color: $boatgray;
-        color: white;
-        .badge {
-          background-color: $paler_blue;
-          color: black;
-        }
-      }
-    }
-  }
-
-  .tbsModal {
-    .scroll-content {
-      background-color: $paler_blue;
-    }
-    .button {
-      background-color: $medium_blue;
-    }
-
-    .button-positive {
-      background-color: $darker_green;
-    }
-
-    .item {
-      background-color: $paler_blue;
-    }
-
+  @mixin defaultInput {
     input {
       border-radius: 4px;
       padding-left: 2px;
@@ -69,5 +28,107 @@
     }
   }
 
+  background-color: $paler_blue;
+  .scroll-content {
+    background-color: $medium_blue;
+  }
+  .bar-header {
+    background-color: $darker_blue;
+  }
+  .gameState {
+    .list {
+      .newGame {
+        background-color: $medium_green;
+        color: black;
+      }
+    }
+
+    .playable {
+      background-color: $medium_blue;
+      .item-content {
+        background-color: $medium_blue;
+      }
+    }
+
+    .waiting {
+      background-color: $paler_green;
+      .item-content {
+        background-color: $paler_green;
+      }
+    }
+  }
+
+  .item {
+    background-color: $medium_blue;
+    .item-content {
+      background-color: $medium_blue;
+    }
+  }
+
+  .item-divider {
+    background-color: $boatgray;
+    color: white;
+    .badge {
+      background-color: $paler_blue;
+      color: black;
+    }
+  }
+
+  .button {
+    background-color: $paler_blue;
+  }
+
+  .button-positive {
+    background-color: $darker_green;
+  }
+
+  .toggle .track {
+    background: $boatgray;
+    border-color: $boatgray;
+  }
+  .toggle input:checked + .track {
+    background: $darker_green;
+    border-color: $darker_green;
+  }
+  .tbsModal {
+    @include defaultInput;
+  }
+
+  .createGame {
+    @include defaultInput;
+    .item {
+      background-color: $paler_blue;
+    }
+    select {
+      background-color: $paler_blue;
+    }
+
+    .optionOn {
+      color: $darker_green;
+      font-size: x-large;
+      padding-right: 5px;
+    }
+    .optionOff {
+      color: $boatgray;
+      font-size: x-large;
+      padding-right: 5px;
+    }
+
+    .item-toggle {
+      padding-top: 12px;
+      padding-bottom: 12px;
+    }
+  }
+  @include defaultInput;
+
+  select {
+    border-radius: 4px;
+    padding-left: 2px;
+    background-color: $medium_blue;
+    #margin-right: 15px;
+  }
+  .createHelp {
+
+  }
 }
 

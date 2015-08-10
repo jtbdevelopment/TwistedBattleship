@@ -9,11 +9,12 @@
         <div class="modal">
             <!--  TODO - theme  -->
             <div class="default-theme">
-                <div class="gameHelp tbsModal">
+                <div class="createHelp tbsModal">
                     <ion-header-bar>
-                        <button class="button button-icon ion-arrow-left-b" ng-click="previousHelp()"></button>
+                        <button class="button button-positive button-icon ion-arrow-left-b"
+                                ng-click="previousHelp()"></button>
                         <h1 class="title">Help on {{featureData[helpIndex].feature.label}}</h1>
-                        <button class="button button-icon ion-arrow-right-b"
+                        <button class="button button-positive button-icon ion-arrow-right-b"
                                 ng-click="nextHelp()"></button>
                     </ion-header-bar>
                     <ion-content>
@@ -73,12 +74,12 @@
         </div>
     </script>
     <ion-content>
-        <div class="list">
+        <div class="list create">
             <div ng-repeat="feature in featureData | propsFilter: { checkBox: 'false' }">
                 <label class="item item-input item-select">
                     <div class="input-label">
-                        {{feature.feature.label}} <i
-                            class="icon balanced ion-{{gameDetails.iconForFeature(currentOptions[feature.index])}}"></i>
+                        <i class="icon optionOn ion-{{gameDetails.iconForFeature(currentOptions[feature.index])}}"></i>
+                        {{feature.feature.label}}
                     </div>
                     <select ng-model="currentOptions[feature.index]">
                         <option ng-repeat="option in feature.options" value="{{option.feature}}">{{option.label}}
@@ -89,12 +90,13 @@
 
             <div ng-repeat="feature in featureData | propsFilter: { checkBox: 'true' }">
                 <ion-toggle ng-model="currentOptions[feature.index]">
-                    {{feature.feature.label}} <i
-                        class="icon ion-{{gameDetails.iconForFeature(feature.options[0].feature)}} {{currentOptions[feature.index] ? 'balanced' : 'assertive'}}"></i>
+                    <i class="icon ion-{{gameDetails.iconForFeature(feature.options[0].feature)}} {{currentOptions[feature.index] ? 'optionOn' : 'optionOff'}}"></i>
+                    {{feature.feature.label}}
                 </ion-toggle>
             </div>
             <label class="item item-input">
                 <div class="input-label">
+                    <i class="icon optionOn ion-person-stalker"></i>
                     Opponents (Max 5):
                 </div>
                 <!-- TODO - seems to have caching bug on first load  -->
