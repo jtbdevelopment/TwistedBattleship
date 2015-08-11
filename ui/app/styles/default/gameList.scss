@@ -1,0 +1,24 @@
+@import "default-theme-colors";
+
+.gameState {
+  .list {
+    .newGame {
+      background-color: $medium_green;
+      color: black;
+    }
+  }
+
+  .playable {
+    background-color: $medium_blue;
+    .item-content {
+      background-color: $medium_blue;
+    }
+  }
+
+  .waiting {
+    background-color: $paler_green;
+    .item-content {
+      background-color: $paler_green;
+    }
+  }
+}

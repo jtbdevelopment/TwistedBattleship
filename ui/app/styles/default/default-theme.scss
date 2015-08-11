@@ -1,0 +1,63 @@
+@import "default-theme-colors";
+@import "input";
+
+.default-theme {
+
+  @import "gameList";
+  @import "create";
+  @import "signin";
+  @import "modal";
+  @include defaultInput;
+  @include defaultSelect;
+
+  background-color: $paler_blue;
+
+  .scroll-content {
+    background-color: $medium_blue;
+  }
+
+  .bar-header {
+    background-color: $darker_blue;
+  }
+
+  //  List items
+  .item {
+    background-color: $medium_blue;
+    border-color: $boatgray;
+    .item-content {
+      background-color: $medium_blue;
+    }
+  }
+
+  .item-divider {
+    background-color: $boatgray;
+    color: white;
+    .badge {
+      background-color: $paler_blue;
+      color: black;
+    }
+  }
+
+  //  Buttons
+  .button {
+    background-color: $paler_blue;
+    border-color: $paler_blue;
+  }
+
+  .button-positive {
+    background-color: $darker_green;
+    border-color: $darker_green;
+  }
+
+  //  Toggle
+  .toggle .track {
+    background: $boatgray;
+    border-color: $boatgray;
+  }
+  .toggle input:checked + .track {
+    background: $darker_green;
+    border-color: $darker_green;
+  }
+
+}
+

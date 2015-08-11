@@ -1,0 +1,29 @@
+@import "default-theme-colors";
+@import "input";
+
+.createGame {
+  @include defaultInput;
+
+  .item {
+    background-color: $paler_blue;
+  }
+  select {
+    background-color: $paler_blue;
+  }
+
+  .optionOn {
+    color: $darker_green;
+    font-size: x-large;
+    padding-right: 5px;
+  }
+  .optionOff {
+    color: $boatgray;
+    font-size: x-large;
+    padding-right: 5px;
+  }
+
+  .item-toggle {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+}
