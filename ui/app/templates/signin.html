@@ -1,5 +1,5 @@
 <ion-view>
-    <ion-content>
+    <ion-content class="signin">
         <div ng-controller="CoreMobileSignInCtrl">
             <div class="container">
                 <div class="row text-center">
@@ -10,8 +10,9 @@
             </div>
 
             <div class="list" ng-show="showFacebook">
-                <a class="item item-button" href="#" ng-click="fbLogin()"><img
-                        ng-src="/images/sign-in-with-facebook.png"/></a>
+                <a class="item item-button" href="#" ng-click="fbLogin()">
+                    <img ng-src="/images/sign-in-with-facebook.png"/>
+                </a>
             </div>
 
             <div class="list" ng-show="showManual">
@@ -24,9 +25,9 @@
                     <span class="input-label">Password</span>
                     <input id="password" name="password" type="password" size="25" ng-model="password"/>
                 </label>
-                <ion-checkbox ng-model="rememberme">
+                <ion-toggle ng-model="rememberme">
                     Remember Me?
-                </ion-checkbox>
+                </ion-toggle>
                 <button class="button-full button-positive button" ng-click="manualLogin()">
                     Login
                 </button>
