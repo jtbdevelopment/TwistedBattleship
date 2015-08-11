@@ -20,44 +20,8 @@
     background-color: $darker_blue;
   }
 
-  //  List items
-  .item {
-    background-color: $medium_blue;
-    border-color: $boatgray;
-    .item-content {
-      background-color: $medium_blue;
-    }
-  }
-
-  .item-divider {
-    background-color: $boatgray;
-    color: white;
-    .badge {
-      background-color: $paler_blue;
-      color: black;
-    }
-  }
-
-  //  Buttons
-  .button {
-    background-color: $paler_blue;
-    border-color: $paler_blue;
-  }
-
-  .button-positive {
-    background-color: $darker_green;
-    border-color: $darker_green;
-  }
-
-  //  Toggle
-  .toggle .track {
-    background: $boatgray;
-    border-color: $boatgray;
-  }
-  .toggle input:checked + .track {
-    background: $darker_green;
-    border-color: $darker_green;
-  }
-
+  @import "items";
+  @import "buttons";
+  @import "toggles";
 }
 

@@ -1,0 +1,12 @@
+@import "default-theme-colors";
+
+.toggle .track {
+  background: $boatgray;
+  border-color: $boatgray;
+}
+
+.toggle input:checked + .track {
+  background: $darker_green;
+  border-color: $darker_green;
+}
+

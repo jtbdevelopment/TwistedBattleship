@@ -1,0 +1,19 @@
+@import "default-theme-colors";
+
+.item {
+  background-color: $medium_blue;
+  border-color: $boatgray;
+  .item-content {
+    background-color: $medium_blue;
+  }
+}
+
+.item-divider {
+  background-color: $boatgray;
+  color: white;
+  .badge {
+    background-color: $paler_blue;
+    color: black;
+  }
+}
+
