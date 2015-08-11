@@ -6,7 +6,7 @@
                 <i class="icon ion-plus"></i>
                 New Game
             </ion-item>
-            <div ng-repeat="phase in phasesInOrder">
+            <div ng-repeat="phase in phasesInOrder" ng-show="games[phase].games.length > 0">
                 <div class="item item-divider" ng-click="switchHideGames(phase)">
                     <i class="icon ion-{{games[phase].icon}}"></i>
                     {{games[phase].label}}

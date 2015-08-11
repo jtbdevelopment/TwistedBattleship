@@ -1,0 +1,17 @@
+@import "default-theme-colors";
+
+.pending {
+  color: $paler_green
+}
+
+.rejected {
+  color: $boatgray;
+}
+
+.quit {
+  color: white;
+}
+
+.accepted {
+  color: $darker_green
+}
