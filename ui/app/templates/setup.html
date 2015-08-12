@@ -1,5 +1,5 @@
 <!--  TODO - help -->
-<ion-view>
+<ion-view class="setupGame">
     <ion-nav-buttons side="right">
         <button class="button button-icon button-clear ion-help-circled" ng-click="showHelp(0)"></button>
     </ion-nav-buttons>
@@ -13,15 +13,28 @@
             <div class="default-theme">
                 <div class="setupHelp tbsModal">
                     <ion-header-bar>
-                        <button class="button button-positive button-icon ion-arrow-left-b"
-                                ng-click="previousHelp()"></button>
-                        <h1 class="title">{{helpTopics[helpIndex].topic}}</h1>
-                        <button class="button button-positive button-icon ion-arrow-right-b"
-                                ng-click="nextHelp()"></button>
+                        <h1 class="title">Setup Help</h1>
                     </ion-header-bar>
                     <ion-content>
                         <div class="row">
-                            <div class="col-100">{{helpTopics[helpIndex].description}}</div>
+
+                            <div class="col-100">
+                                <p>This is where you place your own ships. Once you are happy, press Save.</p>
+
+                                <p>The game begins when all players have saved their ships. As long as not all players
+                                    have saved their setup, you can keep moving your ships even after pressing Save.</p>
+
+                                <p>But move quickly since there is no guarantee the other players won't finish soon!</p>
+
+                                <p>You can drag and drop your ships into position. The ship you are moving will turn
+                                    <span class="greenShip">green</span> while you are moving it. Ships cannot be placed
+                                    on top of each other or out of bounds.</p>
+
+                                <p>Double clicking or double tapping a ship will rotate it 90 degrees.</p>
+
+                                <p>If ships are <span class="redShip">red</span>, it means they are on top of each other
+                                    and at least one needs to be moved.</p>
+                            </div>
                         </div>
                         <button class="button button-full button-positive" ng-click="closeHelp()">Close</button>
                     </ion-content>
@@ -64,7 +77,7 @@
                 </div>
 
             </div>
-            <div id="phaser" class="col-80">
+            <div id="phaser" class="col-80 phaser">
 
             </div>
         </div>

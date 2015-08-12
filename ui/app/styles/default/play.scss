@@ -1,0 +1,20 @@
+@import "default-theme-colors";
+
+.playGame {
+  .list {
+    .item {
+      border-color: $medium_blue;
+      border-left: transparent;
+      border-right: transparent;
+    }
+    .item-divider {
+      border-color: $boatgray;
+    }
+
+    .chosen {
+      background-color: yellow;
+
+    }
+    @import "buttons";
+  }
+}

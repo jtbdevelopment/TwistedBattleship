@@ -10,6 +10,16 @@
   border-color: $darker_green;
 }
 
+.button-balanced {
+  background-color: $paler_green;
+  border-color: $paler_green;
+}
+
+.button[disabled] {
+  background-color: $boatgray;
+  border-color: $boatgray;
+}
+
 .button-assertive {
   background-color: red;
   border-color: red;

@@ -13,40 +13,14 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
             $scope.movingPointerRelativeToShip = {x: 0, y: 0};
             $scope.submitDisabled = true;
 
-            $scope.helpTopics = [
-                {
-                    topic: 'General Help',
-                    description: 'This is where you place your own ships.  Once you are happy, press Save.  The game begins when all players have saved their ships.  As long as not all players have saved their setup, you can keep moving your ships.'
-                },
-                {
-                    topic: 'Moving Ships',
-                    description: 'You can drag and drop your ships into position.  Ships cannot be placed on top of each other or out of bounds.  Double clicking or double tapping a ship will rotate it 90 degrees.  If ships are red, it means they are on top of each other and need to be moved.'
-                },
-            ];
             $ionicModal.fromTemplateUrl('help-modal.html', {
                 scope: $scope,
                 animation: 'slide-in-up'
             }).then(function (modal) {
                 $scope.helpModal = modal;
-                $scope.helpIndex = 0;
             });
 
-            $scope.previousHelp = function () {
-                $scope.helpIndex--;
-                if ($scope.helpIndex < 0) {
-                    $scope.helpIndex = $scope.helpTopics.length - 1;
-                }
-            };
-
-            $scope.nextHelp = function () {
-                $scope.helpIndex++;
-                if ($scope.helpIndex === $scope.helpTopics.length) {
-                    $scope.helpIndex = 0;
-                }
-            };
-
             $scope.showHelp = function () {
-                $scope.helpIndex = 0;
                 $scope.helpModal.show();
             };
 

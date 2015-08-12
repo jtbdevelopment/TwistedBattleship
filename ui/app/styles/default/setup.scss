@@ -1,0 +1,13 @@
+@import "default-theme-colors";
+
+.setupGame {
+  .list {
+    .item-avatar {
+      border-color: $medium_blue;
+    }
+    .item {
+      border-left: transparent;
+      border-right: transparent;
+    }
+  }
+}

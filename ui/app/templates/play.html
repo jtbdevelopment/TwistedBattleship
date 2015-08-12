@@ -1,6 +1,6 @@
 <!--  TODO - help -->
 <!--  TODO - eliminate dead people -->
-<ion-view>
+<ion-view class="playGame">
     <ion-footer-bar>
         <game-summary-bar></game-summary-bar>
     </ion-footer-bar>
@@ -36,12 +36,12 @@
                         </button>
                     </div>
                 </div>
-                <div class="item item-avatar {{showing == 'ALL' ? 'item-energized' : ''}}" ng-show="showingSelf"
+                <div class="item item-avatar {{showing == 'ALL' ? 'chosen' : ''}}" ng-show="showingSelf"
                      ng-click="changePlayer('ALL')">
                     <img ng-src="{{gameDetails.imageForPlayer(game, 'ALL')}}">
                     Combined Opponents
                 </div>
-                <div class="item item-avatar {{showing == md5 ? 'item-energized' : ''}}"
+                <div class="item item-avatar {{showing == md5 ? 'chosen' : ''}}"
                      ng-repeat="(md5, name) in game.players | orderBy:name" ng-click="changePlayer(md5)"
                      ng-hide="md5 === player.md5">
                     <img ng-src="{{gameDetails.imageForPlayer(game, md5)}}">
@@ -56,7 +56,7 @@
                                     ng-click="ecm()">
                                 ECM
                             </button>
-                            <span class="badge badge-assertive">{{game.maskedPlayersState.ecmsRemaining}}</span>
+                            <span class="badge">{{game.maskedPlayersState.ecmsRemaining}}</span>
                         </div>
                     </div>
                     <div class="item action-item">
@@ -66,7 +66,7 @@
                                     ng-click="move()">
                                 Evade
                             </button>
-                            <span class="badge badge-assertive">{{game.maskedPlayersState.emergencyRepairsRemaining}}</span>
+                            <span class="badge">{{game.maskedPlayersState.emergencyRepairsRemaining}}</span>
                         </div>
                     </div>
                     <div class="item action-item">
@@ -76,7 +76,7 @@
                                     ng-click="repair()">
                                 Repair
                             </button>
-                            <span class="badge badge-assertive">{{game.maskedPlayersState.emergencyRepairsRemaining}}</span>
+                            <span class="badge">{{game.maskedPlayersState.emergencyRepairsRemaining}}</span>
                         </div>
                     </div>
                 </div>
@@ -94,7 +94,7 @@
                                     ng-disabled="!gameDetails.spyPossible(game, player.md5)" ng-click="spy()">
                                 Spy
                             </button>
-                            <span class="badge badge-assertive">{{game.maskedPlayersState.spysRemaining}}</span>
+                            <span class="badge">{{game.maskedPlayersState.spysRemaining}}</span>
                         </div>
                     </div>
                 </div>
@@ -105,7 +105,7 @@
                     </div>
                 </div>
             </div>
-            <div id="phaser" class="col-80">
+            <div id="phaser" class="col-80 phaser">
 
             </div>
         </div>
