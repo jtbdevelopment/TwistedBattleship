@@ -10,11 +10,20 @@
   border-color: $darker_green;
 }
 
-.button-balanced {
+.button-attack {
+  background-color: $darker_green;
+  border-color: $darker_green;
+}
+
+.button-defend {
   background-color: $paler_green;
   border-color: $paler_green;
 }
 
+.button-switch {
+  background-color: $medium_blue;
+  border-color: $boatgray;
+}
 .button[disabled] {
   background-color: $boatgray;
   border-color: $boatgray;
