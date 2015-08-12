@@ -13,7 +13,7 @@ angular.module('tbs.controllers').controller('PlayerListAndStateCtrl',
 
             $scope.statusColor = function (md5) {
                 if (angular.isDefined(md5)) {
-                    return $scope.game.playerStates[md5].toLowerCase()
+                    return $scope.game.playerStates[md5].toLowerCase();
                 }
                 return '';
             };
