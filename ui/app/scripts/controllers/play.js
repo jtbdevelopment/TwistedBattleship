@@ -11,6 +11,7 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
             $scope.theme = 'default';
             $scope.gameID = $state.params.gameID;
             $scope.game = jtbGameCache.getGameForID($scope.gameID);
+            $scope.playerKeys = Object.keys($scope.game.players);
             $scope.gameDetails = tbsGameDetails;
             $scope.player = {};
             $scope.player = angular.copy(jtbPlayerService.currentPlayer(), $scope.player);
@@ -92,14 +93,14 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
                 $scope.showing = md5;
             };
 
-            $scope.switchView = function () {
-                $scope.showingSelf = !($scope.showingSelf);
+            $scope.switchView = function (showingSelf) {
+                $scope.showingSelf = showingSelf
                 if (!$scope.showingSelf && $scope.showing === ALL) {
                     var keys = Object.keys($scope.game.players);
-                    if (keys[0] === $scope.player.md5) {
-                        $scope.showing = keys[1];
+                    if ($scope.playerKeys[0] === $scope.player.md5) {
+                        $scope.showing = $scope.playerKeys[1];
                     } else {
-                        $scope.showing = keys[0];
+                        $scope.showing = $scope.playerKeys[0];
                     }
                 }
                 $scope.changePlayer($scope.showing);
@@ -132,6 +133,7 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
                     tbsShipGrid.initialize($scope.theme, $scope.game, [], [], function () {
                         $scope.changePlayer($scope.showing);
                         tbsShipGrid.activateHighlighting(highlightCallback);
+                        $scope.switchView(false);
                     });
                 },
                 function () {

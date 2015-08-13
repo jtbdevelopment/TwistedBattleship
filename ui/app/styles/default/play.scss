@@ -6,18 +6,38 @@
       border-color: $medium_blue;
       border-left: transparent;
       border-right: transparent;
+
+      .badge {
+        background: $paler_blue;
+        color: $boatgray;
+        top: 12px;
+      }
+
+      .badge-note {
+        background-color: transparent;
+        top: 15px;
+      }
+
     }
     .item-divider {
       border-color: $boatgray;
     }
 
-    .badge-note {
-      background-color: transparent;
-    }
-
     .chosen {
       background-color: yellow;
 
+    }
+
+    .activePlayer {
+      .badge {
+        background-color: $medium_green;
+      }
+    }
+
+    .inactivePlayer {
+      .badge {
+        background-color: $medium_blue;
+      }
     }
     @import "buttons";
   }

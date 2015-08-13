@@ -23,6 +23,10 @@
     background-color: $darker_blue;
   }
 
+  .bar-footer {
+    background-color: $darker_blue;
+  }
+
   @import "items";
   @import "buttons";
   @import "toggles";

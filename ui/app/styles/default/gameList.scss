@@ -3,22 +3,22 @@
 .gameState {
   .list {
     .newGame {
-      background-color: $medium_green;
+      background-color: $paler_green;
       color: black;
     }
   }
 
-  .playable {
+  .waiting {
     background-color: $medium_blue;
     .item-content {
       background-color: $medium_blue;
     }
   }
 
-  .waiting {
-    background-color: $paler_green;
+  .playable {
+    background-color: $medium_green;
     .item-content {
-      background-color: $paler_green;
+      background-color: $medium_green;
     }
   }
 }
