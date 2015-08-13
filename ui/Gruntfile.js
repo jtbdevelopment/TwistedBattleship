@@ -95,6 +95,14 @@ module.exports = function (grunt) {
                     spawn: false
                 }
             },
+            png: {
+                files: ['<%= yeoman.app %>/images/**/*.png'],
+                tasks: ['newer:copy:app'],
+                options: {
+                    interval: 1000,
+                    spawn: false
+                }
+            },
             js: {
                 files: ['<%= yeoman.app %>/<%= yeoman.scripts %>/**/*.js'],
                 tasks: ['newer:copy:app', 'newer:jshint:all'],
