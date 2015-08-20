@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component
 @Component
 @CompileStatic
 class GridCircleUtil {
-    //  Details are cumulative - use entries for 10 + 15 to get circle for grid size 15
+    //  Details are cumulative - use entries for 10 + 15 to get circle for grid size 20
     final static Map<Integer, Set<GridCoordinate>> CIRCLE_OFFSETS = [
             (10): [
-                    new GridCoordinate(0, -1),
                     new GridCoordinate(0, 0),
+                    new GridCoordinate(0, -1),
                     new GridCoordinate(0, 1),
                     new GridCoordinate(1, 0),
                     new GridCoordinate(-1, 0),

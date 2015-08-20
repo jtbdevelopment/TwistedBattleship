@@ -36,7 +36,9 @@ angular.module('tbs', ['ionic', 'ngCookies', 'tbs.controllers', 'tbs.directives'
                     config.url = ENV.apiEndpoint + config.url;
                 }
                 return config;
-            },
+            }
+            //,
+            /*
             //  TODO?
             'responseError': function (rejection) {
                 console.log('responseError:' + JSON.stringify(rejection));
@@ -50,6 +52,7 @@ angular.module('tbs', ['ionic', 'ngCookies', 'tbs.controllers', 'tbs.directives'
             'response': function (response) {
                 return response;
             }
+             */
         };
     })
     .config(function ($httpProvider) {

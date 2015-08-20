@@ -4,6 +4,7 @@ var ALL = 'ALL';
 var VIEWING_SELF = 'Yourself viewed by:';
 var VIEWING_OPPONENT = 'Your opponent(s):';
 
+//  TODO - this doesn't seem to initialize properly any more on first view of game
 angular.module('tbs.controllers').controller('PlayGameCtrl',
     ['$rootScope', '$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', '$ionicSideMenuDelegate', 'tbsShips', 'tbsShipGrid', '$ionicModal', // 'twAds',
         function ($rootScope, $scope, tbsGameDetails, tbsActions, jtbGameCache, jtbPlayerService, $state, $ionicSideMenuDelegate, tbsShips, tbsShipGrid, $ionicModal /*, twAds*/) {
@@ -94,9 +95,8 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
             };
 
             $scope.switchView = function (showingSelf) {
-                $scope.showingSelf = showingSelf
+                $scope.showingSelf = showingSelf;
                 if (!$scope.showingSelf && $scope.showing === ALL) {
-                    var keys = Object.keys($scope.game.players);
                     if ($scope.playerKeys[0] === $scope.player.md5) {
                         $scope.showing = $scope.playerKeys[1];
                     } else {

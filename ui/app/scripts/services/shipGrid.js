@@ -8,16 +8,28 @@ var defaultScale = {
 };
 
 angular.module('tbs.services').factory('tbsShipGrid',
-    [
-        function () {
+    ['jtbPlayerService', 'tbsCircles',
+        function (jtbPlayerService, tbsCircles) {
             var CELL_SIZE = 100;
             var HALF_CELL_SIZE = CELL_SIZE / 2;
 
+            var circles;
+            tbsCircles.circles().then(
+                function (circleData) {
+                    circles = circleData;
+                },
+                function (error) {
+                    //  TODO
+                    console.warn(error);
+                }
+            );
+            var circle;
+            var circleSprites = [];
             var theme;
             var game;
             var shipsOnGrid = [], shipLocations = [];
             var cellMarkers = [], markersOnGrid = [];
-            var highlightSprite = null, highlightX, highlightY;
+            var highlightSprite = null, highlightX, highlightY, highlightShip = null;
             var gameWidth, gameHeight, gameScale;
             var phaser;
 
@@ -25,7 +37,43 @@ angular.module('tbs.services').factory('tbsShipGrid',
             var highlightCallback;
 
             function preload() {
-                var json = gameHeight === 1000 ? '10x10.json' : gameHeight === 2000 ? '20x20.json' : '15x15.json';
+                circle = [];
+                var json;
+                switch (gameHeight) {
+                    case 1000:
+                        json = '10x10.json';
+                        angular.forEach(circles['10'], function (coord) {
+                            circle.push(coord);
+                        });
+                        break;
+                    case 1500:
+                        angular.forEach(circles['10'], function (coord) {
+                            circle.push(coord);
+                        });
+                        angular.forEach(circles['15'], function (coord) {
+                            circle.push(coord);
+                        });
+                        json = '15x15.json';
+                        break;
+                    case 2000:
+                        angular.forEach(circles['10'], function (coord) {
+                            circle.push(coord);
+                        });
+                        angular.forEach(circles['15'], function (coord) {
+                            circle.push(coord);
+                        });
+                        angular.forEach(circles['20'], function (coord) {
+                            circle.push(coord);
+                        });
+                        json = '20x20.json';
+                        break;
+                }
+                circle.splice(0, 1);
+                angular.forEach(circleSprites, function (circleSprite) {
+                    circleSprite.destroy();
+                });
+                circleSprites = [];
+
                 if (highlightSprite !== null) {
                     highlightSprite.destroy();
                 }
@@ -36,6 +84,7 @@ angular.module('tbs.services').factory('tbsShipGrid',
                 phaser.load.tilemap('grid', '/templates/gamefiles/' + json, null, Phaser.Tilemap.TILED_JSON);
                 phaser.load.image('tile', '/images/' + theme + '/tile.png');
                 phaser.load.image('highlight', '/images/' + theme + '/highlight.png');
+                phaser.load.image('extendedhighlight', '/images/' + theme + '/extendedhighlight.png');
                 angular.forEach([
                     'knownbyhit',
                     'knownbymiss',
@@ -156,12 +205,26 @@ angular.module('tbs.services').factory('tbsShipGrid',
                 var x = Math.floor(coords.x / CELL_SIZE) * CELL_SIZE;
                 if (highlightSprite === null) {
                     highlightSprite = phaser.add.sprite(x, y, 'highlight', 0);
+                    angular.forEach(circle, function (coord) {
+                        circleSprites.push(phaser.add.sprite(x, y, 'extendedhighlight', 0));
+                    });
                 }
-                if (y !== highlightY || x !== highlightX) {
-                    highlightSprite.x = x;
-                    highlightSprite.y = y;
-                    highlightX = x / CELL_SIZE;
-                    highlightY = y / CELL_SIZE;
+                highlightSprite.x = x;
+                highlightSprite.y = y;
+                highlightX = x / CELL_SIZE;
+                highlightY = y / CELL_SIZE;
+                for (var i = 0; i < circle.length; ++i) {
+                    var coord = circle[i];
+                    var sprite = circleSprites[i];
+                    sprite.x = x + (coord.column * CELL_SIZE);
+                    sprite.y = y + (coord.row * CELL_SIZE);
+                }
+                if (highlightShip !== null) {
+                    highlightShip.sprite.tint = 0xffffff;
+                }
+                highlightShip = findShipByCoordinates({x: x, y: y});
+                if (highlightShip !== null) {
+                    highlightShip.sprite.tint = 0x00ff00;
                 }
                 if (highlightCallback !== null) {
                     highlightCallback();
