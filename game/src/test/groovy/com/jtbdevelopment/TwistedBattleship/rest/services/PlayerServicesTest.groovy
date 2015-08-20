@@ -1,10 +1,14 @@
 package com.jtbdevelopment.TwistedBattleship.rest.services
 
+import com.jtbdevelopment.TwistedBattleship.exceptions.NotAValidThemeException
+import com.jtbdevelopment.TwistedBattleship.player.TBPlayerAttributes
 import com.jtbdevelopment.TwistedBattleship.rest.handlers.PlayerGamesFinderHandler
 import com.jtbdevelopment.TwistedBattleship.rest.services.messages.FeaturesAndPlayers
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.masked.TBMaskedGame
+import com.jtbdevelopment.games.dao.AbstractPlayerRepository
+import com.jtbdevelopment.games.mongo.players.MongoPlayer
 import com.jtbdevelopment.games.rest.handlers.NewGameHandler
 import groovy.transform.TypeChecked
 import org.bson.types.ObjectId
@@ -81,6 +85,89 @@ class PlayerServicesTest extends GroovyTestCase {
         assert gameServices.isAnnotationPresent(GET.class)
         def params = gameServices.parameterAnnotations
         assert params.length == 0
+    }
+
+    void testChangeThemeWithNullThrowsException() {
+        def APLAYER = new ObjectId()
+        MongoPlayer player = new MongoPlayer()
+        playerServices.playerID.set(APLAYER)
+
+        playerServices.playerRepository = [
+                findOne: {
+                    ObjectId id ->
+                        assert APLAYER == id
+                        return player
+                }
+        ] as AbstractPlayerRepository
+
+        shouldFail(NotAValidThemeException.class, {
+            playerServices.changeTheme(null)
+        })
+    }
+
+    void testChangeThemeWithInvalidChoiceThrowsException() {
+        def APLAYER = new ObjectId()
+        MongoPlayer player = new MongoPlayer()
+        player.gameSpecificPlayerAttributes = new TBPlayerAttributes(player: player)
+        playerServices.playerID.set(APLAYER)
+
+        playerServices.playerRepository = [
+                findOne: {
+                    ObjectId id ->
+                        assert APLAYER == id
+                        return player
+                }
+        ] as AbstractPlayerRepository
+
+        shouldFail(NotAValidThemeException.class, {
+            playerServices.changeTheme('somecrazytheme')
+        })
+    }
+
+    void testChangingATheme() {
+        def goodTheme = 'goodtheme'
+        def APLAYER = new ObjectId()
+        MongoPlayer player = new MongoPlayer()
+        MongoPlayer updatedPlayer = new MongoPlayer()
+
+        def attributes = new TBPlayerAttributes(player: player)
+        attributes.availableThemes = ['default-theme', goodTheme, 'another-theme']
+        player.gameSpecificPlayerAttributes = attributes
+
+        playerServices.playerID.set(APLAYER)
+
+        playerServices.playerRepository = [
+                findOne: {
+                    ObjectId id ->
+                        assert APLAYER == id
+                        return player
+                },
+                save   : {
+                    MongoPlayer p ->
+                        assert p.is(player)
+                        assert p.gameSpecificPlayerAttributes.theme == goodTheme
+                        updatedPlayer
+                }
+        ] as AbstractPlayerRepository
+
+        assert updatedPlayer.is(playerServices.changeTheme(goodTheme))
+    }
+
+    void testChangeThemeAnnotations() {
+        def gameServices = PlayerServices.getMethod("changeTheme", [String.class] as Class[])
+        assert (gameServices.annotations.size() == 3 ||
+                (gameServices.isAnnotationPresent(TypeChecked.TypeCheckingInfo) && gameServices.annotations.size() == 3)
+        )
+        assert gameServices.isAnnotationPresent(Path.class)
+        assert gameServices.getAnnotation(Path.class).value() == "changeTheme/{newTheme}"
+        assert gameServices.isAnnotationPresent(Produces.class)
+        assert gameServices.getAnnotation(Produces.class).value() == [MediaType.APPLICATION_JSON]
+        assert gameServices.isAnnotationPresent(PUT.class)
+        def params = gameServices.parameterAnnotations
+        assert params.length == 1
+        assert params[0].length == 1
+        assert params[0][0].annotationType() == PathParam.class
+        assert ((PathParam) params[0][0]).value() == "newTheme"
     }
 }
 

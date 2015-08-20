@@ -3,6 +3,7 @@ package com.jtbdevelopment.TwistedBattleship.rest.services
 import com.jtbdevelopment.TwistedBattleship.rest.GameFeatureInfo
 import com.jtbdevelopment.TwistedBattleship.rest.ShipInfo
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
+import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCircleUtil
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import groovy.transform.TypeChecked
@@ -118,6 +119,24 @@ class PlayerGatewayServiceTest extends GroovyTestCase {
         )
         assert gameServices.isAnnotationPresent(Path.class)
         assert gameServices.getAnnotation(Path.class).value() == "ships"
+        assert gameServices.isAnnotationPresent(GET.class)
+        assert gameServices.isAnnotationPresent(Produces.class)
+        assert gameServices.getAnnotation(Produces.class).value() == [MediaType.APPLICATION_JSON]
+        def params = gameServices.parameterAnnotations
+        assert params.length == 0
+    }
+
+    void testGetCellStates() {
+        assert GridCellState.values() == playerGatewayService.states()
+    }
+
+    void testGetStatesAnnotations() {
+        def gameServices = PlayerGatewayService.getMethod("states", [] as Class[])
+        assert (gameServices.annotations.size() == 3 ||
+                (gameServices.isAnnotationPresent(TypeChecked.TypeCheckingInfo) && gameServices.annotations.size() == 4)
+        )
+        assert gameServices.isAnnotationPresent(Path.class)
+        assert gameServices.getAnnotation(Path.class).value() == "states"
         assert gameServices.isAnnotationPresent(GET.class)
         assert gameServices.isAnnotationPresent(Produces.class)
         assert gameServices.getAnnotation(Produces.class).value() == [MediaType.APPLICATION_JSON]

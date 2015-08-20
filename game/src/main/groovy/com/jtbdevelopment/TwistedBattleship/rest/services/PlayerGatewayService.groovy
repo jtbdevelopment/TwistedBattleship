@@ -3,6 +3,7 @@ package com.jtbdevelopment.TwistedBattleship.rest.services
 import com.jtbdevelopment.TwistedBattleship.rest.GameFeatureInfo
 import com.jtbdevelopment.TwistedBattleship.rest.ShipInfo
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
+import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCircleUtil
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
@@ -55,5 +56,13 @@ class PlayerGatewayService extends AbstractPlayerGatewayService<ObjectId> {
     @SuppressWarnings("GrMethodMayBeStatic")
     List<ShipInfo> ships() {
         return Ship.values().collect { Ship it -> new ShipInfo(it) }
+    }
+
+    @GET
+    @Path("states")
+    @Produces(MediaType.APPLICATION_JSON)
+    @SuppressWarnings("GrMethodMayBeStatic")
+    List<GridCellState> states() {
+        return GridCellState.values().toList()
     }
 }

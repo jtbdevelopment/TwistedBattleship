@@ -16,6 +16,7 @@ import org.springframework.data.annotation.Transient
 class TBPlayerState implements Serializable {
     private static int SHIP_COUNT = Ship.values().size()
 
+    //  TODO - make this not a map so we can have games where it's all carriers or some such
     Map<Ship, ShipState> shipStates = [:]
 
     @Transient

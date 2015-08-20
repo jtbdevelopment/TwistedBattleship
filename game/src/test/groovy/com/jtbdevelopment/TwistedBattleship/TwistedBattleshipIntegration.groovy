@@ -1,6 +1,7 @@
 package com.jtbdevelopment.TwistedBattleship
 
 import com.jtbdevelopment.TwistedBattleship.dao.GameRepository
+import com.jtbdevelopment.TwistedBattleship.player.TBPlayerAttributes
 import com.jtbdevelopment.TwistedBattleship.rest.GameFeatureInfo
 import com.jtbdevelopment.TwistedBattleship.rest.ShipInfo
 import com.jtbdevelopment.TwistedBattleship.rest.Target
@@ -15,6 +16,8 @@ import com.jtbdevelopment.TwistedBattleship.state.masked.TBMaskedGame
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.core.hazelcast.caching.HazelcastCacheManager
 import com.jtbdevelopment.games.dev.utilities.integrationtesting.AbstractGameIntegration
+import com.jtbdevelopment.games.mongo.players.MongoManualPlayer
+import com.jtbdevelopment.games.mongo.players.MongoPlayer
 import com.jtbdevelopment.games.players.Player
 import com.jtbdevelopment.games.state.GamePhase
 import com.jtbdevelopment.games.state.PlayerState
@@ -22,6 +25,7 @@ import org.bson.types.ObjectId
 import org.junit.BeforeClass
 import org.junit.Test
 
+import javax.ws.rs.client.Client
 import javax.ws.rs.client.Entity
 import javax.ws.rs.client.WebTarget
 import javax.ws.rs.core.GenericType
@@ -44,12 +48,32 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
     }
 
     @Test
+    void testPlayerTheme() {
+        ((TBPlayerAttributes) TEST_PLAYER2.gameSpecificPlayerAttributes).availableThemes = ['default-theme', 'new-theme']
+        playerRepository.save(TEST_PLAYER2)
+        Client client = createConnection(TEST_PLAYER2)
+        def p = client.target(PLAYER_API).request(MediaType.APPLICATION_JSON).get(MongoManualPlayer.class);
+        assert 'default-theme' == ((TBPlayerAttributes) p.gameSpecificPlayerAttributes).theme
+        MongoPlayer updated = client.target(PLAYER_API).path('changeTheme').path('new-theme').request(MediaType.APPLICATION_JSON).put(EMPTY_PUT_POST, MongoManualPlayer.class)
+        assert 'new-theme' == ((TBPlayerAttributes) updated.gameSpecificPlayerAttributes).theme
+    }
+
+    @Test
     void testGetCircleSizes() {
         def client = createAPITarget(TEST_PLAYER2)
         def sizes = client.path("circles").request(MediaType.APPLICATION_JSON_TYPE).get(
                 new GenericType<Map<Integer, Set<GridCoordinate>>>() {
                 })
         assert GridCircleUtil.CIRCLE_OFFSETS == sizes
+    }
+
+    @Test
+    void testGetCellStates() {
+        def client = createAPITarget(TEST_PLAYER2)
+        def sizes = client.path("states").request(MediaType.APPLICATION_JSON_TYPE).get(
+                new GenericType<List<GridCellState>>() {
+                })
+        assert GridCellState.values().toList() == sizes
     }
 
     @Test
