@@ -49,11 +49,11 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
 
     @Test
     void testPlayerTheme() {
-        ((TBPlayerAttributes) TEST_PLAYER2.gameSpecificPlayerAttributes).availableThemes = ['default-theme', 'new-theme']
+        ((TBPlayerAttributes) TEST_PLAYER2.gameSpecificPlayerAttributes).availableThemes = ['default', 'new-theme']
         playerRepository.save(TEST_PLAYER2)
         Client client = createConnection(TEST_PLAYER2)
         def p = client.target(PLAYER_API).request(MediaType.APPLICATION_JSON).get(MongoManualPlayer.class);
-        assert 'default-theme' == ((TBPlayerAttributes) p.gameSpecificPlayerAttributes).theme
+        assert 'default' == ((TBPlayerAttributes) p.gameSpecificPlayerAttributes).theme
         MongoPlayer updated = client.target(PLAYER_API).path('changeTheme').path('new-theme').request(MediaType.APPLICATION_JSON).put(EMPTY_PUT_POST, MongoManualPlayer.class)
         assert 'new-theme' == ((TBPlayerAttributes) updated.gameSpecificPlayerAttributes).theme
     }

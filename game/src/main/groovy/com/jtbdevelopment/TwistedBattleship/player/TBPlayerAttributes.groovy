@@ -12,7 +12,7 @@ import org.springframework.data.annotation.Transient
  */
 @CompileStatic
 class TBPlayerAttributes extends AbstractPlayerGameTrackingAttributes {
-    private static final String DEFAULT_THEME = 'default-theme'
+    private static final String DEFAULT_THEME = 'default'
     public static final int DEFAULT_FREE_GAMES_PER_DAY = 10;
     public static final int DEFAULT_PREMIUM_PLAYER_GAMES_PER_DAY = 25;
 

@@ -20,7 +20,7 @@ class TBPlayerAttributesTest extends MongoGameCoreTestCase {
 
     void testDefaultThemes() {
         TBPlayerAttributes attributes = new TBPlayerAttributes()
-        assert 'default-theme' == attributes.theme
-        assert ['default-theme'] == attributes.availableThemes
+        assert 'default' == attributes.theme
+        assert ['default'] == attributes.availableThemes
     }
 }

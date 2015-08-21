@@ -1,14 +1,12 @@
 'use strict';
 
 var ALL = 'ALL';
-var VIEWING_SELF = 'Yourself viewed by:';
-var VIEWING_OPPONENT = 'Your opponent(s):';
 
-//  TODO - this doesn't seem to initialize properly any more on first view of game
 angular.module('tbs.controllers').controller('PlayGameCtrl',
-    ['$rootScope', '$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', '$ionicSideMenuDelegate', 'tbsShips', 'tbsShipGrid', '$ionicModal', // 'twAds',
-        function ($rootScope, $scope, tbsGameDetails, tbsActions, jtbGameCache, jtbPlayerService, $state, $ionicSideMenuDelegate, tbsShips, tbsShipGrid, $ionicModal /*, twAds*/) {
+    ['$rootScope', '$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', '$ionicSideMenuDelegate', 'shipInfo', 'tbsShipGrid', '$ionicModal', // 'twAds',
+        function ($rootScope, $scope, tbsGameDetails, tbsActions, jtbGameCache, jtbPlayerService, $state, $ionicSideMenuDelegate, shipInfo, tbsShipGrid, $ionicModal /*, twAds*/) {
             $ionicSideMenuDelegate.canDragContent(false);
+            //  TODO
             $scope.theme = 'default';
             $scope.gameID = $state.params.gameID;
             $scope.game = jtbGameCache.getGameForID($scope.gameID);
@@ -16,12 +14,18 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
             $scope.gameDetails = tbsGameDetails;
             $scope.player = {};
             $scope.player = angular.copy(jtbPlayerService.currentPlayer(), $scope.player);
+            $scope.generalShipInfo = shipInfo;
             $scope.showing = ALL;
-            $scope.showingSelf = true;
-            $scope.switchViewText = VIEWING_SELF;
+            $scope.showingSelf = false;
 
-            $scope.generalShipInfo = [];
             $scope.shipHighlighted = false;
+
+            tbsShipGrid.initialize($scope.theme, $scope.game, [], [], function () {
+                $scope.changePlayer($scope.showing);
+                tbsShipGrid.activateHighlighting(highlightCallback);
+                $scope.switchView(false);
+            });
+
 
             $scope.modalScope = $rootScope.$new();
             $ionicModal.fromTemplateUrl('templates/messageBox.html', {
@@ -104,7 +108,6 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
                     }
                 }
                 $scope.changePlayer($scope.showing);
-                $scope.switchViewText = $scope.showingSelf ? VIEWING_SELF : VIEWING_OPPONENT;
             };
 
             function computeShipLocations() {
@@ -126,20 +129,6 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
                 $scope.shipHighlighted = (tbsShipGrid.selectedShip() !== null);
                 $scope.$apply();
             }
-
-            tbsShips.ships().then(
-                function (generalShipInfo) {
-                    $scope.generalShipInfo = generalShipInfo;
-                    tbsShipGrid.initialize($scope.theme, $scope.game, [], [], function () {
-                        $scope.changePlayer($scope.showing);
-                        tbsShipGrid.activateHighlighting(highlightCallback);
-                        $scope.switchView(false);
-                    });
-                },
-                function () {
-                    //  TODO
-                }
-            );
 
             $scope.$on('$ionicView.leave', function () {
                 tbsShipGrid.stop();

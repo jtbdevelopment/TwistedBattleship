@@ -131,7 +131,7 @@ class PlayerServicesTest extends GroovyTestCase {
         MongoPlayer updatedPlayer = new MongoPlayer()
 
         def attributes = new TBPlayerAttributes(player: player)
-        attributes.availableThemes = ['default-theme', goodTheme, 'another-theme']
+        attributes.availableThemes = ['default', goodTheme, 'another-theme']
         player.gameSpecificPlayerAttributes = attributes
 
         playerServices.playerID.set(APLAYER)
