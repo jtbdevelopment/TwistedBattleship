@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('tbs.controllers').controller('SetupGameCtrl',
-    ['$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', '$ionicSideMenuDelegate', 'tbsShips', 'tbsShipGrid', '$ionicModal', // 'twAds',
-        function ($scope, tbsGameDetails, tbsActions, jtbGameCache, jtbPlayerService, $state, $ionicSideMenuDelegate, tbsShips, tbsShipGrid, $ionicModal /*, twAds*/) {
+    ['$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', '$ionicSideMenuDelegate', 'shipInfo', 'tbsShipGrid', '$ionicModal', // 'twAds',
+        function ($scope, tbsGameDetails, tbsActions, jtbGameCache, jtbPlayerService, $state, $ionicSideMenuDelegate, shipInfo, tbsShipGrid, $ionicModal /*, twAds*/) {
             $ionicSideMenuDelegate.canDragContent(false);
             $scope.theme = 'default';
             $scope.gameID = $state.params.gameID;
@@ -194,20 +194,13 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                 return shipLocations;
             }
 
-            tbsShips.ships().then(
-                function (generalShipInfo) {
-                    tbsShipGrid.initialize($scope.theme, $scope.game, computeShipLocations(generalShipInfo), [], function () {
-                        tbsShipGrid.onDown(onDown);
-                        tbsShipGrid.onMove(onMove);
-                        tbsShipGrid.onTap(onTap);
-                        tbsShipGrid.onUp(onUp);
-                        checkOverlap();
-                    });
-                },
-                function () {
-                    //  TODO
-                }
-            );
+            tbsShipGrid.initialize($scope.theme, $scope.game, computeShipLocations(shipInfo), [], function () {
+                tbsShipGrid.onDown(onDown);
+                tbsShipGrid.onMove(onMove);
+                tbsShipGrid.onTap(onTap);
+                tbsShipGrid.onUp(onUp);
+                checkOverlap();
+            });
 
             $scope.$on('$ionicView.leave', function () {
                 tbsShipGrid.stop();

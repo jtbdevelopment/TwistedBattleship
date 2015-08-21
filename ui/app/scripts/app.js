@@ -136,7 +136,12 @@ angular.module('tbs', ['ionic', 'ngCookies', 'tbs.controllers', 'tbs.directives'
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/setup.html',
-                        controller: 'SetupGameCtrl'
+                        controller: 'SetupGameCtrl',
+                        resolve: {
+                            shipInfo: function (tbsShips) {
+                                return tbsShips.ships();
+                            }
+                        }
                     }
                 }
             })
