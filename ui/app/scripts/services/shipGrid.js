@@ -199,7 +199,7 @@ angular.module('tbs.services').factory('tbsShipGrid',
                 var x = Math.floor(coords.x / CELL_SIZE) * CELL_SIZE;
                 if (highlightSprite === null) {
                     highlightSprite = phaser.add.sprite(x, y, 'highlight', 0);
-                    angular.forEach(circle, function (coord) {
+                    angular.forEach(circle, function () {
                         circleSprites.push(phaser.add.sprite(x, y, 'extendedhighlight', 0));
                     });
                 }

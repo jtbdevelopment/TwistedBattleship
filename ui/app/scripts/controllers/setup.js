@@ -159,6 +159,7 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                 }
             }
 
+            //  TODO - patched phaser to work - get latest rev after 2.4.2 with official fix for ontap
             function onTap(pointer, double) {
                 if (double) {
                     var ship = tbsShipGrid.findShipByMouseCoordinates();
