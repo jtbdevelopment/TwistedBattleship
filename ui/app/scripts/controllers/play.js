@@ -6,8 +6,6 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
     ['$rootScope', '$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', '$ionicSideMenuDelegate', 'shipInfo', 'tbsShipGrid', '$ionicModal', // 'twAds',
         function ($rootScope, $scope, tbsGameDetails, tbsActions, jtbGameCache, jtbPlayerService, $state, $ionicSideMenuDelegate, shipInfo, tbsShipGrid, $ionicModal /*, twAds*/) {
             $ionicSideMenuDelegate.canDragContent(false);
-            //  TODO
-            $scope.theme = 'default';
             $scope.gameID = $state.params.gameID;
             $scope.game = jtbGameCache.getGameForID($scope.gameID);
             $scope.playerKeys = Object.keys($scope.game.players);
@@ -20,7 +18,7 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
 
             $scope.shipHighlighted = false;
 
-            tbsShipGrid.initialize($scope.theme, $scope.game, [], [], function () {
+            tbsShipGrid.initialize($scope.game, [], [], function () {
                 $scope.changePlayer($scope.showing);
                 tbsShipGrid.activateHighlighting(highlightCallback);
                 $scope.switchView(false);

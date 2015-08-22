@@ -16,6 +16,7 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
             $scope.invitableFriends = [];
             $scope.submitEnabled = false;
             $scope.gameDetails = tbsGameDetails;
+            $scope.theme = jtbPlayerService.currentPlayer().gameSpecificPlayerAttributes.theme;
 
             var count = 0;
             angular.forEach($scope.featureData, function (feature) {
@@ -48,7 +49,7 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
                 });
             }
 
-            $ionicModal.fromTemplateUrl('help-modal.html', {
+            $ionicModal.fromTemplateUrl('templates/help/help-create.html', {
                 scope: $scope,
                 animation: 'slide-in-up'
             }).then(function (modal) {

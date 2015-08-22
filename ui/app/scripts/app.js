@@ -62,7 +62,6 @@ angular.module('tbs', ['ionic', 'ngCookies', 'tbs.controllers', 'tbs.directives'
     })
     .config(function ($stateProvider, $urlRouterProvider) {
         $stateProvider
-
             //  TODO - menu
             .state('app', {
                 url: '/app',

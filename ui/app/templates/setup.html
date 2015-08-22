@@ -5,42 +5,6 @@
     <ion-footer-bar>
         <game-summary-bar></game-summary-bar>
     </ion-footer-bar>
-    <!--  TODO - move out  -->
-    <script id="help-modal.html" type="text/ng-template">
-        <div class="modal">
-            <!--  TODO - theme  -->
-            <div class="default-theme">
-                <div class="setupHelp tbsModal">
-                    <ion-header-bar>
-                        <h1 class="title">Setup Help</h1>
-                    </ion-header-bar>
-                    <ion-content>
-                        <div class="row">
-
-                            <div class="col-100">
-                                <p>This is where you place your own ships. Once you are happy, press Save.</p>
-
-                                <p>The game begins when all players have saved their ships. As long as not all players
-                                    have saved their setup, you can keep moving your ships even after pressing Save.</p>
-
-                                <p>But move quickly since there is no guarantee the other players won't finish soon!</p>
-
-                                <p>You can drag and drop your ships into position. The ship you are moving will turn
-                                    <span class="greenShip">green</span> while you are moving it. Ships cannot be placed
-                                    on top of each other or out of bounds.</p>
-
-                                <p>Double clicking or double tapping a ship will rotate it 90 degrees.</p>
-
-                                <p>If ships are <span class="redShip">red</span>, it means they are on top of each other
-                                    and at least one needs to be moved.</p>
-                            </div>
-                        </div>
-                        <button class="button button-full button-positive" ng-click="closeHelp()">Close</button>
-                    </ion-content>
-                </div>
-            </div>
-        </div>
-    </script>
     <ion-content has-bouncing="false">
         <div class="row">
             <div class="list col-20">

@@ -62,11 +62,12 @@
     <script src="scripts/controllers/playerListAndState.js"></script>
     <script src="scripts/controllers/setup.js"></script>
     <script src="scripts/controllers/play.js"></script>
+    <script src="scripts/controllers/theme.js"></script>
     <!-- endbuild -->
 </head>
 
-<body ng-app="tbs">
 <!--  TODO - theme  -->
-<ion-nav-view class="default-theme"></ion-nav-view>
+<body ng-app="tbs" ng-controller="ThemeCtrl" class="{{theme}}">
+<ion-nav-view></ion-nav-view>
 </body>
 </html>

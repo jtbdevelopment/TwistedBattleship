@@ -255,8 +255,8 @@ angular.module('tbs.services').factory('tbsShipGrid',
                         phaser = null;
                     }
                 },
-                initialize: function (useTheme, loadedGame, initialShipLocations, initialCellMarkers, postCreateCB) {
-                    theme = useTheme;
+                initialize: function (loadedGame, initialShipLocations, initialCellMarkers, postCreateCB) {
+                    theme = jtbPlayerService.currentPlayer().gameSpecificPlayerAttributes.theme;
                     game = loadedGame;
                     gameWidth = game.gridSize * CELL_SIZE;
                     gameHeight = game.gridSize * CELL_SIZE;

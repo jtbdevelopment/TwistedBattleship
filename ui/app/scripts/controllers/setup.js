@@ -4,7 +4,6 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
     ['$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', '$ionicSideMenuDelegate', 'shipInfo', 'tbsShipGrid', '$ionicModal', // 'twAds',
         function ($scope, tbsGameDetails, tbsActions, jtbGameCache, jtbPlayerService, $state, $ionicSideMenuDelegate, shipInfo, tbsShipGrid, $ionicModal /*, twAds*/) {
             $ionicSideMenuDelegate.canDragContent(false);
-            $scope.theme = 'default';
             $scope.gameID = $state.params.gameID;
             $scope.game = jtbGameCache.getGameForID($scope.gameID);
             $scope.gameDetails = tbsGameDetails;
@@ -13,7 +12,7 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
             $scope.movingPointerRelativeToShip = {x: 0, y: 0};
             $scope.submitDisabled = true;
 
-            $ionicModal.fromTemplateUrl('help-modal.html', {
+            $ionicModal.fromTemplateUrl('templates/help/help-setup.html', {
                 scope: $scope,
                 animation: 'slide-in-up'
             }).then(function (modal) {
@@ -195,7 +194,7 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                 return shipLocations;
             }
 
-            tbsShipGrid.initialize($scope.theme, $scope.game, computeShipLocations(shipInfo), [], function () {
+            tbsShipGrid.initialize($scope.game, computeShipLocations(shipInfo), [], function () {
                 tbsShipGrid.onDown(onDown);
                 tbsShipGrid.onMove(onMove);
                 tbsShipGrid.onTap(onTap);
