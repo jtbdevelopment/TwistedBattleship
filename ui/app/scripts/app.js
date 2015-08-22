@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('tbs', ['ionic', 'ngCookies', 'tbs.controllers', 'tbs.directives', 'config', 'ion-autocomplete'])
+angular.module('tbs', ['ionic', 'ngBiscuit', 'tbs.controllers', 'tbs.directives', 'config', 'ion-autocomplete'])
 
-    .run(function ($ionicPlatform, $cookies) {
+    .run(function ($ionicPlatform, cookieStore, ENV) {
         $ionicPlatform.ready(function () {
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
             // for form inputs)
@@ -13,8 +13,7 @@ angular.module('tbs', ['ionic', 'ngCookies', 'tbs.controllers', 'tbs.directives'
                 // org.apache.cordova.statusbar required
                 StatusBar.styleDefault();
             }
-            //  TODO - this is not setting it for endpoint domain
-            $cookies['jtbdevelopment.twistedbattleship'] = 'true';
+            cookieStore.put('jtbdevelopment.twistedbattleship', 'true', {'domain': ENV.domain});
         });
     })
     //  TODO - move interceptor to game core?

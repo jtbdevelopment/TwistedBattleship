@@ -1,7 +1,5 @@
 'use strict';
 
-var ALL = 'ALL';
-
 angular.module('tbs.controllers').controller('ThemeCtrl',
     ['$scope', 'jtbPlayerService',
         function ($scope, jtbPlayerService) {
