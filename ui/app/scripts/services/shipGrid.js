@@ -14,15 +14,6 @@ angular.module('tbs.services').factory('tbsShipGrid',
             var HALF_CELL_SIZE = CELL_SIZE / 2;
 
             var circles;
-            tbsCircles.circles().then(
-                function (circleData) {
-                    circles = circleData;
-                },
-                function (error) {
-                    //  TODO
-                    console.warn(error);
-                }
-            );
             var circle;
             var circleSprites = [];
             var theme;
@@ -100,6 +91,7 @@ angular.module('tbs.services').factory('tbsShipGrid',
                     'obscuredrehit',
                     'obscuredmiss',
                     'obscuredhit',
+                    'hiddenhit',
                     'unknown'
                 ], function (state) {
                     phaser.load.image(state, '/images/' + theme + '/' + state + '.png');
@@ -124,6 +116,8 @@ angular.module('tbs.services').factory('tbsShipGrid',
                 placeCellMarkers();
 
                 //  TODO  - look at more
+                //  phasescale.setUserScale?
+
                 //phaser.scale.fullScreenScaleMode = Phaser.ScaleManager.NO_SCALE;
                 //phaser.scale.startFullScreen(false);
 
@@ -270,12 +264,21 @@ angular.module('tbs.services').factory('tbsShipGrid',
                     shipLocations = initialShipLocations;
                     cellMarkers = initialCellMarkers;
                     postCreateFunction = postCreateCB;
-                    phaser = new Phaser.Game(
-                        gameWidth,
-                        gameHeight,
-                        Phaser.AUTO,
-                        'phaser',
-                        {preload: preload, create: create});
+                    tbsCircles.circles().then(
+                        function (circleData) {
+                            circles = circleData;
+                            phaser = new Phaser.Game(
+                                gameWidth,
+                                gameHeight,
+                                Phaser.AUTO,
+                                'phaser',
+                                {preload: preload, create: create});
+                        },
+                        function (error) {
+                            //  TODO
+                            console.warn(error);
+                        }
+                    );
                 },
 
                 placeShips: function (newShipLocations) {

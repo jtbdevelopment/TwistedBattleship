@@ -23,6 +23,8 @@ enum GridCellState {
     KnownEmpty(40),  // Spied
     KnownShip(40),   // Spied
 
+    HiddenHit(45),   // Hit but not known to opponent
+
     KnownByOtherHit(50),
     KnownByOtherMiss(50),
     KnownByRehit(55),

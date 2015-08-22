@@ -514,15 +514,15 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
         assert 2 == game.remainingMoves
         assert "TEST PLAYER1 deployed an ECM at (8,7)."
         assert 1 == game.maskedPlayersState.ecmsRemaining
-        assert GridCellState.Unknown == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 7)
+        assert GridCellState.HiddenHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 7)
         assert GridCellState.KnownByHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 0)
 
 
         game = ecm(P1G, TEST_PLAYER1, new GridCoordinate(6, 0))
         assert "TEST PLAYER1 deployed an ECM at (6,0)."
         assert GamePhase.Playing == game.gamePhase
-        assert GridCellState.Unknown == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 7)
-        assert GridCellState.Unknown == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 0)
+        assert GridCellState.HiddenHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 7)
+        assert GridCellState.HiddenHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 0)
         assert 0 == game.playersScore[TEST_PLAYER1.md5]
         assert 0 == game.maskedPlayersState.ecmsRemaining
         assert TEST_PLAYER1.md5 != game.currentPlayer

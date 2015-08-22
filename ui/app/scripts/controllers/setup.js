@@ -200,6 +200,7 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                 tbsShipGrid.onTap(onTap);
                 tbsShipGrid.onUp(onUp);
                 checkOverlap();
+                $scope.$apply();
             });
 
             $scope.$on('$ionicView.leave', function () {

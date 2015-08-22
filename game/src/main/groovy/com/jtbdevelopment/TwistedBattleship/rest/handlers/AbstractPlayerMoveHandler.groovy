@@ -8,7 +8,11 @@ import com.jtbdevelopment.TwistedBattleship.rest.Target
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
+import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
+import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
+import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
+import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
 import com.jtbdevelopment.games.exceptions.input.GameIsNotInPlayModeException
 import com.jtbdevelopment.games.exceptions.input.PlayerOutOfTurnException
 import com.jtbdevelopment.games.players.Player
@@ -41,7 +45,28 @@ abstract class AbstractPlayerMoveHandler extends AbstractGameActionHandler<Targe
 
         Player targetPlayer = loadPlayerMD5(target.player)
         validateMove(player, game, targetPlayer, target.coordinate)
-        return playMove(player, game, targetPlayer, target.coordinate)
+        return markHiddenHits(playMove(player, game, targetPlayer, target.coordinate), player)
+    }
+
+    //  TODO - unit test
+    @SuppressWarnings("GrMethodMayBeStatic")
+    protected TBGame markHiddenHits(TBGame game, Player player) {
+        TBPlayerState state = game.playerDetails[(ObjectId) player.id]
+        state.shipStates.each {
+            Ship ship, ShipState shipState ->
+                for (int shipCell = 0; shipCell < ship.gridSize; ++shipCell) {
+                    if (shipState.shipSegmentHit[shipCell]) {
+                        state.opponentViews.each {
+                            ObjectId opponent, Grid opponentView ->
+                                GridCoordinate shipCellCoordinate = shipState.shipGridCells[shipCell]
+                                if (opponentView.get(shipCellCoordinate).rank < GridCellState.HiddenHit.rank) {
+                                    opponentView.set(shipCellCoordinate, GridCellState.HiddenHit)
+                                }
+                        }
+                    }
+                }
+        }
+        return game
     }
 
     @Override

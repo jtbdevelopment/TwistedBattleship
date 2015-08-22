@@ -24,6 +24,7 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
                 $scope.changePlayer($scope.showing);
                 tbsShipGrid.activateHighlighting(highlightCallback);
                 $scope.switchView(false);
+                $scope.$apply();
             });
 
 
