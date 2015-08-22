@@ -3,7 +3,6 @@
 angular.module('tbs.controllers')
     //  TODO - finish and move to core
     //  TODO - investigate cordova facebook plugin instead of custom
-    //  TODO - move modals out of html?
     .controller('CoreMobileSignInCtrl',
     ['$scope', '$window', '$cookies', '$http', '$state', '$cacheFactory', '$ionicHistory', '$rootScope', 'jtbFacebook', 'ENV',
         function ($scope, $window, $cookies, $http, $state, $cacheFactory, $ionicHistory, $rootScope, jtbFacebook, ENV) {

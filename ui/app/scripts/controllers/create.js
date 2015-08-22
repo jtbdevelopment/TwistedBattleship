@@ -7,6 +7,7 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
         function (friends, features, $scope, jtbGameCache, jtbPlayerService, jtbFacebook, $http, $state, $location, tbsGameDetails, $ionicModal, $ionicHistory/*, twAds*/) {
 
             $scope.playerChoices = [];
+            //  TODO - nothing displaying alerts
             $scope.alerts = [];
             $scope.featureData = [];
             $scope.currentOptions = [];
@@ -171,7 +172,7 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
 //                });
             };
 
-            //  TODO
+            //  TODO - test
             $scope.showInvite = function () {
                 $ionicModal.open({
                     templateUrl: 'views/inviteDialog.html',
