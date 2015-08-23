@@ -27,6 +27,11 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
                 $scope.$apply();
             });
 
+            $scope.declineRematch = function () {
+                //  TODO - winds up on weird location
+                tbsActions.declineRematch($scope);
+            };
+
             $scope.rematch = function () {
                 //  TODO - winds up on weird location
                 tbsActions.rematch($scope);

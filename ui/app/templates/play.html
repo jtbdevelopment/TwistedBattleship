@@ -29,13 +29,6 @@
                     </div>
                 </div>
                 <div ng-hide="game.gamePhase === 'Playing'">
-                    <div class="item action-item " ng-show="game.gamePhase === 'RoundOver'">
-                        <div class="button-bar ">
-                            <button class="button rematch icon-left ion-loop" ng-click="rematch()">
-                                Rematch
-                            </button>
-                        </div>
-                    </div>
                     <div class="item {{(game.winningPlayer === player.md5) ? 'winner' : 'loser'}}">
                         Winner: <span class="badge badge-note">{{game.players[game.winningPlayer]}}</span>
                     </div>
@@ -118,8 +111,25 @@
                             </button>
                         </div>
                     </div>
-
                 </div>
+                <div ng-show="game.gamePhase === 'RoundOver'">
+                    <div class="item item-divider"></div>
+                    <div class="item action-item">
+                        <div class="button-bar ">
+                            <button class="button rematch icon-left ion-loop" ng-click="rematch()">
+                                Rematch
+                            </button>
+                        </div>
+                    </div>
+                    <div class="item action-item">
+                        <div class="button-bar ">
+                            <button class="button endRematch icon-left ion-loop" ng-click="declineRematch()">
+                                End Rematches
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
             </div>
             <div class="col-80">
                 <div class="row">
