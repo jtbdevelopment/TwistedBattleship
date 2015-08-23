@@ -1,4 +1,3 @@
-/*global $:false */
 'use strict';
 
 var phasesAndIcons = {
@@ -52,26 +51,8 @@ angular.module('tbs.controllers').controller('MobileGameListCtrl',
                 $scope.$broadcast('scroll.refreshComplete');
             });
 
-            $scope.$on('phaseChangeAlert', function (event, game) {
+            $scope.$on('phaseChangeAlert', function (/*event, game*/) {
                 //  TODO
-                /*
-                 //  Brief timeout to allow event to fully propagate so data is current
-                 $timeout(function () {
-                 if (game.gamePhase === phase) {
-                 var buttonId = '#' + game.id;
-                 var prop = angular.element(buttonId);
-                 if (angular.isDefined(prop)) {
-                 $animate.addClass(prop, 'animated shake').then(function () {
-                 var prop = angular.element(buttonId);
-                 //  TODO - not sure why but angular remove not working - jquery for now
-                 $(buttonId).removeClass('animated');
-                 $(buttonId).removeClass('shake');
-                 $animate.removeClass(prop, 'animated shake');
-                 });
-                 }
-                 }
-                 }, 1);
-                 */
             });
         }
     ]);
