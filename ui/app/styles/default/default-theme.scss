@@ -15,6 +15,12 @@
 
   background-color: $paler_blue;
 
+  .popup {
+    background: $medium_blue;
+    .popup-body {
+      text-align: center;
+    }
+  }
   .scroll-content {
     background-color: $medium_blue;
   }

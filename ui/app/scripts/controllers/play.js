@@ -3,8 +3,8 @@
 var ALL = 'ALL';
 
 angular.module('tbs.controllers').controller('PlayGameCtrl',
-    ['$rootScope', '$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', '$ionicSideMenuDelegate', 'shipInfo', 'tbsShipGrid', '$ionicModal', // 'twAds',
-        function ($rootScope, $scope, tbsGameDetails, tbsActions, jtbGameCache, jtbPlayerService, $state, $ionicSideMenuDelegate, shipInfo, tbsShipGrid, $ionicModal /*, twAds*/) {
+    ['$rootScope', '$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', '$ionicSideMenuDelegate', 'shipInfo', 'tbsShipGrid', '$ionicPopup', // 'twAds',
+        function ($rootScope, $scope, tbsGameDetails, tbsActions, jtbGameCache, jtbPlayerService, $state, $ionicSideMenuDelegate, shipInfo, tbsShipGrid, $ionicPopup /*, twAds*/) {
             $ionicSideMenuDelegate.canDragContent(false);
             $scope.gameID = $state.params.gameID;
             $scope.game = jtbGameCache.getGameForID($scope.gameID);
@@ -23,18 +23,6 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
                 tbsShipGrid.activateHighlighting(highlightCallback);
                 $scope.switchView(false);
                 $scope.$apply();
-            });
-
-
-            $scope.modalScope = $rootScope.$new();
-            $ionicModal.fromTemplateUrl('templates/messageBox.html', {
-                scope: $scope.modalScope,
-                animation: 'slide-in-up'
-            }).then(function (modal) {
-                $scope.modal = modal;
-                $scope.modalScope.close = function () {
-                    $scope.modal.hide();
-                };
             });
 
             $scope.fire = function () {
@@ -132,9 +120,6 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
             $scope.$on('$ionicView.leave', function () {
                 tbsShipGrid.stop();
             });
-            $scope.$on('$destroy', function () {
-                $scope.modal.remove();
-            });
 
             $scope.$on('gameUpdated', function (event, oldGame, newGame) {
                 if ($scope.gameID === newGame.id) {
@@ -142,8 +127,12 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
                     $scope.changePlayer($scope.showing);
                     var message = $scope.game.maskedPlayersState.lastActionMessage;
                     if (angular.isDefined(message) && message !== '') {
-                        $scope.modalScope.lastMessage = message;
-                        $scope.modal.show();
+                        var alertPopup = $ionicPopup.alert({
+                            title: 'Move Completed!',
+                            template: message
+                        });
+                        alertPopup.then(function () {
+                        });
                     }
                 }
             });
