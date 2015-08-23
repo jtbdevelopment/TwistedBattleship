@@ -20,10 +20,17 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
 
             tbsShipGrid.initialize($scope.game, [], [], function () {
                 $scope.changePlayer($scope.showing);
-                tbsShipGrid.activateHighlighting(highlightCallback);
+                if ($scope.game.gamePhase === 'Playing') {
+                    tbsShipGrid.activateHighlighting(highlightCallback);
+                }
                 $scope.switchView(false);
                 $scope.$apply();
             });
+
+            $scope.rematch = function () {
+                //  TODO - winds up on weird location
+                tbsActions.rematch($scope);
+            };
 
             $scope.fire = function () {
                 var cell = tbsShipGrid.selectedCell();
@@ -126,6 +133,9 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
                     $scope.game = newGame;
                     $scope.changePlayer($scope.showing);
                     var message = $scope.game.maskedPlayersState.lastActionMessage;
+                    if ($scope.game.gamePhase !== 'Playing') {
+                        tbsShipGrid.deactivateHighlighting();
+                    }
                     if (angular.isDefined(message) && message !== '') {
                         var alertPopup = $ionicPopup.alert({
                             title: 'Move Completed!',

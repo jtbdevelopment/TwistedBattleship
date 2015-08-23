@@ -157,6 +157,34 @@ angular.module('tbs', ['ionic', 'ngBiscuit', 'tbs.controllers', 'tbs.directives'
                     }
                 }
             })
+            .state('app.roundover', {
+                url: '/games/roundover/:gameID',
+                views: {
+                    'menuContent': {
+                        templateUrl: 'templates/play.html',
+                        controller: 'PlayGameCtrl',
+                        resolve: {
+                            shipInfo: function (tbsShips) {
+                                return tbsShips.ships();
+                            }
+                        }
+                    }
+                }
+            })
+            .state('app.nextroundstarted', {
+                url: '/games/nextroundstarted/:gameID',
+                views: {
+                    'menuContent': {
+                        templateUrl: 'templates/play.html',
+                        controller: 'PlayGameCtrl',
+                        resolve: {
+                            shipInfo: function (tbsShips) {
+                                return tbsShips.ships();
+                            }
+                        }
+                    }
+                }
+            })
         ;
 
         // if none of the above states are matched, use this as the fallback

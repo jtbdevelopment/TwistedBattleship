@@ -144,5 +144,6 @@ class TBGameMaskerTest extends MongoGameCoreTestCase {
                 }
             }
         }
+        assert PONE.md5 == maskedGame.winningPlayer
     }
 }

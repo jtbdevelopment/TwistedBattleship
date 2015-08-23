@@ -728,6 +728,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
         assert game.playersAlive[TEST_PLAYER1.md5]
         assert 72 == game.playersScore[TEST_PLAYER1.md5]
         assert "TEST PLAYER1 defeated all challengers!" == game.maskedPlayersState.lastActionMessage
+        assert TEST_PLAYER1.md5 == game.winningPlayer
 
         TBMaskedGame newGame = rematchGame(P1G)
         assert GamePhase.Challenged == newGame.gamePhase

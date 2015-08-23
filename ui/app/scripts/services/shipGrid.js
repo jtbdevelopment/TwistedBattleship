@@ -312,6 +312,10 @@ angular.module('tbs.services').factory('tbsShipGrid',
                     highlightCallback = highlightCB;
                     this.onTap(highlightCell);
                 },
+                deactivateHighlighting: function () {
+                    highlightCallback = undefined;
+                    this.onTap(undefined);
+                },
                 selectedCell: function () {
                     return {x: highlightX, y: highlightY};
                 },

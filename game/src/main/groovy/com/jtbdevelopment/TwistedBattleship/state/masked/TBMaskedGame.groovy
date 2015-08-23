@@ -16,6 +16,7 @@ class TBMaskedGame extends AbstractMaskedMultiPlayerGame<GameFeature> {
     TBMaskedPlayerState maskedPlayersState
     String generalMessage
     String currentPlayer
+    String winningPlayer
     //  TODO support non-symmetrical
     int gridSize
     int remainingMoves

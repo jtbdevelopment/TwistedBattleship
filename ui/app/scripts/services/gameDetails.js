@@ -55,6 +55,14 @@ angular.module('tbs.services').factory('tbsGameDetails',
                 return game.maskedPlayersState.evasiveManeuversRemaining > 0 && game.remainingMoves >= game.movesForSpecials;
             },
 
+            playerRematchPossible: function (game, md5) {
+                if (!checkParams(game, md5)) {
+                    return false;
+                }
+
+                return game.gamePhase === 'RoundOver';
+            },
+
             playerChallengeResponseNeeded: function (game, md5) {
                 if (!checkParams(game, md5)) {
                     return false;
@@ -202,7 +210,8 @@ angular.module('tbs.services').factory('tbsGameDetails',
                     });
                     result.playerAction = this.playerChallengeResponseNeeded(game, md5) === true ||
                         this.playerSetupEntryRequired(game, md5) === true ||
-                        this.playerCanPlay(game, md5) === true;
+                        this.playerCanPlay(game, md5) === true ||
+                        this.playerRematchPossible(game, md5) == true;
                     return result;
                 }
                 return 'Game details missing!';

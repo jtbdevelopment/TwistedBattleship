@@ -1,5 +1,7 @@
 <!--  TODO - help -->
 <!--  TODO - eliminate dead people -->
+<!--  TODO - show if you are dead  -->
+<!--  TODO - disable buttons if action pending  -->
 <ion-view class="playGame" xmlns="http://www.w3.org/1999/html">
     <ion-footer-bar>
         <game-summary-bar></game-summary-bar>
@@ -18,11 +20,25 @@
         </div>
         <div class="row">
             <div class="list col-20">
-                <div class="item {{gameDetails.playerCanPlay(game, player.md5) ? 'activePlayer' : 'inactivePlayer'}}">
-                    Current Turn: <span class="badge badge-note">{{game.players[game.currentPlayer]}}</span>
+                <div ng-show="game.gamePhase === 'Playing'">
+                    <div class="item {{gameDetails.playerCanPlay(game, player.md5) ? 'activePlayer' : 'inactivePlayer'}}">
+                        Current Turn: <span class="badge badge-note">{{game.players[game.currentPlayer]}}</span>
+                    </div>
+                    <div class="item">
+                        Moves Remaining: <span class="badge badge-note">{{game.remainingMoves}}</span>
+                    </div>
                 </div>
-                <div class="item">
-                    Moves Remaining: <span class="badge badge-note">{{game.remainingMoves}}</span>
+                <div ng-hide="game.gamePhase === 'Playing'">
+                    <div class="item action-item " ng-show="game.gamePhase === 'RoundOver'">
+                        <div class="button-bar ">
+                            <button class="button rematch icon-left ion-loop" ng-click="rematch()">
+                                Rematch
+                            </button>
+                        </div>
+                    </div>
+                    <div class="item {{(game.winningPlayer === player.md5) ? 'winner' : 'loser'}}">
+                        Winner: <span class="badge badge-note">{{game.players[game.winningPlayer]}}</span>
+                    </div>
                 </div>
                 <div class="item">
                     Your Score: <span class="badge badge-note">{{game.playersScore[player.md5]}}</span>
@@ -94,11 +110,15 @@
                         </div>
                     </div>
                 </div>
-                <div class="item item-divider"></div>
-                <div class="item action-item">
-                    <div class="button-bar">
-                        <button class="button button-assertive icon-left ion-flag" ng-click="quit()"> Surrender</button>
+                <div ng-show="game.gamePhase === 'Playing'">
+                    <div class="item item-divider"></div>
+                    <div class="item action-item">
+                        <div class="button-bar">
+                            <button class="button button-assertive icon-left ion-flag" ng-click="quit()"> Surrender
+                            </button>
+                        </div>
                     </div>
+
                 </div>
             </div>
             <div class="col-80">

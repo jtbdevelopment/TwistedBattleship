@@ -57,12 +57,21 @@ class TBGameMasker extends AbstractMultiPlayerGameMasker<ObjectId, GameFeature, 
         masked.maskedPlayersState = createMaskedPlayerState(game.playerDetails[player.id], idMap)
         masked.maskedPlayersState.consolidatedOpponentView = createConsolidatedView(game, masked)
         masked.currentPlayer = idMap[game.currentPlayer].md5
+        int maxScore = -1;
+        String winningPlayer;
         game.playerDetails.each {
             ObjectId playerId, TBPlayerState state ->
-                masked.playersAlive[idMap[playerId].md5] = state.alive
-                masked.playersScore[idMap[playerId].md5] = state.totalScore
-                masked.playersSetup[idMap[playerId].md5] = state.setup
+
+                String md5 = idMap[playerId].md5
+                masked.playersAlive[md5] = state.alive
+                masked.playersScore[md5] = state.totalScore
+                masked.playersSetup[md5] = state.setup
+                if(state.totalScore > maxScore) {
+                    winningPlayer = md5
+                    maxScore = state.totalScore
+                }
         }
+        masked.winningPlayer = winningPlayer
     }
 
     @SuppressWarnings("GrMethodMayBeStatic")

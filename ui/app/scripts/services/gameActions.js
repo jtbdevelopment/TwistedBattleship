@@ -70,6 +70,20 @@ angular.module('tbs.services').factory('tbsActions',
 //                });
                 },
 
+                rematch: function ($scope) {
+//  TODO
+//                twAds.showAdPopup().result.then(function () {
+                    $http.put(gameURL($scope) + 'rematch').success(function (data) {
+                        updateGame($scope, data);
+                        //twGameDisplay.processGameUpdateForScope($scope, data);
+                    }).error(function (data, status, headers, config) {
+                        //  TODO
+                        //showMessage(data);
+                        console.error(data + status + headers + config);
+                    });
+//                });
+                },
+
                 quit: function ($scope) {
 //  TODO
 //                var modal = showConfirmDialog();

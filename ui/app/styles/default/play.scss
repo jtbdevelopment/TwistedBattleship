@@ -18,10 +18,16 @@
         top: 15px;
       }
 
+      .rematch {
+        background-color: $paler_green;
+        color: black;
+      }
+
     }
     .item-divider {
       border-color: $boatgray;
     }
+
 
     .chosen {
       background-color: yellow;
@@ -37,6 +43,20 @@
     .inactivePlayer {
       .badge {
         background-color: $medium_blue;
+      }
+    }
+
+    .winner {
+      .badge {
+        background-color: $darker_green;
+        color: black;
+      }
+    }
+
+    .loser {
+      .badge {
+        background-color: red;
+        color: black;
       }
     }
     @import "buttons";
