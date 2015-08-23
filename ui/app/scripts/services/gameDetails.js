@@ -211,7 +211,7 @@ angular.module('tbs.services').factory('tbsGameDetails',
                     result.playerAction = this.playerChallengeResponseNeeded(game, md5) === true ||
                         this.playerSetupEntryRequired(game, md5) === true ||
                         this.playerCanPlay(game, md5) === true ||
-                        this.playerRematchPossible(game, md5) == true;
+                        this.playerRematchPossible(game, md5) === true;
                     return result;
                 }
                 return 'Game details missing!';
