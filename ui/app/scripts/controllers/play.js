@@ -130,6 +130,7 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
 
             $scope.$on('gameUpdated', function (event, oldGame, newGame) {
                 if ($scope.gameID === newGame.id) {
+                    //  TODO - show ad if turn over
                     $scope.game = newGame;
                     $scope.changePlayer($scope.showing);
                     var message = $scope.game.maskedPlayersState.lastActionMessage;
