@@ -44,7 +44,7 @@ module.exports = function (grunt) {
                     ENV: {
                         name: 'development',
                         domain: 'localhost',
-                        apiEndpoint: 'http://localhost:8100'
+                        apiEndpoint: 'http://localhost:9998'
                     }
                 }
             },

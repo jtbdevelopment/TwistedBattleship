@@ -49,9 +49,12 @@ angular.module('tbs.controllers')
 
             function showLoginOptions() {
                 $scope.showFacebook = true;
+                alert($window.location);
                 $scope.showManual =
                     $window.location.href.indexOf('localhost') > -1 ||
+                    $window.location.href.indexOf('file') === 0 ||
                     $window.location.href.indexOf('-dev') > -1;
+                alert($scope.showManual);
                 $scope.message = '';
             }
 

@@ -1,7 +1,9 @@
 'use strict';
 
 angular.module('tbs', ['ionic', 'ngBiscuit', 'tbs.controllers', 'tbs.directives', 'config', 'ion-autocomplete'])
-
+    .config(['$httpProvider', function ($httpProvider) {
+        $httpProvider.defaults.withCredentials = true;
+    }])
     .run(function ($ionicPlatform, cookieStore, ENV) {
         $ionicPlatform.ready(function () {
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
