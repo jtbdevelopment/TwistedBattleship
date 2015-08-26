@@ -1,13 +1,12 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <widget id="com.example.TwistedBattleship" version="0.0.1" xmlns="http://www.w3.org/ns/widgets">
-    <name>TwistedBattleship</name>
-    <description>
+  <name>TwistedBattleship</name>
+  <description>
         Twisted Battleship - Rule the 7 seas!
     </description>
-    <author email="jtbdevelopment@gmail.com" href="http://www.jtbdevelopment.com/">
+  <author email="jtbdevelopment@gmail.com" href="http://www.jtbdevelopment.com/">
         JTB Development
     </author>
-    <content src="index.html"/>
-    <!--  TODO -->
-    <access origin="*"/>
+  <content src="index.html"/>
+  <access origin="*"/>
 </widget>

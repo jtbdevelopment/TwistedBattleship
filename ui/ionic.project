@@ -1,28 +1,6 @@
 {
   "name": "Twisted Battleship",
   "app_id": "",
-  "proxies": [
-    {
-      "path": "/api",
-      "proxyUrl": "http://localhost:9998/api"
-    },
-    {
-      "path": "/auth",
-      "proxyUrl": "http://localhost:9998/auth"
-    },
-    {
-      "path": "/signout",
-      "proxyUrl": "http://localhost:9998/signout"
-    },
-    {
-      "path": "/livefeed",
-      "proxyUrl": "http://localhost:9998/livefeed"
-    },
-    {
-      "path": "/signin",
-      "proxyUrl": "http://localhost:9998/signin"
-    }
-  ],
   "watchPatterns": [
     "www/**/*",
     "!www/lib/**/*",
