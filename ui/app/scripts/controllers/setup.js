@@ -139,18 +139,18 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                 }
             }
 
-            function onMove() {
+            function onMove(pointer, x, y) {
                 if ($scope.movingShip !== null) {
-                    var coords = tbsShipGrid.currentMouseCoordinates();
+                    var coords = tbsShipGrid.currentCoordinatesFromXY(x, y);
                     $scope.movingShip.sprite.x = coords.x + $scope.movingPointerRelativeToShip.x;
                     $scope.movingShip.sprite.y = coords.y + $scope.movingPointerRelativeToShip.y;
                     tbsShipGrid.computeShipCorners($scope.movingShip);
                 }
             }
 
-            function onDown() {
-                var coords = tbsShipGrid.currentMouseCoordinates();
-                $scope.movingShip = tbsShipGrid.findShipByMouseCoordinates();
+            function onDown(context) {
+                var coords = tbsShipGrid.currentContextCoordinates(context);
+                $scope.movingShip = tbsShipGrid.findShipByContextCoordinates(context);
                 if ($scope.movingShip !== null) {
                     $scope.movingPointerRelativeToShip.x = $scope.movingShip.centerX - coords.x;
                     $scope.movingPointerRelativeToShip.y = $scope.movingShip.centerY - coords.y;
@@ -159,9 +159,9 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
             }
 
             //  TODO - patched phaser to work - get latest rev after 2.4.2 with official fix for ontap
-            function onTap(pointer, double) {
+            function onTap(context, double) {
                 if (double) {
-                    var ship = tbsShipGrid.findShipByMouseCoordinates();
+                    var ship = tbsShipGrid.findShipByContextCoordinates(context);
 
                     if (ship) {
                         ship.horizontal = !(ship.horizontal);

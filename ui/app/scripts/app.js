@@ -1,10 +1,10 @@
 'use strict';
 
-angular.module('tbs', ['ionic', 'ngBiscuit', 'tbs.controllers', 'tbs.directives', 'config', 'ion-autocomplete'])
+angular.module('tbs', ['ionic', 'tbs.controllers', 'tbs.directives', 'config', 'ion-autocomplete'])
     .config(['$httpProvider', function ($httpProvider) {
         $httpProvider.defaults.withCredentials = true;
     }])
-    .run(function ($ionicPlatform, cookieStore, ENV) {
+    .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
             // for form inputs)
@@ -15,7 +15,6 @@ angular.module('tbs', ['ionic', 'ngBiscuit', 'tbs.controllers', 'tbs.directives'
                 // org.apache.cordova.statusbar required
                 StatusBar.styleDefault();
             }
-            cookieStore.put('jtbdevelopment.twistedbattleship', 'true', {'domain': ENV.domain});
         });
     })
     //  TODO - move interceptor to game core?

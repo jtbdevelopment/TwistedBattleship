@@ -35,13 +35,15 @@ angular.module('tbs.controllers')
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                     method: 'POST'
                 }).success(function () {
+                    console.log('Logged in');
                     clearHttpCache();
-                    $rootScope.$broadcast('refreshGames', '');
+                    $rootScope.$broadcast('login');
                     $ionicHistory.nextViewOptions({
                         disableBack: true
                     });
                     $state.go('app.games', {}, {reload: true});
                 }).error(function () {
+                    console.log('Login failed');
                     clearHttpCache();
                     $scope.message = 'Invalid username or password.';
                 });
@@ -49,12 +51,12 @@ angular.module('tbs.controllers')
 
             function showLoginOptions() {
                 $scope.showFacebook = true;
-                alert($window.location);
+                // TODO - this will be no good for prod - need to pull in endpoint
                 $scope.showManual =
+                    $window.location.href.indexOf('192.168.1') > -1 ||
                     $window.location.href.indexOf('localhost') > -1 ||
                     $window.location.href.indexOf('file') === 0 ||
                     $window.location.href.indexOf('-dev') > -1;
-                alert($scope.showManual);
                 $scope.message = '';
             }
 
@@ -66,6 +68,8 @@ angular.module('tbs.controllers')
                 //  TODO - make $http instead?
                 //  TODO - force a refresh games in here/reload all
                 $window.location = ENV.apiEndpoint + '/auth/facebook';
+                //  TODO - doubt this works
+                $scope.$broadcast('login');
             }
 
             function clearHttpCache() {

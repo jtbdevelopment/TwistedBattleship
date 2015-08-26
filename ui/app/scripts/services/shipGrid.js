@@ -72,10 +72,10 @@ angular.module('tbs.services').factory('tbsShipGrid',
                 highlightCallback = null;
                 highlightX = -1;
                 highlightY = -1;
-                phaser.load.tilemap('grid', '/templates/gamefiles/' + json, null, Phaser.Tilemap.TILED_JSON);
-                phaser.load.image('tile', '/images/' + theme + '/tile.png');
-                phaser.load.image('highlight', '/images/' + theme + '/highlight.png');
-                phaser.load.image('extendedhighlight', '/images/' + theme + '/extendedhighlight.png');
+                phaser.load.tilemap('grid', 'templates/gamefiles/' + json, null, Phaser.Tilemap.TILED_JSON);
+                phaser.load.image('tile', 'images/' + theme + '/tile.png');
+                phaser.load.image('highlight', 'images/' + theme + '/highlight.png');
+                phaser.load.image('extendedhighlight', 'images/' + theme + '/extendedhighlight.png');
                 angular.forEach([
                     'knownbyhit',
                     'knownbymiss',
@@ -94,13 +94,13 @@ angular.module('tbs.services').factory('tbsShipGrid',
                     'hiddenhit',
                     'unknown'
                 ], function (state) {
-                    phaser.load.image(state, '/images/' + theme + '/' + state + '.png');
+                    phaser.load.image(state, 'images/' + theme + '/' + state + '.png');
                 });
-                phaser.load.image('Destroyer', '/images/' + theme + '/destroyer.png');
-                phaser.load.image('Submarine', '/images/' + theme + '/submarine.png');
-                phaser.load.image('Battleship', '/images/' + theme + '/battleship.png');
-                phaser.load.image('Cruiser', '/images/' + theme + '/cruiser.png');
-                phaser.load.image('Carrier', '/images/' + theme + '/carrier.png');
+                phaser.load.image('Destroyer', 'images/' + theme + '/destroyer.png');
+                phaser.load.image('Submarine', 'images/' + theme + '/submarine.png');
+                phaser.load.image('Battleship', 'images/' + theme + '/battleship.png');
+                phaser.load.image('Cruiser', 'images/' + theme + '/cruiser.png');
+                phaser.load.image('Carrier', 'images/' + theme + '/carrier.png');
             }
 
             function create() {
@@ -187,14 +187,14 @@ angular.module('tbs.services').factory('tbsShipGrid',
                 shipsOnGrid.push(shipOnGrid);
             }
 
-            function currentMouseCoordinates() {
-                var x = phaser.input.mousePointer.x / gameScale;
-                var y = phaser.input.mousePointer.y / gameScale;
+            function currentContextCoordinates(context) {
+                var x = context.worldX / gameScale;
+                var y = context.worldY / gameScale;
                 return {x: x, y: y};
             }
 
-            function highlightCell() {
-                var coords = currentMouseCoordinates();
+            function highlightCell(context) {
+                var coords = currentContextCoordinates(context);
                 var y = Math.floor(coords.y / CELL_SIZE) * CELL_SIZE;
                 var x = Math.floor(coords.x / CELL_SIZE) * CELL_SIZE;
                 if (highlightSprite === null) {
@@ -310,7 +310,7 @@ angular.module('tbs.services').factory('tbsShipGrid',
 
                 activateHighlighting: function (highlightCB) {
                     highlightCallback = highlightCB;
-                    this.onTap(highlightCell);
+                    this.onDown(highlightCell);
                 },
                 deactivateHighlighting: function () {
                     highlightCallback = undefined;
@@ -327,12 +327,16 @@ angular.module('tbs.services').factory('tbsShipGrid',
                     computeShipCorners(shipData);
                 },
 
-                currentMouseCoordinates: function () {
-                    return currentMouseCoordinates();
+                currentContextCoordinates: function (context) {
+                    return currentContextCoordinates(context);
                 },
 
-                findShipByMouseCoordinates: function () {
-                    return findShipByCoordinates(currentMouseCoordinates());
+                currentCoordinatesFromXY: function (x, y) {
+                    return {x: x / gameScale, y: y / gameScale};
+                },
+
+                findShipByContextCoordinates: function (context) {
+                    return findShipByCoordinates(currentContextCoordinates(context));
                 },
 
                 onMove: function (cb) {
