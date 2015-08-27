@@ -7,11 +7,12 @@
     </ion-footer-bar>
     <ion-content has-bouncing="false">
         <div class="row">
-            <div class="list col-20">
+            <div class="list col-25">
                 <div class="item item-avatar item-icon-right"
                      ng-repeat="(md5, name) in game.players | orderBy:name">
                     <img ng-src="{{gameDetails.imageForPlayer(game, md5)}}">
-                    {{name}}
+
+                    <h3>{{name}}</h3>
                 <span class="{{gameDetails.playerSetupEntryRequired(game, md5) ? 'pending' : 'accepted'}}">
                     <i class="icon ion-{{gameDetails.playerSetupEntryRequired(game, md5) ? 'edit' : 'checkmark'}}"></i>
                 </span>
@@ -24,7 +25,7 @@
                         <button class="button button-positive icon-left ion-edit"
                                 ng-disabled="submitDisabled"
                                 ng-click="submit()">
-                            Save
+                            <span>Save</span>
                         </button>
                     </div>
                 </div>
@@ -34,13 +35,13 @@
                 <div class="item action-item">
                     <div class="button-bar">
                         <button class="button button-assertive icon-left ion-flag" ng-click="quit()">
-                            Surrender
+                            <span>Surrender</span>
                         </button>
                     </div>
                 </div>
 
             </div>
-            <div id="phaser" class="col-80 phaser">
+            <div id="phaser" class="col-75 phaser">
 
             </div>
         </div>

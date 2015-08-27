@@ -2,6 +2,13 @@
 
 .playGame {
   .list {
+    .item-avatar {
+      padding-left: 60px;
+      img {
+        left: 6px;
+      }
+    }
+
     .item {
       border-color: $medium_blue;
       border-left: transparent;
@@ -18,14 +25,32 @@
         top: 15px;
       }
 
+      .quit {
+        text-align: left;
+        padding-left: 6px;
+        span {
+          padding-left: 3px;
+        }
+      }
+
       .rematch {
         background-color: $paler_green;
         color: black;
+        text-align: left;
+        padding-left: 6px;
+        span {
+          padding-left: 3px;
+        }
       }
 
       .endRematch {
         background-color: red;
         color: black;
+        text-align: left;
+        padding-left: 6px;
+        span {
+          padding-left: 3px;
+        }
       }
     }
     .item-divider {
