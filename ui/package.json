@@ -53,6 +53,12 @@
   "cordovaPlugins": [
     "org.apache.cordova.console",
     "org.apache.cordova.device",
+    "com.ionic.keyboard",
+    "org.apache.cordova.console",
+    "org.apache.cordova.device",
     "com.ionic.keyboard"
+  ],
+  "cordovaPlatforms": [
+    "ios"
   ]
 }

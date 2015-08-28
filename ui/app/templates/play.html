@@ -3,9 +3,6 @@
 <!--  TODO - show if you are dead  -->
 <!--  TODO - disable buttons if action pending  -->
 <ion-view class="playGame" xmlns="http://www.w3.org/1999/html">
-    <ion-footer-bar>
-        <game-summary-bar></game-summary-bar>
-    </ion-footer-bar>
     <ion-content has-bouncing="false">
         <div class="row">
             <div class="col-50">
@@ -14,9 +11,6 @@
             <div class="col-50">
                 <h5 class="text-center">Last Move: {{game.maskedPlayersState.lastActionMessage}}</h5>
             </div>
-        </div>
-        <div class="row">
-
         </div>
         <div class="row">
             <div class="list col-25">
