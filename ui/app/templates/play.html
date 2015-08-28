@@ -13,7 +13,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="list col-25">
+            <div class="list col-20">
                 <div ng-show="game.gamePhase === 'Playing'">
                     <div class="item {{gameDetails.playerCanPlay(game, player.md5) ? 'activePlayer' : 'inactivePlayer'}}">
                         Current Turn: <span class="badge badge-note">{{game.players[game.currentPlayer]}}</span>
@@ -130,7 +130,7 @@
                 </div>
 
             </div>
-            <div class="col-75">
+            <div class="col-80">
                 <div class="row">
                     <div class="button-bar">
                         <button class="button icon-left {{showingSelf ? 'ion-checkmark' : '' }} button-defend"
