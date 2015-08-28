@@ -21,12 +21,10 @@ angular.module('tbs', ['ionic', 'tbs.controllers', 'tbs.directives', 'config', '
     // Custom Interceptor for replacing outgoing URLs
     .factory('httpEnvInterceptor', function ($q, $cacheFactory, ENV) {
         return {
-            //  TODO - handle 401 redirect here now?
             'request': function (config) {
                 if (
                     (
                         //  TODO - this better
-                        //  TODO - live feed not impacted
                         config.url.indexOf('/api') >= 0 ||
                         config.url.indexOf('/auth') >= 0 ||
                         config.url.indexOf('/signout') >= 0 ||
@@ -62,7 +60,6 @@ angular.module('tbs', ['ionic', 'tbs.controllers', 'tbs.directives', 'config', '
     })
     .config(function ($stateProvider, $urlRouterProvider) {
         $stateProvider
-            //  TODO - menu
             .state('app', {
                 url: '/app',
                 abstract: true,

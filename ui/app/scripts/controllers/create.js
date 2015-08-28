@@ -57,7 +57,7 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
                 $scope.helpModal = modal;
                 $scope.helpIndex = 0;
             });
-            $ionicModal.fromTemplateUrl('invite-modal.html', {
+            $ionicModal.fromTemplateUrl('templates/friends/invite.html', {
                 scope: $scope,
                 animation: 'slide-in-up'
             }).then(function (modal) {

@@ -1,0 +1,31 @@
+<div class="modal">
+    <div class="inviteFriends tbsModal">
+        <ion-header-bar>
+            <h1 class="title">Invite Friends!</h1>
+        </ion-header-bar>
+        <ion-content>
+            <div class="list">
+                <label class="item item-input">
+                    <div class="input-label">
+                        Friends To Invite:
+                    </div>
+                    <!-- TODO - seems to have caching bug on first load - confirmed ion-autocomplete bug - take update -->
+                    <!-- TODO - why do we need callbacks - why isn't scope working directly?  -->
+                    <ion-autocomplete template-url="templates/autocomplete/autocompleteTemplate.html"
+                                      ng-model="friendsToInvite"
+                                      items-method="queryInvitableFriends(query)"
+                                      selected-items-label="Selected Friends:"
+                                      placeholder="Select friends..."
+                                      item-value-key="id"
+                                      item-view-value-key="name"
+                                      multiple-select="true">
+                    </ion-autocomplete>
+                </label>
+            </div>
+            <button class="button button-full button-positive" ng-click="inviteFriends(friendsToInvite)">
+                Invite
+            </button>
+            <button class="button button-full" ng-click="cancelInviteFriends()">Cancel</button>
+        </ion-content>
+    </div>
+</div>
