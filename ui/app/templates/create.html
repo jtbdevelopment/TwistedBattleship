@@ -4,7 +4,6 @@
                 ng-click="showInviteFriends()"></button>
         <button class="button button-icon button-clear ion-help-circled" ng-click="showHelp(0)"></button>
     </ion-nav-buttons>
-    <!--  TODO - move out  -->
     <ion-content>
         <div class="list create">
             <div ng-repeat="feature in featureData | propsFilter: { checkBox: 'false' }">
@@ -31,7 +30,6 @@
                     <i class="icon optionOn ion-person-stalker"></i>
                     Opponents (Max 5):
                 </div>
-                <!-- TODO - seems to have caching bug on first load  -->
                 <!-- TODO - why do we need callbacks - why isn't scope working directly?  -->
                 <ion-autocomplete theme="default-theme"
                                   template-url="templates/autocomplete/autocompleteTemplate.html"
