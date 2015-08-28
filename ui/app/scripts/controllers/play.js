@@ -98,6 +98,7 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
             };
 
             $scope.switchView = function (showingSelf) {
+                //  TODO - if switching from attack to defend, does not highlight ship if appropriate
                 $scope.showingSelf = showingSelf;
                 if (!$scope.showingSelf && $scope.showing === ALL) {
                     if ($scope.playerKeys[0] === $scope.player.md5) {
