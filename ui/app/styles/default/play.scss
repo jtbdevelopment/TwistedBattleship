@@ -3,7 +3,6 @@
 .playGame {
   .list {
     .item-avatar {
-      padding-left: 60px;
       img {
         left: 6px;
       }
@@ -27,68 +26,76 @@
       }
 
       .quit {
-        text-align: left;
         padding-left: 6px;
-        span {
-          padding-left: 3px;
-        }
       }
 
       .rematch {
         background-color: $paler_green;
         color: black;
-        text-align: left;
         padding-left: 6px;
-        span {
-          padding-left: 3px;
-        }
       }
 
       .endRematch {
         background-color: red;
         color: black;
-        text-align: left;
         padding-left: 6px;
-        span {
-          padding-left: 3px;
-        }
       }
     }
     .item-divider {
       border-color: $boatgray;
     }
 
-
     .chosen {
       background-color: yellow;
 
     }
 
-    .activePlayer {
-      .badge {
+    @import "buttons";
+  }
+
+  .gameSummary {
+    .item {
+      font-weight: bold;
+      text-align: left;
+      border: none;
+      .item-note {
+        text-align: left;
+        color: black;
+        float: left;
+      }
+      .activePlayer {
         background-color: $medium_green;
       }
-    }
 
-    .inactivePlayer {
-      .badge {
-        background-color: $medium_blue;
+      .inactivePlayer {
+        .badge {
+          background-color: $medium_blue;
+        }
+      }
+
+      .winner {
+        .badge {
+          background-color: $darker_green;
+          color: black;
+        }
+      }
+
+      .loser {
+        .badge {
+          background-color: red;
+          color: black;
+        }
       }
     }
+  }
 
-    .winner {
-      .badge {
-        background-color: $darker_green;
-        color: black;
-      }
-    }
+  .defeated {
+    text-decoration: line-through;
+    color: $boatgray;
+  }
 
-    .loser {
-      .badge {
-        background-color: red;
-        color: black;
-      }
-    }
-    @import "buttons";
+  .viewToggleRow {
+    padding-top: 0px;
+    margin-top: 0px;
   }
 }

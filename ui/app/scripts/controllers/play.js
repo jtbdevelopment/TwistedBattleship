@@ -83,6 +83,7 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
 
             $scope.changePlayer = function (md5) {
                 if (md5 === ALL) {
+                    $scope.showingSelf = true;
                     tbsShipGrid.placeShips(computeShipLocations());
                     tbsShipGrid.placeCellMarkers($scope.game.maskedPlayersState.consolidatedOpponentView.table);
                 } else {

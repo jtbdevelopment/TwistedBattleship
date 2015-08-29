@@ -1,54 +1,55 @@
 <!--  TODO - help -->
-<!--  TODO - eliminate dead people -->
-<!--  TODO - show if you are dead  -->
 <!--  TODO - disable buttons if action pending  -->
 <ion-view class="playGame" xmlns="http://www.w3.org/1999/html">
     <ion-content has-bouncing="false">
-        <div class="row">
-            <div class="col-50">
-                <h5 class="text-center">General: {{game.generalMessage}}</h5>
+        <div class="row gameSummary" on-swipe="switchView(!showing)">
+            <div class="col-33 item">
+                <div ng-show="game.gamePhase === 'Playing'">
+                    Current Turn:
+                    <p><span
+                            class="item-note {{gameDetails.playerCanPlay(game, player.md5) ? 'activePlayer' : 'inactivePlayer'}}">
+                        {{game.players[game.currentPlayer]}} with {{game.remainingMoves}} moves.
+                    </span></p>
+                </div>
+                <div ng-hide="game.gamePhase === 'Playing'">
+                    <div class="{{(game.winningPlayer === player.md5) ? 'winner' : 'loser'}}">
+                        Winner: <p><span class="item-note">{{game.players[game.winningPlayer]}}</span></p>
+                    </div>
+                </div>
             </div>
-            <div class="col-50">
-                <h5 class="text-center">Last Move: {{game.maskedPlayersState.lastActionMessage}}</h5>
+            <div class="col-33 item">
+                General:
+                <p><span class="item-note">{{game.generalMessage}}</span></p>
+            </div>
+            <div class="col-33 item">
+                Last Move:
+                <p><span class="item-note">{{game.maskedPlayersState.lastActionMessage}}</span>
             </div>
         </div>
         <div class="row">
             <div class="list col-20">
-                <div ng-show="game.gamePhase === 'Playing'">
-                    <div class="item {{gameDetails.playerCanPlay(game, player.md5) ? 'activePlayer' : 'inactivePlayer'}}">
-                        Current Turn: <span class="badge badge-note">{{game.players[game.currentPlayer]}}</span>
-                    </div>
-                    <div class="item">
-                        Moves Remaining: <span class="badge badge-note">{{game.remainingMoves}}</span>
-                    </div>
+                <div class="item item-avatar {{showing == 'ALL' ? 'chosen' : ''}}"
+                     ng-click="changePlayer('ALL')">
+                    <img ng-src="{{gameDetails.imageForPlayer(game, player.md5)}}">
+
+                    <h3 class="{{game.playersAlive[player.md5] == true ? 'active' : 'defeated'}}">
+                        {{player.displayName}}</h3>
+
+                    <p>Score: {{game.playersScore[player.md5]}}</p>
                 </div>
-                <div ng-hide="game.gamePhase === 'Playing'">
-                    <div class="item {{(game.winningPlayer === player.md5) ? 'winner' : 'loser'}}">
-                        Winner: <span class="badge badge-note">{{game.players[game.winningPlayer]}}</span>
-                    </div>
-                </div>
-                <div class="item">
-                    Your Score: <span class="badge badge-note">{{game.playersScore[player.md5]}}</span>
-                </div>
-                <div class="item item-divider"></div>
-                <div class="item item-avatar {{showing == md5 ? 'chosen' : ''}}"
-                     ng-repeat="(md5, name) in game.players | orderBy:name" ng-click="changePlayer(md5)"
+                <div class="item item-divider">Opponents</div>
+                <div ng-repeat="(md5, name) in game.players | orderBy:name"
+                     class="item item-avatar {{showing == md5 ? 'chosen' : ''}}"
+                     ng-click="changePlayer(md5)"
                      ng-hide="md5 === player.md5">
                     <img ng-src="{{gameDetails.imageForPlayer(game, md5)}}">
 
-                    <h3>{{name}}</h3>
+                    <h3 class="{{game.playersAlive[md5] == true ? 'active' : 'defeated'}}">{{name}}</h3>
 
                     <p>Score: {{game.playersScore[md5]}}</p>
                 </div>
-                <div class="item item-avatar {{showing == 'ALL' ? 'chosen' : ''}}"
-                     ng-show="playerKeys.length > 2 && showingSelf"
-                     ng-click="changePlayer('ALL')">
-                    <img ng-src="{{gameDetails.imageForPlayer(game, 'ALL')}}">
-
-                    <h3>Combined<br/>Opponents</p></h3>
-                </div>
                 <div ng-show="gameDetails.playerCanPlay(game, player.md5)">
-                    <div class="item item-divider"></div>
+                    <div class="item item-divider">Actions</div>
                     <div ng-show="showingSelf">
                         <div class="item action-item">
                             <div class="button-bar">
@@ -81,7 +82,7 @@
                             </div>
                         </div>
                     </div>
-                    <div ng-show="!showingSelf">
+                    <div ng-show="!showingSelf && game.playersAlive[showing] === true">
                         <div class="item action-item">
                             <div class="button-bar">
                                 <button class="button button-attack icon-left ion-disc" ng-click="fire()">
@@ -102,7 +103,7 @@
                     </div>
                 </div>
                 <div ng-show="game.gamePhase === 'Playing'">
-                    <div class="item item-divider"></div>
+                    <div class="item item-divider">Quit</div>
                     <div class="item action-item">
                         <div class="button-bar">
                             <button class="button button-assertive quit icon-left ion-flag" ng-click="quit()">
@@ -112,7 +113,7 @@
                     </div>
                 </div>
                 <div ng-show="game.gamePhase === 'RoundOver'">
-                    <div class="item item-divider"></div>
+                    <div class="item item-divider">Rematch?</div>
                     <div class="item action-item">
                         <div class="button-bar ">
                             <button class="button rematch icon-left ion-loop" ng-click="rematch()">
@@ -131,7 +132,7 @@
 
             </div>
             <div class="col-80">
-                <div class="row">
+                <div class="row viewToggleRow">
                     <div class="button-bar">
                         <button class="button icon-left {{showingSelf ? 'ion-checkmark' : '' }} button-defend"
                                 ng-click="switchView(true)">Their view of you
