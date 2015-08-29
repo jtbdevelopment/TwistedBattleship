@@ -3,9 +3,8 @@
 var ALL = 'ALL';
 
 angular.module('tbs.controllers').controller('PlayGameCtrl',
-    ['$rootScope', '$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', '$ionicSideMenuDelegate', 'shipInfo', 'tbsShipGrid', '$ionicPopup', // 'twAds',
-        function ($rootScope, $scope, tbsGameDetails, tbsActions, jtbGameCache, jtbPlayerService, $state, $ionicSideMenuDelegate, shipInfo, tbsShipGrid, $ionicPopup /*, twAds*/) {
-            $ionicSideMenuDelegate.canDragContent(false);
+    ['$rootScope', '$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', 'shipInfo', 'tbsShipGrid', '$ionicPopup', // 'twAds',
+        function ($rootScope, $scope, tbsGameDetails, tbsActions, jtbGameCache, jtbPlayerService, $state, shipInfo, tbsShipGrid, $ionicPopup /*, twAds*/) {
             $scope.gameID = $state.params.gameID;
             $scope.game = jtbGameCache.getGameForID($scope.gameID);
             $scope.playerKeys = Object.keys($scope.game.players);
@@ -17,6 +16,10 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
             $scope.showingSelf = false;
 
             $scope.shipHighlighted = false;
+
+            $scope.showHelp = function () {
+                $state.transitionTo('app.help');
+            };
 
             tbsShipGrid.initialize($scope.game, [], [], function () {
                 $scope.changePlayer($scope.showing);

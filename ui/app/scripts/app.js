@@ -155,6 +155,15 @@ angular.module('tbs', ['ionic', 'tbs.controllers', 'tbs.directives', 'config', '
                     }
                 }
             })
+            .state('app.help', {
+                url: '/help',
+                views: {
+                    'menuContent': {
+                        templateUrl: 'templates/help/help-play.html',
+                        controller: 'ThemeCtrl'
+                    }
+                }
+            })
             .state('app.roundover', {
                 url: '/games/roundover/:gameID',
                 views: {

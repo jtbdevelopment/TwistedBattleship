@@ -1,6 +1,9 @@
-<!--  TODO - help -->
 <!--  TODO - disable buttons if action pending  -->
+<!--  TODO - disable if network down -->
 <ion-view class="playGame" xmlns="http://www.w3.org/1999/html">
+    <ion-nav-buttons side="right">
+        <button class="button button-icon button-clear ion-help-circled" ng-click="showHelp()"></button>
+    </ion-nav-buttons>
     <ion-content has-bouncing="false">
         <div class="row gameSummary" on-swipe="switchView(!showing)">
             <div class="col-33 item">

@@ -1,0 +1,173 @@
+<!--  TODO - this loses back button -->
+<ion-view class="playHelp" xmlns="http://www.w3.org/1999/html">
+    <ion-tabs class="tabs-below tabs-positive tabs-color-stable">
+        <ion-tab title="General">
+            <ion-view>
+                <ion-content class="has-header">
+                    <p>The screen is broken into four main areas.</p>
+
+                    <p>At the top is the summary of basic state of the game - who's turn it is, or who won
+                        the game and messages from the last play.</p>
+
+                    <p>Along the left are the players of this game, whether they are alive or dead and their
+                        scores.</p>
+
+                    <p>Below that, if it is your turn to play, are the available actions you can take based
+                        on moves left and whether you are attacking or defending. Also, this is where you
+                        can surrender or start rematches.</p>
+
+                    <p>Finally, the main part of the screen shows a grid of yourself or your opponent as
+                        chosen.</p>
+                </ion-content>
+            </ion-view>
+        </ion-tab>
+        <ion-tab title="Taking Action">
+            <ion-view>
+                <ion-content class="has-header">
+                    <p>Pick your opponent or yourself on the left. The available actions will appear under the
+                        opponents. The chosen player will be highlighted.</p>
+
+                    <p><strong>Picking an opponent.</strong></p>
+
+                    <p>To defend, click 'Their view of you.' above the grid. This will show what your opponent can see.
+                        Highlight the spot you want to defend. Then pick the action you want to take on the left under
+                        the opponents.</p>
+
+                    <p>The attack, click 'Your view of them.' above the gird. This will show your view of their
+                        sea so far. If they are not already defeated, you can click the cell you wish to attack
+                        and the choice of attack on the left.</p>
+
+                    <p><strong>Picking yourself.</strong></p>
+
+                    <p>This will show you a consolidated view of what your combined opponents can see. Depending
+                        on game options, not every player may see the same view. You can click on each player to
+                        see their specific view.</p>
+
+                    <p><strong>Grid Highlights</strong></p>
+
+                    <p>When you pick a spot on the grid, it will be highlighted like <img
+                            ng-src="images/{{theme}}/highlight.png"/>. Additional cells will be highlighted to show what
+                        will be shown or hidden if you use Spy or ECM like <img
+                                ng-src="images/{{theme}}/extendedhighlight.png"/>. Also, if you are selecting a cell
+                        with your own ship, it will be highlighted as well to show which ship will take Evasive
+                        Maneuvers or make Emergency Repairs.
+                    </p>
+                </ion-content>
+            </ion-view>
+        </ion-tab>
+        <ion-tab title="Cell Icon Meanings">
+            <ion-view>
+                <ion-content class="has-header">
+                    <div class="row">
+                        <div class="col-100">
+                            <p><strong>What do the different images mean?</strong></p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-100">
+                            <p><strong>The Unknown.</strong></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-50">
+                            <img ng-src="images/{{theme}}/unknown.png"/>This area is not known.
+                        </div>
+                        <div class="col-50">
+                            <img ng-src="images/{{theme}}/hiddenhit.png"/>This ship is damaged, but the damage is not
+                            known to the current opponent.
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-100">
+                            <p><strong>The Known.</strong></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-50">
+                            <img ng-src="images/{{theme}}/knownship.png"/>This area is known to have an undamaged ship.
+                        </div>
+                        <div class="col-50">
+                            <img ng-src="images/{{theme}}/knownbyhit.png"/>This area is known to have a ship damaged by
+                            you.
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-50">
+                            <img ng-src="images/{{theme}}/knownbyrehit.png"/>This area is known to an already damaged
+                            ship
+                            that you hit as well.
+                        </div>
+                        <div class="col-50">
+                            <img ng-src="images/{{theme}}/knownbyotherhit.png"/>This area is known to have a ship
+                            damaged
+                            by another player.
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-50">
+                            <img ng-src="images/{{theme}}/knownbymiss.png"/>This area is known to be empty from a shot
+                            taken by yourself.
+                        </div>
+                        <div class="col-50">
+                            <img ng-src="images/{{theme}}/knownbyothermiss.png"/>This area is known to be empty from a
+                            miss
+                            by another player.
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-50">
+                            <img ng-src="images/{{theme}}/knownempty.png"/>This area is known to be empty.
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-100">
+                            <p><strong>The Uncertain (from Evasive Maneuvers).</strong></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-50">
+                            <img ng-src="images/{{theme}}/obscuredship.png"/>This area was previously known to have an
+                            undamaged ship.
+                        </div>
+                        <div class="col-50">
+                            <img ng-src="images/{{theme}}/obscuredhit.png"/>This area was previously known to have a
+                            ship damaged by
+                            you.
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-50">
+                            <img ng-src="images/{{theme}}/obscuredrehit.png"/>This area was previously known to an
+                            already damaged ship
+                            that you hit as well.
+                        </div>
+                        <div class="col-50">
+                            <img ng-src="images/{{theme}}/obscuredotherhit.png"/>This area was previously known to have
+                            a ship damaged
+                            by another player.
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-50">
+                            <img ng-src="images/{{theme}}/obscuredmiss.png"/>This area was previously known to be empty
+                            from a shot
+                            taken by yourself.
+                        </div>
+                        <div class="col-50">
+                            <img ng-src="images/{{theme}}/obscuredothermiss.png"/>This area was previously known to be
+                            empty from a miss
+                            by another player.
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-50">
+                            <img ng-src="images/{{theme}}/obscuredempty.png"/>This area was previously known to be
+                            empty.
+                        </div>
+                    </div>
+                </ion-content>
+            </ion-view>
+        </ion-tab>
+    </ion-tabs>
+</ion-view>
