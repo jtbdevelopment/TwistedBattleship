@@ -1,12 +1,6 @@
 /*global Phaser:false */
 'use strict';
 
-var defaultScale = {
-    10: 0.5,
-    15: 0.4,
-    20: 0.3
-};
-
 angular.module('tbs.services').factory('tbsShipGrid',
     ['jtbPlayerService', 'tbsCircles',
         function (jtbPlayerService, tbsCircles) {
@@ -21,7 +15,7 @@ angular.module('tbs.services').factory('tbsShipGrid',
             var shipsOnGrid = [], shipLocations = [];
             var cellMarkers = [], markersOnGrid = [];
             var highlightSprite = null, highlightX, highlightY, highlightShip = null;
-            var gameWidth, gameHeight, gameScale;
+            var gameWidth, gameHeight;
             var phaser;
 
             var postCreateFunction;
@@ -108,18 +102,14 @@ angular.module('tbs.services').factory('tbsShipGrid',
                 map.addTilesetImage('tile');
                 var layer = map.createLayer('base grid');
                 layer.resizeWorld();
-                phaser.width = gameWidth * gameScale;
-                phaser.height = gameHeight * gameScale;
-                phaser.world.resize(gameWidth * gameScale, gameHeight * gameScale);
+
+                phaser.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+                phaser.scale.pageAlignHorizontally = false;
+                phaser.scale.pageAlignVertically = false;
+                phaser.scale.windowConstraints.bottom = 'visual';
 
                 placeShips();
                 placeCellMarkers();
-
-                //  TODO  - look at more
-                //  phasescale.setUserScale?
-
-                //phaser.scale.fullScreenScaleMode = Phaser.ScaleManager.NO_SCALE;
-                //phaser.scale.startFullScreen(false);
 
                 if (postCreateFunction !== null) {
                     postCreateFunction();
@@ -188,8 +178,8 @@ angular.module('tbs.services').factory('tbsShipGrid',
             }
 
             function currentContextCoordinates(context) {
-                var x = context.worldX / gameScale;
-                var y = context.worldY / gameScale;
+                var x = context.worldX;
+                var y = context.worldY;
                 return {x: x, y: y};
             }
 
@@ -260,7 +250,6 @@ angular.module('tbs.services').factory('tbsShipGrid',
                     game = loadedGame;
                     gameWidth = game.gridSize * CELL_SIZE;
                     gameHeight = game.gridSize * CELL_SIZE;
-                    gameScale = defaultScale[game.gridSize];
                     shipLocations = initialShipLocations;
                     cellMarkers = initialCellMarkers;
                     postCreateFunction = postCreateCB;
@@ -331,8 +320,9 @@ angular.module('tbs.services').factory('tbsShipGrid',
                     return currentContextCoordinates(context);
                 },
 
+                //  TODO - eliminate
                 currentCoordinatesFromXY: function (x, y) {
-                    return {x: x / gameScale, y: y / gameScale};
+                    return {x: x, y: y};
                 },
 
                 findShipByContextCoordinates: function (context) {
