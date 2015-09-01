@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('tbs.services').factory('tbsActions',
-    ['$http', '$state', 'jtbGameCache', 'jtbPlayerService', '$ionicHistory',
-        function ($http, $state, jtbGameCache, jtbPlayerService, $ionicHistory) {
+    ['$http', '$state', 'jtbGameCache', 'jtbPlayerService', '$ionicHistory', '$ionicActionSheet',
+        function ($http, $state, jtbGameCache, jtbPlayerService, $ionicHistory, $ionicActionSheet) {
             function updateGame($scope, updatedGame) {
                 var currentPhase = $scope.game.gamePhase;
                 $scope.game = updatedGame;
@@ -56,32 +56,39 @@ angular.module('tbs.services').factory('tbsActions',
                 },
 
                 reject: function ($scope) {
-//  TODO
-//                var modal = showConfirmDialog();
-                    //               modal.result.then(function () {
-                    $http.put(gameURL($scope) + 'reject').success(function (data) {
-                        updateGame($scope, data);
-                        //twGameDisplay.processGameUpdateForScope($scope, data);
-                    }).error(function (data, status, headers, config) {
-//  TODO
-                        //showMessage(data);
-                        console.error(data + status + headers + config);
+                    $ionicActionSheet.show({
+                        buttons: [],
+                        destructiveText: 'Reject this game!',
+                        titleText: 'Are you sure?',
+                        cancelText: 'Cancel',
+                        destructiveButtonClicked: function () {
+                            $http.put(gameURL($scope) + 'reject').success(function (data) {
+                                updateGame($scope, data);
+                            }).error(function (data, status, headers, config) {
+                                //  TODO
+                                //showMessage(data);
+                                console.error(data + status + headers + config);
+                            });
+                        }
                     });
-//                });
                 },
 
                 declineRematch: function ($scope) {
-//  TODO -- warning
-//                twAds.showAdPopup().result.then(function () {
-                    $http.put(gameURL($scope) + 'endRematch').success(function (data) {
-                        updateGame($scope, data);
-                        //twGameDisplay.processGameUpdateForScope($scope, data);
-                    }).error(function (data, status, headers, config) {
-                        //  TODO
-                        //showMessage(data);
-                        console.error(data + status + headers + config);
+                    $ionicActionSheet.show({
+                        buttons: [],
+                        destructiveText: 'Decline further rematches.',
+                        titleText: 'Are you sure?',
+                        cancelText: 'Cancel',
+                        destructiveButtonClicked: function () {
+                            $http.put(gameURL($scope) + 'endRematch').success(function (data) {
+                                updateGame($scope, data);
+                            }).error(function (data, status, headers, config) {
+                                //  TODO
+                                //showMessage(data);
+                                console.error(data + status + headers + config);
+                            });
+                        }
                     });
-//                });
                 },
 
                 rematch: function ($scope) {
@@ -99,18 +106,21 @@ angular.module('tbs.services').factory('tbsActions',
                 },
 
                 quit: function ($scope) {
-//  TODO
-//                var modal = showConfirmDialog();
-                    //               modal.result.then(function () {
-                    $http.put(gameURL($scope) + 'quit').success(function (data) {
-                        updateGame($scope, data);
-                        //twGameDisplay.processGameUpdateForScope($scope, data);
-                    }).error(function (data, status, headers, config) {
-//  TODO
-                        //showMessage(data);
-                        console.error(data + status + headers + config);
+                    $ionicActionSheet.show({
+                        buttons: [],
+                        destructiveText: 'Quit this game!',
+                        titleText: 'Are you sure?',
+                        cancelText: 'Cancel',
+                        destructiveButtonClicked: function () {
+                            $http.put(gameURL($scope) + 'quit').success(function (data) {
+                                updateGame($scope, data);
+                            }).error(function (data, status, headers, config) {
+                                //  TODO
+                                //showMessage(data);
+                                console.error(data + status + headers + config);
+                            });
+                        }
                     });
-//                });
                 },
 
                 setup: function ($scope, positions) {
