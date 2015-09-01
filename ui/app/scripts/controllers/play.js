@@ -42,41 +42,26 @@ angular.module('tbs.controllers').controller('PlayGameCtrl',
 
             $scope.fire = function () {
                 var cell = tbsShipGrid.selectedCell();
-                if (cell.x === -1 || cell.y === -1) {
-                    //  TODO
-                }
                 tbsActions.fire($scope, $scope.showingSelf ? $scope.player.md5 : $scope.showing, cell);
             };
 
             $scope.move = function () {
                 var cell = tbsShipGrid.selectedCell();
-                if (cell.x === -1 || cell.y === -1) {
-                    //  TODO
-                }
                 tbsActions.move($scope, $scope.showingSelf ? $scope.player.md5 : $scope.showing, cell);
             };
 
             $scope.spy = function () {
                 var cell = tbsShipGrid.selectedCell();
-                if (cell.x === -1 || cell.y === -1) {
-                    //  TODO
-                }
                 tbsActions.spy($scope, $scope.showingSelf ? $scope.player.md5 : $scope.showing, cell);
             };
 
             $scope.repair = function () {
                 var cell = tbsShipGrid.selectedCell();
-                if (cell.x === -1 || cell.y === -1) {
-                    //  TODO
-                }
                 tbsActions.repair($scope, $scope.showingSelf ? $scope.player.md5 : $scope.showing, cell);
             };
 
             $scope.ecm = function () {
                 var cell = tbsShipGrid.selectedCell();
-                if (cell.x === -1 || cell.y === -1) {
-                    //  TODO
-                }
                 tbsActions.ecm($scope, $scope.showingSelf ? $scope.player.md5 : $scope.showing, cell);
             };
 

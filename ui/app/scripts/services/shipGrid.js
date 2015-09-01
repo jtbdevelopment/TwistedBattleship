@@ -320,11 +320,6 @@ angular.module('tbs.services').factory('tbsShipGrid',
                     return currentContextCoordinates(context);
                 },
 
-                //  TODO - eliminate
-                currentCoordinatesFromXY: function (x, y) {
-                    return {x: x, y: y};
-                },
-
                 findShipByContextCoordinates: function (context) {
                     return findShipByCoordinates(currentContextCoordinates(context));
                 },

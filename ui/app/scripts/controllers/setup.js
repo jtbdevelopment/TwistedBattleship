@@ -141,9 +141,8 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
 
             function onMove(pointer, x, y) {
                 if ($scope.movingShip !== null) {
-                    var coords = tbsShipGrid.currentCoordinatesFromXY(x, y);
-                    $scope.movingShip.sprite.x = coords.x + $scope.movingPointerRelativeToShip.x;
-                    $scope.movingShip.sprite.y = coords.y + $scope.movingPointerRelativeToShip.y;
+                    $scope.movingShip.sprite.x = x + $scope.movingPointerRelativeToShip.x;
+                    $scope.movingShip.sprite.y = y + $scope.movingPointerRelativeToShip.y;
                     tbsShipGrid.computeShipCorners($scope.movingShip);
                 }
             }
