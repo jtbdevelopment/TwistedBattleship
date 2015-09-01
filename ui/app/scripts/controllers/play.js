@@ -2,6 +2,7 @@
 
 var ALL = 'ALL';
 
+//  TODO - need to disable play between click and response
 angular.module('tbs.controllers').controller('PlayGameCtrl',
     ['$rootScope', '$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', 'shipInfo', 'tbsShipGrid', '$ionicPopup', // 'twAds',
         function ($rootScope, $scope, tbsGameDetails, tbsActions, jtbGameCache, jtbPlayerService, $state, shipInfo, tbsShipGrid, $ionicPopup /*, twAds*/) {

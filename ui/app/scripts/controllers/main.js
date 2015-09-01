@@ -1,6 +1,8 @@
 'use strict';
 
-angular.module('tbs.controllers').controller('ThemeCtrl',
+//  TODO - need to control network up/down etc
+//  TODO - need to control background/foreground etc
+angular.module('tbs.controllers').controller('MainCtrl',
     ['$scope', 'jtbPlayerService', 'jtbLiveGameFeed', 'ENV',
         function ($scope, jtbPlayerService, jtbLiveGameFeed, ENV) {
 
