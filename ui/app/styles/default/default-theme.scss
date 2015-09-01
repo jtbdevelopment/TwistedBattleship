@@ -33,8 +33,10 @@
     }
 
     .button.button-icon::before {
-      font-size: small;
-      line-height: 14px;
+      @media (max-width: $screen-xs-max) {
+        font-size: small;
+        line-height: 14px;
+      }
     }
 
     .title {
@@ -80,9 +82,11 @@
     }
   }
 
-  .ion-autocomplete-container {
-    .bar {
-      padding: 2px;
+  @media (max-width: $screen-xs-max) {
+    .ion-autocomplete-container {
+      .bar {
+        padding: 2px;
+      }
     }
   }
 }
