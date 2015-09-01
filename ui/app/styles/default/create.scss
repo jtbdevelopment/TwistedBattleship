@@ -1,12 +1,18 @@
 @import "default-theme-colors";
 @import "input";
+@import "../screens";
 
 .createGame {
   @include defaultInput;
 
   .item {
     background-color: $paler_blue;
+
+    @media (max-width: $screen-xs-max) {
+      font-size: small;
+    }
   }
+
   select {
     background-color: $paler_blue;
   }
@@ -16,6 +22,7 @@
     font-size: x-large;
     padding-right: 5px;
   }
+
   .optionOff {
     color: $boatgray;
     font-size: x-large;

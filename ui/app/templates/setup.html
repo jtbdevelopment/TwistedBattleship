@@ -2,9 +2,6 @@
     <ion-nav-buttons side="right">
         <button class="button button-icon button-clear ion-help-circled" ng-click="showHelp(0)"></button>
     </ion-nav-buttons>
-    <ion-footer-bar>
-        <game-summary-bar></game-summary-bar>
-    </ion-footer-bar>
     <ion-content has-bouncing="false">
         <div class="row">
             <div class="list col-25">
@@ -22,7 +19,7 @@
 
                 <div class="item action-item">
                     <div class="button-bar">
-                        <button class="button button-positive icon-left ion-edit"
+                        <button class="button button-submit icon-left ion-edit"
                                 ng-disabled="submitDisabled"
                                 ng-click="submit()">
                             <span>Save</span>

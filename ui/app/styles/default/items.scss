@@ -1,15 +1,33 @@
 @import "default-theme-colors";
+@import "../screens";
 
 .item {
   background-color: $medium_blue;
   border-color: $boatgray;
   color: black;
+
+  @media (max-width: $screen-xs-max) {
+    padding: 2px;
+  }
+
   .item-content {
     background-color: $medium_blue;
+
+    @media (max-width: $screen-xs-max) {
+      font-size: xx-small;
+    }
   }
   .badge {
     background: $paler_green;
     color: $boatgray;
+
+    @media (max-width: $screen-xs-max) {
+      font-size: xx-small;
+    }
+  }
+
+  @media (max-width: $screen-xs-max) {
+    font-size: xx-small;
   }
 }
 
@@ -19,6 +37,20 @@
   .badge {
     background-color: $paler_blue;
     color: black;
+
+    @media (max-width: $screen-xs-max) {
+      font-size: xx-small;
+      top: 2.5px;
+      padding: 3px 6px;
+      line-height: 12px;
+    }
+  }
+
+  @media (max-width: $screen-xs-max) {
+    font-size: xx-small;
+    font-weight: lighter;
+    padding: 1px;
+    min-height: 1px;
   }
 }
 

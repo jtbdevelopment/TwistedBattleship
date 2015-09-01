@@ -2,7 +2,6 @@
 @import "input";
 
 .default-theme {
-
   @import "gameList";
   @import "create";
   @import "signin";
@@ -25,16 +24,67 @@
     background-color: $medium_blue;
   }
 
-  .bar-header {
+  .bar {
     background-color: $darker_blue;
+
+    @media (max-width: $screen-xs-max) {
+      padding: 1px;
+      height: 24px;
+    }
+
+    .button.button-icon::before {
+      font-size: small;
+      line-height: 14px;
+    }
+
+    .title {
+      @media (max-width: $screen-xs-max) {
+        font-size: x-small;
+        line-height: 24px;
+      }
+      + .buttons {
+        top: 2px;
+      }
+    }
+
+    .buttons {
+      .left-buttons {
+        .button {
+          @media (max-width: $screen-xs-max) {
+            font-size: x-small;
+          }
+        }
+      }
+    }
   }
 
-  .bar-footer {
-    background-color: $darker_blue;
+  .has-header {
+    @media (max-width: $screen-xs-max) {
+      top: 24px;
+    }
+
   }
 
   @import "items";
   @import "buttons";
   @import "toggles";
+
+  .autocomplete {
+    @media (max-width: $screen-xs-max) {
+      padding-left: 42px;
+      padding-top: 2px;
+      padding-bottom: 2px;
+      .icon {
+        font-size: large;
+      }
+    }
+  }
+
+  .ion-autocomplete-container {
+    .bar {
+      padding: 2px;
+    }
+  }
 }
+
 

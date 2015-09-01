@@ -1,11 +1,46 @@
 @import "default-theme-colors";
+@import "../screens";
 
 .button {
   background-color: $paler_blue;
   border-color: $paler_blue;
+
+  @media (max-width: $screen-xs-max) {
+    font-size: xx-small;
+    padding: 1px;
+    min-height: 1px;
+    min-width: 1px;
+    line-height: 20px;
+  }
+
 }
 
-.button-positive {
+.button::before {
+  @media (max-width: $screen-xs-max) {
+    font-size: xx-small;
+    padding: 1px;
+    min-height: 1px;
+    min-width: 1px;
+    line-height: 20px;
+  }
+}
+
+.button-submit {
+  background-color: $darker_green;
+  border-color: $darker_green;
+}
+
+.button-accept {
+  background-color: $darker_green;
+  border-color: $darker_green;
+}
+
+.button-close {
+  background-color: $darker_green;
+  border-color: $darker_green;
+}
+
+.button-rotatehelp {
   background-color: $darker_green;
   border-color: $darker_green;
 }
@@ -15,6 +50,7 @@
   border-color: red;
   color: black;
   padding-left: 6px;
+
 }
 
 .button-defend {

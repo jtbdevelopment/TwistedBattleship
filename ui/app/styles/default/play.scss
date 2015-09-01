@@ -1,10 +1,21 @@
 @import "default-theme-colors";
+@import "../screens";
 
 .playGame {
   .list {
     .item-avatar {
       img {
         left: 6px;
+
+        @media (max-width: $screen-xs-max) {
+          height: 0;
+          width: 0;
+        }
+      }
+
+      @media (max-width: $screen-xs-max) {
+        min-height: 0;
+        padding: 1px;
       }
     }
 
@@ -13,6 +24,15 @@
       border-left: transparent;
       border-right: transparent;
 
+      @media (max-width: $screen-xs-max) {
+        font-size: xx-small;
+      }
+
+      p, h3 {
+        @media (max-width: $screen-xs-max) {
+          font-size: xx-small;
+        }
+      }
       .badge {
         background: $paler_blue;
         color: black;
@@ -43,6 +63,10 @@
     }
     .item-divider {
       border-color: $boatgray;
+
+      @media (max-width: $screen-xs-max) {
+        font-size: x-small;
+      }
     }
 
     .chosen {
@@ -58,10 +82,22 @@
       font-weight: bold;
       text-align: left;
       border: none;
+      padding: 2px;
+
+      @media (max-width: $screen-xs-max) {
+        font-size: x-small;
+      }
+
       .item-note {
         text-align: left;
         color: black;
         float: left;
+
+        @media (max-width: $screen-xs-max) {
+          font-size: xx-small;
+          font-weight: normal;
+          width: 100%;
+        }
       }
       .activePlayer {
         background-color: $medium_green;
