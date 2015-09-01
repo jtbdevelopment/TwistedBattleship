@@ -5,8 +5,6 @@ import groovy.transform.CompileStatic
 /**
  * Date: 3/31/15
  * Time: 4:01 PM
- *
- * TODO - check amount of text on different devices
  */
 @CompileStatic
 enum GameFeature {
@@ -45,6 +43,8 @@ enum GameFeature {
     CriticalEnabled(1, 'Criticals', 'Small chance a hit can damage an adjacent boat segment OR be a dud missile and do no damage.', Critical),
     CriticalDisabled(2, '', 'No critical hits or duds.', Critical)
     */
+
+    //  TODO - cruise missiles?
 
     final GameFeature group
     final String label
