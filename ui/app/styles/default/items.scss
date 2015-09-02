@@ -29,6 +29,15 @@
   @media (max-width: $screen-xs-max) {
     font-size: xx-small;
   }
+
+  .icon {
+    @media (max-width: $screen-xs-max) {
+      font-size: small;
+      right: 1px;
+      text-align: right;
+      width: 16px;
+    }
+  }
 }
 
 .item-divider {
