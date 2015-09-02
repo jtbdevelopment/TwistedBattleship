@@ -25,12 +25,12 @@
                     {{feature.feature.label}}
                 </ion-toggle>
             </div>
-            <label class="item item-input">
+            <label class="item item-input item-wrap-text">
                 <div class="input-label">
                     <i class="icon optionOn ion-person-stalker"></i>
                     Opponents (Max 5):
                 </div>
-                <!-- TODO - why do we need callbacks - why isn't scope working directly?  -->
+                <!--  TODO - not very nice on small screens -->
                 <ion-autocomplete theme="default-theme"
                                   template-url="templates/autocomplete/autocompleteTemplate.html"
                                   ng-model="playerChoices"
