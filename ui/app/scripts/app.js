@@ -145,8 +145,8 @@ angular.module('tbs', ['ionic', 'tbs.controllers', 'tbs.directives', 'config', '
                 url: '/games/playing/:gameID',
                 views: {
                     'menuContent': {
-                        templateUrl: 'templates/play.html',
-                        controller: 'PlayGameCtrl',
+                        templateUrl: 'templates/game.html',
+                        controller: 'GameCtrl',
                         resolve: {
                             shipInfo: function (tbsShips) {
                                 return tbsShips.ships();
@@ -168,8 +168,8 @@ angular.module('tbs', ['ionic', 'tbs.controllers', 'tbs.directives', 'config', '
                 url: '/games/roundover/:gameID',
                 views: {
                     'menuContent': {
-                        templateUrl: 'templates/play.html',
-                        controller: 'PlayGameCtrl',
+                        templateUrl: 'templates/game.html',
+                        controller: 'GameCtrl',
                         resolve: {
                             shipInfo: function (tbsShips) {
                                 return tbsShips.ships();
@@ -182,8 +182,8 @@ angular.module('tbs', ['ionic', 'tbs.controllers', 'tbs.directives', 'config', '
                 url: '/games/nextroundstarted/:gameID',
                 views: {
                     'menuContent': {
-                        templateUrl: 'templates/play.html',
-                        controller: 'PlayGameCtrl',
+                        templateUrl: 'templates/game.html',
+                        controller: 'GameCtrl',
                         resolve: {
                             shipInfo: function (tbsShips) {
                                 return tbsShips.ships();
