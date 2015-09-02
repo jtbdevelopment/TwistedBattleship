@@ -4,6 +4,7 @@
 .button {
   background-color: $paler_blue;
   border-color: $paler_blue;
+  padding-left: 6px;
 
   @media (max-width: $screen-xs-max) {
     font-size: xx-small;
@@ -33,6 +34,7 @@
 .button-accept {
   background-color: $darker_green;
   border-color: $darker_green;
+  color: white;
 }
 
 .button-close {
@@ -49,27 +51,43 @@
   background-color: red;
   border-color: red;
   color: black;
-  padding-left: 6px;
-
 }
 
 .button-defend {
   background-color: $paler_green;
   border-color: $paler_green;
   color: black;
-  padding-left: 6px;
 }
 
 .button-switch {
   background-color: $medium_blue;
   border-color: $boatgray;
 }
+
+.button-quit {
+  background-color: orange;
+  border-color: orange;
+  color: white
+}
+
+.button-reject {
+  background-color: orange;
+  border-color: orange;
+  color: white
+}
+
+.button-rematch {
+  background-color: $paler_green;
+  color: black;
+}
+
+.button-norematch {
+  background-color: red;
+  color: black;
+}
+
 .button[disabled] {
   background-color: $boatgray;
   border-color: $boatgray;
 }
 
-.button-assertive {
-  background-color: orange;
-  border-color: orange;
-}
