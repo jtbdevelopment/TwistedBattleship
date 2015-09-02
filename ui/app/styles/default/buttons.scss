@@ -4,6 +4,7 @@
 .button {
   background-color: $paler_blue;
   border-color: $paler_blue;
+  color: white;
   padding-left: 6px;
 
   @media (max-width: $screen-xs-max) {
@@ -34,7 +35,6 @@
 .button-accept {
   background-color: $darker_green;
   border-color: $darker_green;
-  color: white;
 }
 
 .button-close {
@@ -50,7 +50,6 @@
 .button-attack {
   background-color: red;
   border-color: red;
-  color: black;
 }
 
 .button-defend {
@@ -67,23 +66,19 @@
 .button-quit {
   background-color: orange;
   border-color: orange;
-  color: white
 }
 
 .button-reject {
   background-color: orange;
   border-color: orange;
-  color: white
 }
 
 .button-rematch {
   background-color: $paler_green;
-  color: black;
 }
 
 .button-norematch {
   background-color: red;
-  color: black;
 }
 
 .button[disabled] {

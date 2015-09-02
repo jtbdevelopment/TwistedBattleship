@@ -4,7 +4,7 @@
     </ion-nav-buttons>
     <ion-content has-bouncing="false">
         <div class="row">
-            <div class="list col-25">
+            <div class="list col-20">
                 <div class="item item-avatar item-icon-right"
                      ng-repeat="(md5, name) in game.players | orderBy:name">
                     <img ng-src="{{gameDetails.imageForPlayer(game, md5)}}">
@@ -38,7 +38,7 @@
                 </div>
 
             </div>
-            <div id="phaser" class="col-75 phaser">
+            <div id="phaser" class="col-80 phaser">
 
             </div>
         </div>

@@ -1,25 +1,18 @@
 @import "default-theme-colors";
+@import "../screens";
 
 .setupGame {
   .list {
     .item-avatar {
-      border-color: $medium_blue;
-      padding-left: 60px;
       img {
         left: 6px;
       }
     }
     .item {
+      border-color: $medium_blue;
       border-left: transparent;
       border-right: transparent;
     }
 
-    .button {
-      padding-left: 6px;
-      text-align: left;
-      span {
-        padding-left: 3px;
-      }
-    }
   }
 }
