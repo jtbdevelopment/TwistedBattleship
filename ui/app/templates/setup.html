@@ -1,11 +1,11 @@
-<ion-view class="setupGame">
+<ion-view class="game setupGame">
     <ion-nav-buttons side="right">
         <button class="button button-icon button-clear ion-help-circled" ng-click="showHelp(0)"></button>
     </ion-nav-buttons>
     <ion-content has-bouncing="false">
         <div class="row">
             <div class="list col-20">
-                <div class="item item-avatar item-icon-right"
+                <div class="item item-avatar item-text-wrap item-icon-right"
                      ng-repeat="(md5, name) in game.players | orderBy:name">
                     <img ng-src="{{gameDetails.imageForPlayer(game, md5)}}">
 

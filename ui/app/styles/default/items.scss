@@ -33,6 +33,7 @@
 
 .item-divider {
   background-color: $boatgray;
+  border-color: $boatgray;
   color: white;
   .badge {
     background-color: $paler_blue;
@@ -52,5 +53,10 @@
     padding: 1px;
     min-height: 1px;
   }
+}
+
+.action-item {
+  border: 0;
+  padding: 0;
 }
 

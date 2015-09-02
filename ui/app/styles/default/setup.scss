@@ -2,17 +2,13 @@
 @import "../screens";
 
 .setupGame {
-  .list {
-    .item-avatar {
-      img {
-        left: 6px;
-      }
+  .icon {
+    @media (max-width: $screen-xs-max) {
+      font-size: small;
+      right: 1px;
+      text-align: right;
+      width: 16px;
     }
-    .item {
-      border-color: $medium_blue;
-      border-left: transparent;
-      border-right: transparent;
-    }
-
   }
+
 }
