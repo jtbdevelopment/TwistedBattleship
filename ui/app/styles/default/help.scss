@@ -1,0 +1,19 @@
+@import "default-theme-colors";
+@import "../screens";
+
+.createHelp {
+  @media (max-width: $screen-xs-max) {
+    font-size: smaller;
+
+    h4 {
+      font-size: small;
+    }
+  }
+}
+
+.setupHelp {
+  @media (max-width: $screen-xs-max) {
+    font-size: smaller;
+
+  }
+}

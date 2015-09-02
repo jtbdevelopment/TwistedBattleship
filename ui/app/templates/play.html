@@ -6,7 +6,7 @@
     </ion-nav-buttons>
     <ion-content has-bouncing="false">
         <div class="row gameSummary" on-swipe="switchView(!showing)">
-            <div class="col-33 item">
+            <div class="col-33 item item-text-wrap">
                 <div ng-show="game.gamePhase === 'Playing'">
                     Current Turn:
                     <p><span
@@ -22,16 +22,16 @@
             </div>
             <div class="col-33 item">
                 General:
-                <p><span class="item-note">{{game.generalMessage}}</span></p>
+                <p><span class="item-text-wrap item-note">{{game.generalMessage}}</span></p>
             </div>
             <div class="col-33 item">
                 Last Move:
-                <p><span class="item-note">{{game.maskedPlayersState.lastActionMessage}}</span>
+                <p><span class="item-text-wrap item-note">{{game.maskedPlayersState.lastActionMessage}}</span>
             </div>
         </div>
         <div class="row">
             <div class="list col-20">
-                <div class="item item-avatar {{showing == 'ALL' ? 'chosen' : ''}}"
+                <div class="item item-avatar item-text-wrap {{showing == 'ALL' ? 'chosen' : ''}}"
                      ng-click="changePlayer('ALL')">
                     <img ng-src="{{gameDetails.imageForPlayer(game, player.md5)}}">
 
@@ -42,7 +42,7 @@
                 </div>
                 <div class="item item-divider">Opponents</div>
                 <div ng-repeat="(md5, name) in game.players | orderBy:name"
-                     class="item item-avatar {{showing == md5 ? 'chosen' : ''}}"
+                     class="item item-avatar item-text-wrap {{showing == md5 ? 'chosen' : ''}}"
                      ng-click="changePlayer(md5)"
                      ng-hide="md5 === player.md5">
                     <img ng-src="{{gameDetails.imageForPlayer(game, md5)}}">
