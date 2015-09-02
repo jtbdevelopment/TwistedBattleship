@@ -160,7 +160,7 @@ angular.module('tbs', ['ionic', 'tbs.controllers', 'tbs.directives', 'config', '
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/help/help-play.html',
-                        controller: 'ThemeCtrl'
+                        controller: 'MainCtrl'
                     }
                 }
             })
