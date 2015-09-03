@@ -104,13 +104,18 @@ angular.module('tbs.controllers').controller('GameCtrl',
                 //  TODO - overlap with setup
                 var shipLocations = [];
                 angular.forEach($scope.game.maskedPlayersState.shipStates, function (value, key) {
-                    var shipInfo = $scope.generalShipInfo.find(function (info) {
-                        return info.ship === key;
+                    var shipInfo = undefined;
+                    angular.forEach($scope.generalShipInfo, function (ship) {
+                        if (ship.ship === key) {
+                            shipInfo = ship;
+                        }
                     });
-                    var horizontal = value.shipGridCells[0].row === value.shipGridCells[1].row;
-                    var row = value.shipGridCells[0].row;
-                    var column = value.shipGridCells[0].column;
-                    shipLocations.push({horizontal: horizontal, row: row, column: column, shipInfo: shipInfo});
+                    if (angular.isDefined(shipInfo)) {
+                        var horizontal = value.shipGridCells[0].row === value.shipGridCells[1].row;
+                        var row = value.shipGridCells[0].row;
+                        var column = value.shipGridCells[0].column;
+                        shipLocations.push({horizontal: horizontal, row: row, column: column, shipInfo: shipInfo});
+                    }
                 });
                 return shipLocations;
             }
