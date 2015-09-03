@@ -90,6 +90,19 @@
       }
     }
   }
+
+  .action-sheet {
+    .button {
+      font-size: 21px;
+      line-height: 42px;
+    }
+
+    .action-sheet-cancel {
+      .button {
+        color: $darker_green;
+      }
+    }
+  }
 }
 
 

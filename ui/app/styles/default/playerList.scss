@@ -1,17 +1,41 @@
 @import "default-theme-colors";
 
-.pending {
-  color: $paler_green
-}
+.playerList {
+  //  Most of the items on .list are for restoring items under small screen size
+  .list {
+    .item {
+      font-size: 16px;
+      padding: 16px;
+    }
 
-.rejected {
-  color: $boatgray;
-}
+    .item-avatar {
+      padding-left: 72px;
+    }
 
-.quit {
-  color: white;
-}
+    .item-icon-right {
+      padding-right: 54px;
+    }
 
-.accepted {
-  color: $darker_green
+    .button {
+      line-height: 42px;
+      font-size: 16px;
+      padding: 0 12px;
+    }
+  }
+
+  .pending {
+    color: $paler_green
+  }
+
+  .rejected {
+    color: $boatgray;
+  }
+
+  .quit {
+    color: white;
+  }
+
+  .accepted {
+    color: $darker_green
+  }
 }
