@@ -1,10 +1,9 @@
 'use strict';
 
-//  TODO - need to control network up/down etc
 //  TODO - need to control background/foreground etc
 angular.module('tbs.controllers').controller('MainCtrl',
-    ['$scope', 'jtbPlayerService', 'jtbLiveGameFeed', 'ENV',
-        function ($scope, jtbPlayerService, jtbLiveGameFeed, ENV) {
+    ['$scope', 'jtbPlayerService', 'jtbLiveGameFeed', '$ionicHistory', '$state', 'ENV',
+        function ($scope, jtbPlayerService, jtbLiveGameFeed, $ionicHistory, $state, ENV) {
 
             //  Set here to avoid causing circular dependency in app.js
             jtbLiveGameFeed.setServiceBase(ENV.apiEndpoint);
@@ -14,6 +13,13 @@ angular.module('tbs.controllers').controller('MainCtrl',
 
             $scope.$on('playerLoaded', function () {
                 $scope.theme = jtbPlayerService.currentPlayer().gameSpecificPlayerAttributes.theme;
+            });
+
+            $scope.$on('$cordovaNetwork:offline', function () {
+                $ionicHistory.nextViewOptions({
+                    disableBack: true
+                });
+                $state.go('network', {}, {reload: true});
             });
         }
     ]

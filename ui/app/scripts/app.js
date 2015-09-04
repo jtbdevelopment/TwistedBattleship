@@ -60,14 +60,18 @@ angular.module('tbs', ['ionic', 'tbs.controllers', 'tbs.directives', 'config', '
     })
     .config(function ($stateProvider, $urlRouterProvider) {
         $stateProvider
-            .state('app', {
-                url: '/app',
-                abstract: true,
-                templateUrl: 'templates/menu.html'
+            .state('network', {
+                url: '/network',
+                templateUrl: 'templates/network.html'
             })
             .state('signin', {
                 url: '/signin',
                 templateUrl: 'templates/signin.html'
+            })
+            .state('app', {
+                url: '/app',
+                abstract: true,
+                templateUrl: 'templates/menu.html'
             })
             .state('app.create', {
                 url: '/create',
@@ -195,5 +199,5 @@ angular.module('tbs', ['ionic', 'tbs.controllers', 'tbs.directives', 'config', '
         ;
 
         // if none of the above states are matched, use this as the fallback
-        $urlRouterProvider.otherwise('/signin');
+        $urlRouterProvider.otherwise('/network');
     });

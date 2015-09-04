@@ -104,13 +104,13 @@ angular.module('tbs.controllers').controller('GameCtrl',
                 //  TODO - overlap with setup
                 var shipLocations = [];
                 angular.forEach($scope.game.maskedPlayersState.shipStates, function (value, key) {
-                    var shipInfo = undefined;
+                    var shipInfo = null;
                     angular.forEach($scope.generalShipInfo, function (ship) {
                         if (ship.ship === key) {
                             shipInfo = ship;
                         }
                     });
-                    if (angular.isDefined(shipInfo)) {
+                    if (shipInfo !== null) {
                         var horizontal = value.shipGridCells[0].row === value.shipGridCells[1].row;
                         var row = value.shipGridCells[0].row;
                         var column = value.shipGridCells[0].column;
