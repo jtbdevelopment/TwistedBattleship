@@ -84,11 +84,11 @@ angular.module('tbs.controllers').controller('GameCtrl',
                         tbsShipGrid.placeCellMarkers($scope.game.maskedPlayersState.opponentGrids[md5].table);
                     }
                 }
+                $scope.shipHighlighted = (tbsShipGrid.selectedShip() !== null);
                 $scope.showing = md5;
             };
 
             $scope.switchView = function (showingSelf) {
-                //  TODO - if switching from attack to defend, does not highlight ship if appropriate
                 $scope.showingSelf = showingSelf;
                 if (!$scope.showingSelf && $scope.showing === ALL) {
                     if ($scope.playerKeys[0] === $scope.player.md5) {

@@ -97,13 +97,15 @@ angular.module('tbs.services').factory('tbsShipGrid',
                 phaser.load.image('Carrier', 'images/' + theme + '/carrier.png');
             }
 
+            function init() {
+                phaser.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+            }
+
             function create() {
                 var map = phaser.add.tilemap('grid');
                 map.addTilesetImage('tile');
-                var layer = map.createLayer('base grid');
-                layer.resizeWorld();
+                map.createLayer('base grid');
 
-                phaser.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
                 phaser.scale.pageAlignHorizontally = false;
                 phaser.scale.pageAlignVertically = false;
                 phaser.scale.windowConstraints.bottom = 'visual';
@@ -183,6 +185,16 @@ angular.module('tbs.services').factory('tbsShipGrid',
                 return {x: x, y: y};
             }
 
+            function highlightAShip(x, y) {
+                if (highlightShip !== null) {
+                    highlightShip.sprite.tint = 0xffffff;
+                }
+                highlightShip = findShipByCoordinates({x: x, y: y});
+                if (highlightShip !== null) {
+                    highlightShip.sprite.tint = 0x00ff00;
+                }
+            }
+
             function highlightCell(context) {
                 var coords = currentContextCoordinates(context);
                 var y = Math.floor(coords.y / CELL_SIZE) * CELL_SIZE;
@@ -203,13 +215,7 @@ angular.module('tbs.services').factory('tbsShipGrid',
                     sprite.x = x + (coord.column * CELL_SIZE);
                     sprite.y = y + (coord.row * CELL_SIZE);
                 }
-                if (highlightShip !== null) {
-                    highlightShip.sprite.tint = 0xffffff;
-                }
-                highlightShip = findShipByCoordinates({x: x, y: y});
-                if (highlightShip !== null) {
-                    highlightShip.sprite.tint = 0x00ff00;
-                }
+                highlightAShip(x, y);
                 if (highlightCallback !== null) {
                     highlightCallback();
                 }
@@ -261,7 +267,7 @@ angular.module('tbs.services').factory('tbsShipGrid',
                                 gameHeight,
                                 Phaser.AUTO,
                                 'phaser',
-                                {preload: preload, create: create});
+                                {preload: preload, create: create, init: init});
                         },
                         function (error) {
                             //  TODO
@@ -273,6 +279,7 @@ angular.module('tbs.services').factory('tbsShipGrid',
                 placeShips: function (newShipLocations) {
                     shipLocations = newShipLocations;
                     placeShips();
+                    highlightAShip(highlightX * CELL_SIZE, highlightY * CELL_SIZE);
                 },
 
                 placeCellMarkers: function (newCellMarkers) {
@@ -303,7 +310,7 @@ angular.module('tbs.services').factory('tbsShipGrid',
                 },
                 deactivateHighlighting: function () {
                     highlightCallback = undefined;
-                    this.onTap(undefined);
+                    this.onDown(undefined);
                 },
                 selectedCell: function () {
                     return {x: highlightX, y: highlightY};
