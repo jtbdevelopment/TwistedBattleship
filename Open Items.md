@@ -3,7 +3,6 @@ Consolidated To Do's
 
 - Check ui on ipad/iphone6
 - check ui on android devices
-- creating action wait on ui ($ionicLoading?)
 - handle errors and messages in ui
 - add user profile in ui
 - add game detail popup
@@ -27,3 +26,4 @@ Consolidated To Do's
 - a.i. players
 - many ui tests
 - check for latest phaser
+- hazecast cluster group name?

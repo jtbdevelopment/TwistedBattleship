@@ -3,8 +3,8 @@
 var MAX_OPPONENTS = 5;
 
 angular.module('tbs.controllers').controller('CreateGameCtrl',
-    ['friends', 'features', '$scope', 'jtbGameCache', 'jtbPlayerService', 'jtbFacebook', '$http', '$state', '$location', 'tbsGameDetails', '$ionicModal', '$ionicHistory',// 'twAds',
-        function (friends, features, $scope, jtbGameCache, jtbPlayerService, jtbFacebook, $http, $state, $location, tbsGameDetails, $ionicModal, $ionicHistory/*, twAds*/) {
+    ['friends', 'features', '$scope', 'jtbGameCache', 'jtbPlayerService', 'jtbFacebook', '$http', '$state', '$location', 'tbsGameDetails', '$ionicModal', '$ionicHistory', '$ionicLoading',// 'twAds',
+        function (friends, features, $scope, jtbGameCache, jtbPlayerService, jtbFacebook, $http, $state, $location, tbsGameDetails, $ionicModal, $ionicHistory, $ionicLoading/*, twAds*/) {
 
             $scope.playerChoices = [];
             //  TODO - nothing displaying alerts
@@ -158,13 +158,18 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
                     return player.md5;
                 });
                 var playersAndFeatures = {'players': players, 'features': features};
+                $ionicLoading.show({
+                    template: 'Creating game and issuing challenges..'
+                });
                 $http.post(jtbPlayerService.currentPlayerBaseURL() + '/new', playersAndFeatures).success(function (data) {
+                    $ionicLoading.hide();
                     jtbGameCache.putUpdatedGame(data);
                     $ionicHistory.nextViewOptions({
                         disableBack: true
                     });
-                    $state.go('app.challenged', {gameID: data.id});
+                    $state.go('app.games', {}, {reload: true});
                 }).error(function (data, status, headers, config) {
+                    $ionicLoading.hide();
                     //  TODO
                     $scope.alerts.push({type: 'danger', msg: 'Error creating game:' + data});
                     console.error(data + status + headers + config);
