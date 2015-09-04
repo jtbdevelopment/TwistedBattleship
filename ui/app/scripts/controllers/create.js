@@ -2,6 +2,7 @@
 
 var MAX_OPPONENTS = 5;
 
+//  TODO - clear choices on re-entry - not sure if we should
 angular.module('tbs.controllers').controller('CreateGameCtrl',
     ['friends', 'features', '$scope', 'jtbGameCache', 'jtbPlayerService', 'jtbFacebook', '$http', '$state', 'tbsGameDetails', '$ionicModal', '$ionicHistory', '$ionicLoading', '$ionicPopup', // 'twAds',
         function (friends, features, $scope, jtbGameCache, jtbPlayerService, jtbFacebook, $http, $state, tbsGameDetails, $ionicModal, $ionicHistory, $ionicLoading, $ionicPopup /*, twAds*/) {
