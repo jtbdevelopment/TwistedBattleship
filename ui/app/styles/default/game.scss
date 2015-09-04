@@ -38,6 +38,14 @@
         color: black;
         top: 12px;
         right: 6px;
+
+        @media (max-width: $screen-xs-max) {
+          font-size: xx-small;
+          top: 6px;
+          padding: 1px 2px;
+          line-height: 8px;
+          right: 1px;
+        }
       }
 
       .badge-note {
