@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('tbs.services').factory('tbsActions',
-    ['$http', '$state', 'jtbGameCache', 'jtbPlayerService', '$ionicHistory', '$ionicActionSheet', '$ionicLoading',
-        function ($http, $state, jtbGameCache, jtbPlayerService, $ionicHistory, $ionicActionSheet, $ionicLoading) {
+    ['$http', '$state', 'jtbGameCache', 'jtbPlayerService', '$ionicHistory', '$ionicActionSheet', '$ionicLoading', '$ionicPopup',
+        function ($http, $state, jtbGameCache, jtbPlayerService, $ionicHistory, $ionicActionSheet, $ionicLoading, $ionicPopup) {
             function updateGame($scope, updatedGame) {
                 var currentPhase = $scope.game.gamePhase;
                 $scope.game = updatedGame;
@@ -44,7 +44,11 @@ angular.module('tbs.services').factory('tbsActions',
                     updateGame($scope, data);
                 }).error(function (data, status, headers, config) {
                     $ionicLoading.hide();
-                    //  TODO
+                    $ionicPopup.alert({
+                        title: 'Error updating game!',
+                        template: data
+                    }).then(function () {
+                    });
                     console.error(data + status + headers + config);
                 });
             }
@@ -56,7 +60,11 @@ angular.module('tbs.services').factory('tbsActions',
                     updateGame($scope, data);
                 }).error(function (data, status, headers, config) {
                     $ionicLoading.hide();
-                    //  TODO
+                    $ionicPopup.alert({
+                        title: 'Error updating game!',
+                        template: data
+                    }).then(function () {
+                    });
                     console.error(data + status + headers + config);
                 });
             }
@@ -107,7 +115,11 @@ angular.module('tbs.services').factory('tbsActions',
                         updateGame($scope, data);
                     }).error(function (data, status, headers, config) {
                         $ionicLoading.hide();
-                        //  TODO
+                        $ionicPopup.alert({
+                            title: 'Error updating game!',
+                            template: data
+                        }).then(function () {
+                        });
                         console.error(data + status + headers + config);
                     });
                 },

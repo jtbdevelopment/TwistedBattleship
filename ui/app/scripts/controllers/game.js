@@ -138,11 +138,10 @@ angular.module('tbs.controllers').controller('GameCtrl',
                         tbsShipGrid.deactivateHighlighting();
                     }
                     if (angular.isDefined(message) && message !== '') {
-                        var alertPopup = $ionicPopup.alert({
+                        $ionicPopup.alert({
                             title: 'Move Completed!',
                             template: message
-                        });
-                        alertPopup.then(function () {
+                        }).then(function () {
                         });
                     }
                 }

@@ -3,7 +3,6 @@ Consolidated To Do's
 
 - Check ui on ipad/iphone6
 - check ui on android devices
-- handle errors and messages in ui
 - add user profile in ui
 - add game detail popup
 - zoom controls on phaser
@@ -27,3 +26,4 @@ Consolidated To Do's
 - many ui tests
 - check for latest phaser
 - hazecast cluster group name?
+- http interceptor error

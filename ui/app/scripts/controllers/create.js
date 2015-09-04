@@ -3,12 +3,10 @@
 var MAX_OPPONENTS = 5;
 
 angular.module('tbs.controllers').controller('CreateGameCtrl',
-    ['friends', 'features', '$scope', 'jtbGameCache', 'jtbPlayerService', 'jtbFacebook', '$http', '$state', '$location', 'tbsGameDetails', '$ionicModal', '$ionicHistory', '$ionicLoading',// 'twAds',
-        function (friends, features, $scope, jtbGameCache, jtbPlayerService, jtbFacebook, $http, $state, $location, tbsGameDetails, $ionicModal, $ionicHistory, $ionicLoading/*, twAds*/) {
+    ['friends', 'features', '$scope', 'jtbGameCache', 'jtbPlayerService', 'jtbFacebook', '$http', '$state', 'tbsGameDetails', '$ionicModal', '$ionicHistory', '$ionicLoading', '$ionicPopup', // 'twAds',
+        function (friends, features, $scope, jtbGameCache, jtbPlayerService, jtbFacebook, $http, $state, tbsGameDetails, $ionicModal, $ionicHistory, $ionicLoading, $ionicPopup /*, twAds*/) {
 
             $scope.playerChoices = [];
-            //  TODO - nothing displaying alerts
-            $scope.alerts = [];
             $scope.featureData = [];
             $scope.currentOptions = [];
             $scope.featureData = features;
@@ -170,8 +168,12 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
                     $state.go('app.games', {}, {reload: true});
                 }).error(function (data, status, headers, config) {
                     $ionicLoading.hide();
-                    //  TODO
-                    $scope.alerts.push({type: 'danger', msg: 'Error creating game:' + data});
+                    $ionicPopup.alert({
+                        title: 'Error creating game!',
+                        template: data
+                    }).then(function () {
+                    });
+
                     console.error(data + status + headers + config);
                 });
 //                });
@@ -189,13 +191,6 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
                         }
                     }
                 });
-            };
-
-            //  TODO
-            $scope.closeAlert = function (index) {
-                if (angular.isDefined(index) && index >= 0 && index < $scope.alerts.length) {
-                    $scope.alerts.splice(index, 1);
-                }
             };
         }
     ]
