@@ -5,7 +5,6 @@ angular.module('tbs.controllers')
     .controller('NetworkCtrl',
     ['$scope', '$state', '$ionicHistory', '$rootScope', '$cordovaNetwork', '$timeout',
         function ($scope, $state, $ionicHistory, $rootScope, $cordovaNetwork, $timeout) {
-            $scope.message = 'Checking network status...';
 
             function online() {
                 $ionicHistory.nextViewOptions({
@@ -14,28 +13,36 @@ angular.module('tbs.controllers')
                 $state.go('signin', {}, {reload: true});
             }
 
+            function checkOnline() {
+                $scope.message = 'Checking network status...';
+                //  As Per http://stackoverflow.com/questions/25672502/phonegap-network-connection-cannot-read-property-type-of-undefined
+                //  Need a timeout to ensure its initialized
+                $timeout(function () {
+                    try {
+                        if ($cordovaNetwork.isOnline()) {
+                            online();
+                        }
+                    } catch (error) {
+                        if (error.message === 'navigator.connection is undefined') {
+                            //  Assume a browser and go
+                            online();
+                            return;
+                        }
+                        console.log(error);
+                    }
+                    $scope.message = 'Internet not currently available.';
+                }, 1000);
+            }
+
             $scope.$on('$cordovaNetwork:online', function () {
                 online();
             });
 
-            //  As Per http://stackoverflow.com/questions/25672502/phonegap-network-connection-cannot-read-property-type-of-undefined
-            //  Need a timeout to ensure its initialized
-            $timeout(function () {
-                try {
-                    if ($cordovaNetwork.isOnline()) {
-                        online();
-                    }
-                } catch (error) {
-                    if (error.message === 'navigator.connection is undefined') {
-                        //  Assume a browser and go
-                        online();
-                    }
-                    console.log(error);
-                }
-            }, 1000);
+            $scope.$on('$ionicView.enter', function () {
+                checkOnline();
+            });
 
-            $scope.message = 'Internet not currently available.';
-
+            checkOnline();
         }
     ]
 );
