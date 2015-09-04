@@ -2,14 +2,16 @@
 'use strict';
 
 angular.module('tbs.services').factory('tbsShipGrid',
-    ['jtbPlayerService', 'tbsCircles',
-        function (jtbPlayerService, tbsCircles) {
+    ['jtbPlayerService', 'tbsCircles', 'tbsCellStates', 'tbsShips',
+        function (jtbPlayerService, tbsCircles, tbsCellStates, tbsShips) {
             var CELL_SIZE = 100;
             var HALF_CELL_SIZE = CELL_SIZE / 2;
 
             var circles;
             var circle;
             var circleSprites = [];
+            var cellStates;
+            var shipNames;
             var theme;
             var game;
             var shipsOnGrid = [], shipLocations = [];
@@ -70,31 +72,13 @@ angular.module('tbs.services').factory('tbsShipGrid',
                 phaser.load.image('tile', 'images/' + theme + '/tile.png');
                 phaser.load.image('highlight', 'images/' + theme + '/highlight.png');
                 phaser.load.image('extendedhighlight', 'images/' + theme + '/extendedhighlight.png');
-                angular.forEach([
-                    'knownbyhit',
-                    'knownbymiss',
-                    'knownbyothermiss',
-                    'knownbyotherhit',
-                    'knownbyrehit',
-                    'knownship',
-                    'knownempty',
-                    'obscuredempty',
-                    'obscuredship',
-                    'obscuredotherhit',
-                    'obscuredothermiss',
-                    'obscuredrehit',
-                    'obscuredmiss',
-                    'obscuredhit',
-                    'hiddenhit',
-                    'unknown'
-                ], function (state) {
-                    phaser.load.image(state, 'images/' + theme + '/' + state + '.png');
+                angular.forEach(cellStates, function (state) {
+                    var lower = angular.lowercase(state);
+                    phaser.load.image(lower, 'images/' + theme + '/' + lower + '.png');
                 });
-                phaser.load.image('Destroyer', 'images/' + theme + '/destroyer.png');
-                phaser.load.image('Submarine', 'images/' + theme + '/submarine.png');
-                phaser.load.image('Battleship', 'images/' + theme + '/battleship.png');
-                phaser.load.image('Cruiser', 'images/' + theme + '/cruiser.png');
-                phaser.load.image('Carrier', 'images/' + theme + '/carrier.png');
+                angular.forEach(shipNames, function (shipName) {
+                    phaser.load.image(shipName, 'images/' + theme + '/' + angular.lowercase(shipName) + '.png');
+                });
             }
 
             function init() {
@@ -259,21 +243,30 @@ angular.module('tbs.services').factory('tbsShipGrid',
                     shipLocations = initialShipLocations;
                     cellMarkers = initialCellMarkers;
                     postCreateFunction = postCreateCB;
-                    tbsCircles.circles().then(
-                        function (circleData) {
-                            circles = circleData;
-                            phaser = new Phaser.Game(
-                                gameWidth,
-                                gameHeight,
-                                Phaser.AUTO,
-                                'phaser',
-                                {preload: preload, create: create, init: init});
-                        },
-                        function (error) {
-                            //  TODO
-                            console.warn(error);
-                        }
-                    );
+                    tbsShips.ships().then(function (shipData) {
+                        shipNames = [];
+                        angular.forEach(shipData, function (singleShip) {
+                            shipNames.push(singleShip.ship);
+                        });
+                        tbsCellStates.cellStates().then(function (stateData) {
+                            cellStates = stateData;
+                            tbsCircles.circles().then(
+                                function (circleData) {
+                                    circles = circleData;
+                                    phaser = new Phaser.Game(
+                                        gameWidth,
+                                        gameHeight,
+                                        Phaser.AUTO,
+                                        'phaser',
+                                        {preload: preload, create: create, init: init});
+                                },
+                                function (error) {
+                                    //  TODO
+                                    console.warn(error);
+                                }
+                            );
+                        });
+                    });
                 },
 
                 placeShips: function (newShipLocations) {
