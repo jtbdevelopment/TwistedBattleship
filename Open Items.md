@@ -1,7 +1,7 @@
 Consolidated To Do's
 ====================
 
-- Check ui on ipad/iphone6
+- Check ui on iphone6
 - check ui on android devices
 - add user profile in ui
 - add game detail popup
