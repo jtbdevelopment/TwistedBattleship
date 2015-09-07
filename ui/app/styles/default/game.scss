@@ -7,24 +7,25 @@
       img {
         left: 6px;
 
-        @media (max-width: $screen-xs-max) {
-          height: 0;
-          width: 0;
-        }
-
         @media (max-width: $screen-sm-max) {
           height: 24px;
           width: 24px;
         }
+
+        @media (max-width: $screen-xs-max) {
+          height: 0;
+          width: 0;
+        }
+      }
+
+      @media (max-width: $screen-sm-max) {
+        min-height: 0;
+        padding: 20px 0 20px 34px;
       }
 
       @media (max-width: $screen-xs-max) {
         min-height: 0;
         padding: 1px;
-      }
-      @media (max-width: $screen-sm-max) {
-        min-height: 0;
-        padding: 20px 0 20px 34px;
       }
     }
 
@@ -38,11 +39,11 @@
       }
 
       p, h3 {
-        @media (max-width: $screen-xs-max) {
-          font-size: xx-small;
-        }
         @media (max-width: $screen-sm-max) {
           font-size: smaller;
+        }
+        @media (max-width: $screen-xs-max) {
+          font-size: xx-small;
         }
       }
       .badge {
