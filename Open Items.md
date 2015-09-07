@@ -8,7 +8,6 @@ Consolidated To Do's
 - fix game help navigation
 - add nudge player
 - revamp game list to be your action, their action, older
-- more network up/down testing especially with pause/foreground
 - fix ion-autocomplete filtering
 - fix ion-autocomplete summary display on smaller screens
 - better uncertain icons
