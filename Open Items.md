@@ -7,7 +7,6 @@ Consolidated To Do's
 - zoom controls on phaser
 - fix game help navigation
 - add nudge
-- check cordova plugins and remove unused ones
 - revamp game list to be your action, their action, older
 - handle pause/foreground - stop/start websocket
 - more network up/down testing especially with pause/foreground
