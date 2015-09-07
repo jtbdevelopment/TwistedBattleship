@@ -125,7 +125,8 @@ var platformConfig = (function () {
                 destination: 'android:windowSoftInputMode'
             }
         },
-        'ios': {}
+        'ios': {},
+        'browser': {}
     };
     var configXmlData, preferencesData;
 
