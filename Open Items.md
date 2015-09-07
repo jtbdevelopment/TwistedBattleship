@@ -23,5 +23,5 @@ Consolidated To Do's
 - many ui tests
 - check for latest phaser
 - hazecast cluster group name?
-- http interceptor error
 - sometimes game cache not current?
+- 4 space ship image is not right
