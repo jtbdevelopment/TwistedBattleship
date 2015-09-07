@@ -32,6 +32,12 @@ angular.module('tbs.controllers').controller('MainCtrl',
             $scope.$on('$cordovaNetwork:offline', function () {
                 checkNetworkStatusAndLogin();
             });
+
+            $scope.$on('InvalidSession', function () {
+                if ($state.$current.name !== 'signin') {
+                    checkNetworkStatusAndLogin();
+                }
+            });
         }
     ]
 );

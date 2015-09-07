@@ -19,7 +19,7 @@ angular.module('tbs', ['ionic', 'tbs.controllers', 'tbs.directives', 'config', '
     })
     //  TODO - move interceptor to game core?
     // Custom Interceptor for replacing outgoing URLs
-    .factory('httpEnvInterceptor', function ($q, $cacheFactory, ENV) {
+    .factory('httpEnvInterceptor', function ($q, $cacheFactory, ENV, $rootScope) {
         return {
             'request': function (config) {
                 if (
@@ -34,23 +34,14 @@ angular.module('tbs', ['ionic', 'tbs.controllers', 'tbs.directives', 'config', '
                     config.url = ENV.apiEndpoint + config.url;
                 }
                 return config;
-            }
-            //,
-            /*
-            //  TODO?
-            'responseError': function (rejection) {
-                console.log('responseError:' + JSON.stringify(rejection));
-                $q.reject(rejection);
             },
-            //  TODO
-            'requestError': function (rejection) {
-                console.log('requestError:' + JSON.stringify(rejection));
-                $q.reject(rejection);
-            },
-            'response': function (response) {
-                return response;
+            'responseError': function (response) {
+                console.log('responseError:' + JSON.stringify(response));
+                if (response.status === 401) {
+                    $rootScope.$broadcast('InvalidSession');
+                }
+                return $q.reject(response);
             }
-             */
         };
     })
     .config(function ($httpProvider) {

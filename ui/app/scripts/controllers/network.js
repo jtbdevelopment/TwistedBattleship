@@ -22,6 +22,7 @@ angular.module('tbs.controllers')
                         try {
                             if ($cordovaNetwork.isOnline()) {
                                 online();
+                                return;
                             }
                         } catch (error) {
                             if (error.message === 'navigator.connection is undefined') {
