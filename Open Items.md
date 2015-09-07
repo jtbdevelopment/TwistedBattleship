@@ -27,5 +27,3 @@ Consolidated To Do's
 - hazecast cluster group name?
 - http interceptor error
 - sometimes game cache not current?
-- splash screen
-- icon
