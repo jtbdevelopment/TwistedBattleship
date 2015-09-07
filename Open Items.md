@@ -6,9 +6,8 @@ Consolidated To Do's
 - add game detail popup
 - zoom controls on phaser
 - fix game help navigation
-- add nudge
+- add nudge player
 - revamp game list to be your action, their action, older
-- handle pause/foreground - stop/start websocket
 - more network up/down testing especially with pause/foreground
 - fix ion-autocomplete filtering
 - fix ion-autocomplete summary display on smaller screens

@@ -186,7 +186,7 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                 if (shipLocations.length === 0) {
                     var row = 0;
                     angular.forEach(generalShipInfo, function (shipInfo) {
-                        shipLocations.push({horizontal: true, row: row, column: 4, shipInfo: shipInfo});
+                        shipLocations.push({horizontal: true, row: row, column: 0, shipInfo: shipInfo});
                         row = row + 1;
                     });
                 }
