@@ -14,7 +14,6 @@ Consolidated To Do's
 - specifically for uncertain empty - hides ship
 - test facebook login
 - test fb friends
-- use cordova facebook
 - make war / website
 - test war with non / roots
 - push notifications
