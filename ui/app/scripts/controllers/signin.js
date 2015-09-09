@@ -16,6 +16,26 @@ angular.module('tbs.controllers')
             $scope.password = '';
             $scope.rememberme = false;
 
+            function onSuccessfulLogin() {
+                console.log('Logged in');
+                clearHttpCache();
+                $rootScope.$broadcast('login');
+                $ionicHistory.nextViewOptions({
+                    disableBack: true
+                });
+                $state.go('app.games', {}, {reload: true});
+            }
+
+            function onFailedLogin() {
+                console.log('Login failed');
+                clearHttpCache();
+                $scope.message = 'Invalid username or password.';
+            }
+
+            function clearHttpCache() {
+                $cacheFactory.get('$http').removeAll();
+            }
+
             $scope.manualLogin = function () {
                 clearHttpCache();
                 $http({
@@ -34,29 +54,12 @@ angular.module('tbs.controllers')
                     },
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                     method: 'POST'
-                }).success(function () {
-                    console.log('Logged in');
-                    clearHttpCache();
-                    $rootScope.$broadcast('login');
-                    $ionicHistory.nextViewOptions({
-                        disableBack: true
-                    });
-                    $state.go('app.games', {}, {reload: true});
-                }).error(function () {
-                    console.log('Login failed');
-                    clearHttpCache();
-                    $scope.message = 'Invalid username or password.';
-                });
+                }).success(onSuccessfulLogin).error(onFailedLogin);
             };
 
             function showLoginOptions() {
                 $scope.showFacebook = true;
-                // TODO - this will be no good for prod - need to pull in endpoint
-                $scope.showManual =
-                    $window.location.href.indexOf('192.168.1') > -1 ||
-                    $window.location.href.indexOf('localhost') > -1 ||
-                    $window.location.href.indexOf('file') === 0 ||
-                    $window.location.href.indexOf('-dev') > -1;
+                $scope.showManual = ENV.domain === 'localhost' || ENV.domain.href.indexOf('-dev') > -1;
                 $scope.message = '';
             }
 
@@ -65,15 +68,7 @@ angular.module('tbs.controllers')
                 $scope.showManual = false;
                 $scope.message = 'Logging in via Facebook';
                 clearHttpCache();
-                //  TODO - make $http instead?
-                //  TODO - force a refresh games in here/reload all
-                $window.location = ENV.apiEndpoint + '/auth/facebook';
-                //  TODO - doubt this works
-                $scope.$broadcast('login');
-            }
-
-            function clearHttpCache() {
-                $cacheFactory.get('$http').removeAll();
+                $http.get(ENV.apiEndpoint + '/auth/facebook').success(onSuccessfulLogin).error(onFailedLogin);
             }
 
             jtbFacebook.canAutoSignIn().then(function (details) {
