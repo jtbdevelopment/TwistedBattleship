@@ -3,6 +3,9 @@
   <component name="EntryPointsManager">
     <entry_points version="2.0" />
   </component>
+  <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$/war" />
+  </component>
   <component name="IdProvider" IDEtalkID="1755D618597C9AFE8C9688F086A576BC" />
   <component name="JsBowerSettings">
     <exe-path>/usr/local/bin/bower</exe-path>

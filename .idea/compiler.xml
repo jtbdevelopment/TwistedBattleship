@@ -24,10 +24,18 @@
         <processorPath useClasspath="true" />
         <module name="game" />
       </profile>
+      <profile default="false" name="Annotation profile for war" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="war" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="game" target="1.5" />
       <module name="TwistedBattleship" target="1.5" />
+      <module name="war" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>
