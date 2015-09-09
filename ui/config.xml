@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.jtbdevelopment.TwistedBattleship" version="0.0.1" xmlns="http://www.w3.org/ns/widgets">
-    <name>TwistedBattleship</name>
+    <name>Twisted Battleship</name>
     <description>
         Twisted Battleship - Rule the 7 seas!
     </description>
@@ -74,6 +74,6 @@
     <plugin name="com.phonegap.plugins.facebookconnect"
             spec="/Users/buscej/IdeaProjects/phongegap-facebook-plugin/phonegap-facebook-plugin">
         <variable name="APP_ID" value="100714310269707"/>
-        <variable name="APP_NAME" value="TwistedBattleship"/>
+        <variable name="APP_NAME" value="Twisted Battleship"/>
     </plugin>
 </widget>

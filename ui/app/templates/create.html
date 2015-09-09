@@ -25,25 +25,26 @@
                     {{feature.feature.label}}
                 </ion-toggle>
             </div>
-            <label class="item item-input item-wrap-text">
-                <div class="input-label">
-                    <i class="icon optionOn ion-person-stalker"></i>
-                    Opponents (Max 5):
+            <div class="item item-input item-wrap-text">
+                <div style="width: 100%;">
+                    <div class="input-label">
+                        <i class="icon optionOn ion-person-stalker"></i>
+                        Opponents (Max 5):
+                    </div>
+                <textarea ion-autocomplete rows="4" theme="default-theme"
+                          template-url="templates/autocomplete/autocompleteTemplate.html"
+                          ng-model="playerChoices"
+                          items-method="queryFriends(query)"
+                          selected-items-label="Selected Players:"
+                          placeholder="Select opponents..."
+                          item-value-key="md5"
+                          item-view-value-key="displayName"
+                          items-clicked-method="playersChanged(callback)"
+                          items-removed-method="playersChanged(callback)"
+                          multiple-select="true">
+                </textarea>
                 </div>
-                <!--  TODO - not very nice on small screens -->
-                <ion-autocomplete theme="default-theme"
-                                  template-url="templates/autocomplete/autocompleteTemplate.html"
-                                  ng-model="playerChoices"
-                                  items-method="queryFriends(query)"
-                                  selected-items-label="Selected Players:"
-                                  placeholder="Select opponents..."
-                                  item-value-key="md5"
-                                  item-view-value-key="displayName"
-                                  items-clicked-method="playersChanged(callback)"
-                                  items-removed-method="playersChanged(callback)"
-                                  multiple-select="true">
-                </ion-autocomplete>
-            </label>
+            </div>
         </div>
         <button class="button-full button-submit button" ng-disabled="!(submitEnabled)" ng-click="createGame()">
             Start

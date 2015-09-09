@@ -6,25 +6,27 @@
         <ion-content>
             <div class="list">
                 <label class="item item-input">
-                    <div class="input-label">
-                        Friends To Invite:
+                    <div style="width: 100%;">
+                        <div class="input-label">
+                            Friends To Invite:
+                        </div>
+                        <textarea rows="4" ion-autocomplete
+                                  template-url="templates/autocomplete/autocompleteTemplate.html"
+                                  ng-model="friendsToInvite"
+                                  items-method="queryInvitableFriends(query)"
+                                  selected-items-label="Selected Friends:"
+                                  placeholder="Select friends..."
+                                  item-value-key="id"
+                                  item-view-value-key="name"
+                                  multiple-select="true">
+                    </textarea>
                     </div>
-                    <!--  TODO - not very nice on small screens -->
-                    <ion-autocomplete template-url="templates/autocomplete/autocompleteTemplate.html"
-                                      ng-model="friendsToInvite"
-                                      items-method="queryInvitableFriends(query)"
-                                      selected-items-label="Selected Friends:"
-                                      placeholder="Select friends..."
-                                      item-value-key="id"
-                                      item-view-value-key="name"
-                                      multiple-select="true">
-                    </ion-autocomplete>
                 </label>
             </div>
             <button class="button button-full button-submit" ng-click="inviteFriends(friendsToInvite)">
                 Invite
             </button>
-            <button class="button button-full" ng-click="cancelInviteFriends()">Cancel</button>
+            <button class="button button-full button-quit" ng-click="cancelInviteFriends()">Cancel</button>
         </ion-content>
     </div>
 </div>
