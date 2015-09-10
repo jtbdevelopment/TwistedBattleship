@@ -44,7 +44,7 @@ describe('Service: gameDetails', function () {
         game = angular.copy(gameBase);
         service = $injector.get('tbsGameDetails');
     }));
-
+    /*
     it('player icon based on state', function () {
         expect(service.stateIconForPlayer(game, 'md1')).to.equal('speakerphone');
         expect(service.stateIconForPlayer(game, 'md2')).to.equal('thumbsup');
@@ -312,6 +312,7 @@ describe('Service: gameDetails', function () {
     it('test shorten grid description bad game', function () {
         expect(service.shortenGridSize()).to.equal('');
     });
+     */
 });
 
 
