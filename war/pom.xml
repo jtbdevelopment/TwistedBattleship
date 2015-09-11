@@ -18,11 +18,11 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.5</version>
                 <configuration>
-                    <!--webResources>
+                    <webResources>
                         <resource>
-                            <directory>../webUI/TwistedHangman/dist</directory>
+                            <directory>../ui/www</directory>
                         </resource>
-                    </webResources-->
+                    </webResources>
                 </configuration>
             </plugin>
         </plugins>

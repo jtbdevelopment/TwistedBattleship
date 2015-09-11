@@ -9,6 +9,7 @@
     <version>0.1-SNAPSHOT</version>
     <modules>
         <module>game</module>
+        <module>ui</module>
         <module>war</module>
     </modules>
     <packaging>pom</packaging>
