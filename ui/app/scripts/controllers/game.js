@@ -3,8 +3,8 @@
 var ALL = 'ALL';
 
 angular.module('tbs.controllers').controller('GameCtrl',
-    ['$rootScope', '$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', 'shipInfo', 'tbsShipGrid', '$ionicPopup', // 'twAds',
-        function ($rootScope, $scope, tbsGameDetails, tbsActions, jtbGameCache, jtbPlayerService, $state, shipInfo, tbsShipGrid, $ionicPopup /*, twAds*/) {
+    ['$rootScope', '$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', 'shipInfo', 'tbsShipGrid', '$ionicPopup', '$ionicLoading', // 'twAds',
+        function ($rootScope, $scope, tbsGameDetails, tbsActions, jtbGameCache, jtbPlayerService, $state, shipInfo, tbsShipGrid, $ionicPopup, $ionicLoading /*, twAds*/) {
             $scope.gameID = $state.params.gameID;
             $scope.game = jtbGameCache.getGameForID($scope.gameID);
             $scope.playerKeys = Object.keys($scope.game.players);
@@ -20,15 +20,6 @@ angular.module('tbs.controllers').controller('GameCtrl',
             $scope.showHelp = function () {
                 $state.transitionTo('app.help');
             };
-
-            tbsShipGrid.initialize($scope.game, [], [], function () {
-                $scope.changePlayer($scope.showing);
-                if ($scope.game.gamePhase === 'Playing') {
-                    tbsShipGrid.activateHighlighting(highlightCallback);
-                }
-                $scope.switchView(false);
-                $scope.$apply();
-            });
 
             $scope.declineRematch = function () {
                 //  TODO - winds up on weird location
@@ -126,6 +117,21 @@ angular.module('tbs.controllers').controller('GameCtrl',
 
             $scope.$on('$ionicView.leave', function () {
                 tbsShipGrid.stop();
+            });
+
+            $scope.$on('$ionicView.enter', function () {
+                $ionicLoading.show({
+                    template: 'Loading...'
+                });
+                tbsShipGrid.initialize($scope.game, [], [], function () {
+                    $scope.changePlayer($scope.showing);
+                    if ($scope.game.gamePhase === 'Playing') {
+                        tbsShipGrid.activateHighlighting(highlightCallback);
+                    }
+                    $scope.switchView(false);
+                    $scope.$apply();
+                    $ionicLoading.hide();
+                });
             });
 
             $scope.$on('gameUpdated', function (event, oldGame, newGame) {

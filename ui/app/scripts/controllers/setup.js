@@ -1,8 +1,9 @@
 'use strict';
 
+//  TODO - unsaved changes warning
 angular.module('tbs.controllers').controller('SetupGameCtrl',
-    ['$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', '$ionicSideMenuDelegate', 'shipInfo', 'tbsShipGrid', '$ionicModal', // 'twAds',
-        function ($scope, tbsGameDetails, tbsActions, jtbGameCache, jtbPlayerService, $state, $ionicSideMenuDelegate, shipInfo, tbsShipGrid, $ionicModal /*, twAds*/) {
+    ['$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', '$ionicSideMenuDelegate', 'shipInfo', 'tbsShipGrid', '$ionicModal', '$ionicLoading', // 'twAds',
+        function ($scope, tbsGameDetails, tbsActions, jtbGameCache, jtbPlayerService, $state, $ionicSideMenuDelegate, shipInfo, tbsShipGrid, $ionicModal, $ionicLoading /*, twAds*/) {
             $ionicSideMenuDelegate.canDragContent(false);
             $scope.gameID = $state.params.gameID;
             $scope.game = jtbGameCache.getGameForID($scope.gameID);
@@ -193,17 +194,23 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                 return shipLocations;
             }
 
-            tbsShipGrid.initialize($scope.game, computeShipLocations(shipInfo), [], function () {
-                tbsShipGrid.onDown(onDown);
-                tbsShipGrid.onMove(onMove);
-                tbsShipGrid.onTap(onTap);
-                tbsShipGrid.onUp(onUp);
-                checkOverlap();
-                $scope.$apply();
-            });
-
             $scope.$on('$ionicView.leave', function () {
                 tbsShipGrid.stop();
+            });
+
+            $scope.$on('$ionicView.enter', function () {
+                $ionicLoading.show({
+                    template: 'Loading...'
+                });
+                tbsShipGrid.initialize($scope.game, computeShipLocations(shipInfo), [], function () {
+                    tbsShipGrid.onDown(onDown);
+                    tbsShipGrid.onMove(onMove);
+                    tbsShipGrid.onTap(onTap);
+                    tbsShipGrid.onUp(onUp);
+                    checkOverlap();
+                    $scope.$apply();
+                    $ionicLoading.hide();
+                });
             });
         }
     ]
