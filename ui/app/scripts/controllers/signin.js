@@ -4,8 +4,8 @@ angular.module('tbs.controllers')
     //  TODO - finish and move to core
     //  TODO - investigate cordova facebook plugin instead of custom
     .controller('CoreMobileSignInCtrl',
-    ['$scope', '$window', '$cookies', '$http', '$state', '$cacheFactory', '$ionicHistory', '$rootScope', 'jtbFacebook', 'ENV',
-        function ($scope, $window, $cookies, $http, $state, $cacheFactory, $ionicHistory, $rootScope, jtbFacebook, ENV) {
+    ['$scope', '$window', '$cookies', '$http', '$state', '$cacheFactory', '$ionicHistory', '$rootScope', 'jtbFacebook', 'ENV', '$ionicLoading',
+        function ($scope, $window, $cookies, $http, $state, $cacheFactory, $ionicHistory, $rootScope, jtbFacebook, ENV, $ionicLoading) {
             $scope.message = 'Initializing...';
             $scope.showFacebook = false;
             $scope.showManual = false;
@@ -17,6 +17,7 @@ angular.module('tbs.controllers')
             $scope.rememberme = false;
 
             function onSuccessfulLogin() {
+                $ionicLoading.hide();
                 console.log('Logged in');
                 clearHttpCache();
                 $rootScope.$broadcast('login');
@@ -27,6 +28,7 @@ angular.module('tbs.controllers')
             }
 
             function onFailedLogin() {
+                $ionicLoading.hide();
                 console.log('Login failed');
                 clearHttpCache();
                 $scope.message = 'Invalid username or password.';
@@ -37,6 +39,9 @@ angular.module('tbs.controllers')
             }
 
             $scope.manualLogin = function () {
+                $ionicLoading.show({
+                    template: 'Sending...'
+                });
                 clearHttpCache();
                 $http({
                     transformRequest: function (obj) {
@@ -68,7 +73,13 @@ angular.module('tbs.controllers')
                 $scope.showManual = false;
                 $scope.message = 'Logging in via Facebook';
                 clearHttpCache();
-                $http.get(ENV.apiEndpoint + '/auth/facebook').success(onSuccessfulLogin).error(onFailedLogin);
+                if ($window.location.href.indexOf('file') === 0) {
+                    $http.get(ENV.apiEndpoint + '/auth/facebook').success(onSuccessfulLogin).error(onFailedLogin);
+                } else {
+                    $window.location = ENV.apiEndpoint + '/auth/facebook';
+                    //  TODO - doubt this works
+                    $scope.$broadcast('login');
+                }
             }
 
             jtbFacebook.canAutoSignIn().then(function (details) {
