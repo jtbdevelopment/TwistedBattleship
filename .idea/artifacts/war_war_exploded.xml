@@ -110,7 +110,7 @@
           <element id="library" level="project" name="Maven: org.springframework:spring-web:4.1.6.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework:spring-aop:4.1.6.RELEASE" />
           <element id="library" level="project" name="Maven: javax.ws.rs:javax.ws.rs-api:2.0.1" />
-          <element id="library" level="project" name="Maven: org.codehaus.groovy:groovy-all:2.4.3" />
+          <element id="library" level="project" name="Maven: org.codehaus.groovy:groovy-all:2.4.4" />
         </element>
       </element>
       <element id="directory" name="META-INF">

@@ -12,19 +12,19 @@ angular.module('tbs.controllers')
             $scope.csrf = $cookies['XSRF-TOKEN'];
             $scope.facebookPermissions = '';
 
-            $scope.username = '';
-            $scope.password = '';
-            $scope.rememberme = false;
+            $scope.manualForm = {
+                username: '',
+                password: '',
+                rememberme: false
+            };
+
+            function clearHttpCache() {
+                $cacheFactory.get('$http').removeAll();
+            }
 
             function onSuccessfulLogin() {
                 $ionicLoading.hide();
-                console.log('Logged in');
-                clearHttpCache();
-                $rootScope.$broadcast('login');
-                $ionicHistory.nextViewOptions({
-                    disableBack: true
-                });
-                $state.go('app.games', {}, {reload: true});
+                $state.go('signedin');
             }
 
             function onFailedLogin() {
@@ -32,10 +32,6 @@ angular.module('tbs.controllers')
                 console.log('Login failed');
                 clearHttpCache();
                 $scope.message = 'Invalid username or password.';
-            }
-
-            function clearHttpCache() {
-                $cacheFactory.get('$http').removeAll();
             }
 
             $scope.manualLogin = function () {
@@ -53,9 +49,9 @@ angular.module('tbs.controllers')
                     },
                     url: '/signin/authenticate',
                     data: {
-                        username: $scope.username,
-                        password: $scope.password,
-                        'remember-me': $scope.rememberme
+                        username: $scope.manualForm.username,
+                        password: $scope.manualForm.password,
+                        'remember-me': $scope.manualForm.rememberme
                     },
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                     method: 'POST'
@@ -77,22 +73,8 @@ angular.module('tbs.controllers')
                     $http.get(ENV.apiEndpoint + '/auth/facebook').success(onSuccessfulLogin).error(onFailedLogin);
                 } else {
                     $window.location = ENV.apiEndpoint + '/auth/facebook';
-                    //  TODO - doubt this works
-                    $scope.$broadcast('login');
                 }
             }
-
-            jtbFacebook.canAutoSignIn().then(function (details) {
-                clearHttpCache();
-                $scope.facebookPermissions = details.permissions;
-                if (!details.auto) {
-                    showLoginOptions();
-                } else {
-                    autoLogin();
-                }
-            }, function () {
-                showLoginOptions();
-            });
 
             $scope.fbLogin = function () {
                 jtbFacebook.initiateFBLogin().then(function (details) {
@@ -105,6 +87,20 @@ angular.module('tbs.controllers')
                     showLoginOptions();
                 });
             };
+
+            $scope.$on('$ionicView.enter', function () {
+                jtbFacebook.canAutoSignIn().then(function (details) {
+                    clearHttpCache();
+                    $scope.facebookPermissions = details.permissions;
+                    if (!details.auto) {
+                        showLoginOptions();
+                    } else {
+                        autoLogin();
+                    }
+                }, function () {
+                    showLoginOptions();
+                });
+            });
         }
     ]
 );

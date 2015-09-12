@@ -10,7 +10,7 @@ angular.module('tbs.controllers')
                 $ionicHistory.nextViewOptions({
                     disableBack: true
                 });
-                $state.go('signin', {}, {reload: true});
+                $state.go('signin', {});
             }
 
             function checkOnline() {

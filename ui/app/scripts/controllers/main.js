@@ -8,7 +8,7 @@ angular.module('tbs.controllers').controller('MainCtrl',
                 $ionicHistory.nextViewOptions({
                     disableBack: true
                 });
-                $state.go('network', {}, {reload: true});
+                $state.go('network');
             }
 
             //  Set here to avoid causing circular dependency in app.js

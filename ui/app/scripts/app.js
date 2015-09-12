@@ -53,11 +53,18 @@ angular.module('tbs', ['ionic', 'tbs.controllers', 'tbs.directives', 'config', '
         $stateProvider
             .state('network', {
                 url: '/network',
-                templateUrl: 'templates/network.html'
+                templateUrl: 'templates/network.html',
+                controller: 'NetworkCtrl'
             })
             .state('signin', {
                 url: '/signin',
-                templateUrl: 'templates/signin.html'
+                templateUrl: 'templates/signin.html',
+                controller: 'CoreMobileSignInCtrl'
+            })
+            .state('signedin', {
+                url: '/signedin',
+                templateUrl: 'templates/signedin.html',
+                controller: 'CoreMobileSignedInCtrl'
             })
             .state('app', {
                 url: '/app',

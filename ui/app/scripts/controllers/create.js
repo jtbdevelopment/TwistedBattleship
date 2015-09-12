@@ -166,7 +166,7 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
                     $ionicHistory.nextViewOptions({
                         disableBack: true
                     });
-                    $state.go('app.games', {}, {reload: true});
+                    $state.go('app.games');
                 }).error(function (data, status, headers, config) {
                     $ionicLoading.hide();
                     $ionicPopup.alert({

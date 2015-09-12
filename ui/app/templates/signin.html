@@ -1,37 +1,33 @@
 <ion-view>
     <ion-content class="signin">
-        <div ng-controller="CoreMobileSignInCtrl">
-            <div class="container">
-                <div class="row text-center">
-                    <div class="center">
-                        <p>{{message}}</p>
-                    </div>
-                </div>
+        <div class="row text-center">
+            <div class="center">
+                <p>{{message}}</p>
             </div>
+        </div>
 
-            <div class="list" ng-show="showFacebook">
-                <a class="item item-button" href="#" ng-click="fbLogin()">
-                    <img ng-src="images/sign-in-with-facebook.png"/>
-                </a>
-            </div>
+        <div class="list" ng-show="showFacebook">
+            <a class="item item-button" href="#" ng-click="fbLogin()">
+                <img ng-src="images/sign-in-with-facebook.png"/>
+            </a>
+        </div>
 
-            <div class="list" ng-show="showManual">
-                <span class="item item-divider">Don't want to login with Facebook?</span>
-                <label class="item item-input">
-                    <span class="input-label">Email</span>
-                    <input id="username" name="username" type="text" size="25" ng-model="username"/>
-                </label>
-                <label class="item item-input">
-                    <span class="input-label">Password</span>
-                    <input id="password" name="password" type="password" size="25" ng-model="password"/>
-                </label>
-                <ion-toggle ng-model="rememberme">
-                    Remember Me?
-                </ion-toggle>
-                <button class="button-full button-submit button" ng-click="manualLogin()">
-                    Login
-                </button>
-            </div>
+        <div class="list" ng-show="showManual">
+            <span class="item item-divider">Don't want to login with Facebook?</span>
+            <label class="item item-input">
+                <span class="input-label">Email</span>
+                <input id="username" name="username" type="email" size="25" ng-model="manualForm.username"/>
+            </label>
+            <label class="item item-input">
+                <span class="input-label">Password</span>
+                <input id="password" name="password" type="password" size="25" ng-model="manualForm.password"/>
+            </label>
+            <ion-toggle ng-model="manualForm.rememberme">
+                Remember Me?
+            </ion-toggle>
+            <button class="button-full button-submit button" ng-click="manualLogin(username, password)">
+                Login
+            </button>
         </div>
     </ion-content>
 </ion-view>

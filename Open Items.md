@@ -21,4 +21,6 @@ Consolidated To Do's
 - check for latest phaser
 - hazecast cluster group name?
 - sometimes game cache not current?
-- 4 space ship image is not right
+- web page logout?
+- refresh on web page not working
+- max retry on resubscribe
