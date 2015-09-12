@@ -1,8 +1,8 @@
 <ion-view class="createGame">
     <ion-nav-buttons side="right">
-        <button class="button button-icon button-clear ion-person-add" ng-show="invitableFriends.length >= 0"
-                ng-click="showInviteFriends()"></button>
-        <button class="button button-icon button-clear ion-help-circled" ng-click="showHelp(0)"></button>
+        <a class="button button-icon button-clear ion-person-add" ng-show="invitableFriends.length >= 0"
+                ng-click="showInviteFriends()"></a>
+        <a class="button button-icon button-clear ion-help-circled" ng-click="showHelp(0)"></a>
     </ion-nav-buttons>
     <ion-content>
         <div class="list create">
@@ -46,8 +46,8 @@
                 </div>
             </div>
         </div>
-        <button class="button-full button-submit button" ng-disabled="!(submitEnabled)" ng-click="createGame()">
+        <a class="button-full button-submit button" ng-disabled="!(submitEnabled)" ng-click="createGame()">
             Start
-        </button>
+        </a>
     </ion-content>
 </ion-view>

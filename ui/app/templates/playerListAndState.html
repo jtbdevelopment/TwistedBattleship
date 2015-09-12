@@ -8,15 +8,15 @@
                     <i class="icon ion-{{statusIcon(player.md5)}}"></i>
                 </span>
             </div>
-            <div class="item" ng-show="{{showActions}}">
+            <div class="item" ng-show="showActions">
                 <div class="row">
-                    <button class="button button-accept col" ng-click="accept()"
+                    <a class="button button-accept col" ng-click="accept()"
                             ng-show="gameDetails.playerChallengeResponseNeeded(game, player.md5)">
                         <i class="icon ion-checkmark-circled"></i> Accept
-                    </button>
-                    <button class="button button-reject col" ng-click="reject()">
+                    </a>
+                    <a class="button button-reject col" ng-click="reject()">
                         <i class="icon ion-close-circled"></i> Reject
-                    </button>
+                    </a>
                 </div>
             </div>
             <div class="item item-avatar item-icon-right"

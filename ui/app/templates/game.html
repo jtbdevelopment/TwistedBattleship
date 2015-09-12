@@ -1,9 +1,7 @@
-<!--  TODO - disable buttons if action pending  -->
-<!--  TODO - disable if network down -->
 <!--  TODO - a game info button and screen shared with setup -->
 <ion-view class="game" xmlns="http://www.w3.org/1999/html">
     <ion-nav-buttons side="right">
-        <button class="button button-icon button-clear ion-help-circled" ng-click="showHelp()"></button>
+        <a class="button button-icon button-clear ion-help-circled" ng-click="showHelp()"></a>
     </ion-nav-buttons>
     <ion-content has-bouncing="false">
         <div class="row gameSummary" on-swipe="switchView(!showing)">
@@ -57,31 +55,31 @@
                     <div ng-show="showingSelf">
                         <div class="item action-item">
                             <div class="button-bar">
-                                <button class="button button-defend icon-left ion-{{gameDetails.iconForFeature('ECMEnabled')}}"
+                                <a class="button button-defend icon-left ion-{{gameDetails.iconForFeature('ECMEnabled')}}"
                                         ng-disabled="!gameDetails.ecmPossible(game, player.md5)"
                                         ng-click="ecm()">
                                     <span>ECM</span>
-                                </button>
+                                </a>
                                 <span class="badge">{{game.maskedPlayersState.ecmsRemaining}}</span>
                             </div>
                         </div>
                         <div class="item action-item">
                             <div class="button-bar">
-                                <button class="button button-defend icon-left ion-{{gameDetails.iconForFeature('EMEnabled')}}"
+                                <a class="button button-defend icon-left ion-{{gameDetails.iconForFeature('EMEnabled')}}"
                                         ng-disabled="!(gameDetails.evasiveMovePossible(game, player.md5) && shipHighlighted)"
                                         ng-click="move()">
                                     <span>Evade</span>
-                                </button>
+                                </a>
                                 <span class="badge">{{game.maskedPlayersState.evasiveManeuversRemaining}}</span>
                             </div>
                         </div>
                         <div class="item action-item">
                             <div class="button-bar">
-                                <button class="button button-defend icon-left ion-{{gameDetails.iconForFeature('EREnabled')}}"
+                                <a class="button button-defend icon-left ion-{{gameDetails.iconForFeature('EREnabled')}}"
                                         ng-disabled="!(gameDetails.repairPossible(game, player.md5) && shipHighlighted)"
                                         ng-click="repair()">
                                     <span>Repair</span>
-                                </button>
+                                </a>
                                 <span class="badge">{{game.maskedPlayersState.emergencyRepairsRemaining}}</span>
                             </div>
                         </div>
@@ -89,18 +87,18 @@
                     <div ng-show="!showingSelf && game.playersAlive[showing] === true">
                         <div class="item action-item">
                             <div class="button-bar">
-                                <button class="button button-attack icon-left ion-disc" ng-click="fire()">
+                                <a class="button button-attack icon-left ion-disc" ng-click="fire()">
                                     <span>Fire</span>
-                                </button>
+                                </a>
                                 <span class="badge">{{game.remainingMoves}}</span>
                             </div>
                         </div>
                         <div class="item action-item">
                             <div class="button-bar">
-                                <button class="button button-attack icon-left ion-{{gameDetails.iconForFeature('SpyEnabled')}}"
+                                <a class="button button-attack icon-left ion-{{gameDetails.iconForFeature('SpyEnabled')}}"
                                         ng-disabled="!gameDetails.spyPossible(game, player.md5)" ng-click="spy()">
                                     <span>Spy</span>
-                                </button>
+                                </a>
                                 <span class="badge">{{game.maskedPlayersState.spysRemaining}}</span>
                             </div>
                         </div>
@@ -110,9 +108,9 @@
                     <div class="item item-divider">Quit</div>
                     <div class="item action-item">
                         <div class="button-bar">
-                            <button class="button button-quit icon-left ion-flag" ng-click="quit()">
+                            <a class="button button-quit icon-left ion-flag" ng-click="quit()">
                                 <span>Surrender</span>
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -120,16 +118,16 @@
                     <div class="item item-divider">Rematch?</div>
                     <div class="item action-item">
                         <div class="button-bar ">
-                            <button class="button button-rematch icon-left ion-loop" ng-click="rematch()">
+                            <a class="button button-rematch icon-left ion-loop" ng-click="rematch()">
                                 <span>Rematch</span>
-                            </button>
+                            </a>
                         </div>
                     </div>
                     <div class="item action-item">
                         <div class="button-bar ">
-                            <button class="button button-norematch icon-left ion-loop" ng-click="declineRematch()">
+                            <a class="button button-norematch icon-left ion-loop" ng-click="declineRematch()">
                                 <span>End Rematches</span>
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -138,12 +136,12 @@
             <div class="col-80">
                 <div class="row viewToggleRow">
                     <div class="button-bar">
-                        <button class="button icon-left {{showingSelf ? 'ion-checkmark' : '' }} button-defend"
+                        <a class="button icon-left {{showingSelf ? 'ion-checkmark' : '' }} button-defend"
                                 ng-click="switchView(true)">Their view of you
-                        </button>
-                        <button class="button icon-left {{showingSelf ? '' : 'ion-checkmark' }} button-attack"
+                        </a>
+                        <a class="button icon-left {{showingSelf ? '' : 'ion-checkmark' }} button-attack"
                                 ng-click="switchView(false)" ng-disabled="showing == 'ALL'">Your view of them
-                        </button>
+                        </a>
                     </div>
                 </div>
                 <div class="row">

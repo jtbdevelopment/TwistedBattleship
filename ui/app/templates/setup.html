@@ -1,6 +1,6 @@
 <ion-view class="game setupGame">
     <ion-nav-buttons side="right">
-        <button class="button button-icon button-clear ion-help-circled" ng-click="showHelp(0)"></button>
+        <a class="button button-icon button-clear ion-help-circled" ng-click="showHelp(0)"></a>
     </ion-nav-buttons>
     <ion-content has-bouncing="false">
         <div class="row">
@@ -19,11 +19,11 @@
 
                 <div class="item action-item">
                     <div class="button-bar">
-                        <button class="button button-submit icon-left ion-edit"
+                        <a class="button button-submit icon-left ion-edit"
                                 ng-disabled="submitDisabled"
                                 ng-click="submit()">
                             <span>Save</span>
-                        </button>
+                        </a>
                     </div>
                 </div>
 
@@ -31,9 +31,9 @@
 
                 <div class="item action-item">
                     <div class="button-bar">
-                        <button class="button button-quit icon-left ion-flag" ng-click="quit()">
+                        <a class="button button-quit icon-left ion-flag" ng-click="quit()">
                             <span>Surrender</span>
-                        </button>
+                        </a>
                     </div>
                 </div>
 
