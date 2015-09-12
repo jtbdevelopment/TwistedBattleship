@@ -6,6 +6,7 @@ angular.module('tbs.controllers')
     .controller('CoreMobileSignInCtrl',
     ['$scope', '$window', '$cookies', '$http', '$state', '$cacheFactory', '$ionicHistory', '$rootScope', 'jtbFacebook', 'ENV', '$ionicLoading',
         function ($scope, $window, $cookies, $http, $state, $cacheFactory, $ionicHistory, $rootScope, jtbFacebook, ENV, $ionicLoading) {
+            //  TODO - Make this a popup on error I think
             $scope.message = 'Initializing...';
             $scope.showFacebook = false;
             $scope.showManual = false;

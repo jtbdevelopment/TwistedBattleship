@@ -11,9 +11,8 @@ Consolidated To Do's
 - fix ion-autocomplete filtering
 - better uncertain icons
 - specifically for uncertain empty - hides ship
-- test facebook login
-- test fb friends
-- make war / website
+- test facebook login - on mobile
+- test fb friends - on mobile
 - test war with non / roots
 - push notifications
 - a.i. players
@@ -24,3 +23,4 @@ Consolidated To Do's
 - web page logout?
 - refresh on web page not working
 - max retry on resubscribe
+- sounds

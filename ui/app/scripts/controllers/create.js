@@ -120,7 +120,7 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
 
             //  TODO - similar scope issue to playerChoices
             $scope.inviteFriends = function (friendsToInvite) {
-                jtbFacebook.inviteFriends(friendsToInvite);
+                jtbFacebook.inviteFriends(friendsToInvite, 'Come play Twisted Battleship with me!');
                 $scope.inviteModal.hide();
             };
 
@@ -178,20 +178,6 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
                     console.error(data + status + headers + config);
                 });
 //                });
-            };
-
-            //  TODO - test
-            $scope.showInvite = function () {
-                $ionicModal.open({
-                    templateUrl: 'views/inviteDialog.html',
-                    controller: 'CoreInviteCtrl',
-                    size: 'lg',
-                    resolve: {
-                        invitableFriends: function () {
-                            return $scope.invitableFriends;
-                        }
-                    }
-                });
             };
         }
     ]
