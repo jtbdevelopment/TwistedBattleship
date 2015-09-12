@@ -11,8 +11,8 @@ var phasesAndIcons = {
 };
 
 angular.module('tbs.controllers').controller('MobileGameListCtrl',
-    ['$rootScope', '$scope', '$location', '$animate', '$timeout', '$state', 'jtbPlayerService', 'jtbGameCache', 'tbsGameDetails', 'phases',
-        function ($rootScope, $scope, $location, $animate, $timeout, $state, jtbPlayerService, jtbGameCache, tbsGameDetails, phases) {
+    ['$rootScope', '$scope', '$state', 'jtbPlayerService', 'jtbGameCache', 'tbsGameDetails', 'phases',
+        function ($rootScope, $scope, $state, jtbPlayerService, jtbGameCache, tbsGameDetails, phases) {
             $scope.games = {};
             $scope.phasesInOrder = [];
             $scope.gameDetails = tbsGameDetails;
