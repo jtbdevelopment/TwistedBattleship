@@ -54,10 +54,9 @@ module.exports = function (grunt) {
             production: {
                 constants: {
                     ENV: {
-                        //  TODO
                         name: 'production',
-                        domain: 'yoursite.com',
-                        apiEndpoint: 'http://api.yoursite.com/'
+                        domain: 'jtbdevelopment.com',
+                        apiEndpoint: 'https://twistedbattleship.jtbdevelopment.com/'
                     }
                 }
             }
