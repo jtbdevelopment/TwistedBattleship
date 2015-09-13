@@ -43,13 +43,21 @@ angular.module('tbs.controllers').controller('MobileGameListCtrl',
                 $rootScope.$broadcast('refreshGames', '');
             };
 
-            $scope.$on('gameCachesLoaded', function () {
+            function reloadFromCaches() {
                 $scope.md5 = jtbPlayerService.currentPlayer().md5;
                 angular.forEach($scope.games, function (phaseData, phase) {
                     phaseData.games = jtbGameCache.getGamesForPhase(phase);
                 });
+            }
+
+            $scope.$on('gameCachesLoaded', function () {
+                reloadFromCaches();
                 $scope.$broadcast('scroll.refreshComplete');
             });
+
+            if(jtbGameCache.initialized()) {
+                reloadFromCaches();
+            }
 
             $scope.$on('phaseChangeAlert', function (/*event, game*/) {
                 //  TODO
