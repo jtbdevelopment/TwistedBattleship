@@ -9,8 +9,7 @@ angular.module('tbs.controllers').controller('GameCtrl',
             $scope.game = jtbGameCache.getGameForID($scope.gameID);
             $scope.playerKeys = Object.keys($scope.game.players);
             $scope.gameDetails = tbsGameDetails;
-            $scope.player = {};
-            $scope.player = angular.copy(jtbPlayerService.currentPlayer(), $scope.player);
+            $scope.player = jtbPlayerService.currentPlayer();
             $scope.generalShipInfo = shipInfo;
             $scope.showing = ALL;
             $scope.showingSelf = false;
@@ -124,13 +123,12 @@ angular.module('tbs.controllers').controller('GameCtrl',
                     template: 'Loading...'
                 });
                 tbsShipGrid.initialize($scope.game, [], [], function () {
-                    $scope.changePlayer($scope.showing);
                     if ($scope.game.gamePhase === 'Playing') {
                         tbsShipGrid.activateHighlighting(highlightCallback);
                     }
                     $scope.switchView(false);
-                    $scope.$apply();
                     $ionicLoading.hide();
+                    $scope.$apply();
                 });
             });
 

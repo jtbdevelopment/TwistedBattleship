@@ -9,7 +9,7 @@ angular.module('tbs.controllers').controller('PlayerListAndStateCtrl',
             $scope.gameDetails = tbsGameDetails;
             $scope.showActions = $scope.game.gamePhase === 'Challenged';
             $scope.player = {};
-            $scope.player = angular.copy(jtbPlayerService.currentPlayer(), $scope.player);
+            $scope.player = jtbPlayerService.currentPlayer();
 
             $scope.statusColor = function (md5) {
                 if (angular.isDefined(md5)) {
