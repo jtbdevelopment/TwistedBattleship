@@ -20,3 +20,4 @@ Consolidated To Do's
 - refresh on web page not working if on root (ok via FB Canvas)
 - max retry on resubscribe
 - sounds
+- review server side general and last action messages
