@@ -15,9 +15,10 @@ Consolidated To Do's
 - push notifications
 - a.i. players
 - many ui tests
+- ion-autocomplete is very specific version
+- core lib error handling
 - hazecast cluster group name?
 - web page logout?
 - refresh on web page not working if on root (ok via FB Canvas)
-- max retry on resubscribe
+- max retry on resubscribe websocket
 - sounds
-- review server side general and last action messages
