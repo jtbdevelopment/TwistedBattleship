@@ -136,10 +136,10 @@
             <div class="col-80">
                 <div class="row viewToggleRow">
                     <div class="button-bar">
-                        <a class="button icon-left {{showingSelf ? 'ion-checkmark' : '' }} button-defend"
+                        <a class="button button-switch-view icon-left {{showingSelf ? 'ion-checkmark' : '' }} button-defend"
                                 ng-click="switchView(true)">Their view of you
                         </a>
-                        <a class="button icon-left {{showingSelf ? '' : 'ion-checkmark' }} button-attack"
+                        <a class="button button-switch-view icon-left {{showingSelf ? '' : 'ion-checkmark' }} button-attack"
                                 ng-click="switchView(false)" ng-disabled="showing == 'ALL'">Your view of them
                         </a>
                     </div>

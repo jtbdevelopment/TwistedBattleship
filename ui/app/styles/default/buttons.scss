@@ -58,9 +58,12 @@
   color: black;
 }
 
-.button-switch {
-  background-color: $medium_blue;
-  border-color: $boatgray;
+.button-bar {
+  .button-switch-view {
+    border-radius: 6px;
+    margin: 0 10px;
+    max-width: 190px;
+  }
 }
 
 .button-quit {

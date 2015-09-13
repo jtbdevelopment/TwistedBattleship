@@ -17,10 +17,8 @@ Consolidated To Do's
 - push notifications
 - a.i. players
 - many ui tests
-- check for latest phaser
 - hazecast cluster group name?
-- sometimes game cache not current?
 - web page logout?
-- refresh on web page not working
+- refresh on web page not working if on root (ok via FB Canvas)
 - max retry on resubscribe
 - sounds
