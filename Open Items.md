@@ -9,8 +9,6 @@ Consolidated To Do's
 - add nudge player
 - revamp game list to be your action, their action, older
 - fix ion-autocomplete filtering
-- better uncertain icons
-- specifically for uncertain empty - hides ship
 - test facebook login - on mobile
 - test fb friends - on mobile
 - test war with non / roots
