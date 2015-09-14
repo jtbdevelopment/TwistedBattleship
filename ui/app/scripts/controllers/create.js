@@ -2,21 +2,20 @@
 
 var MAX_OPPONENTS = 5;
 
-//  TODO - clear choices on re-entry - not sure if we should
 angular.module('tbs.controllers').controller('CreateGameCtrl',
     ['friends', 'features', '$scope', 'jtbGameCache', 'jtbPlayerService', 'jtbFacebook', '$http', '$state', 'tbsGameDetails', '$ionicModal', '$ionicHistory', '$ionicLoading', '$ionicPopup', // 'twAds',
         function (friends, features, $scope, jtbGameCache, jtbPlayerService, jtbFacebook, $http, $state, tbsGameDetails, $ionicModal, $ionicHistory, $ionicLoading, $ionicPopup /*, twAds*/) {
 
-            $scope.playerChoices = [];
-            $scope.featureData = [];
-            $scope.currentOptions = [];
+            $scope.gameDetails = tbsGameDetails;
             $scope.featureData = features;
-            $scope.currentOptions = [];
+
             $scope.friends = [];
             $scope.invitableFriends = [];
+
+            $scope.playerChoices = [];
+            $scope.currentOptions = [];
+            $scope.currentOptions = [];
             $scope.submitEnabled = false;
-            $scope.gameDetails = tbsGameDetails;
-            $scope.theme = jtbPlayerService.currentPlayer().gameSpecificPlayerAttributes.theme;
 
             var count = 0;
             angular.forEach($scope.featureData, function (feature) {
@@ -124,7 +123,6 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
                 $scope.inviteModal.show();
             };
 
-            //  TODO - similar scope issue to playerChoices
             $scope.inviteFriends = function (friendsToInvite) {
                 jtbFacebook.inviteFriends(friendsToInvite, 'Come play Twisted Battleship with me!');
                 $scope.inviteModal.hide();
@@ -176,7 +174,7 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
                 }).error(function (data, status, headers, config) {
                     $ionicLoading.hide();
                     $ionicPopup.alert({
-                        title: 'Error creating game!',
+                        title: 'There was a problem creating the game!',
                         template: data
                     }).then(function () {
                     });
