@@ -148,7 +148,6 @@ class FireAtCoordinateHandler extends AbstractPlayerMoveHandler {
                                 state.opponentGrids[targetedPlayer.id].set(coordinate, markForOthers)
                                 targetedState.opponentViews[playerId].set(coordinate, markForOthers)
                             }
-
                         }
                 }
         }

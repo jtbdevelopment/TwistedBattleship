@@ -44,10 +44,10 @@ module.exports = function (grunt) {
                     ENV: {
                         name: 'development',
                         domain: 'localhost',
-                        apiEndpointOther: 'http://localhost:9998',
+                        apiEndpoint: 'http://localhost:9998',
                         apiEndpointAndroidEmulator: 'http://10.0.2.2:9998',
                         apiEndpointGenymotionEmulator: 'http://192.168.56.1:9998',
-                        apiEndpoint: 'https://localhost:8443'
+                        apiEndpointTomcat: 'https://localhost:8443'
                     }
                 }
             },
@@ -298,6 +298,7 @@ module.exports = function (grunt) {
                         '<%= yeoman.images %>/**/*.{png,jpg,jpeg,gif,webp,svg}',
                         '*.html',
                         'templates/**/*.html',
+                        'templates/**/*.json',
                         'fonts/*'
                     ]
                 }, {

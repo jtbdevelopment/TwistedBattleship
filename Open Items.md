@@ -24,3 +24,10 @@ Consolidated To Do's
 - review server side messages
 - upgrade ionic
 - after upgrading ionic - then upgrade ion-autocomplete and look at prepopulate feature
+
+--  Notes on messages 
+ - ecm, repair, evasive: message to all players
+ - spy goes to all players if in shared intel mode
+ - fire target/player only, sink/defeat to all
+ - lack of history renders most messages pointless, history would render ecm useless
+ - make history list and have ecm wipe history list?
