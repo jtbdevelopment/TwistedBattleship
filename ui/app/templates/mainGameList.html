@@ -1,0 +1,9 @@
+<!-- TODO - revamp into your turn/their turn/older -->
+<ion-view hide-back-button="true">
+    <ion-content>
+        <div class="mainGameList">
+            <ion-refresher pulling-text="Pull to refresh" on-refresh="refreshGames()"></ion-refresher>
+            <player-game-list></player-game-list>
+        </div>
+    </ion-content>
+</ion-view>

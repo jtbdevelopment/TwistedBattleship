@@ -11,15 +11,9 @@ angular.module('tbs.services').factory('tbsActions',
                     $scope.game.gamePhase !== 'Challenged' &&
                     $scope.game.gamePhase !== 'NextRoundStarted' &&
                     $scope.game.gamePhase !== 'Declined') {
-                    $ionicHistory.nextViewOptions({
-                        disableBack: true
-                    });
                     $state.go('app.' + $scope.game.gamePhase.toLowerCase(), {gameID: $scope.gameID});
                 } else {
                     if ($scope.game.gamePhase !== 'Playing') {
-                        $ionicHistory.nextViewOptions({
-                            disableBack: true
-                        });
                         $state.go('app.games');
                     }
                 }

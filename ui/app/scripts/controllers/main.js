@@ -5,9 +5,6 @@ angular.module('tbs.controllers').controller('MainCtrl',
         function ($scope, jtbPlayerService, jtbLiveGameFeed, $ionicHistory, $state, ENV, $document) {
 
             function checkNetworkStatusAndLogin() {
-                $ionicHistory.nextViewOptions({
-                    disableBack: true
-                });
                 $state.go('network');
             }
 

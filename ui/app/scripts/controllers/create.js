@@ -167,9 +167,6 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
                 $http.post(jtbPlayerService.currentPlayerBaseURL() + '/new', playersAndFeatures).success(function (data) {
                     $ionicLoading.hide();
                     jtbGameCache.putUpdatedGame(data);
-                    $ionicHistory.nextViewOptions({
-                        disableBack: true
-                    });
                     $state.go('app.games');
                 }).error(function (data, status, headers, config) {
                     $ionicLoading.hide();

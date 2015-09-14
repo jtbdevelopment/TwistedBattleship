@@ -28,6 +28,12 @@
   width: 100%;
 }
 
+.mainGameList {
+  @media (min-width: 992px) {
+    display: none !important;
+  }
+}
+
 .platform-ipad.platform-ios.platform-cordova:not(.fullscreen) .bar-header:not(.bar-subheader) {
   height: 44px;
 }

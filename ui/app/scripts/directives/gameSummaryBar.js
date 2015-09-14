@@ -1,5 +1,6 @@
 'use strict';
 
+//  TODO - find user for or delete file
 var yes = 'checkmark';
 var no = 'close';
 

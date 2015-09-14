@@ -92,13 +92,8 @@ angular.module('tbs', ['ionic', 'tbs.controllers', 'tbs.directives', 'config', '
                 url: '/games',
                 views: {
                     'menuContent': {
-                        templateUrl: 'templates/gamelist.html',
-                        controller: 'MobileGameListCtrl',
-                        resolve: {
-                            phases: function (jtbGamePhaseService) {
-                                return jtbGamePhaseService.phases();
-                            }
-                        }
+                        templateUrl: 'templates/mainGameList.html',
+                        controller: 'MobileGameListCtrl'
                     }
                 }
             })

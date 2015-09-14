@@ -1,14 +1,39 @@
-<!--  TODO - show player name and profile button  -->
-<ion-nav-bar class="bar-stable">
-    <ion-nav-buttons side="left">
-        <a href="#/app/games" class="button button-icon button-clear ion-navicon"></a>
-    </ion-nav-buttons>
-    <ion-nav-title>Twisted Battleship <span class="beta">(BETA)</span></ion-nav-title>
-    <!-- TODO - profile of player -->
-    <!--
-    <ion-nav-buttons side="right">
-        <a href="#/app/games" class="button button-icon button-clear ion-person"></a>
-    </ion-nav-buttons>
-    -->
-</ion-nav-bar>
-<ion-nav-view name="menuContent"></ion-nav-view>
+<ion-side-menus enable-menu-with-back-views="true" expose-aside-when="(min-width:992px)">
+    <ion-side-menu-content>
+        <!--  TODO - show player name and profile button  -->
+        <ion-nav-bar class="bar-stable">
+            <ion-nav-back-button>
+            </ion-nav-back-button>
+
+            <ion-nav-buttons side="left">
+                <a class="button button-icon button-clear ion-navicon" menu-toggle="left">
+                </a>
+            </ion-nav-buttons>
+            <ion-nav-title>Twisted Battleship <span class="beta">(BETA)</span></ion-nav-title>
+        </ion-nav-bar>
+        <ion-nav-view name="menuContent"></ion-nav-view>
+    </ion-side-menu-content>
+    <ion-side-menu side="left">
+        <ion-header-bar class="bar-stable">
+            <h1 class="title">Menu</h1>
+        </ion-header-bar>
+        <ion-content>
+            <ion-list>
+                <ion-item menu-close href="#/signin">
+                    Login
+                </ion-item>
+                <player-game-list></player-game-list>
+                <!--ion-item menu-close href="#/app/games">
+                    Games
+                </ion-item-->
+                <!-- TODO - logout? -->
+                <!-- TODO - profile of player -->
+                <!--
+                <ion-nav-buttons side="right">
+                    <a href="#/app/games" class="button button-icon button-clear ion-person"></a>
+                </ion-nav-buttons>
+                -->
+            </ion-list>
+        </ion-content>
+    </ion-side-menu>
+</ion-side-menus>

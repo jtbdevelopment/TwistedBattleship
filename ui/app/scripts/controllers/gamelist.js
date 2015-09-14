@@ -11,8 +11,8 @@ var phasesAndIcons = {
 };
 
 angular.module('tbs.controllers').controller('MobileGameListCtrl',
-    ['$rootScope', '$scope', '$state', 'jtbPlayerService', 'jtbGameCache', 'tbsGameDetails', 'phases',
-        function ($rootScope, $scope, $state, jtbPlayerService, jtbGameCache, tbsGameDetails, phases) {
+    ['$rootScope', '$scope', '$state', 'jtbPlayerService', 'jtbGameCache', 'tbsGameDetails', 'jtbGamePhaseService',
+        function ($rootScope, $scope, $state, jtbPlayerService, jtbGameCache, tbsGameDetails, jtbGamePhaseService) {
             $scope.games = {};
             $scope.phasesInOrder = [];
             $scope.gameDetails = tbsGameDetails;
@@ -25,10 +25,6 @@ angular.module('tbs.controllers').controller('MobileGameListCtrl',
                 $scope.games[phase].style = phase.toLowerCase() + 'Button';
                 $scope.games[phase].hideGames = false;
                 $scope.games[phase].label = '';
-            });
-
-            angular.forEach(phases, function (values, phase) {
-                $scope.games[phase].label = values[1];
             });
 
             $scope.createNew = function () {
@@ -44,6 +40,13 @@ angular.module('tbs.controllers').controller('MobileGameListCtrl',
             };
 
             function reloadFromCaches() {
+                jtbGamePhaseService.phases().then(function (phases) {
+                    angular.forEach(phases, function (values, phase) {
+                        $scope.games[phase].label = values[1];
+                    });
+
+                });
+
                 $scope.md5 = jtbPlayerService.currentPlayer().md5;
                 angular.forEach($scope.games, function (phaseData, phase) {
                     phaseData.games = jtbGameCache.getGamesForPhase(phase);

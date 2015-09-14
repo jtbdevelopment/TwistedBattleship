@@ -7,9 +7,6 @@ angular.module('tbs.controllers')
         function ($scope, $state, $ionicHistory, $rootScope, $cordovaNetwork, $timeout, $window) {
 
             function online() {
-                $ionicHistory.nextViewOptions({
-                    disableBack: true
-                });
                 $state.go('signin', {});
             }
 

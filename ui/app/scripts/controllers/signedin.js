@@ -14,9 +14,6 @@ angular.module('tbs.controllers')
                 console.log('Logged in');
                 clearHttpCache();
                 $rootScope.$broadcast('login');
-                $ionicHistory.nextViewOptions({
-                    disableBack: true
-                });
                 $state.go('app.games');
             }
 
