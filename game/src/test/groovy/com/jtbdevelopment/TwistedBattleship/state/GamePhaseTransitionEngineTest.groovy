@@ -42,7 +42,8 @@ class GamePhaseTransitionEngineTest extends MongoGameCoreTestCase {
         ]
         TBGame result = engine.evaluateGame(game)
         assert result.gamePhase == GamePhase.Playing
-        game.playerDetails.each { assert "Begin!" == it.value.lastActionMessage }
+        assert "Begin!" == game.generalMessage
+        game.playerDetails.each { assert "" == it.value.lastActionMessage }
     }
 
     void testEvaluateSetupPhaseWithSomePlayersSetup() {

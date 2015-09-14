@@ -19,8 +19,7 @@ class GamePhaseTransitionEngine extends AbstractGamePhaseTransitionEngine<TBGame
         } != null) {
             return game
         }
-        String message = "Begin!"
-        game.playerDetails.each { it.value.lastActionMessage = message }
+        game.generalMessage = "Begin!"
         return changeStateAndReevaluate(GamePhase.Playing, game)
     }
 
