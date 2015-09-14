@@ -68,12 +68,18 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
                 $scope.submitEnabled = $scope.playerChoices.length > 0 && $scope.playerChoices.length <= MAX_OPPONENTS;
             };
 
+            $scope.friendsToInvite = [];
+            $scope.friendInvitesChanged = function (callback) {
+                $scope.friendsToInvite = callback.selectedItems;
+            };
+
             $scope.queryInvitableFriends = function (query) {
                 var match = [];
-                //  TODO - filter existing choices
                 angular.forEach($scope.invitableFriends, function (friend) {
                     if (friend.name.search(new RegExp(query, 'i')) >= 0) {
-                        match.push(friend);
+                        if($scope.friendsToInvite.indexOf(friend) === -1) {
+                            match.push(friend);
+                        }
                     }
                 });
                 return match;
@@ -114,7 +120,6 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
                 $scope.helpModal.hide();
             };
 
-            $scope.friendsToInvite = [];
             $scope.showInviteFriends = function () {
                 $scope.inviteModal.show();
             };

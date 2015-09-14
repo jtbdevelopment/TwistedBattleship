@@ -8,7 +8,6 @@ Consolidated To Do's
 - fix game help navigation
 - add nudge player
 - revamp game list to be your action, their action, older
-- fix ion-autocomplete filtering
 - test facebook login - on mobile
 - test fb friends - on mobile
 - test war with non / roots
