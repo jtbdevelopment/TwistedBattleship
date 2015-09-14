@@ -7,8 +7,10 @@ angular.module('tbs.services').factory('tbsActions',
                 var currentPhase = $scope.game.gamePhase;
                 $scope.game = updatedGame;
                 jtbGameCache.putUpdatedGame(updatedGame);
-                //  TODO - review this concept
-                if ($scope.game.gamePhase !== currentPhase) {
+                if ($scope.game.gamePhase !== currentPhase &&
+                    $scope.game.gamePhase !== 'Challenged' &&
+                    $scope.game.gamePhase !== 'NextRoundStarted' &&
+                    $scope.game.gamePhase !== 'Declined') {
                     $ionicHistory.nextViewOptions({
                         disableBack: true
                     });

@@ -2,8 +2,8 @@
 
 //  TODO - unsaved changes warning
 angular.module('tbs.controllers').controller('SetupGameCtrl',
-    ['$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', '$ionicSideMenuDelegate', 'shipInfo', 'tbsShipGrid', '$ionicModal', '$ionicLoading', // 'twAds',
-        function ($scope, tbsGameDetails, tbsActions, jtbGameCache, jtbPlayerService, $state, $ionicSideMenuDelegate, shipInfo, tbsShipGrid, $ionicModal, $ionicLoading /*, twAds*/) {
+    ['$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', '$ionicSideMenuDelegate', 'shipInfo', 'tbsShipGrid', '$ionicModal', '$ionicLoading', '$timeout',  // 'twAds',
+        function ($scope, tbsGameDetails, tbsActions, jtbGameCache, jtbPlayerService, $state, $ionicSideMenuDelegate, shipInfo, tbsShipGrid, $ionicModal, $ionicLoading, $timeout /*, twAds*/) {
             $ionicSideMenuDelegate.canDragContent(false);
             $scope.gameID = $state.params.gameID;
             $scope.game = jtbGameCache.getGameForID($scope.gameID);
@@ -128,49 +128,56 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                     }
                 }
                 $scope.submitDisabled = overlapExists;
-                $scope.$apply();
             }
 
             function onUp() {
-                if ($scope.movingShip !== null) {
-                    $scope.movingShip.sprite.tint = 0xffffff;
-                    roundPosition($scope.movingShip);
-                    checkOverlap();
-                    $scope.movingShip = null;
-                }
+                $timeout(function() {
+                    if ($scope.movingShip !== null) {
+                        $scope.movingShip.sprite.tint = 0xffffff;
+                        roundPosition($scope.movingShip);
+                        checkOverlap();
+                        $scope.movingShip = null;
+                    }
+                });
             }
 
             function onMove(pointer, x, y) {
-                if ($scope.movingShip !== null) {
-                    $scope.movingShip.sprite.x = x + $scope.movingPointerRelativeToShip.x;
-                    $scope.movingShip.sprite.y = y + $scope.movingPointerRelativeToShip.y;
-                    tbsShipGrid.computeShipCorners($scope.movingShip);
-                }
+                $timeout(function () {
+                    if ($scope.movingShip !== null) {
+                        $scope.movingShip.sprite.x = x + $scope.movingPointerRelativeToShip.x;
+                        $scope.movingShip.sprite.y = y + $scope.movingPointerRelativeToShip.y;
+                        tbsShipGrid.computeShipCorners($scope.movingShip);
+                    }
+                });
             }
 
             function onDown(context) {
-                var coords = tbsShipGrid.currentContextCoordinates(context);
-                $scope.movingShip = tbsShipGrid.findShipByContextCoordinates(context);
-                if ($scope.movingShip !== null) {
-                    $scope.movingPointerRelativeToShip.x = $scope.movingShip.centerX - coords.x;
-                    $scope.movingPointerRelativeToShip.y = $scope.movingShip.centerY - coords.y;
-                    $scope.movingShip.sprite.tint = 0x00ff00;
-                }
+                $timeout(function() {
+                    var coords = tbsShipGrid.currentContextCoordinates(context);
+                    $scope.movingShip = tbsShipGrid.findShipByContextCoordinates(context);
+                    if ($scope.movingShip !== null) {
+                        $scope.movingPointerRelativeToShip.x = $scope.movingShip.centerX - coords.x;
+                        $scope.movingPointerRelativeToShip.y = $scope.movingShip.centerY - coords.y;
+                        $scope.movingShip.sprite.tint = 0x00ff00;
+                    }
+                });
             }
 
             //  TODO - patched phaser to work - get latest rev after 2.4.2 with official fix for ontap
             function onTap(context, double) {
-                if (double) {
-                    var ship = tbsShipGrid.findShipByContextCoordinates(context);
+                $timeout(function() {
+                    if (double) {
+                        var ship = tbsShipGrid.findShipByContextCoordinates(context);
 
-                    if (ship) {
-                        ship.horizontal = !(ship.horizontal);
-                        tbsShipGrid.computeShipCorners(ship);
-                        roundPosition(ship);
-                        checkOverlap();
-                        ship.sprite.angle = ship.horizontal ? 0 : 90;
+                        if (ship) {
+                            ship.horizontal = !(ship.horizontal);
+                            tbsShipGrid.computeShipCorners(ship);
+                            roundPosition(ship);
+                            checkOverlap();
+                            ship.sprite.angle = ship.horizontal ? 0 : 90;
+                        }
                     }
-                }
+                });
             }
 
             function computeShipLocations(generalShipInfo) {
@@ -203,13 +210,14 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                     template: 'Loading...'
                 });
                 tbsShipGrid.initialize($scope.game, computeShipLocations(shipInfo), [], function () {
-                    tbsShipGrid.onDown(onDown);
-                    tbsShipGrid.onMove(onMove);
-                    tbsShipGrid.onTap(onTap);
-                    tbsShipGrid.onUp(onUp);
-                    checkOverlap();
-                    $scope.$apply();
-                    $ionicLoading.hide();
+                    $timeout(function () {
+                        tbsShipGrid.onDown(onDown);
+                        tbsShipGrid.onMove(onMove);
+                        tbsShipGrid.onTap(onTap);
+                        tbsShipGrid.onUp(onUp);
+                        checkOverlap();
+                        $ionicLoading.hide();
+                    });
                 });
             });
         }

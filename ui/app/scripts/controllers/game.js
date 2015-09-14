@@ -3,8 +3,8 @@
 var ALL = 'ALL';
 
 angular.module('tbs.controllers').controller('GameCtrl',
-    ['$rootScope', '$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', 'shipInfo', 'tbsShipGrid', '$ionicPopup', '$ionicLoading', // 'twAds',
-        function ($rootScope, $scope, tbsGameDetails, tbsActions, jtbGameCache, jtbPlayerService, $state, shipInfo, tbsShipGrid, $ionicPopup, $ionicLoading /*, twAds*/) {
+    ['$rootScope', '$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', 'shipInfo', 'tbsShipGrid', '$ionicPopup', '$ionicLoading', '$timeout', // 'twAds',
+        function ($rootScope, $scope, tbsGameDetails, tbsActions, jtbGameCache, jtbPlayerService, $state, shipInfo, tbsShipGrid, $ionicPopup, $ionicLoading, $timeout /*, twAds*/) {
             $scope.gameID = $state.params.gameID;
             $scope.game = jtbGameCache.getGameForID($scope.gameID);
             $scope.playerKeys = Object.keys($scope.game.players);
@@ -21,12 +21,10 @@ angular.module('tbs.controllers').controller('GameCtrl',
             };
 
             $scope.declineRematch = function () {
-                //  TODO - winds up on weird location
                 tbsActions.declineRematch($scope);
             };
 
             $scope.rematch = function () {
-                //  TODO - winds up on weird location
                 tbsActions.rematch($scope);
             };
 
@@ -110,8 +108,9 @@ angular.module('tbs.controllers').controller('GameCtrl',
             }
 
             function highlightCallback() {
-                $scope.shipHighlighted = (tbsShipGrid.selectedShip() !== null);
-                $scope.$apply();
+                $timeout(function() {
+                    $scope.shipHighlighted = (tbsShipGrid.selectedShip() !== null);
+                });
             }
 
             $scope.$on('$ionicView.leave', function () {
@@ -123,12 +122,13 @@ angular.module('tbs.controllers').controller('GameCtrl',
                     template: 'Loading...'
                 });
                 tbsShipGrid.initialize($scope.game, [], [], function () {
-                    if ($scope.game.gamePhase === 'Playing') {
-                        tbsShipGrid.activateHighlighting(highlightCallback);
-                    }
-                    $scope.switchView(false);
-                    $ionicLoading.hide();
-                    $scope.$apply();
+                    $timeout(function() {
+                        if ($scope.game.gamePhase === 'Playing') {
+                            tbsShipGrid.activateHighlighting(highlightCallback);
+                        }
+                        $scope.switchView(false);
+                        $ionicLoading.hide();
+                    });
                 });
             });
 
