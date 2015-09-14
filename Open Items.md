@@ -17,8 +17,9 @@ Consolidated To Do's
 - many ui tests
 - ion-autocomplete is very specific version
 - core lib error handling
-- hazecast cluster group name?
+- hazelcast cluster group name?
 - web page logout?
 - refresh on web page not working if on root (ok via FB Canvas)
 - max retry on resubscribe websocket
 - sounds
+- review server side messages
