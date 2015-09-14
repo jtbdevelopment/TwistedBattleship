@@ -316,7 +316,8 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
         assert GamePhase.Playing == game.gamePhase
         assert 5 == game.remainingMoves
         assert [TEST_PLAYER2.md5, TEST_PLAYER1.md5, TEST_PLAYER3.md5].contains(game.currentPlayer)
-        assert "Begin!" == game.maskedPlayersState.lastActionMessage
+        assert "Begin!" == game.generalMessage
+        assert "" == game.maskedPlayersState.lastActionMessage
     }
 
     @Test
