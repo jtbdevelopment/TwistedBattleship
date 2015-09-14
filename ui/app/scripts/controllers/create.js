@@ -81,10 +81,11 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
 
             $scope.queryFriends = function (query) {
                 var match = [];
-                //  TODO - filter existing choices
                 angular.forEach($scope.friends, function (friend) {
                     if (friend.displayName.search(new RegExp(query, 'i')) >= 0) {
-                        match.push(friend);
+                        if($scope.playerChoices.indexOf(friend) === -1) {
+                            match.push(friend);
+                        }
                     }
                 });
                 return match;

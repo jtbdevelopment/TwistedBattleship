@@ -23,3 +23,5 @@ Consolidated To Do's
 - max retry on resubscribe websocket
 - sounds
 - review server side messages
+- upgrade ionic
+- after upgrading ionic - then upgrade ion-autocomplete and look at prepopulate feature
