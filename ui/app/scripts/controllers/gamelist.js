@@ -56,6 +56,7 @@ angular.module('tbs.controllers').controller('MobileGameListCtrl',
             $scope.$on('gameCachesLoaded', function () {
                 reloadFromCaches();
                 $scope.$broadcast('scroll.refreshComplete');
+                $state.go('app.games');
             });
 
             if(jtbGameCache.initialized()) {
