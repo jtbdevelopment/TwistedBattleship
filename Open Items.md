@@ -5,7 +5,6 @@ Consolidated To Do's
 - add user profile in ui
 - add game detail popup
 - zoom controls on phaser
-- fix game help navigation
 - add nudge player
 - revamp game list to be your action, their action, older
 - test facebook login - on mobile
