@@ -3,8 +3,8 @@
 angular.module('tbs.controllers')
     //  TODO - finish and move to core?
     .controller('NetworkCtrl',
-    ['$scope', '$state', '$cordovaNetwork', '$timeout', '$window',
-        function ($scope, $state, $cordovaNetwork, $timeout, $window) {
+    ['$scope', '$state', '$cordovaNetwork', '$timeout', '$window', 'ENV',
+        function ($scope, $state, $cordovaNetwork, $timeout, $window, ENV) {
 
             function online() {
                 $state.go('signin', {});
@@ -14,7 +14,7 @@ angular.module('tbs.controllers')
                 $scope.message = 'Checking network status...';
                 //  As Per http://stackoverflow.com/questions/25672502/phonegap-network-connection-cannot-read-property-type-of-undefined
                 //  Need a timeout to ensure its initialized
-                if ($window.location.href.indexOf('file') === 0) {
+                if ($window.location.href.indexOf('file') === 0 && ENV.domain !== 'localhost') {
                     $timeout(function () {
                         try {
                             if ($cordovaNetwork.isOnline()) {

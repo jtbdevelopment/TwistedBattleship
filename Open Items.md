@@ -28,5 +28,6 @@ Consolidated To Do's
  - ecm, repair, evasive: message to all players
  - spy goes to all players if in shared intel mode
  - fire target/player only, sink/defeat to all
+ - victory should be reversed
  - lack of history renders most messages pointless, history would render ecm useless
  - make history list and have ecm wipe history list?
