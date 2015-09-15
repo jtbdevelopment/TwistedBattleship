@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('tbs.services').factory('tbsActions',
-    ['$http', '$state', 'jtbGameCache', 'jtbPlayerService', '$ionicHistory', '$ionicActionSheet', '$ionicLoading', '$ionicPopup',
-        function ($http, $state, jtbGameCache, jtbPlayerService, $ionicHistory, $ionicActionSheet, $ionicLoading, $ionicPopup) {
+    ['$http', '$state', 'jtbGameCache', 'jtbPlayerService', '$ionicActionSheet', '$ionicLoading', '$ionicPopup',
+        function ($http, $state, jtbGameCache, jtbPlayerService, $ionicActionSheet, $ionicLoading, $ionicPopup) {
             function updateGame($scope, updatedGame) {
                 var currentPhase = $scope.game.gamePhase;
                 $scope.game = updatedGame;

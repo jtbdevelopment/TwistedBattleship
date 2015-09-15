@@ -3,8 +3,8 @@
 angular.module('tbs.controllers')
     //  TODO - finish and move to core?
     .controller('CoreMobileSignedInCtrl',
-    ['$scope', '$state', '$ionicHistory', '$rootScope', '$cacheFactory',
-        function ($scope, $state, $ionicHistory, $rootScope, $cacheFactory) {
+    ['$scope', '$state', '$rootScope', '$cacheFactory',
+        function ($scope, $state, $rootScope, $cacheFactory) {
 
             function clearHttpCache() {
                 $cacheFactory.get('$http').removeAll();

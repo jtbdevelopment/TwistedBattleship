@@ -3,8 +3,8 @@
 angular.module('tbs.controllers')
     //  TODO - finish and move to core?
     .controller('NetworkCtrl',
-    ['$scope', '$state', '$ionicHistory', '$rootScope', '$cordovaNetwork', '$timeout', '$window',
-        function ($scope, $state, $ionicHistory, $rootScope, $cordovaNetwork, $timeout, $window) {
+    ['$scope', '$state', '$cordovaNetwork', '$timeout', '$window',
+        function ($scope, $state, $cordovaNetwork, $timeout, $window) {
 
             function online() {
                 $state.go('signin', {});

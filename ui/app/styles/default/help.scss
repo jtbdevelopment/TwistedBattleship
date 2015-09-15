@@ -18,18 +18,29 @@
 }
 
 .playHelp {
+  img {
+    height: 40px;
+    width: 40px;
+    vertical-align: middle;
+  }
+
+  @media (max-width: $screen-sm-max) {
+    img {
+      height: 24px;
+      width: 24px;
+    }
+  }
+
   @media (max-width: $screen-xs-max) {
     font-size: smaller;
   }
 
-  .tab-item {
+  .button {
     background-color: $darker_green;
-    color: black;
+    border-radius: 0;
   }
 
-  .tab-item.activated {
-    background-color: $darker_green;
-    color: black;
-    font-weight: bolder;
+  .picked {
+    font-weight: bold;
   }
 }

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('tbs.controllers').controller('MainCtrl',
-    ['$scope', 'jtbPlayerService', 'jtbLiveGameFeed', '$ionicHistory', '$state', 'ENV', '$document',
-        function ($scope, jtbPlayerService, jtbLiveGameFeed, $ionicHistory, $state, ENV, $document) {
+    ['$scope', 'jtbPlayerService', 'jtbLiveGameFeed', '$state', 'ENV', '$document',
+        function ($scope, jtbPlayerService, jtbLiveGameFeed, $state, ENV, $document) {
 
             function checkNetworkStatusAndLogin() {
                 $state.go('network');

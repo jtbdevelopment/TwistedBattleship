@@ -153,11 +153,11 @@ angular.module('tbs', ['ionic', 'tbs.controllers', 'tbs.directives', 'config', '
                 }
             })
             .state('app.playhelp', {
-                url: '/help',
+                url: '/play-help',
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/help/help-play.html',
-                        controller: 'MainCtrl'
+                        controller: 'PlayHelpCtrl'
                     }
                 }
             })
