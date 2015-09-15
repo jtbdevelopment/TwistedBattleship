@@ -17,7 +17,7 @@ angular.module('tbs.controllers').controller('GameCtrl',
             $scope.shipHighlighted = false;
 
             $scope.showHelp = function () {
-                $state.transitionTo('app.help');
+                $state.go('app.playhelp');
             };
 
             $scope.declineRematch = function () {

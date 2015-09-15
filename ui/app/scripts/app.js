@@ -152,7 +152,7 @@ angular.module('tbs', ['ionic', 'tbs.controllers', 'tbs.directives', 'config', '
                     }
                 }
             })
-            .state('app.help', {
+            .state('app.playhelp', {
                 url: '/help',
                 views: {
                     'menuContent': {
