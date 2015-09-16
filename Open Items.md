@@ -1,13 +1,11 @@
 Consolidated To Do's
 ====================
 
-- check ui on android devices
 - add user profile in ui
 - add game detail popup
 - zoom controls on phaser
 - add nudge player
 - revamp game list to be your action, their action, older
-- test facebook login - on mobile
 - test fb friends - on mobile
 - test war with non / roots
 - push notifications
@@ -18,7 +16,6 @@ Consolidated To Do's
 - hazelcast cluster group name?
 - web page logout?
 - refresh on web page not working if on root (ok via FB Canvas)
-- max retry on resubscribe websocket
 - sounds
 - review server side messages
 - upgrade ionic

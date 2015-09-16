@@ -71,7 +71,7 @@ angular.module('tbs.controllers')
                 $scope.message = 'Logging in via Facebook';
                 clearHttpCache();
                 if ($window.location.href.indexOf('file') === 0) {
-                    $http.get(ENV.apiEndpoint + '/auth/facebook').success(onSuccessfulLogin).error(onFailedLogin);
+                    $http.get(ENV.apiEndpoint + '/auth/facebook?code=' + jtbFacebook.currentAuthorization().accessToken).success(onSuccessfulLogin).error(onFailedLogin);
                 } else {
                     $window.location = ENV.apiEndpoint + '/auth/facebook';
                 }

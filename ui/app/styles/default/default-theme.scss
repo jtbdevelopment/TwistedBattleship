@@ -33,10 +33,25 @@
       height: 24px;
     }
 
+    .button.button-clear {
+      @media (max-width: $screen-xs-max) {
+        font-size: xx-small;
+      }
+    }
+    .button.button-clear .icon:before {
+      @media (max-width: $screen-xs-max) {
+        font-size: xx-small;
+        padding: 1px;
+        min-height: 1px;
+        min-width: 1px;
+        line-height: 18px;
+      }
+    }
+
     .button.button-icon::before {
       @media (max-width: $screen-xs-max) {
         font-size: small;
-        line-height: 14px;
+        line-height: 18px;
       }
     }
 

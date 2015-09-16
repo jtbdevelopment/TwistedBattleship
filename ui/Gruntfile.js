@@ -46,7 +46,7 @@ module.exports = function (grunt) {
                         domain: 'localhost',
                         apiEndpoint: 'http://localhost:9998',
                         apiEndpointAndroidEmulator: 'http://10.0.2.2:9998',
-                        apiEndpointGenymotionEmulator: 'http://192.168.56.1:9998',
+                        apiEndpointGenymotion: 'http://192.168.56.1:9998',
                         apiEndpointTomcat: 'https://localhost:8443'
                     }
                 }
@@ -56,7 +56,7 @@ module.exports = function (grunt) {
                     ENV: {
                         name: 'production',
                         domain: 'jtbdevelopment.com',
-                        apiEndpoint: 'https://twistedbattleship.jtbdevelopment.com/'
+                        apiEndpoint: 'https://twistedbattleship.jtbdevelopment.com'
                     }
                 }
             }
