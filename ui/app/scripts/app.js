@@ -20,6 +20,7 @@ angular.module('tbs', ['ionic', 'tbs.controllers', 'tbs.directives', 'config', '
     //  TODO - move interceptor to game core?
     // Custom Interceptor for replacing outgoing URLs
     .factory('httpEnvInterceptor', function ($q, $cacheFactory, ENV, $rootScope) {
+        var csrfToken;
         return {
             'request': function (config) {
                 if (
@@ -32,8 +33,19 @@ angular.module('tbs', ['ionic', 'tbs.controllers', 'tbs.directives', 'config', '
                         config.url.indexOf('/signin/authenticate') >= 0
                     ) && config.url.indexOf(ENV.apiEndpoint) < 0) {
                     config.url = ENV.apiEndpoint + config.url;
+                    if (angular.isDefined(csrfToken)) {
+                        config.headers['X-XSRF-TOKEN'] = csrfToken;
+                    }
                 }
                 return config;
+            },
+            'response': function (response) {
+                if (angular.isDefined(response.headers) &&
+                    angular.isDefined(response.headers('XSRF-TOKEN')) &&
+                    response.headers('XSRF-TOKEN') !== null) {
+                    csrfToken = response.headers('XSRF-TOKEN');
+                }
+                return response;
             },
             'responseError': function (response) {
                 console.log('responseError:' + JSON.stringify(response));
