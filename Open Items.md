@@ -9,7 +9,6 @@ Consolidated To Do's
 - zoom controls on phaser
 - add nudge player
 - revamp game list to be your action, their action, older
-- test fb friends - on mobile
 - test war with non / roots
 - push notifications
 - a.i. players
