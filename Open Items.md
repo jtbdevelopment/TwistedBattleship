@@ -3,6 +3,7 @@ Consolidated To Do's
 
 -  android rotation
 - better / quieter check on re-open?
+- auto-close menu?
 - add user profile in ui
 - add game detail popup
 - zoom controls on phaser
