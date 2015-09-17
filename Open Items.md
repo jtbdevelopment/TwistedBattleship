@@ -1,6 +1,8 @@
 Consolidated To Do's
 ====================
 
+-  android rotation
+- better / quieter check on re-open?
 - add user profile in ui
 - add game detail popup
 - zoom controls on phaser
