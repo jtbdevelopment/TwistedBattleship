@@ -1,5 +1,6 @@
 package com.jtbdevelopment.TwistedBattleship.rest.handlers
 
+import com.jtbdevelopment.TwistedBattleship.exceptions.CannotRepairADestroyedShipException
 import com.jtbdevelopment.TwistedBattleship.exceptions.NoRepairActionsRemainException
 import com.jtbdevelopment.TwistedBattleship.exceptions.NoShipAtCoordinateException
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
@@ -79,5 +80,28 @@ class RepairShipHandlerTest extends AbstractBaseHandlerTest {
         assert 0 == game.playerDetails[PONE.id].emergencyRepairsRemaining
         assert 5 == game.playerDetails[PONE.id].shipStates[Ship.Carrier].healthRemaining
         assert [false, false, false, false, false] == game.playerDetails[PONE.id].shipStates[Ship.Carrier].shipSegmentHit
+    }
+
+    void testRepairOnDestroyedShip() {
+        game.playerDetails[PONE.id].emergencyRepairsRemaining = 1
+        game.playerDetails[PONE.id].shipStates[Ship.Carrier].healthRemaining = 0
+        game.playerDetails[PTWO.id].opponentGrids[PONE.id].set(0, 0, GridCellState.KnownShip)
+        game.playerDetails[PTWO.id].opponentGrids[PONE.id].set(1, 0, GridCellState.KnownByHit)
+        game.playerDetails[PTWO.id].opponentGrids[PONE.id].set(2, 0, GridCellState.KnownByRehit)
+        game.playerDetails[PTWO.id].opponentGrids[PONE.id].set(3, 0, GridCellState.KnownByOtherHit)
+        game.playerDetails[PTWO.id].opponentGrids[PONE.id].set(4, 0, GridCellState.Unknown)
+        game.playerDetails[PONE.id].opponentViews[PTWO.id].set(0, 0, GridCellState.KnownShip)
+        game.playerDetails[PONE.id].opponentViews[PTWO.id].set(1, 0, GridCellState.KnownByHit)
+        game.playerDetails[PONE.id].opponentViews[PTWO.id].set(2, 0, GridCellState.KnownByRehit)
+        game.playerDetails[PONE.id].opponentViews[PTWO.id].set(3, 0, GridCellState.KnownByOtherHit)
+        game.playerDetails[PONE.id].opponentViews[PTWO.id].set(4, 0, GridCellState.Unknown)
+
+        game.playerDetails[PTHREE.id].opponentGrids[PONE.id].set(3, 0, GridCellState.KnownByHit)
+        game.playerDetails[PONE.id].opponentViews[PTHREE.id].set(3, 0, GridCellState.KnownByHit)
+
+        shouldFail(CannotRepairADestroyedShipException.class, {
+            handler.validateMoveSpecific(PONE, game, PONE, new GridCoordinate(4, 0))
+
+        });
     }
 }

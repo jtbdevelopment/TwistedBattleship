@@ -4,6 +4,7 @@ import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.games.factory.AbstractMultiPlayerGameFactory
 import groovy.transform.CompileStatic
+import org.bson.types.ObjectId
 import org.springframework.stereotype.Component
 
 /**
@@ -20,6 +21,6 @@ class TBGameFactory extends AbstractMultiPlayerGameFactory<TBGame, GameFeature> 
 
     @Override
     protected void copyFromPreviousGame(final TBGame previousGame, final TBGame newGame) {
-        newGame.previousId = previousGame.id
+        newGame.previousId = (ObjectId) previousGame.id
     }
 }

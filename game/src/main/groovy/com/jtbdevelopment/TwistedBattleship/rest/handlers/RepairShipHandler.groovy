@@ -1,5 +1,6 @@
 package com.jtbdevelopment.TwistedBattleship.rest.handlers
 
+import com.jtbdevelopment.TwistedBattleship.exceptions.CannotRepairADestroyedShipException
 import com.jtbdevelopment.TwistedBattleship.exceptions.NoRepairActionsRemainException
 import com.jtbdevelopment.TwistedBattleship.exceptions.NoShipAtCoordinateException
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
@@ -38,6 +39,10 @@ class RepairShipHandler extends AbstractSpecialMoveHandler {
         //  Will let you repair an undamaged ship
         if (!playerState.coordinateShipMap.containsKey(coordinate)) {
             throw new NoShipAtCoordinateException()
+        }
+
+        if(playerState.coordinateShipMap[coordinate].healthRemaining == 0) {
+            throw new CannotRepairADestroyedShipException()
         }
     }
 
