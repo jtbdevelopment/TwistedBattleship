@@ -1,6 +1,7 @@
 package com.jtbdevelopment.TwistedBattleship.ai.simple
 
 import com.jtbdevelopment.TwistedBattleship.ai.AI
+import com.jtbdevelopment.TwistedBattleship.ai.WeightedTarget
 import com.jtbdevelopment.TwistedBattleship.rest.Target
 import com.jtbdevelopment.TwistedBattleship.rest.handlers.*
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
@@ -76,8 +77,8 @@ class SimpleAI implements AI {
                 //  If spy available - use it
                 if (!didSpy(game, myState)) {
                     //  Fire
-                    if (!didFire(game)) {
-                        //  TODO -??
+                    if (!didFire(game, myState)) {
+                        throw new RuntimeException("Unable to take any action!")
                     }
                 }
             }
@@ -146,58 +147,57 @@ class SimpleAI implements AI {
         return false
     }
 
-    private boolean didFire(final TBGame game) {
-        Player target = findActiveOpponent(game)
+    private boolean didFire(final TBGame game, final TBPlayerState myState) {
+        List<WeightedTarget> targets = myState.opponentGrids.collectMany {
+            ObjectId opponent, Grid grid ->
+                List<WeightedTarget> weightedTargets = []
+                for (int row = 0; row < game.gridSize; ++row) {
+                    for (int col = 0; col < game.gridSize; ++col) {
+                        int currentValue;
+                        switch (grid.get(row, col)) {
+                            case GridCellState.KnownEmpty:
+                            case GridCellState.KnownByRehit:
+                            case GridCellState.KnownByHit:
+                            case GridCellState.KnownByOtherMiss:
+                            case GridCellState.KnownByOtherHit:
+                            case GridCellState.KnownByMiss:
+                                currentValue = -1
+                                break
+                            case GridCellState.KnownShip:
+                                currentValue = 100
+                                break
+                            case GridCellState.Unknown:
+                                currentValue = 25
+                                break
+                            default:
+                                currentValue = 50
+                                break
+                        }
+                        weightedTargets.add(new WeightedTarget(
+                                player: opponent,
+                                coordinate: new GridCoordinate(row, col),
+                                weight: currentValue))
+                    }
+                }
+                weightedTargets
+        }.toList()
 
-        Grid opponent = game.playerDetails[(ObjectId) playerCreator.player.id].opponentGrids[(ObjectId) target.id]
-        GridCoordinate bestTarget = new GridCoordinate(0, 0)
-        int bestTargetValue = -1
-        for (int row = 0; row < game.gridSize; ++row) {
-            for (int col = 0; col < game.gridSize; ++col) {
-                int currentValue;
-                switch (opponent.get(row, col)) {
-                    case GridCellState.KnownEmpty:
-                    case GridCellState.KnownByRehit:
-                    case GridCellState.KnownByHit:
-                    case GridCellState.KnownByOtherMiss:
-                    case GridCellState.KnownByOtherHit:
-                    case GridCellState.KnownByMiss:
-                        currentValue = -1
-                        break
-                    case GridCellState.KnownShip:
-                        currentValue = 100
-                        break
-                    case GridCellState.Unknown:
-                        currentValue = 25
-                        break
-                    default:
-                        currentValue = 50
-                        break
-                }
-                if (currentValue > bestTargetValue) {
-                    bestTarget = new GridCoordinate(row, col)
-                    bestTargetValue = currentValue
-                }
-            }
-        }
+        List<WeightedTarget> bestTargets = targets.sort {
+            WeightedTarget t1, WeightedTarget t2 ->
+                return t2.weight - t1.weight
+        }.findAll {
+            WeightedTarget t ->
+                t.weight == targets[0].weight
+        }.toList()
+
+        WeightedTarget target = bestTargets[random.nextInt(bestTargets.size())]
+
         fireAtCoordinateHandler.handleAction(
                 playerCreator.player.id,
                 game.id,
-                new Target(player: target.md5, coordinate: bestTarget))
+                new Target(player: game.players.find { it.id == target.player }.md5, coordinate: target.coordinate))
 
         return true
     }
 
-    protected Player findActiveOpponent(TBGame game) {
-        List<Player> targets = game.playerDetails.findAll {
-            ObjectId id, TBPlayerState state ->
-                state.activeShipsRemaining > 0 && id != playerCreator.player.id
-        }.collect {
-            ObjectId id, TBPlayerState state ->
-                game.players.find {
-                    id == it.id
-                }
-        }.sort()
-        return targets[random.nextInt(targets.size())]
-    }
 }
