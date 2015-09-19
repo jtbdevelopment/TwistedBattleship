@@ -11,7 +11,6 @@ import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
-import com.jtbdevelopment.games.mongo.players.MongoPlayer
 import com.jtbdevelopment.games.players.Player
 import groovy.transform.CompileStatic
 import org.bson.types.ObjectId
@@ -94,7 +93,9 @@ class SimpleAI implements AI {
                     [Ship.Carrier, Ship.Battleship, Ship.Submarine, Ship.Cruiser] as Set
             def damagedShip = myState.shipStates.values().findAll {
                 ShipState state ->
-                    allowedShips.contains(state.ship) && (state.healthRemaining < state.ship.gridSize - 2)
+                    allowedShips.contains(state.ship) &&
+                            state.healthRemaining < (state.ship.gridSize - 2) &&
+                            state.healthRemaining > 0
             }.sort {
                 ShipState one, ShipState two ->
                     return ((two.ship.gridSize - one.ship.gridSize) * 10) + (two.healthRemaining - one.healthRemaining)
@@ -117,7 +118,9 @@ class SimpleAI implements AI {
         if (game.movesForSpecials <= game.remainingMoves && myState.evasiveManeuversRemaining > 0) {
             def damagedShip = myState.shipStates.values().findAll {
                 ShipState state ->
-                    state.ship.gridSize > 2 && (state.healthRemaining < state.ship.gridSize - 2)
+                    state.ship.gridSize > 2 &&
+                            state.healthRemaining < (state.ship.gridSize - 2) &&
+                            state.healthRemaining > 0
             }.sort {
                 ShipState one, ShipState two ->
                     return ((two.ship.gridSize - one.ship.gridSize) * 10) + (one.healthRemaining - two.healthRemaining)

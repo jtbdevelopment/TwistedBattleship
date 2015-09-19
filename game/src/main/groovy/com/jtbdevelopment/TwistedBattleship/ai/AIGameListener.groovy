@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 import javax.annotation.PostConstruct
+import java.time.ZonedDateTime
 import java.util.concurrent.LinkedBlockingDeque
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
@@ -71,8 +72,35 @@ class AIGameListener implements GameListener {
             TimeUnit.SECONDS,
             new LinkedBlockingDeque<Runnable>())
 
+    protected ObjectId playerToAccept(final TBGame game) {
+        game.playerStates.find {
+            ObjectId id, PlayerState state ->
+                aiIDs.contains(id) && state == PlayerState.Pending
+        }?.key
+    }
+
+    protected ObjectId playerToSetup(final TBGame game) {
+        ObjectId aiToSetup = game.playerDetails.find {
+            ObjectId id, TBPlayerState state ->
+                aiIDs.contains(id) && !state.setup
+        }?.key
+        aiToSetup
+    }
+
+    private boolean hasAIWorkToDo(final TBGame game) {
+        switch (game.gamePhase) {
+            case GamePhase.Challenged:
+                return playerToAccept(game) != null
+            case GamePhase.Setup:
+                return playerToSetup(game) != null
+            case GamePhase.Playing:
+                return aiIDs.contains(game.currentPlayer)
+        }
+    }
+
     //  TODO - messages to surrender/quit/decline?
     //  TODO - on initialization
+    @CompileStatic
     private class Worker implements Runnable {
         private TBGame game
 
@@ -83,29 +111,25 @@ class AIGameListener implements GameListener {
         //  Only ever handle one AI action at a time, even if multiple AIs or multiple actions allowed
         @Override
         void run() {
-            if(!game.players.find{ Player p -> aiPlayers.contains(p) }) {
-                return
-            }
-            //  Too fast and UI can't tell difference between updates since only looks at second level
-            sleep(1000)
-            logger.debug('AI Playing ' + game.id)
             try {
+                //  Too fast and UI can't tell difference between updates since only looks at second level
                 game = gameRepository.findOne(game.id)
+                while((
+                        ZonedDateTime.now(((ZonedDateTime) game.lastUpdate).zone).toInstant().toEpochMilli() -
+                                ((ZonedDateTime)game.lastUpdate).toInstant().toEpochMilli()) < 100) {
+                    sleep(100)
+                    game = gameRepository.findOne(game.id)
+                }
+                logger.debug('AI Playing ' + game.id)
                 switch (game.gamePhase) {
                     case GamePhase.Challenged:
-                        ObjectId aiToAccept = game.playerStates.find {
-                            ObjectId id, PlayerState state ->
-                                aiIDs.contains(id) && state == PlayerState.Pending
-                        }?.key
+                        ObjectId aiToAccept = playerToAccept(game)
                         if (aiToAccept) {
                             challengeResponseHandler.handleAction(aiToAccept, game.id, PlayerState.Accepted)
                         }
                         break
                     case GamePhase.Setup:
-                        ObjectId aiToSetup = game.playerDetails.find {
-                            ObjectId id, TBPlayerState state ->
-                                aiIDs.contains(id) && !state.setup
-                        }?.key
+                        ObjectId aiToSetup = playerToSetup(game)
                         if (aiToSetup) {
                             playerIDAIMap[aiToSetup].setup(game)
                         }
@@ -142,7 +166,11 @@ class AIGameListener implements GameListener {
             final MultiPlayerGame multiPlayerGame, final Player initiatingPlayer, final boolean initiatingServer) {
         TBGame game = (TBGame) multiPlayerGame
         if (initiatingServer) {
-            executor.execute(new Worker(game))
+            if(game.players.find{ Player p -> aiPlayers.contains(p) }) {
+                if(hasAIWorkToDo(game)) {
+                    executor.execute(new Worker(game))
+                }
+            }
         }
     }
 }
