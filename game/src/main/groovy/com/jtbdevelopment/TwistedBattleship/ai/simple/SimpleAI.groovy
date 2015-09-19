@@ -22,6 +22,7 @@ import org.springframework.stereotype.Component
  * Date: 9/18/15
  * Time: 6:58 AM
  */
+@SuppressWarnings("GroovyUnusedDeclaration")
 @CompileStatic
 @Component
 class SimpleAI implements AI {
