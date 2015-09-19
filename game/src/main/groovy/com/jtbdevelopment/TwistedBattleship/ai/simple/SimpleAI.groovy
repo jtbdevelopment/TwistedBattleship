@@ -11,6 +11,7 @@ import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
+import com.jtbdevelopment.games.mongo.players.MongoPlayer
 import com.jtbdevelopment.games.players.Player
 import groovy.transform.CompileStatic
 import org.bson.types.ObjectId
@@ -43,6 +44,11 @@ class SimpleAI implements AI {
     SetupShipsHandler setupShipsHandler
 
     private Random random = new Random()
+
+    @Override
+    Player getPlayer() {
+        return playerCreator.player
+    }
 
     void setup(final TBGame game) {
         //  TODO - better

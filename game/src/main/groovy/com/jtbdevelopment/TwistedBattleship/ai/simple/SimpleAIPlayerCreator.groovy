@@ -1,6 +1,8 @@
 package com.jtbdevelopment.TwistedBattleship.ai.simple
 
 import com.jtbdevelopment.games.dao.AbstractPlayerRepository
+import com.jtbdevelopment.games.mongo.players.MongoPlayer
+import com.jtbdevelopment.games.mongo.players.MongoSystemPlayer
 import com.jtbdevelopment.games.players.Player
 import com.jtbdevelopment.games.players.PlayerFactory
 import com.jtbdevelopment.games.players.SystemPlayer
@@ -19,10 +21,10 @@ import javax.annotation.PostConstruct
 @Component
 @CompileStatic
 class SimpleAIPlayerCreator {
-    private static final String DISPLAY_NAME = "Friendly AI"
+    private static final String DISPLAY_NAME = "Simple AI"
     Player player
 
-    private static Logger logger = LoggerFactory.getLogger(SystemPlayer.class)
+    private static Logger logger = LoggerFactory.getLogger(SimpleAIPlayerCreator.class)
     @Autowired
     AbstractPlayerRepository playerRepository
     @Autowired
@@ -32,11 +34,12 @@ class SimpleAIPlayerCreator {
     void loadOrCreateSystemPlayers() {
         logger.info('Checking for system player.')
         player = (Player) playerRepository.findByDisplayName(DISPLAY_NAME)
+        //  Need icon
         if (player == null) {
             logger.info("Making system id for " + DISPLAY_NAME)
             player = playerFactory.newSystemPlayer()
             player.displayName = DISPLAY_NAME
-            player.sourceId = 'AI1'
+            player.sourceId = DISPLAY_NAME
             player = playerRepository.save(player)
         }
         logger.info("Completed")

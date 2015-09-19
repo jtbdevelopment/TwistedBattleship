@@ -1,5 +1,6 @@
 package com.jtbdevelopment.TwistedBattleship.rest.services
 
+import com.jtbdevelopment.TwistedBattleship.ai.AI
 import com.jtbdevelopment.TwistedBattleship.ai.simple.SimpleAIPlayerCreator
 import com.jtbdevelopment.TwistedBattleship.exceptions.NotAValidThemeException
 import com.jtbdevelopment.TwistedBattleship.player.TBPlayerAttributes
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import org.springframework.util.StringUtils
 
+import javax.annotation.PostConstruct
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 
@@ -34,7 +36,16 @@ class PlayerServices extends AbstractPlayerServices<ObjectId> {
     PlayerGamesFinderHandler playerGamesFinderHandler
 
     @Autowired
-    SimpleAIPlayerCreator simpleAIPlayerCreator
+    List<AI> aiList
+
+    private Map<String, String> aiPlayers
+    @PostConstruct
+    public void setup() {
+        aiPlayers = aiList.collectEntries {
+            AI ai ->
+                [(ai.player.md5): ai.player.displayName]
+        }
+    }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -70,8 +81,7 @@ class PlayerServices extends AbstractPlayerServices<ObjectId> {
     @Override
     Map<String, Object> getFriends() {
         Map<String, Object> friends = super.getFriends()
-        ((Map<String, String>) friends[SourceBasedFriendFinder.MASKED_FRIENDS_KEY]).put(simpleAIPlayerCreator.player.md5, simpleAIPlayerCreator.player.displayName)
-
+        ((Map<String, String>) friends[SourceBasedFriendFinder.MASKED_FRIENDS_KEY]).putAll(aiPlayers)
         friends
     }
 }
