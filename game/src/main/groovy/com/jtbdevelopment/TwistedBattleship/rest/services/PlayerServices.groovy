@@ -1,10 +1,12 @@
 package com.jtbdevelopment.TwistedBattleship.rest.services
 
+import com.jtbdevelopment.TwistedBattleship.ai.simple.SimpleAIPlayerCreator
 import com.jtbdevelopment.TwistedBattleship.exceptions.NotAValidThemeException
 import com.jtbdevelopment.TwistedBattleship.player.TBPlayerAttributes
 import com.jtbdevelopment.TwistedBattleship.rest.handlers.PlayerGamesFinderHandler
 import com.jtbdevelopment.TwistedBattleship.rest.services.messages.FeaturesAndPlayers
 import com.jtbdevelopment.games.players.Player
+import com.jtbdevelopment.games.players.friendfinder.SourceBasedFriendFinder
 import com.jtbdevelopment.games.rest.handlers.NewGameHandler
 import com.jtbdevelopment.games.rest.services.AbstractPlayerServices
 import com.jtbdevelopment.games.state.masking.AbstractMaskedMultiPlayerGame
@@ -30,6 +32,9 @@ class PlayerServices extends AbstractPlayerServices<ObjectId> {
     NewGameHandler newGameHandler
     @Autowired
     PlayerGamesFinderHandler playerGamesFinderHandler
+
+    @Autowired
+    SimpleAIPlayerCreator simpleAIPlayerCreator
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -60,5 +65,13 @@ class PlayerServices extends AbstractPlayerServices<ObjectId> {
         }
         playerAttributes.theme = newTheme
         return playerRepository.save(player)
+    }
+
+    @Override
+    Map<String, Object> getFriends() {
+        Map<String, Object> friends = super.getFriends()
+        ((Map<String, String>) friends[SourceBasedFriendFinder.MASKED_FRIENDS_KEY]).put(simpleAIPlayerCreator.player.md5, simpleAIPlayerCreator.player.displayName)
+
+        friends
     }
 }
