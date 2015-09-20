@@ -59,20 +59,44 @@ class SimpleAI implements AI {
     }
 
     void setup(final TBGame game) {
-        //  TODO - better
-        int row = 0
+        Set<GridCoordinate> used = [] as Set
         Map<Ship, ShipState> shipStateMap = (Map<Ship, ShipState>) Ship.values().collectEntries {
             Ship ship ->
-                row++
-                [(ship): new ShipState(ship, new TreeSet<GridCoordinate>((1..ship.gridSize).collect {
-                    int col ->
-                        new GridCoordinate(row, col)
-                }))]
+                boolean horizontal = random.nextInt(100) < 50
+                TreeSet<GridCoordinate> set
+                if (horizontal) {
+                    boolean ok = false
+                    while (!ok) {
+                        int row = random.nextInt(game.gridSize)
+                        int startCol = random.nextInt(game.gridSize - ship.gridSize)
+                        set = new TreeSet<GridCoordinate>((startCol..(startCol + ship.gridSize - 1)).collect {
+                            int col ->
+                                new GridCoordinate(row, col)
+                        })
+                        ok = set.find {
+                            used.contains(it)
+                        } == null
+                    }
+                } else {
+                    boolean ok = false
+                    while (!ok) {
+                        int startRow = random.nextInt(game.gridSize - ship.gridSize)
+                        int col = random.nextInt(game.gridSize)
+                        set = new TreeSet<GridCoordinate>((startRow..(startRow + ship.gridSize - 1)).collect {
+                            int row ->
+                                new GridCoordinate(row, col)
+                        })
+                        ok = set.find {
+                            used.contains(it)
+                        } == null
+                    }
+                }
+                used.addAll(set)
+                return [(ship): new ShipState(ship, set)]
         }
         setupShipsHandler.handleAction(playerCreator.player.id, game.id, shipStateMap)
     }
 
-    //  TODO - ECM rule?
     void playOneMove(final TBGame game) {
         TBPlayerState myState = game.playerDetails[(ObjectId) playerCreator.player.id]
         //  PerShip
