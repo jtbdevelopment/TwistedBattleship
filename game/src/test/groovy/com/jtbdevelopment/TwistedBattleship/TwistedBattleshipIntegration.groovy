@@ -6,6 +6,7 @@ import com.jtbdevelopment.TwistedBattleship.rest.GameFeatureInfo
 import com.jtbdevelopment.TwistedBattleship.rest.ShipInfo
 import com.jtbdevelopment.TwistedBattleship.rest.Target
 import com.jtbdevelopment.TwistedBattleship.rest.services.messages.FeaturesAndPlayers
+import com.jtbdevelopment.TwistedBattleship.rest.services.messages.ShipAndCoordinates
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
@@ -386,7 +387,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
             cacheManager.getCache(it).clear()
         }
 
-        game = fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 7))
+        fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 7))
 
         game = spy(P2G, TEST_PLAYER1, new GridCoordinate(7, 8))
         assert GamePhase.Playing == game.gamePhase
@@ -439,7 +440,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
             cacheManager.getCache(it).clear()
         }
 
-        game = fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 7))
+        fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 7))
         game = fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 0))
 
         //  Force turn to P1
@@ -451,12 +452,14 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
             cacheManager.getCache(it).clear()
         }
 
-        game = fire(P1G, TEST_PLAYER2, new GridCoordinate(7, 0))
+        fire(P1G, TEST_PLAYER2, new GridCoordinate(7, 0))
         game = repair(P1G, TEST_PLAYER1, new GridCoordinate(8, 7))
         assert 2 == game.remainingMoves
         assert "TEST PLAYER1 repaired their Aircraft Carrier."
-        assert 5 == game.maskedPlayersState.shipStates[Ship.Carrier].healthRemaining
-        assert [false, false, false, false, false] == game.maskedPlayersState.shipStates[Ship.Carrier].shipSegmentHit
+        assert 5 == game.maskedPlayersState.shipStates.find { it.ship == Ship.Carrier }.healthRemaining
+        assert [false, false, false, false, false] == game.maskedPlayersState.shipStates.find {
+            it.ship == Ship.Carrier
+        }.shipSegmentHit
         assert GridCellState.KnownShip == game.maskedPlayersState.consolidatedOpponentView.get(7, 7)
         assert 1 == game.maskedPlayersState.emergencyRepairsRemaining
         assert 2 == game.remainingMoves
@@ -464,8 +467,10 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
 
         game = repair(P1G, TEST_PLAYER1, new GridCoordinate(8, 0))
         assert "TEST PLAYER1 repaired their Cruiser."
-        assert 3 == game.maskedPlayersState.shipStates[Ship.Cruiser].healthRemaining
-        assert [false, false, false] == game.maskedPlayersState.shipStates[Ship.Cruiser].shipSegmentHit
+        assert 3 == game.maskedPlayersState.shipStates.find { it.ship == Ship.Cruiser }.healthRemaining
+        assert [false, false, false] == game.maskedPlayersState.shipStates.find {
+            it.ship == Ship.Cruiser
+        }.shipSegmentHit
         assert GridCellState.KnownShip == game.maskedPlayersState.consolidatedOpponentView.get(7, 0)
         assert GamePhase.Playing == game.gamePhase
         assert 0 == game.playersScore[TEST_PLAYER1.md5]
@@ -496,7 +501,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
             cacheManager.getCache(it).clear()
         }
 
-        game = fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 7))
+        fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 7))
         game = fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 0))
 
         //  Force turn to P1
@@ -552,7 +557,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
             cacheManager.getCache(it).clear()
         }
 
-        game = fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 7))
+        fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 7))
         game = fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 0))
 
         //  Force turn to P1
@@ -571,7 +576,9 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
                 new GridCoordinate(6, 7),
                 new GridCoordinate(7, 7),
                 new GridCoordinate(8, 7),
-                new GridCoordinate(9, 7),] == game.maskedPlayersState.shipStates[Ship.Carrier].shipGridCells
+                new GridCoordinate(9, 7),] == game.maskedPlayersState.shipStates.find {
+            it.ship == Ship.Carrier
+        }.shipGridCells
         game = move(P1G, TEST_PLAYER1, new GridCoordinate(8, 7))
         assert 2 == game.remainingMoves
         assert "TEST PLAYER1 performed evasive maneuvers."
@@ -582,17 +589,23 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
                 new GridCoordinate(6, 7),
                 new GridCoordinate(7, 7),
                 new GridCoordinate(8, 7),
-                new GridCoordinate(9, 7),] != game.maskedPlayersState.shipStates[Ship.Carrier].shipGridCells
+                new GridCoordinate(9, 7),] != game.maskedPlayersState.shipStates.find {
+            it.ship == Ship.Carrier
+        }.shipGridCells
 
 
         assert [new GridCoordinate(7, 0),
                 new GridCoordinate(8, 0),
-                new GridCoordinate(9, 0),] == game.maskedPlayersState.shipStates[Ship.Cruiser].shipGridCells
+                new GridCoordinate(9, 0),] == game.maskedPlayersState.shipStates.find {
+            it.ship == Ship.Cruiser
+        }.shipGridCells
         game = move(P1G, TEST_PLAYER1, new GridCoordinate(7, 0))
         assert "TEST PLAYER1 performed evasive maneuvers."
         assert [new GridCoordinate(7, 0),
                 new GridCoordinate(8, 0),
-                new GridCoordinate(9, 0),] != game.maskedPlayersState.shipStates[Ship.Cruiser].shipGridCells
+                new GridCoordinate(9, 0),] != game.maskedPlayersState.shipStates.find {
+            it.ship == Ship.Cruiser
+        }.shipGridCells
         assert GamePhase.Playing == game.gamePhase
         assert GridCellState.ObscuredHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 7)
         assert GridCellState.ObscuredHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 0)
@@ -796,7 +809,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
                 .post(entity, returnedGameClass())
     }
 
-    protected TBMaskedGame setup(WebTarget target, LinkedHashMap<Ship, ArrayList<GridCoordinate>> positions) {
+    protected TBMaskedGame setup(final WebTarget target, final List<ShipAndCoordinates> positions) {
         def placement = Entity.entity(
                 positions,
                 MediaType.APPLICATION_JSON
@@ -832,94 +845,94 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
         target.path(command).request(MediaType.APPLICATION_JSON).put(placement, returnedGameClass())
     }
 
-    private static final LinkedHashMap<Ship, ArrayList<GridCoordinate>> P1POSITIONS = [
-            (Ship.Carrier)   : [
+    private static final List<ShipAndCoordinates> P1POSITIONS = [
+            new ShipAndCoordinates(ship: Ship.Carrier, coordinates: [
                     new GridCoordinate(5, 7),
                     new GridCoordinate(6, 7),
                     new GridCoordinate(7, 7),
                     new GridCoordinate(8, 7),
                     new GridCoordinate(9, 7),
-            ],
-            (Ship.Battleship): [
+            ]),
+            new ShipAndCoordinates(ship: Ship.Battleship, coordinates: [
                     new GridCoordinate(0, 6),
                     new GridCoordinate(0, 7),
                     new GridCoordinate(0, 8),
                     new GridCoordinate(0, 9),
-            ],
-            (Ship.Cruiser)   : [
+            ]),
+            new ShipAndCoordinates(ship: Ship.Cruiser, coordinates: [
                     new GridCoordinate(7, 0),
                     new GridCoordinate(8, 0),
                     new GridCoordinate(9, 0),
-            ],
-            (Ship.Submarine) : [
+            ]),
+            new ShipAndCoordinates(ship: Ship.Submarine, coordinates: [
                     new GridCoordinate(7, 14),
                     new GridCoordinate(8, 14),
                     new GridCoordinate(9, 14),
-            ],
-            (Ship.Destroyer) : [
+            ]),
+            new ShipAndCoordinates(ship: Ship.Destroyer, coordinates: [
                     new GridCoordinate(14, 7),
                     new GridCoordinate(14, 8),
-            ],
+            ]),
     ]
 
-    private static final LinkedHashMap<Ship, ArrayList<GridCoordinate>> P2POSITIONS = [
-            (Ship.Carrier)   : [
+    private static final List<ShipAndCoordinates> P2POSITIONS = [
+            new ShipAndCoordinates(ship: Ship.Carrier, coordinates: [
                     new GridCoordinate(0, 0),
                     new GridCoordinate(0, 1),
                     new GridCoordinate(0, 2),
                     new GridCoordinate(0, 3),
                     new GridCoordinate(0, 4),
-            ],
-            (Ship.Battleship): [
+            ]),
+            new ShipAndCoordinates(ship: Ship.Battleship, coordinates: [
                     new GridCoordinate(14, 0),
                     new GridCoordinate(14, 1),
                     new GridCoordinate(14, 2),
                     new GridCoordinate(14, 3),
-            ],
-            (Ship.Cruiser)   : [
+            ]),
+            new ShipAndCoordinates(ship: Ship.Cruiser, coordinates: [
                     new GridCoordinate(0, 14),
                     new GridCoordinate(0, 13),
                     new GridCoordinate(0, 12),
-            ],
-            (Ship.Submarine) : [
+            ]),
+            new ShipAndCoordinates(ship: Ship.Submarine, coordinates: [
                     new GridCoordinate(14, 14),
                     new GridCoordinate(14, 13),
                     new GridCoordinate(14, 12),
-            ],
-            (Ship.Destroyer) : [
+            ]),
+            new ShipAndCoordinates(ship: Ship.Destroyer, coordinates: [
                     new GridCoordinate(7, 8),
                     new GridCoordinate(7, 9),
-            ],
+            ]),
     ]
 
-    private static final LinkedHashMap<Ship, ArrayList<GridCoordinate>> P3POSITIONS = [
-            (Ship.Carrier)   : [
+    private static final List<ShipAndCoordinates> P3POSITIONS = [
+            new ShipAndCoordinates(ship: Ship.Carrier, coordinates: [
                     new GridCoordinate(0, 0),
                     new GridCoordinate(0, 1),
                     new GridCoordinate(0, 2),
                     new GridCoordinate(0, 3),
                     new GridCoordinate(0, 4),
-            ],
-            (Ship.Battleship): [
+            ]),
+            new ShipAndCoordinates(ship: Ship.Battleship, coordinates: [
                     new GridCoordinate(1, 0),
                     new GridCoordinate(1, 1),
                     new GridCoordinate(1, 2),
                     new GridCoordinate(1, 3),
-            ],
-            (Ship.Cruiser)   : [
+            ]),
+            new ShipAndCoordinates(ship: Ship.Cruiser, coordinates: [
                     new GridCoordinate(2, 1),
                     new GridCoordinate(2, 2),
                     new GridCoordinate(2, 3),
-            ],
-            (Ship.Submarine) : [
+            ]),
+            new ShipAndCoordinates(ship: Ship.Submarine, coordinates: [
                     new GridCoordinate(3, 4),
                     new GridCoordinate(3, 2),
                     new GridCoordinate(3, 3),
-            ],
-            (Ship.Destroyer) : [
+            ]),
+            new ShipAndCoordinates(ship: Ship.Destroyer, coordinates: [
                     new GridCoordinate(0, 14),
                     new GridCoordinate(1, 14),
-            ],
+            ]),
     ]
 
     public static final FeaturesAndPlayers STANDARD_PLAYERS_AND_FEATURES = new FeaturesAndPlayers(

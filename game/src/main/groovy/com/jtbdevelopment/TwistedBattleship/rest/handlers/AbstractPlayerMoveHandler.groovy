@@ -11,7 +11,6 @@ import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
-import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
 import com.jtbdevelopment.games.exceptions.input.GameIsNotInPlayModeException
 import com.jtbdevelopment.games.exceptions.input.PlayerOutOfTurnException
@@ -53,8 +52,8 @@ abstract class AbstractPlayerMoveHandler extends AbstractGameActionHandler<Targe
     protected TBGame markHiddenHits(TBGame game, Player player) {
         TBPlayerState state = game.playerDetails[(ObjectId) player.id]
         state.shipStates.each {
-            Ship ship, ShipState shipState ->
-                for (int shipCell = 0; shipCell < ship.gridSize; ++shipCell) {
+            ShipState shipState ->
+                for (int shipCell = 0; shipCell < shipState.ship.gridSize; ++shipCell) {
                     if (shipState.shipSegmentHit[shipCell]) {
                         state.opponentViews.each {
                             ObjectId opponent, Grid opponentView ->
