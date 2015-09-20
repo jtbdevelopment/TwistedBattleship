@@ -9,6 +9,7 @@ import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
+import com.jtbdevelopment.TwistedBattleship.state.grid.GridCircleUtil
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
@@ -42,7 +43,13 @@ class SimpleAI implements AI {
     SpyHandler spyHandler
 
     @Autowired
+    ECMHandler ecmHandler
+
+    @Autowired
     SetupShipsHandler setupShipsHandler
+
+    @Autowired
+    GridCircleUtil gridCircleUtil
 
     private Random random = new Random()
 
@@ -77,13 +84,15 @@ class SimpleAI implements AI {
             if (!didEvasive(game, myState)) {
                 //  If spy available - use it
                 if (!didSpy(game, myState)) {
-                    //  Fire
-                    if (!didFire(game, myState)) {
-                        throw new RuntimeException("Unable to take any action!")
+                    //  If we can get at least 3 known details eliminated ecm
+                    if (!didECM(game, myState)) {
+                        //  Fire
+                        if (!didFire(game, myState)) {
+                            throw new RuntimeException("Unable to take any action!")
+                        }
                     }
                 }
             }
-
         }
     }
 
@@ -143,7 +152,120 @@ class SimpleAI implements AI {
 
     private boolean didSpy(final TBGame game, TBPlayerState myState) {
         if (game.movesForSpecials <= game.remainingMoves && myState.spysRemaining > 0) {
-            //  TODO
+            List<WeightedTarget> targets = myState.opponentGrids.collectMany {
+                ObjectId opponent, Grid grid ->
+                    List<WeightedTarget> weightedTargets = []
+                    for (int row = 0; row < game.gridSize; ++row) {
+                        for (int col = 0; col < game.gridSize; ++col) {
+                            int currentValue = 0;
+                            gridCircleUtil.computeCircleCoordinates(game, new GridCoordinate(row, col)).each {
+                                switch (grid.get(row, col)) {
+                                    case GridCellState.KnownEmpty:
+                                    case GridCellState.KnownByRehit:
+                                    case GridCellState.KnownByHit:
+                                    case GridCellState.KnownByOtherMiss:
+                                    case GridCellState.KnownByOtherHit:
+                                    case GridCellState.KnownByMiss:
+                                    case GridCellState.KnownShip:
+                                        break
+                                    case GridCellState.Unknown:
+                                        currentValue += 2
+                                        break
+                                    default:
+                                        //  All the obscured
+                                        currentValue += 1
+                                        break
+                                }
+                            }
+                            weightedTargets.add(new WeightedTarget(
+                                    player: opponent,
+                                    coordinate: new GridCoordinate(row, col),
+                                    weight: currentValue))
+                        }
+                    }
+                    weightedTargets
+            }.toList()
+
+            List<WeightedTarget> bestTargets = targets.sort {
+                WeightedTarget t1, WeightedTarget t2 ->
+                    return t2.weight - t1.weight
+            }.findAll {
+                WeightedTarget t ->
+                    t.weight == targets[0].weight
+            }.toList()
+
+            WeightedTarget target = bestTargets[random.nextInt(bestTargets.size())]
+
+            spyHandler.handleAction(
+                    playerCreator.player.id,
+                    game.id,
+                    new Target(player: game.players.find { it.id == target.player }.md5, coordinate: target.coordinate))
+
+            return true
+        }
+        return false
+    }
+
+    private boolean didECM(final TBGame game, TBPlayerState myState) {
+        if (game.movesForSpecials <= game.remainingMoves && myState.ecmsRemaining > 0) {
+            List<WeightedTarget> targets = myState.opponentViews.collectMany {
+                ObjectId opponent, Grid grid ->
+                    List<WeightedTarget> weightedTargets = []
+                    for (int row = 0; row < game.gridSize; ++row) {
+                        for (int col = 0; col < game.gridSize; ++col) {
+                            int currentValue = 0;
+                            gridCircleUtil.computeCircleCoordinates(game, new GridCoordinate(row, col)).each {
+                                switch (grid.get(row, col)) {
+                                    case GridCellState.KnownShip:
+                                        currentValue += 4
+                                        break
+                                    case GridCellState.KnownEmpty:
+                                    case GridCellState.KnownByRehit:
+                                    case GridCellState.KnownByHit:
+                                    case GridCellState.KnownByOtherMiss:
+                                    case GridCellState.KnownByOtherHit:
+                                    case GridCellState.KnownByMiss:
+                                        currentValue += 2
+                                        break
+                                    case GridCellState.Unknown:
+                                        break
+                                    default:
+                                        //  All the obscured
+                                        currentValue += 1
+                                        break
+                                }
+                            }
+                            if (currentValue >= 6) {
+                                weightedTargets.add(new WeightedTarget(
+                                        player: opponent,
+                                        coordinate: new GridCoordinate(row, col),
+                                        weight: currentValue))
+                            }
+                        }
+                    }
+                    weightedTargets
+            }.toList()
+
+            if (targets.size() == 0) {
+                return false
+            }
+
+            List<WeightedTarget> bestTargets = targets.sort {
+                WeightedTarget t1, WeightedTarget t2 ->
+                    return t2.weight - t1.weight
+            }.findAll {
+                WeightedTarget t ->
+                    t.weight == targets[0].weight
+            }.toList()
+
+            WeightedTarget target = bestTargets[random.nextInt(bestTargets.size())]
+
+            ecmHandler.handleAction(
+                    playerCreator.player.id,
+                    game.id,
+                    new Target(player: player.md5, coordinate: target.coordinate))
+
+            return true
         }
         return false
     }
