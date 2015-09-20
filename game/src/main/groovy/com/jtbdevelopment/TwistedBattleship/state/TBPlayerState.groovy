@@ -14,10 +14,8 @@ import org.springframework.data.annotation.Transient
  */
 @CompileStatic
 class TBPlayerState implements Serializable {
-    private static int SHIP_COUNT = Ship.values().size()
-
-    //  TODO - make this not a map so we can have games where it's all carriers or some such
-    Map<Ship, ShipState> shipStates = [:]
+    List<Ship> startingShips = []
+    List<ShipState> shipStates = []
 
     @Transient
     Map<GridCoordinate, ShipState> coordinateShipMap = null
@@ -36,6 +34,11 @@ class TBPlayerState implements Serializable {
 
     String lastActionMessage = ""
 
+    void setStartingShips(final List<Ship> startingShips) {
+        this.startingShips = startingShips
+        this.startingShips.sort()
+    }
+
     int getTotalScore() {
         scoreFromHits + scoreFromSinks + scoreFromLiving
     }
@@ -49,7 +52,9 @@ class TBPlayerState implements Serializable {
     }
 
     boolean isSetup() {
-        return shipStates.size() == SHIP_COUNT
+        return startingShips.size() > 0 &&
+                shipStates.size() == startingShips.size() &&
+                shipStates.collect { it.ship } == startingShips
     }
 
     void setSetup(final boolean isSetup) {
@@ -69,19 +74,25 @@ class TBPlayerState implements Serializable {
     }
 
     int getActiveShipsRemaining() {
-        return shipStates.values().findAll { ShipState it -> it.healthRemaining > 0 }.size()
+        return shipStates.findAll { ShipState it -> it.healthRemaining > 0 }.size()
     }
 
     void setActiveShipsRemaining(final int remaining) {
         //  ignore
     }
 
-    Map<Ship, ShipState> getShipStates() {
+    List<ShipState> getShipStates() {
         return shipStates
     }
 
-    void setShipStates(final Map<Ship, ShipState> shipStates) {
+    void setShipStates(final List<ShipState> shipStates) {
         this.shipStates = shipStates
+        this.shipStates.sort(new Comparator<ShipState>() {
+            @Override
+            int compare(final ShipState o1, final ShipState o2) {
+                return o1.ship.compareTo(o2.ship)
+            }
+        })
         computeCoordinateShipMap()
     }
 
@@ -98,7 +109,7 @@ class TBPlayerState implements Serializable {
 
     private void computeCoordinateShipMap() {
         def temp = (Map<GridCoordinate, ShipState>) shipStates.collectEntries {
-            Ship ship, ShipState state ->
+            ShipState state ->
                 state.shipGridCells.collectEntries {
                     GridCoordinate coordinate ->
                         [(coordinate): state]

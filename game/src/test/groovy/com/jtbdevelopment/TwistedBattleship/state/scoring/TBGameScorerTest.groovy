@@ -14,7 +14,7 @@ import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
 class TBGameScorerTest extends MongoGameCoreTestCase {
     TBGame game = new TBGame(
             playerDetails: [
-                    (PONE.id): new TBPlayerState(shipStates: [(Ship.Battleship): new ShipState(Ship.Battleship, [] as SortedSet<GridCoordinate>)], scoreFromLiving: 5),
+                    (PONE.id): new TBPlayerState(shipStates: [new ShipState(Ship.Battleship, [] as SortedSet<GridCoordinate>)], scoreFromLiving: 5),
                     (PTWO.id): new TBPlayerState(scoreFromLiving: 2),
             ]
     )

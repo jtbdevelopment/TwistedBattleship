@@ -29,30 +29,30 @@ abstract class AbstractBaseHandlerTest extends MongoGameCoreTestCase {
                 PONE,
                 game,
                 [
-                        (Ship.Carrier)   : new ShipState(Ship.Carrier, [
+                        new ShipState(Ship.Carrier, [
                                 new GridCoordinate(0, 0),
                                 new GridCoordinate(1, 0),
                                 new GridCoordinate(2, 0),
                                 new GridCoordinate(3, 0),
                                 new GridCoordinate(4, 0),
                         ] as SortedSet),
-                        (Ship.Battleship): new ShipState(Ship.Battleship, [
+                        new ShipState(Ship.Battleship, [
                                 new GridCoordinate(0, 14),
                                 new GridCoordinate(1, 14),
                                 new GridCoordinate(2, 14),
                                 new GridCoordinate(3, 14),
                         ] as SortedSet),
-                        (Ship.Cruiser)   : new ShipState(Ship.Cruiser, [
+                        new ShipState(Ship.Cruiser, [
                                 new GridCoordinate(14, 14),
                                 new GridCoordinate(13, 14),
                                 new GridCoordinate(12, 14),
                         ] as SortedSet),
-                        (Ship.Submarine) : new ShipState(Ship.Submarine, [
+                        new ShipState(Ship.Submarine, [
                                 new GridCoordinate(14, 0),
                                 new GridCoordinate(13, 0),
                                 new GridCoordinate(12, 0),
                         ] as SortedSet),
-                        (Ship.Destroyer) : new ShipState(Ship.Destroyer, [
+                        new ShipState(Ship.Destroyer, [
                                 new GridCoordinate(7, 7),
                                 new GridCoordinate(7, 8),
                         ] as SortedSet),

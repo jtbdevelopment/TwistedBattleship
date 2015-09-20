@@ -60,7 +60,7 @@ class SimpleAI implements AI {
 
     void setup(final TBGame game) {
         Set<GridCoordinate> used = [] as Set
-        Map<Ship, ShipState> shipStateMap = (Map<Ship, ShipState>) Ship.values().collectEntries {
+        List<ShipState> shipStates = (List<ShipState>) Ship.values().collectEntries {
             Ship ship ->
                 boolean horizontal = random.nextInt(100) < 50
                 TreeSet<GridCoordinate> set
@@ -92,9 +92,9 @@ class SimpleAI implements AI {
                     }
                 }
                 used.addAll(set)
-                return [(ship): new ShipState(ship, set)]
+                return new ShipState(ship, set)
         }
-        setupShipsHandler.handleAction(playerCreator.player.id, game.id, shipStateMap)
+        setupShipsHandler.handleAction(playerCreator.player.id, game.id, shipStates)
     }
 
     void playOneMove(final TBGame game) {
@@ -126,7 +126,7 @@ class SimpleAI implements AI {
             Set<Ship> allowedShips = perShip ?
                     [Ship.Carrier, Ship.Battleship] as Set :
                     [Ship.Carrier, Ship.Battleship, Ship.Submarine, Ship.Cruiser] as Set
-            def damagedShip = myState.shipStates.values().findAll {
+            def damagedShip = myState.shipStates.findAll {
                 ShipState state ->
                     allowedShips.contains(state.ship) &&
                             state.healthRemaining < (state.ship.gridSize - 2) &&
@@ -151,7 +151,7 @@ class SimpleAI implements AI {
 
     private boolean didEvasive(final TBGame game, final TBPlayerState myState) {
         if (game.movesForSpecials <= game.remainingMoves && myState.evasiveManeuversRemaining > 0) {
-            def damagedShip = myState.shipStates.values().findAll {
+            def damagedShip = myState.shipStates.findAll {
                 ShipState state ->
                     state.ship.gridSize > 2 &&
                             state.healthRemaining < (state.ship.gridSize - 2) &&

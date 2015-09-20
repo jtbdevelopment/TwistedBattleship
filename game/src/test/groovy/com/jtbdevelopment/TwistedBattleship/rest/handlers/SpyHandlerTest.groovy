@@ -30,8 +30,10 @@ class SpyHandlerTest extends AbstractBaseHandlerTest {
         game.playerDetails[PFOUR.id].opponentGrids[PONE.id].set(2, 0, GridCellState.KnownByHit)
         game.playerDetails[PONE.id].opponentViews[PFOUR.id].set(2, 0, GridCellState.KnownByHit)
 
-        game.playerDetails[PONE.id].shipStates[Ship.Carrier].healthRemaining = 3
-        game.playerDetails[PONE.id].shipStates[Ship.Carrier].shipSegmentHit = [false, true, true, false, false]
+        game.playerDetails[PONE.id].shipStates.find { it.ship == Ship.Carrier }.healthRemaining = 3
+        game.playerDetails[PONE.id].shipStates.find {
+            it.ship == Ship.Carrier
+        }.shipSegmentHit = [false, true, true, false, false]
     }
 
     void testTargetSelf() {

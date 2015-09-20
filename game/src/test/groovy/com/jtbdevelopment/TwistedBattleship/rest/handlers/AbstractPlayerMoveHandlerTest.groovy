@@ -167,11 +167,9 @@ class AbstractPlayerMoveHandlerTest extends MongoGameCoreTestCase {
                 remainingMoves: MOVES_REQUIRED + 1,
                 currentPlayer: PTHREE.id,
                 playerDetails: [
-                        (PONE.id)  : new TBPlayerState(shipStates: [:]),
-                        (PTWO.id)  : new TBPlayerState(shipStates: [
-                                (Ship.Battleship): new ShipState(Ship.Battleship, [] as SortedSet<GridCoordinate>)]),
-                        (PTHREE.id): new TBPlayerState(shipStates: [
-                                (Ship.Battleship): new ShipState(Ship.Battleship, [] as SortedSet<GridCoordinate>)]),
+                        (PONE.id)  : new TBPlayerState(shipStates: []),
+                        (PTWO.id)  : new TBPlayerState(shipStates: [new ShipState(Ship.Battleship, [] as SortedSet<GridCoordinate>)]),
+                        (PTHREE.id): new TBPlayerState(shipStates: [new ShipState(Ship.Battleship, [] as SortedSet<GridCoordinate>)]),
                 ],
                 gamePhase: GamePhase.Playing)
 
@@ -187,13 +185,12 @@ class AbstractPlayerMoveHandlerTest extends MongoGameCoreTestCase {
                 currentPlayer: PTHREE.id,
                 players: [PONE, PTWO, PTHREE],
                 playerDetails: [
-                        (PONE.id)  : new TBPlayerState(shipStates: [:]),
+                        (PONE.id)  : new TBPlayerState(shipStates: []),
                         (PTWO.id)  : new TBPlayerState(shipStates: [
-                                (Ship.Battleship): new ShipState(Ship.Battleship, [] as SortedSet<GridCoordinate>),
-                                (Ship.Cruiser)   : new ShipState(Ship.Cruiser, [] as SortedSet<GridCoordinate>)
+                                new ShipState(Ship.Battleship, [] as SortedSet<GridCoordinate>),
+                                new ShipState(Ship.Cruiser, [] as SortedSet<GridCoordinate>)
                         ]),
-                        (PTHREE.id): new TBPlayerState(shipStates: [
-                                (Ship.Battleship): new ShipState(Ship.Battleship, [] as SortedSet<GridCoordinate>)]),
+                        (PTHREE.id): new TBPlayerState(shipStates: [new ShipState(Ship.Battleship, [] as SortedSet<GridCoordinate>)]),
                 ],
                 gamePhase: GamePhase.Playing)
 
@@ -209,15 +206,14 @@ class AbstractPlayerMoveHandlerTest extends MongoGameCoreTestCase {
                 currentPlayer: PTHREE.id,
                 players: [PONE, PTWO, PTHREE],
                 playerDetails: [
-                        (PONE.id)  : new TBPlayerState(shipStates: [:]),
+                        (PONE.id)  : new TBPlayerState(shipStates: []),
                         (PTWO.id)  : new TBPlayerState(shipStates: [
-                                (Ship.Destroyer) : new ShipState(Ship.Destroyer, 0, [], []),
-                                (Ship.Battleship): new ShipState(Ship.Battleship, [] as SortedSet<GridCoordinate>),
-                                (Ship.Carrier)   : new ShipState(Ship.Carrier, [] as SortedSet<GridCoordinate>),
-                                (Ship.Cruiser)   : new ShipState(Ship.Cruiser, [] as SortedSet<GridCoordinate>)
+                                new ShipState(Ship.Destroyer, 0, [], []),
+                                new ShipState(Ship.Battleship, [] as SortedSet<GridCoordinate>),
+                                new ShipState(Ship.Carrier, [] as SortedSet<GridCoordinate>),
+                                new ShipState(Ship.Cruiser, [] as SortedSet<GridCoordinate>)
                         ]),
-                        (PTHREE.id): new TBPlayerState(shipStates: [
-                                (Ship.Battleship): new ShipState(Ship.Battleship, [] as SortedSet<GridCoordinate>)]),
+                        (PTHREE.id): new TBPlayerState(shipStates: [new ShipState(Ship.Battleship, [] as SortedSet<GridCoordinate>)]),
                 ],
                 gamePhase: GamePhase.Playing)
 
@@ -233,10 +229,9 @@ class AbstractPlayerMoveHandlerTest extends MongoGameCoreTestCase {
                 currentPlayer: PTHREE.id,
                 players: [PONE, PTWO, PTHREE],
                 playerDetails: [
-                        (PONE.id)  : new TBPlayerState(shipStates: [:]),
-                        (PTWO.id)  : new TBPlayerState(shipStates: [:]),
-                        (PTHREE.id): new TBPlayerState(shipStates: [
-                                (Ship.Battleship): new ShipState(Ship.Battleship, [] as SortedSet<GridCoordinate>)]),
+                        (PONE.id)  : new TBPlayerState(shipStates: []),
+                        (PTWO.id)  : new TBPlayerState(shipStates: []),
+                        (PTHREE.id): new TBPlayerState(shipStates: [new ShipState(Ship.Battleship, [] as SortedSet<GridCoordinate>)]),
                 ],
                 gamePhase: GamePhase.Playing)
 

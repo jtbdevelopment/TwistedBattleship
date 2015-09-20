@@ -73,14 +73,14 @@ class EvasiveManeuverHandlerTest extends AbstractBaseHandlerTest {
         game.playerDetails[PONE.id].opponentViews[PTHREE.id].set(0, 0, GridCellState.Unknown)
         game.playerDetails[PONE.id].opponentViews[PTHREE.id].set(1, 0, GridCellState.KnownByRehit)
         game.playerDetails[PONE.id].opponentViews[PTHREE.id].set(2, 0, GridCellState.KnownByHit)
-        def initialCoordinates = game.playerDetails[PONE.id].shipStates[Ship.Carrier].shipGridCells
+        def initialCoordinates = game.playerDetails[PONE.id].shipStates.find { it.ship == Ship.Carrier }.shipGridCells
         def newCoordinates = [new GridCoordinate(5, 5), new GridCoordinate(5, 6), new GridCoordinate(5, 7), new GridCoordinate(5, 8), new GridCoordinate(5, 9)]
         handler.shipRelocator = [
                 relocateShip: {
                     TBGame g, TBPlayerState ps, ShipState ss ->
                         assert game.is(g)
                         assert game.playerDetails[PONE.id].is(ps)
-                        assert game.playerDetails[PONE.id].shipStates[Ship.Carrier].is(ss)
+                        assert game.playerDetails[PONE.id].shipStates.find { it.ship == Ship.Carrier }.is(ss)
                         newCoordinates
                 }
         ] as ShipRelocator

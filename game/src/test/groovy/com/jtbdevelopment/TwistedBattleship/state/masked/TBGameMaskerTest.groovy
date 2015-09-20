@@ -28,6 +28,7 @@ class TBGameMaskerTest extends MongoGameCoreTestCase {
                 gamePhase: GamePhase.Playing,
                 features: [GameFeature.Grid10x10],
                 gridSize: 10,
+                startingShips: Ship.values().toList(),
                 players: [PONE, PTWO, PTHREE],
                 currentPlayer: PTHREE.id,
                 movesForSpecials: -2,
@@ -36,6 +37,7 @@ class TBGameMaskerTest extends MongoGameCoreTestCase {
                 generalMessage: "All hands on deck!",
                 playerDetails: [
                         (PONE.id)  : new TBPlayerState(
+                                startingShips: Ship.values().toList(),
                                 scoreFromHits: 10,
                                 scoreFromLiving: 20,
                                 scoreFromSinks: 40,
@@ -53,19 +55,20 @@ class TBGameMaskerTest extends MongoGameCoreTestCase {
                                         (PTHREE.id): new Grid(10)
                                 ],
                                 shipStates: [
-                                        (Ship.Battleship): new ShipState(Ship.Battleship, new TreeSet<GridCoordinate>()),
-                                        (Ship.Destroyer) : new ShipState(Ship.Destroyer, new TreeSet<GridCoordinate>()),
-                                        (Ship.Submarine) : new ShipState(Ship.Submarine, new TreeSet<GridCoordinate>()),
-                                        (Ship.Carrier)   : new ShipState(Ship.Carrier, new TreeSet<GridCoordinate>()),
-                                        (Ship.Cruiser)   : new ShipState(Ship.Cruiser, new TreeSet<GridCoordinate>())
+                                        new ShipState(Ship.Battleship, new TreeSet<GridCoordinate>()),
+                                        new ShipState(Ship.Destroyer, new TreeSet<GridCoordinate>()),
+                                        new ShipState(Ship.Submarine, new TreeSet<GridCoordinate>()),
+                                        new ShipState(Ship.Carrier, new TreeSet<GridCoordinate>()),
+                                        new ShipState(Ship.Cruiser, new TreeSet<GridCoordinate>())
                                 ]),
                         (PTWO.id)  : new TBPlayerState(
+                                startingShips: Ship.values().toList(),
                                 scoreFromLiving: 30, scoreFromSinks: 10,
                                 shipStates: [
-                                        (Ship.Battleship): new ShipState(Ship.Battleship, 0, [], []),
-                                        (Ship.Cruiser)   : new ShipState(Ship.Cruiser, 0, [], [])
+                                        new ShipState(Ship.Battleship, 0, [], []),
+                                        new ShipState(Ship.Cruiser, 0, [], [])
                                 ]),
-                        (PTHREE.id): new TBPlayerState(scoreFromHits: 10, scoreFromSinks: 10),
+                        (PTHREE.id): new TBPlayerState(scoreFromHits: 10, scoreFromSinks: 10, startingShips: Ship.values().toList()),
                 ]
         )
         game.playerDetails[PONE.id].opponentGrids[PTWO.id].set(4, 0, GridCellState.KnownByHit)
@@ -84,6 +87,7 @@ class TBGameMaskerTest extends MongoGameCoreTestCase {
         assert maskedGame
         assert game.gridSize == maskedGame.gridSize
         assert game.movesForSpecials == maskedGame.movesForSpecials
+        assert game.startingShips == maskedGame.startingShips
         assert "All hands on deck!" == maskedGame.generalMessage
         assert [(PONE.md5): true, (PTWO.md5): false, (PTHREE.md5): false] == maskedGame.playersAlive
         assert [(PONE.md5): 70, (PTWO.md5): 40, (PTHREE.md5): 20] == maskedGame.playersScore
@@ -92,6 +96,7 @@ class TBGameMaskerTest extends MongoGameCoreTestCase {
         TBPlayerState playerState = game.playerDetails[PONE.id]
         assert playerState.lastActionMessage == maskedGame.maskedPlayersState.lastActionMessage
         assert playerState.shipStates == maskedGame.maskedPlayersState.shipStates
+        assert playerState.startingShips == maskedGame.maskedPlayersState.startingShips
         assert playerState.alive == maskedGame.maskedPlayersState.alive
         assert playerState.setup == maskedGame.maskedPlayersState.setup
         assert playerState.totalScore == maskedGame.maskedPlayersState.totalScore

@@ -19,7 +19,7 @@ import com.jtbdevelopment.games.state.GamePhase
  */
 class SetupShipsHandlerTest extends MongoGameCoreTestCase {
     SetupShipsHandler setupShipsHandler = new SetupShipsHandler()
-    TBGame game = new TBGame(features: [GameFeature.Grid15x15], gamePhase: GamePhase.Setup)
+    TBGame game = new TBGame(features: [GameFeature.Grid15x15], gamePhase: GamePhase.Setup, startingShips: Ship.values())
 
     void testValidPlacementOfShips() {
         TBGame game = new TBGame(
@@ -27,9 +27,13 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
                 gamePhase: GamePhase.Setup,
                 playerDetails: [(PONE.id): new TBPlayerState(), (PTWO.id): new TBPlayerState()]
         )
+        game.startingShips = Ship.values().toList()
+        game.playerDetails.values().each {
+            it.startingShips = game.startingShips
+        }
         setupShipsHandler.shipPlacementValidator = [
                 validateShipPlacementsForGame: {
-                    TBGame g, Map<Ship, ShipState> m ->
+                    TBGame g, List<ShipState> m ->
                         assert g.is(game)
                         assert m.is(VALID_PLACEMENTS)
                 }
@@ -47,7 +51,7 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
         shouldFail(ShipPlacementsNotValidException.class, {
             setupShipsHandler.shipPlacementValidator = [
                     validateShipPlacementsForGame: {
-                        TBGame g, Map<Ship, ShipState> m ->
+                        TBGame g, List<ShipState> m ->
                             assert g.is(game)
                             assert m.is(VALID_PLACEMENTS)
                             throw new ShipPlacementsNotValidException()
@@ -66,13 +70,28 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
         }
     }
 
+    void testNonMatchingStartupShipsVsSetup() {
+        shouldFail(ShipNotInitializedCorrectlyException.class, {
+            TBGame game = new TBGame(
+                    players: [PONE, PTWO],
+                    gamePhase: GamePhase.Setup,
+                    playerDetails: [(PONE.id): new TBPlayerState(), (PTWO.id): new TBPlayerState()]
+            )
+            game.startingShips = [Ship.Destroyer, Ship.Destroyer, Ship.Destroyer, Ship.Destroyer, Ship.Destroyer]
+            game.playerDetails.values().each {
+                it.startingShips = game.startingShips
+            }
+            setupShipsHandler.handleActionInternal(PONE, game, VALID_PLACEMENTS)
+        })
+    }
+
     void testShipIncorrectSegmentsHit() {
         shouldFail(ShipNotInitializedCorrectlyException.class, {
             setupShipsHandler.handleActionInternal(
                     PONE,
                     game,
                     [
-                            (Ship.Battleship): new ShipState(Ship.Battleship,
+                            new ShipState(Ship.Battleship,
                                     4,
                                     [
                                             new GridCoordinate(0, 0),
@@ -82,7 +101,7 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
                                     ],
                                     [false, false, false]             //wrong
                             ),
-                            (Ship.Carrier)   : new ShipState(Ship.Carrier,
+                            new ShipState(Ship.Carrier,
                                     new TreeSet([
                                             new GridCoordinate(0, 1),
                                             new GridCoordinate(0, 2),
@@ -91,21 +110,21 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
                                             new GridCoordinate(0, 5)
                                     ])
                             ),
-                            (Ship.Cruiser)   : new ShipState(Ship.Cruiser,
+                            new ShipState(Ship.Cruiser,
                                     new TreeSet([
                                             new GridCoordinate(0, 6),
                                             new GridCoordinate(1, 6),
                                             new GridCoordinate(2, 6),
                                     ])
                             ),
-                            (Ship.Submarine) : new ShipState(Ship.Submarine,
+                            new ShipState(Ship.Submarine,
                                     new TreeSet([
                                             new GridCoordinate(0, 7),
                                             new GridCoordinate(0, 8),
                                             new GridCoordinate(0, 9),
                                     ])
                             ),
-                            (Ship.Destroyer) : new ShipState(Ship.Destroyer,
+                            new ShipState(Ship.Destroyer,
                                     new TreeSet([
                                             new GridCoordinate(0, 10),
                                             new GridCoordinate(1, 10)
@@ -121,7 +140,7 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
                     PONE,
                     game,
                     [
-                            (Ship.Battleship): new ShipState(Ship.Battleship,
+                            new ShipState(Ship.Battleship,
                                     5,
                                     [
                                             new GridCoordinate(0, 0),
@@ -131,7 +150,7 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
                                     ],
                                     [false, false, false, true]                // wrong
                             ),
-                            (Ship.Carrier)   : new ShipState(Ship.Carrier,
+                            new ShipState(Ship.Carrier,
                                     new TreeSet([
                                             new GridCoordinate(0, 1),
                                             new GridCoordinate(0, 2),
@@ -140,21 +159,21 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
                                             new GridCoordinate(0, 5)
                                     ])
                             ),
-                            (Ship.Cruiser)   : new ShipState(Ship.Cruiser,
+                            new ShipState(Ship.Cruiser,
                                     new TreeSet([
                                             new GridCoordinate(0, 6),
                                             new GridCoordinate(1, 6),
                                             new GridCoordinate(2, 6),
                                     ])
                             ),
-                            (Ship.Submarine) : new ShipState(Ship.Submarine,
+                            new ShipState(Ship.Submarine,
                                     new TreeSet([
                                             new GridCoordinate(0, 7),
                                             new GridCoordinate(0, 8),
                                             new GridCoordinate(0, 9),
                                     ])
                             ),
-                            (Ship.Destroyer) : new ShipState(Ship.Destroyer,
+                            new ShipState(Ship.Destroyer,
                                     new TreeSet([
                                             new GridCoordinate(0, 10),
                                             new GridCoordinate(1, 10)
@@ -170,7 +189,7 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
                     PONE,
                     game,
                     [
-                            (Ship.Battleship): new ShipState(Ship.Battleship,
+                            new ShipState(Ship.Battleship,
                                     3,                                   // wrong
                                     [
                                             new GridCoordinate(0, 0),
@@ -180,7 +199,7 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
                                     ],
                                     [false, false, false, false]
                             ),
-                            (Ship.Carrier)   : new ShipState(Ship.Carrier,
+                            new ShipState(Ship.Carrier,
                                     new TreeSet([
                                             new GridCoordinate(0, 1),
                                             new GridCoordinate(0, 2),
@@ -189,21 +208,21 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
                                             new GridCoordinate(0, 5)
                                     ])
                             ),
-                            (Ship.Cruiser)   : new ShipState(Ship.Cruiser,
+                            new ShipState(Ship.Cruiser,
                                     new TreeSet([
                                             new GridCoordinate(0, 6),
                                             new GridCoordinate(1, 6),
                                             new GridCoordinate(2, 6),
                                     ])
                             ),
-                            (Ship.Submarine) : new ShipState(Ship.Submarine,
+                            new ShipState(Ship.Submarine,
                                     new TreeSet([
                                             new GridCoordinate(0, 7),
                                             new GridCoordinate(0, 8),
                                             new GridCoordinate(0, 9),
                                     ])
                             ),
-                            (Ship.Destroyer) : new ShipState(Ship.Destroyer,
+                            new ShipState(Ship.Destroyer,
                                     new TreeSet([
                                             new GridCoordinate(0, 10),
                                             new GridCoordinate(1, 10)
@@ -219,7 +238,7 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
                     PONE,
                     game,
                     [
-                            (Ship.Battleship): new ShipState(Ship.Cruiser,        //wrong
+                            new ShipState(Ship.Cruiser,        //wrong
                                     new TreeSet([
                                             new GridCoordinate(0, 0),
                                             new GridCoordinate(1, 0),
@@ -227,7 +246,7 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
                                             new GridCoordinate(3, 0)
                                     ]),
                             ),
-                            (Ship.Carrier)   : new ShipState(Ship.Carrier,
+                            new ShipState(Ship.Carrier,
                                     new TreeSet([
                                             new GridCoordinate(0, 1),
                                             new GridCoordinate(0, 2),
@@ -236,21 +255,21 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
                                             new GridCoordinate(0, 5)
                                     ])
                             ),
-                            (Ship.Cruiser)   : new ShipState(Ship.Cruiser,
+                            new ShipState(Ship.Cruiser,
                                     new TreeSet([
                                             new GridCoordinate(0, 6),
                                             new GridCoordinate(1, 6),
                                             new GridCoordinate(2, 6),
                                     ])
                             ),
-                            (Ship.Submarine) : new ShipState(Ship.Submarine,
+                            new ShipState(Ship.Submarine,
                                     new TreeSet([
                                             new GridCoordinate(0, 7),
                                             new GridCoordinate(0, 8),
                                             new GridCoordinate(0, 9),
                                     ])
                             ),
-                            (Ship.Destroyer) : new ShipState(Ship.Destroyer,
+                            new ShipState(Ship.Destroyer,
                                     new TreeSet([
                                             new GridCoordinate(0, 10),
                                             new GridCoordinate(1, 10)
@@ -260,8 +279,8 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
         })
     }
 
-    Map<Ship, ShipState> VALID_PLACEMENTS = [
-            (Ship.Battleship): new ShipState(Ship.Battleship,
+    List<ShipState> VALID_PLACEMENTS = [
+            new ShipState(Ship.Battleship,
                     new TreeSet([
                             new GridCoordinate(0, 0),
                             new GridCoordinate(1, 0),
@@ -269,7 +288,7 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
                             new GridCoordinate(3, 0)
                     ])
             ),
-            (Ship.Carrier)   : new ShipState(Ship.Carrier,
+            new ShipState(Ship.Carrier,
                     new TreeSet([
                             new GridCoordinate(0, 1),
                             new GridCoordinate(0, 2),
@@ -278,21 +297,21 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
                             new GridCoordinate(0, 5)
                     ])
             ),
-            (Ship.Cruiser)   : new ShipState(Ship.Cruiser,
+            new ShipState(Ship.Cruiser,
                     new TreeSet([
                             new GridCoordinate(0, 6),
                             new GridCoordinate(1, 6),
                             new GridCoordinate(2, 6),
                     ])
             ),
-            (Ship.Submarine) : new ShipState(Ship.Submarine,
+            new ShipState(Ship.Submarine,
                     new TreeSet([
                             new GridCoordinate(0, 7),
                             new GridCoordinate(0, 8),
                             new GridCoordinate(0, 9),
                     ])
             ),
-            (Ship.Destroyer) : new ShipState(Ship.Destroyer,
+            new ShipState(Ship.Destroyer,
                     new TreeSet([
                             new GridCoordinate(0, 10),
                             new GridCoordinate(1, 10)

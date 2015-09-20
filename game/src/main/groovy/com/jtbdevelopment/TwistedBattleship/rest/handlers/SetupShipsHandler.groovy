@@ -3,7 +3,6 @@ package com.jtbdevelopment.TwistedBattleship.rest.handlers
 import com.jtbdevelopment.TwistedBattleship.exceptions.GameIsNotInSetupPhaseException
 import com.jtbdevelopment.TwistedBattleship.exceptions.ShipNotInitializedCorrectlyException
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
-import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipPlacementValidator
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
 import com.jtbdevelopment.games.players.Player
@@ -20,13 +19,13 @@ import org.springframework.stereotype.Component
  */
 @Component
 @CompileStatic
-class SetupShipsHandler extends AbstractGameActionHandler<Map<Ship, ShipState>, TBGame> {
+class SetupShipsHandler extends AbstractGameActionHandler<List<ShipState>, TBGame> {
     @Autowired
     ShipPlacementValidator shipPlacementValidator
 
     @Override
     protected TBGame handleActionInternal(
-            final Player player, final TBGame game, final Map<Ship, ShipState> param) {
+            final Player player, final TBGame game, final List<ShipState> param) {
         validateGame(game);
         validateShipStates(game, param)
         game.playerDetails[(ObjectId) player.id].shipStates = param
@@ -34,12 +33,17 @@ class SetupShipsHandler extends AbstractGameActionHandler<Map<Ship, ShipState>, 
         game
     }
 
-    private void validateShipStates(final TBGame game, final Map<Ship, ShipState> states) {
+    private void validateShipStates(final TBGame game, final List<ShipState> states) {
+        def ships = states.collect { it.ship }
+        ships.sort()
+        if (ships != game.startingShips) {
+            throw new ShipNotInitializedCorrectlyException()
+        }
         states.each {
-            Ship ship, ShipState state ->
-                if (state.ship != ship
-                        || state.healthRemaining != ship.gridSize
-                        || state.shipSegmentHit.size() != ship.gridSize
+            ShipState state ->
+                if (state.ship == null
+                        || state.healthRemaining != state.ship.gridSize
+                        || state.shipSegmentHit.size() != state.ship.gridSize
                         || state.shipSegmentHit.contains(true)
                 ) {
                     throw new ShipNotInitializedCorrectlyException()
@@ -48,6 +52,7 @@ class SetupShipsHandler extends AbstractGameActionHandler<Map<Ship, ShipState>, 
         shipPlacementValidator.validateShipPlacementsForGame(game, states)
     }
 
+    @SuppressWarnings("GrMethodMayBeStatic")
     private void validateGame(final TBGame game) {
         if (GamePhase.Setup != game.gamePhase) {
             throw new GameIsNotInSetupPhaseException()

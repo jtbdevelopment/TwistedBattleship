@@ -44,8 +44,10 @@ class RepairShipHandlerTest extends AbstractBaseHandlerTest {
 
     void testRepair() {
         game.playerDetails[PONE.id].emergencyRepairsRemaining = 1
-        game.playerDetails[PONE.id].shipStates[Ship.Carrier].healthRemaining = 2
-        game.playerDetails[PONE.id].shipStates[Ship.Carrier].shipSegmentHit = [false, true, true, true, false]
+        game.playerDetails[PONE.id].shipStates.find { it.ship == Ship.Carrier }.healthRemaining = 2
+        game.playerDetails[PONE.id].shipStates.find {
+            it.ship == Ship.Carrier
+        }.shipSegmentHit = [false, true, true, true, false]
         game.playerDetails[PTWO.id].opponentGrids[PONE.id].set(0, 0, GridCellState.KnownShip)
         game.playerDetails[PTWO.id].opponentGrids[PONE.id].set(1, 0, GridCellState.KnownByHit)
         game.playerDetails[PTWO.id].opponentGrids[PONE.id].set(2, 0, GridCellState.KnownByRehit)
@@ -78,13 +80,15 @@ class RepairShipHandlerTest extends AbstractBaseHandlerTest {
             assert "1 repaired their Aircraft Carrier." == it.value.lastActionMessage
         }
         assert 0 == game.playerDetails[PONE.id].emergencyRepairsRemaining
-        assert 5 == game.playerDetails[PONE.id].shipStates[Ship.Carrier].healthRemaining
-        assert [false, false, false, false, false] == game.playerDetails[PONE.id].shipStates[Ship.Carrier].shipSegmentHit
+        assert 5 == game.playerDetails[PONE.id].shipStates.find { it.ship == Ship.Carrier }.healthRemaining
+        assert [false, false, false, false, false] == game.playerDetails[PONE.id].shipStates.find {
+            it.ship == Ship.Carrier
+        }.shipSegmentHit
     }
 
     void testRepairOnDestroyedShip() {
         game.playerDetails[PONE.id].emergencyRepairsRemaining = 1
-        game.playerDetails[PONE.id].shipStates[Ship.Carrier].healthRemaining = 0
+        game.playerDetails[PONE.id].shipStates.find { it.ship == Ship.Carrier }.healthRemaining = 0
         game.playerDetails[PTWO.id].opponentGrids[PONE.id].set(0, 0, GridCellState.KnownShip)
         game.playerDetails[PTWO.id].opponentGrids[PONE.id].set(1, 0, GridCellState.KnownByHit)
         game.playerDetails[PTWO.id].opponentGrids[PONE.id].set(2, 0, GridCellState.KnownByRehit)

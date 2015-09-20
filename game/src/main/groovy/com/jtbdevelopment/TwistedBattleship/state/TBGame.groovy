@@ -1,5 +1,6 @@
 package com.jtbdevelopment.TwistedBattleship.state
 
+import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.games.mongo.state.AbstractMongoMultiPlayerGame
 import groovy.transform.CompileStatic
 import org.bson.types.ObjectId
@@ -18,6 +19,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 ])
 class TBGame extends AbstractMongoMultiPlayerGame<GameFeature> {
     Map<ObjectId, TBPlayerState> playerDetails = [:]
+    List<Ship> startingShips = []
     //  TODO support non-symmetrical
     int gridSize
     ObjectId currentPlayer

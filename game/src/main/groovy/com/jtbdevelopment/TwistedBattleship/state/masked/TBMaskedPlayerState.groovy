@@ -16,7 +16,8 @@ class TBMaskedPlayerState {
 
     String lastActionMessage
 
-    Map<Ship, ShipState> shipStates = [:]
+    List<Ship> startingShips = []
+    List<ShipState> shipStates = []
     int activeShipsRemaining
 
     int spysRemaining = 0

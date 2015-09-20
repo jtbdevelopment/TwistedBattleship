@@ -15,7 +15,8 @@ import org.springframework.stereotype.Component
 @Component
 class ShipPlacementValidator {
 
-    public void validateShipPlacementsForGame(final TBGame game, Map<Ship, ShipState> shipState) {
+    @SuppressWarnings("GrMethodMayBeStatic")
+    public void validateShipPlacementsForGame(final TBGame game, final List<ShipState> shipState) {
         if (shipState.size() != Ship.values().size()) {
             throw new NotAllShipsSetupException()
         }
@@ -23,8 +24,8 @@ class ShipPlacementValidator {
         //  TODO - cleanup this code a bit
         Set<GridCoordinate> used = [] as Set
         shipState.each {
-            Ship ship, ShipState state ->
-                if (state.shipGridCells.size() != ship.gridSize) {
+            ShipState state ->
+                if (state.shipGridCells.size() != state.ship.gridSize) {
                     throw new ShipPlacementsNotValidException()
                 }
 
@@ -43,14 +44,14 @@ class ShipPlacementValidator {
                 List<Integer> rows = state.shipGridCells.collect { it.row }.sort()
                 List<Integer> cols = state.shipGridCells.collect { it.column }.sort()
                 if ((rows as Set).size() == 1) {
-                    (0..ship.gridSize - 2).each {
+                    (0..state.ship.gridSize - 2).each {
                         int i ->
                             if ((cols[i + 1] - cols[i]) != 1) {
                                 throw new ShipPlacementsNotValidException()
                             }
                     }
                 } else if ((cols as Set).size() == 1) {
-                    (0..ship.gridSize - 2).each {
+                    (0..state.ship.gridSize - 2).each {
                         int i ->
                             if ((rows[i + 1] - rows[i]) != 1) {
                                 throw new ShipPlacementsNotValidException()

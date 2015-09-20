@@ -2,8 +2,8 @@ package com.jtbdevelopment.TwistedBattleship.rest.services
 
 import com.jtbdevelopment.TwistedBattleship.rest.Target
 import com.jtbdevelopment.TwistedBattleship.rest.handlers.*
+import com.jtbdevelopment.TwistedBattleship.rest.services.messages.ShipAndCoordinates
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
-import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
 import com.jtbdevelopment.games.rest.AbstractMultiPlayerGameServices
 import groovy.transform.CompileStatic
@@ -46,12 +46,12 @@ class GameServices extends AbstractMultiPlayerGameServices<ObjectId> {
     @Path("setup")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    Object setupShips(final Map<Ship, List<GridCoordinate>> ships) {
-        Map<Ship, ShipState> shipStateMap = (Map<Ship, ShipState>) ships.collectEntries {
-            Ship ship, List<GridCoordinate> coordinates ->
-                [(ship): new ShipState(ship, new TreeSet<GridCoordinate>(coordinates))]
+    Object setupShips(final List<ShipAndCoordinates> ships) {
+        List<ShipState> shipStates = (List<ShipState>) ships.collect {
+            ShipAndCoordinates shipAndCoordinates ->
+                new ShipState(shipAndCoordinates.ship, new TreeSet<GridCoordinate>(shipAndCoordinates.coordinates))
         }
-        setupShipsHandler.handleAction((ObjectId) playerID.get(), (ObjectId) gameID.get(), shipStateMap)
+        setupShipsHandler.handleAction((ObjectId) playerID.get(), (ObjectId) gameID.get(), shipStates)
     }
 
     @PUT

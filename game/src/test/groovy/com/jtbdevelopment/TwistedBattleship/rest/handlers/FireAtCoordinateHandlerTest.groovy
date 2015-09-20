@@ -31,8 +31,8 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         assert game.playerDetails[PTWO.id].lastActionMessage == "No enemy at (7,6)."
         assert game.playerDetails[PONE.id].lastActionMessage == "2 missed at (7,6)."
         game.playerDetails[PONE.id].shipStates.each {
-            assert it.key.gridSize == it.value.healthRemaining
-            assertNull it.value.shipSegmentHit.find { it }
+            assert it.ship.gridSize == it.healthRemaining
+            assertNull it.shipSegmentHit.find { it }
         }
         game.playerDetails[PONE.id].opponentViews.each {
             if (it.key == PTWO.id) {
@@ -60,8 +60,8 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         assert game.playerDetails[PTWO.id].lastActionMessage == "No enemy at (7,6)."
         assert game.playerDetails[PONE.id].lastActionMessage == "2 missed at (7,6)."
         game.playerDetails[PONE.id].shipStates.each {
-            assert it.key.gridSize == it.value.healthRemaining
-            assertNull it.value.shipSegmentHit.find { it }
+            assert it.ship.gridSize == it.healthRemaining
+            assertNull it.shipSegmentHit.find { it }
         }
         game.playerDetails[PONE.id].opponentViews.each {
             if (it.key == PTWO.id) {
@@ -89,12 +89,12 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         assert game.playerDetails[PTWO.id].lastActionMessage == "Direct hit at (7,7)!"
         assert game.playerDetails[PONE.id].lastActionMessage == "2 hit your Destroyer at (7,7)!"
         game.playerDetails[PONE.id].shipStates.each {
-            if (it.key == Ship.Destroyer) {
-                assert 1 == it.value.healthRemaining
-                assert [true, false] == it.value.shipSegmentHit
+            if (it.ship == Ship.Destroyer) {
+                assert 1 == it.healthRemaining
+                assert [true, false] == it.shipSegmentHit
             } else {
-                assert it.key.gridSize == it.value.healthRemaining
-                assertNull it.value.shipSegmentHit.find { it }
+                assert it.ship.gridSize == it.healthRemaining
+                assertNull it.shipSegmentHit.find { it }
             }
         }
         game.playerDetails[PONE.id].opponentViews.each {
@@ -123,12 +123,12 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         assert game.playerDetails[PTWO.id].lastActionMessage == "Direct hit at (7,7)!"
         assert game.playerDetails[PONE.id].lastActionMessage == "2 hit your Destroyer at (7,7)!"
         game.playerDetails[PONE.id].shipStates.each {
-            if (it.key == Ship.Destroyer) {
-                assert 1 == it.value.healthRemaining
-                assert [true, false] == it.value.shipSegmentHit
+            if (it.ship == Ship.Destroyer) {
+                assert 1 == it.healthRemaining
+                assert [true, false] == it.shipSegmentHit
             } else {
-                assert it.key.gridSize == it.value.healthRemaining
-                assertNull it.value.shipSegmentHit.find { it }
+                assert it.ship.gridSize == it.healthRemaining
+                assertNull it.shipSegmentHit.find { it }
             }
         }
         game.playerDetails[PONE.id].opponentViews.each {
@@ -152,8 +152,8 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
     void testFireAndReHitWithSharedIntel() {
         game.features.add(GameFeature.SharedIntel)
 
-        game.playerDetails[PONE.id].shipStates[Ship.Destroyer].shipSegmentHit[0] = true
-        game.playerDetails[PONE.id].shipStates[Ship.Destroyer].healthRemaining = 1
+        game.playerDetails[PONE.id].shipStates.find { it.ship == Ship.Destroyer }.shipSegmentHit[0] = true
+        game.playerDetails[PONE.id].shipStates.find { it.ship == Ship.Destroyer }.healthRemaining = 1
         def coordinate = new GridCoordinate(7, 7)
         game.playerDetails[PFOUR.id].opponentGrids[PONE.id].set(coordinate, GridCellState.KnownByHit)
         game.playerDetails[PONE.id].opponentViews[PFOUR.id].set(coordinate, GridCellState.KnownByHit)
@@ -161,12 +161,12 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         assert game.playerDetails[PTWO.id].lastActionMessage == "Damaged area hit again at (7,7)."
         assert game.playerDetails[PONE.id].lastActionMessage == "2 re-hit your Destroyer at (7,7)."
         game.playerDetails[PONE.id].shipStates.each {
-            if (it.key == Ship.Destroyer) {
-                assert 1 == it.value.healthRemaining
-                assert [true, false] == it.value.shipSegmentHit
+            if (it.ship == Ship.Destroyer) {
+                assert 1 == it.healthRemaining
+                assert [true, false] == it.shipSegmentHit
             } else {
-                assert it.key.gridSize == it.value.healthRemaining
-                assertNull it.value.shipSegmentHit.find { it }
+                assert it.ship.gridSize == it.healthRemaining
+                assertNull it.shipSegmentHit.find { it }
             }
         }
         game.playerDetails[PONE.id].opponentViews.each {
@@ -202,8 +202,8 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
     void testFireAndReHitWithIsolatedIntel() {
         game.features.add(GameFeature.IsolatedIntel)
 
-        game.playerDetails[PONE.id].shipStates[Ship.Destroyer].shipSegmentHit[0] = true
-        game.playerDetails[PONE.id].shipStates[Ship.Destroyer].healthRemaining = 1
+        game.playerDetails[PONE.id].shipStates.find { it.ship == Ship.Destroyer }.shipSegmentHit[0] = true
+        game.playerDetails[PONE.id].shipStates.find { it.ship == Ship.Destroyer }.healthRemaining = 1
         def coordinate = new GridCoordinate(7, 7)
         game.playerDetails[PFOUR.id].opponentGrids[PONE.id].set(coordinate, GridCellState.KnownByHit)
         game.playerDetails[PONE.id].opponentViews[PFOUR.id].set(coordinate, GridCellState.KnownByHit)
@@ -211,12 +211,12 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         assert game.playerDetails[PTWO.id].lastActionMessage == "Damaged area hit again at (7,7)."
         assert game.playerDetails[PONE.id].lastActionMessage == "2 re-hit your Destroyer at (7,7)."
         game.playerDetails[PONE.id].shipStates.each {
-            if (it.key == Ship.Destroyer) {
-                assert 1 == it.value.healthRemaining
-                assert [true, false] == it.value.shipSegmentHit
+            if (it.ship == Ship.Destroyer) {
+                assert 1 == it.healthRemaining
+                assert [true, false] == it.shipSegmentHit
             } else {
-                assert it.key.gridSize == it.value.healthRemaining
-                assertNull it.value.shipSegmentHit.find { it }
+                assert it.ship.gridSize == it.healthRemaining
+                assertNull it.shipSegmentHit.find { it }
             }
         }
         game.playerDetails[PONE.id].opponentViews.each {
@@ -252,19 +252,19 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
     void testFireAndSinkShipWithSharedIntel() {
         game.features.add(GameFeature.SharedIntel)
 
-        game.playerDetails[PONE.id].shipStates[Ship.Destroyer].shipSegmentHit[1] = true
-        game.playerDetails[PONE.id].shipStates[Ship.Destroyer].healthRemaining = 1
+        game.playerDetails[PONE.id].shipStates.find { it.ship == Ship.Destroyer }.shipSegmentHit[1] = true
+        game.playerDetails[PONE.id].shipStates.find { it.ship == Ship.Destroyer }.healthRemaining = 1
         def coordinate = new GridCoordinate(7, 7)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
         assert game.playerDetails[PTWO.id].lastActionMessage == "You sunk a Destroyer!"
         assert game.playerDetails[PONE.id].lastActionMessage == "2 sunk your Destroyer!"
         game.playerDetails[PONE.id].shipStates.each {
-            if (it.key == Ship.Destroyer) {
-                assert 0 == it.value.healthRemaining
-                assert [true, true] == it.value.shipSegmentHit
+            if (it.ship == Ship.Destroyer) {
+                assert 0 == it.healthRemaining
+                assert [true, true] == it.shipSegmentHit
             } else {
-                assert it.key.gridSize == it.value.healthRemaining
-                assertNull it.value.shipSegmentHit.find { it }
+                assert it.ship.gridSize == it.healthRemaining
+                assertNull it.shipSegmentHit.find { it }
             }
         }
         game.playerDetails[PONE.id].opponentViews.each {
@@ -295,19 +295,19 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
     void testFireAndSinkShipWithIsolatedIntel() {
         game.features.add(GameFeature.IsolatedIntel)
 
-        game.playerDetails[PONE.id].shipStates[Ship.Destroyer].shipSegmentHit[1] = true
-        game.playerDetails[PONE.id].shipStates[Ship.Destroyer].healthRemaining = 1
+        game.playerDetails[PONE.id].shipStates.find { it.ship == Ship.Destroyer }.shipSegmentHit[1] = true
+        game.playerDetails[PONE.id].shipStates.find { it.ship == Ship.Destroyer }.healthRemaining = 1
         def coordinate = new GridCoordinate(7, 7)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
         assert game.playerDetails[PTWO.id].lastActionMessage == "You sunk a Destroyer!"
         assert game.playerDetails[PONE.id].lastActionMessage == "2 sunk your Destroyer!"
         game.playerDetails[PONE.id].shipStates.each {
-            if (it.key == Ship.Destroyer) {
-                assert 0 == it.value.healthRemaining
-                assert [true, true] == it.value.shipSegmentHit
+            if (it.ship == Ship.Destroyer) {
+                assert 0 == it.healthRemaining
+                assert [true, true] == it.shipSegmentHit
             } else {
-                assert it.key.gridSize == it.value.healthRemaining
-                assertNull it.value.shipSegmentHit.find { it }
+                assert it.ship.gridSize == it.healthRemaining
+                assertNull it.shipSegmentHit.find { it }
             }
         }
         game.playerDetails[PONE.id].opponentViews.each {
@@ -341,7 +341,7 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         Ship.values().each {
             Ship ship ->
                 if (ship != Ship.Destroyer) {
-                    def state = game.playerDetails[PONE.id].shipStates[ship]
+                    def state = game.playerDetails[PONE.id].shipStates.find { it.ship == ship }
                     state.healthRemaining = 0
                     (1..ship.gridSize).each {
                         int index ->
@@ -349,19 +349,19 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
                     }
                 }
         }
-        game.playerDetails[PONE.id].shipStates[Ship.Destroyer].shipSegmentHit[1] = true
-        game.playerDetails[PONE.id].shipStates[Ship.Destroyer].healthRemaining = 1
+        game.playerDetails[PONE.id].shipStates.find { it.ship == Ship.Destroyer }.shipSegmentHit[1] = true
+        game.playerDetails[PONE.id].shipStates.find { it.ship == Ship.Destroyer }.healthRemaining = 1
         def coordinate = new GridCoordinate(7, 7)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
         assert game.playerDetails[PTWO.id].lastActionMessage == "You sunk a Destroyer!"
         assert game.playerDetails[PONE.id].lastActionMessage == "2 sunk your Destroyer!"
         game.playerDetails[PONE.id].shipStates.each {
-            if (it.key == Ship.Destroyer) {
-                assert 0 == it.value.healthRemaining
-                assert [true, true] == it.value.shipSegmentHit
+            if (it.ship == Ship.Destroyer) {
+                assert 0 == it.healthRemaining
+                assert [true, true] == it.shipSegmentHit
             } else {
-                assert 0 == it.value.healthRemaining
-                assertNull it.value.shipSegmentHit.find { !it }
+                assert 0 == it.healthRemaining
+                assertNull it.shipSegmentHit.find { !it }
             }
         }
         game.playerDetails[PONE.id].opponentViews.each {
@@ -395,7 +395,7 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         Ship.values().each {
             Ship ship ->
                 if (ship != Ship.Destroyer) {
-                    def state = game.playerDetails[PONE.id].shipStates[ship]
+                    def state = game.playerDetails[PONE.id].shipStates.find { it.ship == ship }
                     state.healthRemaining = 0
                     (1..ship.gridSize).each {
                         int index ->
@@ -403,19 +403,19 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
                     }
                 }
         }
-        game.playerDetails[PONE.id].shipStates[Ship.Destroyer].shipSegmentHit[1] = true
-        game.playerDetails[PONE.id].shipStates[Ship.Destroyer].healthRemaining = 1
+        game.playerDetails[PONE.id].shipStates.find { it.ship == Ship.Destroyer }.shipSegmentHit[1] = true
+        game.playerDetails[PONE.id].shipStates.find { it.ship == Ship.Destroyer }.healthRemaining = 1
         def coordinate = new GridCoordinate(7, 7)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
         assert game.playerDetails[PTWO.id].lastActionMessage == "You sunk a Destroyer!"
         assert game.playerDetails[PONE.id].lastActionMessage == "2 sunk your Destroyer!"
         game.playerDetails[PONE.id].shipStates.each {
-            if (it.key == Ship.Destroyer) {
-                assert 0 == it.value.healthRemaining
-                assert [true, true] == it.value.shipSegmentHit
+            if (it.ship == Ship.Destroyer) {
+                assert 0 == it.healthRemaining
+                assert [true, true] == it.shipSegmentHit
             } else {
-                assert 0 == it.value.healthRemaining
-                assertNull it.value.shipSegmentHit.find { !it }
+                assert 0 == it.healthRemaining
+                assertNull it.shipSegmentHit.find { !it }
             }
         }
         game.playerDetails[PONE.id].opponentViews.each {

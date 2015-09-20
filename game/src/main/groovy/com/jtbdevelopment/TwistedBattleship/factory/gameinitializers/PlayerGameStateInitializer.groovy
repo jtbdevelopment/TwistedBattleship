@@ -27,6 +27,10 @@ class PlayerGameStateInitializer implements GameInitializer<TBGame> {
     @Override
     void initializeGame(final TBGame game) {
         int specialMoves = game.players.size() - 1
+
+        //  TODO - offer more options in future
+        game.startingShips = Ship.values().toList()
+
         game.gridSize = sizeMap[game.features.find { GameFeature it -> it.group == GameFeature.GridSize }]
         game.currentPlayer = game.players[0].id
         game.remainingMoves = game.features.contains(GameFeature.Single) ? 1 : Ship.values().size()
@@ -36,6 +40,7 @@ class PlayerGameStateInitializer implements GameInitializer<TBGame> {
                 Set<Player> opponents = new HashSet<Player>(game.players)
                 opponents.remove(p)
                 game.playerDetails[p.id] = new TBPlayerState(
+                        startingShips: game.startingShips,
                         ecmsRemaining: game.features.contains(GameFeature.ECMEnabled) ? specialMoves : 0,
                         emergencyRepairsRemaining: game.features.contains(GameFeature.EREnabled) ? specialMoves : 0,
                         evasiveManeuversRemaining: game.features.contains(GameFeature.EMEnabled) ? specialMoves : 0,

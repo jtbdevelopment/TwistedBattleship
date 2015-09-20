@@ -43,6 +43,7 @@ class TBGameMasker extends AbstractMultiPlayerGameMasker<ObjectId, GameFeature, 
         masked.remainingMoves = game.remainingMoves
         masked.movesForSpecials = game.movesForSpecials
         masked.gridSize = game.gridSize
+        masked.startingShips = game.startingShips
     }
 
     @Override
@@ -91,6 +92,7 @@ class TBGameMasker extends AbstractMultiPlayerGameMasker<ObjectId, GameFeature, 
         maskedPlayerState.evasiveManeuversRemaining = playerState.evasiveManeuversRemaining
         maskedPlayerState.spysRemaining = playerState.spysRemaining
         maskedPlayerState.lastActionMessage = playerState.lastActionMessage
+        maskedPlayerState.startingShips = playerState.startingShips
 
         maskedPlayerState.opponentViews = (Map<String, Grid>) playerState.opponentViews.collectEntries {
             ObjectId id, Grid view ->
@@ -103,7 +105,7 @@ class TBGameMasker extends AbstractMultiPlayerGameMasker<ObjectId, GameFeature, 
         return maskedPlayerState
     }
 
-    Grid createConsolidatedView(final TBGame game, final TBMaskedGame masked) {
+    private Grid createConsolidatedView(final TBGame game, final TBMaskedGame masked) {
         int size = game.gridSize
         Grid consolidatedView = new Grid(size)
         (0..size - 1).each {

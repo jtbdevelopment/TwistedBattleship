@@ -23,7 +23,8 @@ class TBPlayerStateTest extends GroovyTestCase {
         assert 0 == state.evasiveManeuversRemaining
         assert 0 == state.emergencyRepairsRemaining
         assert [:] == state.opponentGrids
-        assert [:] == state.shipStates
+        assert [] == state.shipStates
+        assert [] == state.startingShips
         assert "" == state.lastActionMessage
         assert [:] == state.coordinateShipMap
         assertFalse state.setup
@@ -50,21 +51,21 @@ class TBPlayerStateTest extends GroovyTestCase {
 
     void testShipsRemainingAndAlive() {
         state.shipStates = [
-                (Ship.Cruiser): new ShipState(Ship.Cruiser, new TreeSet<GridCoordinate>()),
-                (Ship.Carrier): new ShipState(Ship.Battleship, new TreeSet<GridCoordinate>())
+                new ShipState(Ship.Cruiser, new TreeSet<GridCoordinate>()),
+                new ShipState(Ship.Carrier, new TreeSet<GridCoordinate>())
         ]
         assert state.alive
         assert state.activeShipsRemaining == 2
 
-        state.shipStates[Ship.Carrier].healthRemaining = 1
+        state.shipStates.find { it.ship == Ship.Carrier }.healthRemaining = 1
         assert state.alive
         assert state.activeShipsRemaining == 2
 
-        state.shipStates[Ship.Carrier].healthRemaining = 0
+        state.shipStates.find { it.ship == Ship.Carrier }.healthRemaining = 0
         assert state.alive
         assert state.activeShipsRemaining == 1
 
-        state.shipStates[Ship.Cruiser].healthRemaining = 0
+        state.shipStates.find { it.ship == Ship.Cruiser }.healthRemaining = 0
         assertFalse state.alive
         assert state.activeShipsRemaining == 0
     }
@@ -79,16 +80,44 @@ class TBPlayerStateTest extends GroovyTestCase {
     void testIsSetup() {
         assertFalse state.setup
 
+        state.startingShips = Ship.values().toList()
+        assertFalse state.setup
+
         Ship.values().findAll { Ship it -> it != Ship.Submarine }.each {
             Ship it ->
-                state.shipStates += [(it): new ShipState(it, new TreeSet<GridCoordinate>())]
+                state.shipStates += new ShipState(it, new TreeSet<GridCoordinate>())
                 assertFalse state.setup
         }
-        state.shipStates += [(Ship.Submarine): new ShipState(Ship.Submarine, new TreeSet<GridCoordinate>())]
+        state.shipStates += new ShipState(Ship.Submarine, new TreeSet<GridCoordinate>())
         assert state.setup
     }
 
-    void testIgnoresSetSetup() {
+    void testIsSetupWhenShipsDoNotMatch() {
+        assertFalse state.setup
+
+        state.startingShips = [Ship.Carrier, Ship.Carrier, Ship.Carrier, Ship.Carrier, Ship.Carrier]
+        assertFalse state.setup
+
+        Ship.values().each {
+            Ship it ->
+                state.shipStates += new ShipState(it, new TreeSet<GridCoordinate>())
+                assertFalse state.setup
+        }
+    }
+
+    void testIsSetupNonStandardShips() {
+        state.startingShips = [Ship.Carrier, Ship.Carrier, Ship.Destroyer]
+        assertFalse state.setup
+
+        state.shipStates += new ShipState(Ship.Carrier, new TreeSet<GridCoordinate>())
+        assertFalse state.setup
+        state.shipStates += new ShipState(Ship.Destroyer, new TreeSet<GridCoordinate>())
+        assertFalse state.setup
+        state.shipStates += new ShipState(Ship.Carrier, new TreeSet<GridCoordinate>())
+        assert state.setup
+    }
+
+    void testIgnoresSettingIsSetup() {
         assertFalse state.setup
         state.setup = true
         assertFalse state.setup
@@ -99,7 +128,7 @@ class TBPlayerStateTest extends GroovyTestCase {
         def shipState = new ShipState(Ship.Submarine, new TreeSet<GridCoordinate>(
                 [new GridCoordinate(0, 0), new GridCoordinate(0, 1), new GridCoordinate(0, 2)]
         ))
-        this.state.shipStates += [(Ship.Submarine): shipState]
+        this.state.shipStates += [shipState]
         assert 3 == state.coordinateShipMap.size()
         assert shipState.is(state.coordinateShipMap[new GridCoordinate(0, 0)])
         assert shipState.is(state.coordinateShipMap[new GridCoordinate(0, 1)])
@@ -110,7 +139,7 @@ class TBPlayerStateTest extends GroovyTestCase {
         def shipState = new ShipState(Ship.Submarine, new TreeSet<GridCoordinate>(
                 [new GridCoordinate(0, 0), new GridCoordinate(0, 1), new GridCoordinate(0, 2)]
         ))
-        this.state.shipStates += [(Ship.Submarine): shipState]
+        this.state.shipStates += [shipState]
 
         def firstMapReference = state.coordinateShipMap
         assert 3 == firstMapReference.size()

@@ -25,6 +25,7 @@ class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
 
         assert [:] == game.playerDetails
         initializer.initializeGame(game)
+        assert Ship.values().toList() == game.startingShips
         assert 15 == game.gridSize
         assert 3 == game.playerDetails.size()
         assert PONE.id == game.currentPlayer
@@ -45,6 +46,7 @@ class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
 
         assert [:] == game.playerDetails
         initializer.initializeGame(game)
+        assert Ship.values().toList() == game.startingShips
         assert 15 == game.gridSize
         assert 3 == game.playerDetails.size()
         assert PONE.id == game.currentPlayer
@@ -65,6 +67,7 @@ class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
 
         assert [:] == game.playerDetails
         initializer.initializeGame(game)
+        assert Ship.values().toList() == game.startingShips
         assert 10 == game.gridSize
         assert 3 == game.playerDetails.size()
         assert PONE.id == game.currentPlayer
@@ -85,6 +88,7 @@ class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
 
         assert game.playerDetails == [:]
         initializer.initializeGame(game)
+        assert Ship.values().toList() == game.startingShips
         assert 20 == game.gridSize
         assert 3 == game.playerDetails.size()
         assert PTWO.id == game.currentPlayer
@@ -95,7 +99,7 @@ class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
         }
     }
 
-    protected void validatePlayerStates(TBGame game, Player p, int expectedSpecials) {
+    protected void validatePlayerStates(final TBGame game, final Player p, final int expectedSpecials) {
         Set<ObjectId> opponentIds = game.players.collect { it.id } as Set
         opponentIds.remove(p.id)
         TBPlayerState playerState = game.playerDetails[p.id]
@@ -105,6 +109,7 @@ class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
         assert expectedSpecials == playerState.emergencyRepairsRemaining
         assert expectedSpecials == playerState.spysRemaining
         assert opponentIds == playerState.opponentGrids.keySet()
+        assert game.startingShips == playerState.startingShips
         playerState.opponentGrids.values().each {
             Grid it ->
                 it.size == game.gridSize

@@ -2,6 +2,7 @@ package com.jtbdevelopment.TwistedBattleship.rest.services
 
 import com.jtbdevelopment.TwistedBattleship.rest.Target
 import com.jtbdevelopment.TwistedBattleship.rest.handlers.*
+import com.jtbdevelopment.TwistedBattleship.rest.services.messages.ShipAndCoordinates
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.TwistedBattleship.state.masked.TBMaskedGame
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
@@ -23,7 +24,7 @@ class GameServicesTest extends MongoGameCoreTestCase {
     void testActionAnnotations() {
         Map<String, List<Object>> stuff = [
                 //  method: [name, params, path, path param values, consumes
-                "setupShips": ["setup", [Map.class], [], [MediaType.APPLICATION_JSON]],
+                "setupShips": ["setup", [List.class], [], [MediaType.APPLICATION_JSON]],
                 "fire": ["fire", [Target.class], [], [MediaType.APPLICATION_JSON]],
                 "spy": ["spy", [Target.class], [], [MediaType.APPLICATION_JSON]],
                 "repair": ["repair", [Target.class], [], [MediaType.APPLICATION_JSON]],
@@ -58,17 +59,23 @@ class GameServicesTest extends MongoGameCoreTestCase {
     }
 
     void testSetupShips() {
-        Map<Ship, List<GridCoordinate>> input = [
-                (Ship.Cruiser)  : [
-                        new GridCoordinate(0, 10),
-                        new GridCoordinate(0, 9),
-                        new GridCoordinate(0, 11)
-                ],
-                (Ship.Destroyer): [
-                        new GridCoordinate(1, 10),
-                        new GridCoordinate(1, 9),
-                        new GridCoordinate(1, 10)
-                ]
+        List<ShipAndCoordinates> input = [
+                new ShipAndCoordinates(
+                        ship: Ship.Cruiser,
+                        coordinates: [
+                                new GridCoordinate(0, 10),
+                                new GridCoordinate(0, 9),
+                                new GridCoordinate(0, 11)
+                        ]
+                ),
+                new ShipAndCoordinates(
+                        ship: Ship.Destroyer,
+                        coordinates: [
+                                new GridCoordinate(1, 10),
+                                new GridCoordinate(1, 9),
+                                new GridCoordinate(1, 10)
+                        ]
+                )
         ]
         TBMaskedGame maskedGame = new TBMaskedGame()
         ObjectId gameId = new ObjectId()
@@ -76,18 +83,22 @@ class GameServicesTest extends MongoGameCoreTestCase {
         services.gameID.set(gameId)
         services.setupShipsHandler = [
                 handleAction: {
-                    Serializable p, Serializable g, Map<Ship, ShipState> ss ->
+                    Serializable p, Serializable g, List<ShipState> ss ->
                         assert PONE.id.is(p)
                         assert gameId.is(g)
                         assert 2 == ss.size()
-                        assert ss[Ship.Cruiser].healthRemaining == 3
-                        assert ss[Ship.Cruiser].ship == Ship.Cruiser
-                        assert ss[Ship.Cruiser].shipSegmentHit == [false, false, false]
-                        assert ss[Ship.Cruiser].shipGridCells.toList() == [new GridCoordinate(0, 9), new GridCoordinate(0, 10), new GridCoordinate(0, 11)]
-                        assert ss[Ship.Destroyer].healthRemaining == 2
-                        assert ss[Ship.Destroyer].ship == Ship.Destroyer
-                        assert ss[Ship.Destroyer].shipSegmentHit == [false, false]
-                        assert ss[Ship.Destroyer].shipGridCells.toList() == [new GridCoordinate(1, 9), new GridCoordinate(1, 10)]
+                        def cruiser = ss.find { it.ship == Ship.Cruiser }
+                        assertNotNull cruiser
+                        def destroyer = ss.find { it.ship == Ship.Destroyer }
+                        assertNotNull destroyer
+                        assert cruiser.healthRemaining == 3
+                        assert cruiser.ship == Ship.Cruiser
+                        assert cruiser.shipSegmentHit == [false, false, false]
+                        assert cruiser.shipGridCells.toList() == [new GridCoordinate(0, 9), new GridCoordinate(0, 10), new GridCoordinate(0, 11)]
+                        assert destroyer.healthRemaining == 2
+                        assert destroyer.ship == Ship.Destroyer
+                        assert destroyer.shipSegmentHit == [false, false]
+                        assert destroyer.shipGridCells.toList() == [new GridCoordinate(1, 9), new GridCoordinate(1, 10)]
                         return maskedGame
                 }
         ] as SetupShipsHandler
