@@ -9,7 +9,7 @@ Consolidated To Do's
 - revamp game list to be your action, their action, older
 - test war with non / roots
 - push notifications
-- a.i. players
+- a.i. players - more
 - many ui tests
 - ion-autocomplete is very specific version
 - core lib error handling
