@@ -7,7 +7,9 @@
           <element id="module-output" name="war" />
         </element>
         <element id="directory" name="lib">
-          <element id="library" level="project" name="Maven: com.jtbdevelopment.TwistedBattleship:game:0.1-SNAPSHOT" />
+          <element id="archive" name="game-0.3-SNAPSHOT.jar">
+            <element id="module-output" name="game" />
+          </element>
           <element id="library" level="project" name="Maven: com.jtbdevelopment.core-common:core-spring-web-mongo:1.5-SNAPSHOT" />
           <element id="library" level="project" name="Maven: com.jtbdevelopment.core-common:core-spring-web:1.5-SNAPSHOT" />
           <element id="library" level="project" name="Maven: com.jtbdevelopment.core-common:core-spring:1.5-SNAPSHOT" />

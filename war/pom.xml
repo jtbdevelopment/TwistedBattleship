@@ -32,7 +32,7 @@
         <dependency>
             <groupId>com.jtbdevelopment.TwistedBattleship</groupId>
             <artifactId>game</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>0.3-SNAPSHOT</version>
         </dependency>
 
         <dependency>
