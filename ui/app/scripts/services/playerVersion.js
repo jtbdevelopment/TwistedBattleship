@@ -12,7 +12,7 @@ angular.module('tbs.services').factory('tbsVersionNotes',
                             title: 'Welcome to version ' + currentVersion + '!',
                             template: currentNotes
                         });
-                        $http.post('/api/player/lastVersionNotes/' + currentVersion).success(function (response) {
+                        $http.post('/api/player/lastVersionNotes/' + currentVersion).success(function () {
 
                         }).error(function () {
                             //  TODO
