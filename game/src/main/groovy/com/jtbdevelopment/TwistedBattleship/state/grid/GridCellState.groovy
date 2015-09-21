@@ -20,8 +20,11 @@ enum GridCellState {
     ObscuredMiss(30),
     ObscuredHit(30),
 
+    RevealedShip(35), //  Revealed on game over
+
     KnownEmpty(40),  // Spied
     KnownShip(40),   // Spied
+
 
     HiddenHit(45),   // Hit but not known to opponent
 

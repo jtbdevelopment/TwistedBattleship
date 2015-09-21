@@ -14,13 +14,11 @@ Consolidated To Do's
 - ion-autocomplete is very specific version
 - core lib error handling
 - hazelcast cluster group name?
-- web page logout?
 - refresh on web page not working if on root (ok via FB Canvas)
 - sounds
 - review server side messages
 - upgrade ionic
 - after upgrading ionic - then upgrade ion-autocomplete and look at prepopulate feature
-- reveal ships after end game
 
 --  Notes on messages 
  - ecm, repair, evasive: message to all players

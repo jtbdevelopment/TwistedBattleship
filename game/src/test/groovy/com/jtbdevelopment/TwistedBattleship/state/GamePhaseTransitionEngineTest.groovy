@@ -1,5 +1,7 @@
 package com.jtbdevelopment.TwistedBattleship.state
 
+import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
+import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
@@ -95,8 +97,12 @@ class GamePhaseTransitionEngineTest extends MongoGameCoreTestCase {
         game.playerDetails = [
                 (PONE.id) : new TBPlayerState(shipStates: [new ShipState(Ship.Battleship, 0, [], [])]),
                 (PFOUR.id): new TBPlayerState(shipStates: []),
-                (PTWO.id) : new TBPlayerState(shipStates: [new ShipState(Ship.Submarine, 1, [], [])])
+                (PTWO.id): new TBPlayerState(shipStates: [new ShipState(Ship.Submarine, 1, [new GridCoordinate(0, 0), new GridCoordinate(0, 1), new GridCoordinate(0, 2)], [false, true, true])])
         ]
+        game.playerDetails[PONE.id].opponentGrids[PTWO.id] = new Grid(10)
+        game.playerDetails[PONE.id].opponentGrids[PTWO.id].set(0, 2, GridCellState.KnownByHit)
+        game.playerDetails[PTWO.id].opponentViews[PONE.id] = new Grid(10)
+        game.playerDetails[PTWO.id].opponentViews[PONE.id].set(0, 2, GridCellState.KnownByHit)
         game.players = [PONE, PFOUR, PTWO]
         engine.gameScorer = [
                 scoreGame: {
@@ -110,6 +116,12 @@ class GamePhaseTransitionEngineTest extends MongoGameCoreTestCase {
         assert result.gamePhase == GamePhase.RoundOver
         assert scorerCalled
         game.playerDetails.each { assert "2 defeated all challengers!" == it.value.lastActionMessage }
+        assert GridCellState.RevealedShip == game.playerDetails[PONE.id].opponentGrids[PTWO.id].get(0, 0)
+        assert GridCellState.RevealedShip == game.playerDetails[PTWO.id].opponentViews[PONE.id].get(0, 0)
+        assert GridCellState.HiddenHit == game.playerDetails[PONE.id].opponentGrids[PTWO.id].get(0, 1)
+        assert GridCellState.HiddenHit == game.playerDetails[PTWO.id].opponentViews[PONE.id].get(0, 1)
+        assert GridCellState.KnownByHit == game.playerDetails[PONE.id].opponentGrids[PTWO.id].get(0, 2)
+        assert GridCellState.KnownByHit == game.playerDetails[PTWO.id].opponentViews[PONE.id].get(0, 2)
     }
 
     void testEvaluatePlayingPhaseMultiplePlayerAlive() {
