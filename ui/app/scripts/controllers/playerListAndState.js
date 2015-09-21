@@ -36,6 +36,14 @@ angular.module('tbs.controllers').controller('PlayerListAndStateCtrl',
                 tbsActions.reject($scope);
             };
 
+            $scope.$on('gameUpdated', function (event, oldGame, newGame) {
+                if ($scope.gameID === newGame.id) {
+                    $scope.game = newGame;
+                    if (oldGame.gamePhase !== newGame.gamePhase) {
+                        $state.go('app.' + $scope.game.gamePhase.toLowerCase(), {gameID: $scope.gameID});
+                    }
+                }
+            });
         }
     ]
 );
