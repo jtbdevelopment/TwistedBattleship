@@ -12,7 +12,7 @@ import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
  */
 class ShipPlacementValidatorTest extends GroovyTestCase {
     ShipPlacementValidator validator = new ShipPlacementValidator()
-    TBGame game = new TBGame(features: [GameFeature.Grid15x15], gridSize: 15)
+    TBGame game = new TBGame(features: [GameFeature.Grid15x15], gridSize: 15, startingShips: Ship.values().toList())
 
     void testShipPositionsValid1() {
         validator.validateShipPlacementsForGame(game, [

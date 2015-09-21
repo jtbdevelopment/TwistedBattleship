@@ -34,11 +34,6 @@ class SetupShipsHandler extends AbstractGameActionHandler<List<ShipState>, TBGam
     }
 
     private void validateShipStates(final TBGame game, final List<ShipState> states) {
-        def ships = states.collect { it.ship }
-        ships.sort()
-        if (ships != game.startingShips) {
-            throw new ShipNotInitializedCorrectlyException()
-        }
         states.each {
             ShipState state ->
                 if (state.ship == null

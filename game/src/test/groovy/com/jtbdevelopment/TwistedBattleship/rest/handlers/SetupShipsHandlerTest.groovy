@@ -70,21 +70,6 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
         }
     }
 
-    void testNonMatchingStartupShipsVsSetup() {
-        shouldFail(ShipNotInitializedCorrectlyException.class, {
-            TBGame game = new TBGame(
-                    players: [PONE, PTWO],
-                    gamePhase: GamePhase.Setup,
-                    playerDetails: [(PONE.id): new TBPlayerState(), (PTWO.id): new TBPlayerState()]
-            )
-            game.startingShips = [Ship.Destroyer, Ship.Destroyer, Ship.Destroyer, Ship.Destroyer, Ship.Destroyer]
-            game.playerDetails.values().each {
-                it.startingShips = game.startingShips
-            }
-            setupShipsHandler.handleActionInternal(PONE, game, VALID_PLACEMENTS)
-        })
-    }
-
     void testShipIncorrectSegmentsHit() {
         shouldFail(ShipNotInitializedCorrectlyException.class, {
             setupShipsHandler.handleActionInternal(

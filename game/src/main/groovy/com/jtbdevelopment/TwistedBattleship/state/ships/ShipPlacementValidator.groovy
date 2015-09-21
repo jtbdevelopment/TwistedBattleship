@@ -16,14 +16,16 @@ import org.springframework.stereotype.Component
 class ShipPlacementValidator {
 
     @SuppressWarnings("GrMethodMayBeStatic")
-    public void validateShipPlacementsForGame(final TBGame game, final List<ShipState> shipState) {
-        if (shipState.size() != Ship.values().size()) {
+    public void validateShipPlacementsForGame(final TBGame game, final List<ShipState> states) {
+        List<Ship> ships = states.collect { it.ship }
+        ships.sort()
+        if (ships != game.startingShips) {
             throw new NotAllShipsSetupException()
         }
 
         //  TODO - cleanup this code a bit
         Set<GridCoordinate> used = [] as Set
-        shipState.each {
+        states.each {
             ShipState state ->
                 if (state.shipGridCells.size() != state.ship.gridSize) {
                     throw new ShipPlacementsNotValidException()
