@@ -61,8 +61,11 @@ class RepairShipHandlerTest extends AbstractBaseHandlerTest {
 
         game.playerDetails[PTHREE.id].opponentGrids[PONE.id].set(3, 0, GridCellState.KnownByHit)
         game.playerDetails[PONE.id].opponentViews[PTHREE.id].set(3, 0, GridCellState.KnownByHit)
+        game.playerDetails[PONE.id].opponentViews[PTHREE.id].set(4, 0, GridCellState.HiddenHit)
 
         assert game.is(handler.playMove(PONE, game, PONE, new GridCoordinate(4, 0)))
+
+        assert GridCellState.Unknown == game.playerDetails[PONE.id].opponentViews[PTHREE.id].get(4, 0)
 
         assert GridCellState.KnownShip == game.playerDetails[PTWO.id].opponentGrids[PONE.id].get(0, 0)
         assert GridCellState.KnownShip == game.playerDetails[PTWO.id].opponentGrids[PONE.id].get(1, 0)

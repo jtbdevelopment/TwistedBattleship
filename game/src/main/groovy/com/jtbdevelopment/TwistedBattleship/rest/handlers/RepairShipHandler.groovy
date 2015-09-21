@@ -72,6 +72,9 @@ class RepairShipHandler extends AbstractSpecialMoveHandler {
                                 opponentView.set(shipCoordinate, GridCellState.KnownShip)
                                 break;
                         }
+                        if (opponentView.get(shipCoordinate) == GridCellState.HiddenHit) {
+                            opponentView.set(shipCoordinate, GridCellState.Unknown)
+                        }
                 }
 
                 opponent.lastActionMessage = message
