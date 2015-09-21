@@ -114,10 +114,10 @@ class AIGameListener implements GameListener {
             try {
                 //  Too fast and UI can't tell difference between updates since only looks at second level
                 game = gameRepository.findOne(game.id)
-                while((
+                while ((
                         ZonedDateTime.now(((ZonedDateTime) game.lastUpdate).zone).toInstant().toEpochMilli() -
-                                ((ZonedDateTime)game.lastUpdate).toInstant().toEpochMilli()) < 100) {
-                    sleep(100)
+                                ((ZonedDateTime) game.lastUpdate).toInstant().toEpochMilli()) < 500) {
+                    sleep(500)
                     game = gameRepository.findOne(game.id)
                 }
                 logger.debug('AI Playing ' + game.id)
@@ -166,8 +166,8 @@ class AIGameListener implements GameListener {
             final MultiPlayerGame multiPlayerGame, final Player initiatingPlayer, final boolean initiatingServer) {
         TBGame game = (TBGame) multiPlayerGame
         if (initiatingServer) {
-            if(game.players.find{ Player p -> aiPlayers.contains(p) }) {
-                if(hasAIWorkToDo(game)) {
+            if (game.players.find { Player p -> aiPlayers.contains(p) }) {
+                if (hasAIWorkToDo(game)) {
                     executor.execute(new Worker(game))
                 }
             }
