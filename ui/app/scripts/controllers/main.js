@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('tbs.controllers').controller('MainCtrl',
-    ['$scope', 'jtbPlayerService', 'jtbLiveGameFeed', '$state', 'ENV', '$document',
-        function ($scope, jtbPlayerService, jtbLiveGameFeed, $state, ENV, $document) {
+    ['$scope', 'jtbPlayerService', 'jtbLiveGameFeed', '$state', 'ENV', '$document', 'tbsVersionNotes',
+        function ($scope, jtbPlayerService, jtbLiveGameFeed, $state, ENV, $document, tbsVersionNotes) {
 
             function checkNetworkStatusAndLogin() {
                 $state.go('network');
@@ -16,6 +16,7 @@ angular.module('tbs.controllers').controller('MainCtrl',
 
             $scope.$on('playerLoaded', function () {
                 $scope.theme = jtbPlayerService.currentPlayer().gameSpecificPlayerAttributes.theme;
+                tbsVersionNotes.showReleaseNotes();
             });
 
             $document.bind('pause', function () {
