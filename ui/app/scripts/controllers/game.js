@@ -90,17 +90,17 @@ angular.module('tbs.controllers').controller('GameCtrl',
             function computeShipLocations() {
                 //  TODO - overlap with setup
                 var shipLocations = [];
-                angular.forEach($scope.game.maskedPlayersState.shipStates, function (value, key) {
+                angular.forEach($scope.game.maskedPlayersState.shipStates, function (shipState) {
                     var shipInfo = null;
                     angular.forEach($scope.generalShipInfo, function (ship) {
-                        if (ship.ship === key) {
+                        if (ship.ship === shipState.ship) {
                             shipInfo = ship;
                         }
                     });
                     if (shipInfo !== null) {
-                        var horizontal = value.shipGridCells[0].row === value.shipGridCells[1].row;
-                        var row = value.shipGridCells[0].row;
-                        var column = value.shipGridCells[0].column;
+                        var horizontal = shipState.shipGridCells[0].row === shipState.shipGridCells[1].row;
+                        var row = shipState.shipGridCells[0].row;
+                        var column = shipState.shipGridCells[0].column;
                         shipLocations.push({horizontal: horizontal, row: row, column: column, shipInfo: shipInfo});
                     }
                 });

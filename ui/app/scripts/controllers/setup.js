@@ -37,7 +37,7 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
             };
 
             $scope.submit = function () {
-                var info = {};
+                var info = [];
                 angular.forEach(tbsShipGrid.currentShipsOnGrid(), function (ship) {
                     var cells = [];
                     var startX = ship.startX / tbsShipGrid.cellSize();
@@ -52,7 +52,7 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                             cells.push({column: startX, row: startY + i});
                         }
                     }
-                    info[ship.info.ship] = cells;
+                    info.push({ship: ship.info.ship, coordinates: cells});
                 });
 
                 tbsActions.setup($scope, info);
@@ -182,18 +182,21 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
 
             function computeShipLocations(generalShipInfo) {
                 var shipLocations = [];
-                angular.forEach($scope.game.maskedPlayersState.shipStates, function (value, key) {
+                angular.forEach($scope.game.maskedPlayersState.shipStates, function (shipState) {
                     var shipInfo = generalShipInfo.find(function (info) {
-                        return info.ship === key;
+                        return info.ship === shipState.ship;
                     });
-                    var horizontal = value.shipGridCells[0].row === value.shipGridCells[1].row;
-                    var row = value.shipGridCells[0].row;
-                    var column = value.shipGridCells[0].column;
+                    var horizontal = shipState.shipGridCells[0].row === shipState.shipGridCells[1].row;
+                    var row = shipState.shipGridCells[0].row;
+                    var column = shipState.shipGridCells[0].column;
                     shipLocations.push({horizontal: horizontal, row: row, column: column, shipInfo: shipInfo});
                 });
                 if (shipLocations.length === 0) {
                     var row = 0;
-                    angular.forEach(generalShipInfo, function (shipInfo) {
+                    angular.forEach($scope.game.startingShips, function (startingShip) {
+                        var shipInfo = generalShipInfo.find(function (info) {
+                            return info.ship === startingShip;
+                        });
                         shipLocations.push({horizontal: true, row: row, column: 0, shipInfo: shipInfo});
                         row = row + 1;
                     });

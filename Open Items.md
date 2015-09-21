@@ -20,6 +20,7 @@ Consolidated To Do's
 - review server side messages
 - upgrade ionic
 - after upgrading ionic - then upgrade ion-autocomplete and look at prepopulate feature
+- reveal ships after end game
 
 --  Notes on messages 
  - ecm, repair, evasive: message to all players

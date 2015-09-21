@@ -60,7 +60,7 @@ class SimpleAI implements AI {
 
     void setup(final TBGame game) {
         Set<GridCoordinate> used = [] as Set
-        List<ShipState> shipStates = (List<ShipState>) Ship.values().collectEntries {
+        List<ShipState> shipStates = (List<ShipState>) game.startingShips.collect {
             Ship ship ->
                 boolean horizontal = random.nextInt(100) < 50
                 TreeSet<GridCoordinate> set
