@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "dependencies": {
     "angular-cookies": "1.4.3",
-    "angular-multi-select-alexandernst": "~5.4.1",
     "angular-resource": "1.4.3",
     "angular-route": "1.4.3",
     "ion-autocomplete": "~0.3.0",
