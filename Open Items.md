@@ -1,6 +1,7 @@
 Consolidated To Do's
 ====================
 
+- android websocket issue?
 -  better / quieter check on re-open?
 - add user profile in ui
 - add game detail popup
@@ -11,14 +12,13 @@ Consolidated To Do's
 - push notifications
 - a.i. players - more
 - many ui tests
-- ion-autocomplete is very specific version
 - core lib error handling
 - hazelcast cluster group name?
 - refresh on web page not working if on root (ok via FB Canvas)
 - sounds
 - review server side messages
-- upgrade ionic
 - after upgrading ionic - then upgrade ion-autocomplete and look at prepopulate feature
+-  REPLACE ION AUTOCOMPLETE....
 
 --  Notes on messages 
  - ecm, repair, evasive: message to all players

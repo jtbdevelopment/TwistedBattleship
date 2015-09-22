@@ -137,10 +137,11 @@ angular.module('tbs.controllers').controller('GameCtrl',
                     //  TODO - show ad if turn over
                     $scope.game = newGame;
                     $scope.changePlayer($scope.showing);
-                    var message = $scope.game.maskedPlayersState.lastActionMessage;
                     if ($scope.game.gamePhase !== 'Playing') {
                         tbsShipGrid.deactivateHighlighting();
                     }
+                    /*
+                     var message = $scope.game.maskedPlayersState.lastActionMessage;
                     if (angular.isDefined(message) && message !== '') {
                         $ionicPopup.alert({
                             title: 'Move Completed!',
@@ -148,6 +149,7 @@ angular.module('tbs.controllers').controller('GameCtrl',
                         }).then(function () {
                         });
                     }
+                     */
                 }
             });
         }

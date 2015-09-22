@@ -2,14 +2,15 @@
   "name": "TwistedBattleship",
   "version": "0.0.0",
   "dependencies": {
-    "ionic": "v1.0.0-rc.3",
-    "ngCordova": "v0.1.14-alpha",
-    "angular-route": "1.4.3",
     "angular-cookies": "1.4.3",
+    "angular-multi-select-alexandernst": "~5.4.1",
     "angular-resource": "1.4.3",
-    "jquery-atmosphere": "~2.2.5",
+    "angular-route": "1.4.3",
     "ion-autocomplete": "~0.3.0",
+    "ionic": "v1.0.0-rc.3",
+    "jquery-atmosphere": "~2.2.5",
     "jtb-core-games-ui": "~1.0.0",
+    "ngCordova": "v0.1.14-alpha",
     "phaser": "~2.4.3"
   },
   "devDependencies": {
