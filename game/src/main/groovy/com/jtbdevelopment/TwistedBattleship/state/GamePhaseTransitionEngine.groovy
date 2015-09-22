@@ -23,6 +23,9 @@ class GamePhaseTransitionEngine extends AbstractGamePhaseTransitionEngine<TBGame
             return game
         }
         game.generalMessage = "Begin!"
+        game.playerDetails.each {
+            it.value.lastActionMessage = "";
+        }
         return changeStateAndReevaluate(GamePhase.Playing, game)
     }
 
@@ -32,11 +35,11 @@ class GamePhaseTransitionEngine extends AbstractGamePhaseTransitionEngine<TBGame
             it.value.alive
         }
         if (alivePlayers.size() == 1) {
-            String message = game.players.find {
+            game.generalMessage = game.players.find {
                 it.id == alivePlayers.keySet().iterator().next()
             }.displayName + " defeated all challengers!"
+            game.playerDetails.each { it.value.lastActionMessage = "" }
             gameScorer.scoreGame(game)
-            game.playerDetails.each { it.value.lastActionMessage = message }
             game.playerDetails.each {
                 ObjectId myId, TBPlayerState myState ->
                     myState.opponentGrids.each {

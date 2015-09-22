@@ -27,7 +27,7 @@ class GamePhaseTransitionEngineTest extends MongoGameCoreTestCase {
                         new ShipState(Ship.Carrier, new TreeSet<GridCoordinate>()),
                         new ShipState(Ship.Submarine, new TreeSet<GridCoordinate>()),
                         new ShipState(Ship.Destroyer, new TreeSet<GridCoordinate>())
-                ]),
+                ], lastActionMessage: "X"),
                 (PFOUR.id): new TBPlayerState(shipStates: [
                         new ShipState(Ship.Battleship, new TreeSet<GridCoordinate>()),
                         new ShipState(Ship.Cruiser, new TreeSet<GridCoordinate>()),
@@ -55,6 +55,7 @@ class GamePhaseTransitionEngineTest extends MongoGameCoreTestCase {
     void testEvaluateSetupPhaseWithSomePlayersSetup() {
         TBGame game = new TBGame()
         game.gamePhase = GamePhase.RoundOver.Setup
+        game.generalMessage = "Y"
         game.playerDetails = [
                 (PONE.id)  : new TBPlayerState(shipStates: [
                         new ShipState(Ship.Battleship, new TreeSet<GridCoordinate>()),
@@ -62,32 +63,35 @@ class GamePhaseTransitionEngineTest extends MongoGameCoreTestCase {
                         new ShipState(Ship.Carrier, new TreeSet<GridCoordinate>()),
                         new ShipState(Ship.Submarine, new TreeSet<GridCoordinate>()),
                         new ShipState(Ship.Destroyer, new TreeSet<GridCoordinate>())
-                ]),
-                (PFOUR.id) : new TBPlayerState(shipStates: []),
+                ], lastActionMessage: "X"),
+                (PFOUR.id) : new TBPlayerState(shipStates: [], lastActionMessage: "X"),
                 (PTHREE.id): new TBPlayerState(shipStates: [
                         new ShipState(Ship.Battleship, new TreeSet<GridCoordinate>()),
                         new ShipState(Ship.Cruiser, new TreeSet<GridCoordinate>()),
                         new ShipState(Ship.Carrier, new TreeSet<GridCoordinate>()),
                         new ShipState(Ship.Submarine, new TreeSet<GridCoordinate>()),
                         new ShipState(Ship.Destroyer, new TreeSet<GridCoordinate>())
-                ]),
+                ], lastActionMessage: "X"),
         ]
         TBGame result = engine.evaluateGame(game)
         assert result.gamePhase == GamePhase.Setup
-        game.playerDetails.each { assert "" == it.value.lastActionMessage }
+        game.playerDetails.each { assert "X" == it.value.lastActionMessage }
+        assert "Y" == game.generalMessage
     }
 
     void testEvaluateSetupPhaseWithNoPlayersSetup() {
         TBGame game = new TBGame()
         game.gamePhase = GamePhase.RoundOver.Setup
+        game.generalMessage = "Y"
         game.playerDetails = [
-                (PONE.id) : new TBPlayerState(shipStates: []),
-                (PFOUR.id): new TBPlayerState(shipStates: []),
-                (PTWO.id) : new TBPlayerState(shipStates: [])
+                (PONE.id) : new TBPlayerState(shipStates: [], lastActionMessage: "X"),
+                (PFOUR.id): new TBPlayerState(shipStates: [], lastActionMessage: "X"),
+                (PTWO.id) : new TBPlayerState(shipStates: [], lastActionMessage: "X")
         ]
         TBGame result = engine.evaluateGame(game)
         assert result.gamePhase == GamePhase.Setup
-        game.playerDetails.each { assert "" == it.value.lastActionMessage }
+        game.playerDetails.each { assert "X" == it.value.lastActionMessage }
+        assert "Y" == game.generalMessage
     }
 
     void testEvaluatePlayingPhaseOnePlayerAlive() {
@@ -95,7 +99,7 @@ class GamePhaseTransitionEngineTest extends MongoGameCoreTestCase {
         boolean scorerCalled = false
         game.gamePhase = GamePhase.RoundOver.Playing
         game.playerDetails = [
-                (PONE.id) : new TBPlayerState(shipStates: [new ShipState(Ship.Battleship, 0, [], [])]),
+                (PONE.id): new TBPlayerState(shipStates: [new ShipState(Ship.Battleship, 0, [], [])], lastActionMessage: "X"),
                 (PFOUR.id): new TBPlayerState(shipStates: []),
                 (PTWO.id): new TBPlayerState(shipStates: [new ShipState(Ship.Submarine, 1, [new GridCoordinate(0, 0), new GridCoordinate(0, 1), new GridCoordinate(0, 2)], [false, true, true])])
         ]
@@ -115,7 +119,8 @@ class GamePhaseTransitionEngineTest extends MongoGameCoreTestCase {
         TBGame result = engine.evaluateGame(game)
         assert result.gamePhase == GamePhase.RoundOver
         assert scorerCalled
-        game.playerDetails.each { assert "2 defeated all challengers!" == it.value.lastActionMessage }
+        game.playerDetails.each { assert "" == it.value.lastActionMessage }
+        assert "2 defeated all challengers!" == game.generalMessage
         assert GridCellState.RevealedShip == game.playerDetails[PONE.id].opponentGrids[PTWO.id].get(0, 0)
         assert GridCellState.RevealedShip == game.playerDetails[PTWO.id].opponentViews[PONE.id].get(0, 0)
         assert GridCellState.HiddenHit == game.playerDetails[PONE.id].opponentGrids[PTWO.id].get(0, 1)
