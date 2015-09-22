@@ -31,11 +31,13 @@
                         <i class="icon optionOn ion-person-stalker"></i>
                         Opponents (Max 5):
                     </div>
+                    <!-- TODO                         template-url="templates/autocomplete/autocompleteTemplate.html"-->
                 <textarea ion-autocomplete rows="4"
-                          template-url="templates/autocomplete/autocompleteTemplate.html"
+                          class="ion-autocomplete"
+                          autocomplete="off"
                           ng-model="playerChoices"
                           items-method="queryFriends(query)"
-                          selected-items-label="Selected Players:"
+                          selected-items-label="Selected opponents:"
                           placeholder="Select opponents..."
                           item-value-key="md5"
                           item-view-value-key="displayName"

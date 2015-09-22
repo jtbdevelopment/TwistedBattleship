@@ -3,29 +3,32 @@
         <div class="bar bar-header item-input-inset">
             <label class="item-input-wrapper">
                 <i class="icon ion-search placeholder-icon"></i>
-                <input type="search" class="ion-autocomplete-search" ng-model="searchQuery"
-                       placeholder="{{placeholder}}"/>
+                <input type="search" class="ion-autocomplete-search" ng-model="viewModel.searchQuery"
+                       placeholder="{{viewModel.placeholder}}"/>
             </label>
 
-            <div class="ion-autocomplete-loading-icon" ng-if="showLoadingIcon && loadingIcon">
-                <ion-spinner icon="{{loadingIcon}}"></ion-spinner>
+            <div class="ion-autocomplete-loading-icon" ng-if="viewModel.showLoadingIcon && viewModel.loadingIcon">
+                <ion-spinner icon="{{viewModel.loadingIcon}}"></ion-spinner>
             </div>
-            <a class="ion-autocomplete-cancel button button-submit">{{cancelLabel}}</a>
+            <a class="ion-autocomplete-cancel button button-submit">{{viewModel.cancelLabel}}</a>
         </div>
         <ion-content class="has-header has-header">
             <ion-list>
-                <ion-item class="item-divider" ng-show="selectedItems.length > 0">{{selectedItemsLabel}}</ion-item>
-                <ion-item ng-repeat="selectedItem in selectedItems track by $index" type="item-text-wrap"
-                          class="autocomplete item-icon-left item-icon-right">
+                <ion-item class="item-divider" ng-show="viewModel.selectedItems.length > 0">
+                    {{viewModel.selectedItemsLabel}}
+                </ion-item>
+                <ion-item ng-repeat="selectedItem in viewModel.selectedItems track by $index" type="item-text-wrap"
+                          class="item-icon-left item-icon-right">
                     <i class="icon ion-checkmark"></i>
-                    {{getItemValue(selectedItem, itemViewValueKey)}}
-                    <i class="icon ion-trash-a" style="cursor:pointer" ng-click="removeItem($index)"></i>
+                    {{viewModel.getItemValue(selectedItem, viewModel.itemViewValueKey)}}
+                    <i class="icon ion-trash-a" style="cursor:pointer" ng-click="viewModel.removeItem($index)"></i>
                 </ion-item>
                 <ion-item class="item-divider" ng-show="items.length > 0">{{selectItemsLabel}}</ion-item>
-                <ion-item ng-repeat="item in items" type="item-text-wrap"
-                          class="item"
-                          ng-click="selectItem(item)">
-                    {{getItemValue(item, itemViewValueKey)}}
+                <ion-item class="item-divider" ng-show="viewModel.items.length > 0">{{viewModel.selectItemsLabel}}
+                </ion-item>
+                <ion-item collection-repeat="item in viewModel.items" item-height="55px" item-width="100%"
+                          ng-click="viewModel.selectItem(item)" type="item-text-wrap">
+                    {{viewModel.getItemValue(item, viewModel.itemViewValueKey)}}
                 </ion-item>
             </ion-list>
         </ion-content>

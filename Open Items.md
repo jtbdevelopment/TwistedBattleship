@@ -1,7 +1,7 @@
 Consolidated To Do's
 ====================
 
-- better / quieter check on re-open?
+-  better / quieter check on re-open?
 - add user profile in ui
 - add game detail popup
 - zoom controls on phaser
