@@ -36,6 +36,16 @@ angular.module('tbs.controllers').controller('MainCtrl',
                     checkNetworkStatusAndLogin();
                 }
             });
+
+            $scope.$on('$stateChangeStart', function (event, toState, toParams, fromState) {
+                console.log('change start from ' + fromState + ' to state ' + toState);
+            });
+            $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState) {
+                console.log('change success from ' + fromState + ' to state ' + toState);
+            });
+            $scope.$on('$stateChangeError', function (event, toState, toParams, fromState) {
+                console.log('change error from ' + fromState + ' to state ' + toState);
+            });
         }
     ]
 );

@@ -131,7 +131,7 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
             }
 
             function onUp() {
-                $timeout(function() {
+                $timeout(function () {
                     if ($scope.movingShip !== null) {
                         $scope.movingShip.sprite.tint = 0xffffff;
                         roundPosition($scope.movingShip);
@@ -152,7 +152,7 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
             }
 
             function onDown(context) {
-                $timeout(function() {
+                $timeout(function () {
                     var coords = tbsShipGrid.currentContextCoordinates(context);
                     $scope.movingShip = tbsShipGrid.findShipByContextCoordinates(context);
                     if ($scope.movingShip !== null) {
@@ -163,9 +163,8 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                 });
             }
 
-            //  TODO - patched phaser to work - get latest rev after 2.4.2 with official fix for ontap
             function onTap(context, double) {
-                $timeout(function() {
+                $timeout(function () {
                     if (double) {
                         var ship = tbsShipGrid.findShipByContextCoordinates(context);
 
@@ -180,24 +179,30 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                 });
             }
 
-            function computeShipLocations(generalShipInfo) {
+            function computeShipLocations() {
                 var shipLocations = [];
                 angular.forEach($scope.game.maskedPlayersState.shipStates, function (shipState) {
-                    var shipInfo = generalShipInfo.find(function (info) {
-                        return info.ship === shipState.ship;
+                    var shipDetails = null;
+                    angular.forEach(shipInfo, function (info) {
+                        if (info.ship === shipState.ship) {
+                            shipDetails = info;
+                        }
                     });
                     var horizontal = shipState.shipGridCells[0].row === shipState.shipGridCells[1].row;
                     var row = shipState.shipGridCells[0].row;
                     var column = shipState.shipGridCells[0].column;
-                    shipLocations.push({horizontal: horizontal, row: row, column: column, shipInfo: shipInfo});
+                    shipLocations.push({horizontal: horizontal, row: row, column: column, shipInfo: shipDetails});
                 });
                 if (shipLocations.length === 0) {
                     var row = 0;
                     angular.forEach($scope.game.startingShips, function (startingShip) {
-                        var shipInfo = generalShipInfo.find(function (info) {
-                            return info.ship === startingShip;
+                        var shipDetails = null;
+                        angular.forEach(shipInfo, function (info) {
+                            if (info.ship === startingShip) {
+                                shipDetails = info;
+                            }
                         });
-                        shipLocations.push({horizontal: true, row: row, column: 0, shipInfo: shipInfo});
+                        shipLocations.push({horizontal: true, row: row, column: 0, shipInfo: shipDetails});
                         row = row + 1;
                     });
                 }
@@ -212,7 +217,7 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                 $ionicLoading.show({
                     template: 'Loading...'
                 });
-                tbsShipGrid.initialize($scope.game, computeShipLocations(shipInfo), [], function () {
+                tbsShipGrid.initialize($scope.game, computeShipLocations(), [], function () {
                     $timeout(function () {
                         tbsShipGrid.onDown(onDown);
                         tbsShipGrid.onMove(onMove);

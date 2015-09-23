@@ -10,7 +10,6 @@ angular.module('tbs.controllers').controller('GameCtrl',
             $scope.playerKeys = Object.keys($scope.game.players);
             $scope.gameDetails = tbsGameDetails;
             $scope.player = jtbPlayerService.currentPlayer();
-            $scope.generalShipInfo = shipInfo;
             $scope.showing = ALL;
             $scope.showingSelf = false;
 
@@ -91,17 +90,17 @@ angular.module('tbs.controllers').controller('GameCtrl',
                 //  TODO - overlap with setup
                 var shipLocations = [];
                 angular.forEach($scope.game.maskedPlayersState.shipStates, function (shipState) {
-                    var shipInfo = null;
-                    angular.forEach($scope.generalShipInfo, function (ship) {
+                    var shipDetails = null;
+                    angular.forEach(shipInfo, function (ship) {
                         if (ship.ship === shipState.ship) {
-                            shipInfo = ship;
+                            shipDetails = ship;
                         }
                     });
-                    if (shipInfo !== null) {
+                    if (shipDetails !== null) {
                         var horizontal = shipState.shipGridCells[0].row === shipState.shipGridCells[1].row;
                         var row = shipState.shipGridCells[0].row;
                         var column = shipState.shipGridCells[0].column;
-                        shipLocations.push({horizontal: horizontal, row: row, column: column, shipInfo: shipInfo});
+                        shipLocations.push({horizontal: horizontal, row: row, column: column, shipInfo: shipDetails});
                     }
                 });
                 return shipLocations;
