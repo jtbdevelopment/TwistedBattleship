@@ -17,8 +17,6 @@ Consolidated To Do's
 - refresh on web page not working if on root (ok via FB Canvas)
 - sounds
 - review server side messages
-- after upgrading ionic - then upgrade ion-autocomplete and look at prepopulate feature
--  REPLACE ION AUTOCOMPLETE....
 
 --  Notes on messages 
  - ecm, repair, evasive: message to all players

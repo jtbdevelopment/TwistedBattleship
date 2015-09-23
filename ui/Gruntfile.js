@@ -410,7 +410,6 @@ module.exports = function (grunt) {
                     '<%= yeoman.app %>/bower_components/angular-cookies/angular-cookies.js',
                     '<%= yeoman.app %>/bower_components/angular-resource/angular-resource.js',
                     '<%= yeoman.app %>/bower_components/jtb-core-games-ui/dist/core-games-ui.js',
-                    '<%= yeoman.app %>/bower_components/ion-autocomplete/dist/ion-autocomplete.js',
                     '<%= yeoman.app %>/bower_components/angular-mocks/angular-mocks.js',
                     '<%= yeoman.app %>/bower_components/angular-animate/angular-animate.js',
                     '<%= yeoman.app %>/bower_components/angular-sanitize/angular-sanitize.js',

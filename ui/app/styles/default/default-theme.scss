@@ -10,6 +10,7 @@
   @import "setup";
   @import "game";
   @import "help";
+  @import "ams";
   @include defaultInput;
   @include defaultSelect;
 
@@ -86,25 +87,6 @@
   @import "items";
   @import "buttons";
   @import "toggles";
-
-  .autocomplete {
-    @media (max-width: $screen-xs-max) {
-      padding-left: 42px;
-      padding-top: 2px;
-      padding-bottom: 2px;
-      .icon {
-        font-size: large;
-      }
-    }
-  }
-
-  @media (max-width: $screen-xs-max) {
-    .ion-autocomplete-container {
-      .bar {
-        padding: 2px;
-      }
-    }
-  }
 
   .action-sheet {
     .button {

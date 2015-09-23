@@ -2,16 +2,6 @@
 @import "default-theme-colors";
 
 @mixin defaultInput {
-  textarea {
-    border-radius: 4px;
-    padding-left: 2px;
-    background-color: white;
-    margin-right: 15px;
-    @media (max-width: $screen-xs-max) {
-      font-size: small;
-    }
-  }
-
   input {
     border-radius: 4px;
     padding-left: 2px;
@@ -41,8 +31,3 @@
   }
 }
 
-.ion-autocomplete {
-  @media (max-width: $screen-xs-max) {
-    font-size: small;
-  }
-}

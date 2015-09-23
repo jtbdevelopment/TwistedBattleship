@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('tbs', ['ionic', 'tbs.controllers', 'tbs.directives', 'config', 'ion-autocomplete'])
+angular.module('tbs', ['ionic', 'tbs.controllers', 'tbs.directives', 'config'])
     .config(['$httpProvider', function ($httpProvider) {
         $httpProvider.defaults.withCredentials = true;
     }])

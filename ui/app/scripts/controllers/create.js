@@ -62,38 +62,8 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
                 $scope.inviteModal = modal;
             });
 
-            $scope.playersChanged = function (callback) {
-                $scope.playerChoices = callback.selectedItems;
+            $scope.playersChanged = function () {
                 $scope.submitEnabled = $scope.playerChoices.length > 0 && $scope.playerChoices.length <= MAX_OPPONENTS;
-            };
-
-            $scope.friendsToInvite = [];
-            $scope.friendInvitesChanged = function (callback) {
-                $scope.friendsToInvite = callback.selectedItems;
-            };
-
-            $scope.queryInvitableFriends = function (query) {
-                var match = [];
-                angular.forEach($scope.invitableFriends, function (friend) {
-                    if (friend.name.search(new RegExp(query, 'i')) >= 0) {
-                        if($scope.friendsToInvite.indexOf(friend) === -1) {
-                            match.push(friend);
-                        }
-                    }
-                });
-                return match;
-            };
-
-            $scope.queryFriends = function (query) {
-                var match = [];
-                angular.forEach($scope.friends, function (friend) {
-                    if (friend.displayName.search(new RegExp(query, 'i')) >= 0) {
-                        if($scope.playerChoices.indexOf(friend) === -1) {
-                            match.push(friend);
-                        }
-                    }
-                });
-                return match;
             };
 
             $scope.previousHelp = function () {
@@ -124,7 +94,11 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
             };
 
             $scope.inviteFriends = function (friendsToInvite) {
-                jtbFacebook.inviteFriends(friendsToInvite, 'Come play Twisted Battleship with me!');
+                var ids = [];
+                angular.forEach(friendsToInvite, function (friend) {
+                    ids.push(friend.id);
+                });
+                jtbFacebook.inviteFriends(ids, 'Come play Twisted Battleship with me!');
                 $scope.inviteModal.hide();
             };
 

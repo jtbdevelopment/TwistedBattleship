@@ -5,7 +5,29 @@
         <a class="button button-icon button-clear ion-help-circled" ng-click="showHelp(0)"></a>
     </ion-nav-buttons>
     <ion-content>
+        <a class="button-full button-submit button" ng-disabled="!(submitEnabled)" ng-click="createGame()">
+            Start
+        </a>
         <div class="list create">
+            <div class="item item-divider">
+                Choose your opponents (maximum of 5):
+            </div>
+            <div angular-multi-select
+                 class="ams_container"
+                 helper-elements="filter noall nonone noreset"
+                 min-search-length="1"
+                 on-close="playersChanged()"
+                 on-item-click="playersChanged()"
+                 input-model="friends"
+                 output-model="$parent.playerChoices"
+                 button-template="angular-multi-select-btn-data.htm"
+                 item-label="<[ displayName ]>"
+                 search-property="displayName"
+                 button-label="<[ displayName ]>">
+            </div>
+            <div class="item item-divider">
+                Choose your game options:
+            </div>
             <div ng-repeat="feature in featureData | propsFilter: { checkBox: 'false' }">
                 <label class="item item-input item-select">
                     <div class="input-label">
@@ -25,31 +47,6 @@
                     {{feature.feature.label}}
                 </ion-toggle>
             </div>
-            <div class="item item-input item-wrap-text">
-                <div style="width: 100%;">
-                    <div class="input-label">
-                        <i class="icon optionOn ion-person-stalker"></i>
-                        Opponents (Max 5):
-                    </div>
-                    <!-- TODO                         template-url="templates/autocomplete/autocompleteTemplate.html"-->
-                <textarea ion-autocomplete rows="4"
-                          class="ion-autocomplete"
-                          autocomplete="off"
-                          ng-model="playerChoices"
-                          items-method="queryFriends(query)"
-                          selected-items-label="Selected opponents:"
-                          placeholder="Select opponents..."
-                          item-value-key="md5"
-                          item-view-value-key="displayName"
-                          items-clicked-method="playersChanged(callback)"
-                          items-removed-method="playersChanged(callback)"
-                          multiple-select="true">
-                </textarea>
-                </div>
-            </div>
         </div>
-        <a class="button-full button-submit button" ng-disabled="!(submitEnabled)" ng-click="createGame()">
-            Start
-        </a>
     </ion-content>
 </ion-view>

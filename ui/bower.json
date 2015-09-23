@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "dependencies": {
     "angular-cookies": "1.4.3",
+    "angular-multi-select-alexandernst": "https://github.com/jtbdevelopment/angular-multi-select.git#master",
     "angular-resource": "1.4.3",
     "angular-route": "1.4.3",
-    "ion-autocomplete": "~0.3.0",
     "ionic": "v1.0.0-rc.3",
     "jquery-atmosphere": "~2.2.5",
     "jtb-core-games-ui": "~1.0.0",

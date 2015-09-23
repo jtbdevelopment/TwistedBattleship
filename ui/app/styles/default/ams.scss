@@ -1,0 +1,45 @@
+@import "../screens";
+@import "default-theme-colors";
+
+.ams_container {
+  width: 100%;
+
+  .ams {
+    .caret {
+      text-align: right;
+    }
+    .ams_btn {
+      background-image: none;
+      width: 100%;
+      border-radius: 4px;
+      padding-left: 2px;
+      background-color: white;
+      margin-right: 15px;
+      @media (max-width: $screen-xs-max) {
+        font-size: small;
+      }
+    }
+
+    .ams_layer {
+      .ams_items_container {
+
+        .ams_item:hover {
+          background-color: $paler_green;
+          background-image: none;
+        }
+
+        .ams_selected {
+          background-color: $darker_green;
+          color: black;
+          background-image: none;
+        }
+        .ams_selected:hover {
+
+          background-color: $darker_blue;
+          color: black;
+          background-image: none;
+        }
+      }
+    }
+  }
+}

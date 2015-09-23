@@ -10,20 +10,20 @@
                         <div class="input-label">
                             Friends To Invite:
                         </div>
-                        <!-- TODO                                 template-url="templates/autocomplete/autocompleteTemplate.html"-->
-                        <textarea rows="4" ion-autocomplete
-                                  ng-model="friendsToInvite"
-                                  items-method="queryInvitableFriends(query)"
-                                  selected-items-label="Selected Friends:"
-                                  placeholder="Select friends..."
-                                  item-value-key="id"
-                                  item-view-value-key="name"
-                                  items-clicked-method="friendInvitesChanged(callback)"
-                                  items-removed-method="friendInvitesChanged(callback)"
-                                  multiple-select="true">
-                    </textarea>
                     </div>
                 </label>
+
+                <div angular-multi-select
+                     class="ams_container"
+                     min-search-length="1"
+                     helper-elements="filter noall nonone noreset"
+                     input-model="invitableFriends"
+                     output-model="$parent.friendsToInvite"
+                     button-template="angular-multi-select-btn-data.htm"
+                     item-label="<[ name ]>"
+                     search-property="name"
+                     button-label="<[ name ]>">
+                </div>
             </div>
             <a class="button button-full button-submit" ng-click="inviteFriends(friendsToInvite)">
                 Invite
