@@ -228,6 +228,15 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                     });
                 });
             });
+
+            $scope.$on('gameUpdated', function (event, oldGame, newGame) {
+                if ($scope.gameID === newGame.id) {
+                    $scope.game = newGame;
+                    if (oldGame.gamePhase !== newGame.gamePhase) {
+                        $state.go('app.' + $scope.game.gamePhase.toLowerCase(), {gameID: $scope.gameID});
+                    }
+                }
+            });
         }
     ]
 );
