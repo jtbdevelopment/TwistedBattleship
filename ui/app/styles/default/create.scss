@@ -6,19 +6,14 @@
   @include defaultInput;
 
   .item {
-    background-color: $paler_blue;
 
     @media (max-width: $screen-xs-max) {
       font-size: small;
     }
   }
 
-  select {
-    background-color: $paler_blue;
-  }
-
-  textarea {
-    margin-right: 15px;
+  .item-divider {
+    background-color: $boatgray;
   }
 
   .optionOn {
