@@ -256,7 +256,7 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         game.playerDetails[PONE.id].shipStates.find { it.ship == Ship.Destroyer }.healthRemaining = 1
         def coordinate = new GridCoordinate(7, 7)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
-        assert game.playerDetails[PTWO.id].lastActionMessage == "You sunk a Destroyer!"
+        assert game.playerDetails[PTWO.id].lastActionMessage == "Direct hit at (7,7)!"
         assert game.playerDetails[PONE.id].lastActionMessage == "2 sunk your Destroyer!"
         game.playerDetails[PONE.id].shipStates.each {
             if (it.ship == Ship.Destroyer) {
@@ -289,7 +289,7 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         }
         assert TBGameScorer.SCORE_FOR_HIT == game.playerDetails[PTWO.id].scoreFromHits
         assert TBGameScorer.SCORE_FOR_SINK == game.playerDetails[PTWO.id].scoreFromSinks
-        assert "2 sunk 1's Destroyer!" == game.generalMessage
+        assert "" == game.generalMessage
     }
 
     void testFireAndSinkShipWithIsolatedIntel() {
@@ -299,7 +299,7 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         game.playerDetails[PONE.id].shipStates.find { it.ship == Ship.Destroyer }.healthRemaining = 1
         def coordinate = new GridCoordinate(7, 7)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
-        assert game.playerDetails[PTWO.id].lastActionMessage == "You sunk a Destroyer!"
+        assert game.playerDetails[PTWO.id].lastActionMessage == "Direct hit at (7,7)!"
         assert game.playerDetails[PONE.id].lastActionMessage == "2 sunk your Destroyer!"
         game.playerDetails[PONE.id].shipStates.each {
             if (it.ship == Ship.Destroyer) {
@@ -332,7 +332,7 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         }
         assert TBGameScorer.SCORE_FOR_HIT == game.playerDetails[PTWO.id].scoreFromHits
         assert TBGameScorer.SCORE_FOR_SINK == game.playerDetails[PTWO.id].scoreFromSinks
-        assert "2 sunk 1's Destroyer!" == game.generalMessage
+        assert "" == game.generalMessage
     }
 
     void testFireAndSinkShipAndEndPlayerWithSharedIntel() {
@@ -353,7 +353,7 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         game.playerDetails[PONE.id].shipStates.find { it.ship == Ship.Destroyer }.healthRemaining = 1
         def coordinate = new GridCoordinate(7, 7)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
-        assert game.playerDetails[PTWO.id].lastActionMessage == "You sunk a Destroyer!"
+        assert game.playerDetails[PTWO.id].lastActionMessage == "Direct hit at (7,7)!"
         assert game.playerDetails[PONE.id].lastActionMessage == "2 sunk your Destroyer!"
         game.playerDetails[PONE.id].shipStates.each {
             if (it.ship == Ship.Destroyer) {
@@ -407,7 +407,7 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         game.playerDetails[PONE.id].shipStates.find { it.ship == Ship.Destroyer }.healthRemaining = 1
         def coordinate = new GridCoordinate(7, 7)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
-        assert game.playerDetails[PTWO.id].lastActionMessage == "You sunk a Destroyer!"
+        assert game.playerDetails[PTWO.id].lastActionMessage == "Direct hit at (7,7)!"
         assert game.playerDetails[PONE.id].lastActionMessage == "2 sunk your Destroyer!"
         game.playerDetails[PONE.id].shipStates.each {
             if (it.ship == Ship.Destroyer) {

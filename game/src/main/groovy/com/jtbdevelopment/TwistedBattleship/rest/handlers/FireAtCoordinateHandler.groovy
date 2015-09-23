@@ -100,9 +100,7 @@ class FireAtCoordinateHandler extends AbstractPlayerMoveHandler {
             final TBPlayerState targetedState,
             final ShipState ship) {
         if (ship.healthRemaining == 0) {
-            playerState.lastActionMessage = "You sunk a " + ship.ship.description + "!"
             targetedState.lastActionMessage = player.displayName + " sunk your " + ship.ship.description + "!"
-            game.generalMessage = player.displayName + " sunk " + targetedPlayer.displayName + "'s " + ship.ship.description + "!"
             playerState.scoreFromSinks += TBGameScorer.SCORE_FOR_SINK
             if (!targetedState.alive) {
                 game.generalMessage = player.displayName + " has defeated " + targetedPlayer.displayName + "!"
