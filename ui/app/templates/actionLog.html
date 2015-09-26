@@ -1,0 +1,11 @@
+<ion-view class="actionLog">
+    <ion-content class="has-header" ng-cloak>
+        <ion-list>
+            <ion-item class="item item-text-wrap"
+                      ng-repeat="action in game.maskedPlayersState.actionLog | orderBy:['-timestamp']">
+                {{action.description}}
+                <p>{{gameDetails.formatActionTime(action.timestamp)}}</p>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>

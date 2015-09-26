@@ -164,6 +164,16 @@ angular.module('tbs', ['ionic', 'tbs.controllers', 'tbs.directives', 'config'])
                     }
                 }
             })
+            .state('app.actionLog', {
+                url: '/games/actionLog/:gameID',
+                views: {
+                    'menuContent': {
+                        templateUrl: 'templates/actionLog.html',
+                        controller: 'ActionLogCtrl'
+                    }
+                }
+
+            })
             .state('app.playhelp', {
                 url: '/play-help',
                 views: {

@@ -15,6 +15,10 @@ angular.module('tbs.controllers').controller('GameCtrl',
 
             $scope.shipHighlighted = false;
 
+            $scope.showActionLog = function () {
+                $state.go('app.actionLog', {gameID: $scope.gameID});
+            };
+
             $scope.showHelp = function () {
                 $state.go('app.playhelp');
             };

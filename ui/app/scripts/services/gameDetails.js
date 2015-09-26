@@ -215,6 +215,24 @@ angular.module('tbs.services').factory('tbsGameDetails',
                     return result;
                 }
                 return 'Game details missing!';
+            },
+
+            lastActionLog: function (game) {
+                if (checkParams(game, 'DUMMY')) {
+                    return game.maskedPlayersState.actionLog[game.maskedPlayersState.actionLog.length - 1].description;
+                }
+                return '';
+            },
+
+            lastActionTime: function (game) {
+                if (checkParams(game, 'DUMMY')) {
+                    return new Date(game.maskedPlayersState.actionLog[game.maskedPlayersState.actionLog.length - 1].timestamp).toLocaleString();
+                }
+                return '';
+            },
+
+            formatActionTime: function (time) {
+                return new Date(time).toLocaleString();
             }
         };
     }

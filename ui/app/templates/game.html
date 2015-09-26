@@ -4,32 +4,22 @@
         <a class="button button-icon button-clear ion-help-circled" ng-click="showHelp()"></a>
     </ion-nav-buttons>
     <ion-content has-bouncing="false">
-        <div class="row gameSummary" on-swipe="switchView(!showing)">
-            <div class="col-33 item item-text-wrap">
-                <div ng-show="game.gamePhase === 'Playing'">
-                    Current Turn:
-                    <p><span
-                            class="item-note {{gameDetails.playerCanPlay(game, player.md5) ? 'activePlayer' : 'inactivePlayer'}}">
-                        {{game.players[game.currentPlayer]}} with {{game.remainingMoves}} moves.
-                    </span></p>
-                </div>
-                <div ng-hide="game.gamePhase === 'Playing'">
-                    <div class="{{(game.winningPlayer === player.md5) ? 'winner' : 'loser'}}">
-                        Winner: <p><span class="item-note">{{game.players[game.winningPlayer]}}</span></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-33 item">
-                General:
-                <p><span class="item-text-wrap item-note">{{game.generalMessage}}</span></p>
-            </div>
-            <div class="col-33 item">
-                Last Move:
-                <p><span class="item-text-wrap item-note">{{game.maskedPlayersState.lastActionMessage}}</span>
-            </div>
-        </div>
         <div class="row">
             <div class="list col-20">
+                <div class="item item-avatar item-text-wrap" ng-show="game.gamePhase === 'Playing'">
+                    <img ng-src="{{gameDetails.imageForPlayer(game, game.currentPlayer)}}">
+
+                    <h3 class="activePlayer">Turn: {{game.players[game.currentPlayer]}}</h3>
+
+                    <p>{{game.remainingMoves}} moves left.</p>
+                </div>
+                <div class="item item-avatar item-text-wrap" ng-hide="game.gamePhase === 'Playing'">
+                    <img ng-src="{{gameDetails.imageForPlayer(game, game.winningPlayer)}}">
+
+                    <h3 class="activePlayer">Winner: {{game.players[game.winningPlayer]}}</h3>
+
+                    <p>Winning Score: {{game.playersScore[game.winningPlayer]}}</p>
+                </div>
                 <div class="item item-avatar item-text-wrap {{showing == 'ALL' ? 'chosen' : ''}}"
                      ng-click="changePlayer('ALL')">
                     <img ng-src="{{gameDetails.imageForPlayer(game, player.md5)}}">
@@ -56,8 +46,8 @@
                         <div class="item action-item">
                             <div class="button-bar">
                                 <a class="button button-defend icon-left ion-{{gameDetails.iconForFeature('ECMEnabled')}}"
-                                        ng-disabled="!gameDetails.ecmPossible(game, player.md5)"
-                                        ng-click="ecm()">
+                                   ng-disabled="!gameDetails.ecmPossible(game, player.md5)"
+                                   ng-click="ecm()">
                                     <span>ECM</span>
                                 </a>
                                 <span class="badge">{{game.maskedPlayersState.ecmsRemaining}}</span>
@@ -66,8 +56,8 @@
                         <div class="item action-item">
                             <div class="button-bar">
                                 <a class="button button-defend icon-left ion-{{gameDetails.iconForFeature('EMEnabled')}}"
-                                        ng-disabled="!(gameDetails.evasiveMovePossible(game, player.md5) && shipHighlighted)"
-                                        ng-click="move()">
+                                   ng-disabled="!(gameDetails.evasiveMovePossible(game, player.md5) && shipHighlighted)"
+                                   ng-click="move()">
                                     <span>Evade</span>
                                 </a>
                                 <span class="badge">{{game.maskedPlayersState.evasiveManeuversRemaining}}</span>
@@ -76,8 +66,8 @@
                         <div class="item action-item">
                             <div class="button-bar">
                                 <a class="button button-defend icon-left ion-{{gameDetails.iconForFeature('EREnabled')}}"
-                                        ng-disabled="!(gameDetails.repairPossible(game, player.md5) && shipHighlighted)"
-                                        ng-click="repair()">
+                                   ng-disabled="!(gameDetails.repairPossible(game, player.md5) && shipHighlighted)"
+                                   ng-click="repair()">
                                     <span>Repair</span>
                                 </a>
                                 <span class="badge">{{game.maskedPlayersState.emergencyRepairsRemaining}}</span>
@@ -96,7 +86,7 @@
                         <div class="item action-item">
                             <div class="button-bar">
                                 <a class="button button-attack icon-left ion-{{gameDetails.iconForFeature('SpyEnabled')}}"
-                                        ng-disabled="!gameDetails.spyPossible(game, player.md5)" ng-click="spy()">
+                                   ng-disabled="!gameDetails.spyPossible(game, player.md5)" ng-click="spy()">
                                     <span>Spy</span>
                                 </a>
                                 <span class="badge">{{game.maskedPlayersState.spysRemaining}}</span>
@@ -135,13 +125,24 @@
             </div>
             <div class="col-80">
                 <div class="row viewToggleRow">
-                    <div class="button-bar">
-                        <a class="button button-switch-view icon-left {{showingSelf ? 'ion-checkmark' : '' }} button-defend"
-                                ng-click="switchView(true)">Their view of you
-                        </a>
-                        <a class="button button-switch-view icon-left {{showingSelf ? '' : 'ion-checkmark' }} button-attack"
-                                ng-click="switchView(false)" ng-disabled="showing == 'ALL'">Your view of them
-                        </a>
+                    <div class="col-50">
+                        <div class="button-bar">
+                            <a class="button button-switch-view icon-left {{showingSelf ? 'ion-checkmark' : '' }} button-defend"
+                               ng-click="switchView(true)">Their view of you
+                            </a>
+                            <a class="button button-switch-view icon-left {{showingSelf ? '' : 'ion-checkmark' }} button-attack"
+                               ng-click="switchView(false)" ng-disabled="showing == 'ALL'">Your view of them
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-50">
+                        <div class="item item-text-wrap item-icon-right">
+                            <i class="icon icon-right ion-more" ng-click="showActionLog()"></i>
+                            {{gameDetails.lastActionLog(game)}}
+                            <p>
+                                {{gameDetails.lastActionTime(game)}}
+                            </p>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
