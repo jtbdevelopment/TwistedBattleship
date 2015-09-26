@@ -18,4 +18,5 @@ Consolidated To Do's
 - refresh on web page not working if on root (ok via FB Canvas)
 - sounds
 - ui tweak button bar at top of game .
+-  move logback to core?
 
