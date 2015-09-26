@@ -17,4 +17,5 @@ Consolidated To Do's
 - hazelcast cluster group name?
 - refresh on web page not working if on root (ok via FB Canvas)
 - sounds
+- ui tweak button bar at top of game .
 
