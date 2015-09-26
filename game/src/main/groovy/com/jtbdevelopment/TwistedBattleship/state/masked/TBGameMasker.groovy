@@ -39,7 +39,6 @@ class TBGameMasker extends AbstractMultiPlayerGameMasker<ObjectId, GameFeature, 
         super.copyUnmaskedData(mpGame, playerMaskedGame)
         TBMaskedGame masked = (TBMaskedGame) playerMaskedGame
         TBGame game = (TBGame) mpGame
-        masked.generalMessage = game.generalMessage
         masked.remainingMoves = game.remainingMoves
         masked.movesForSpecials = game.movesForSpecials
         masked.gridSize = game.gridSize
@@ -67,7 +66,7 @@ class TBGameMasker extends AbstractMultiPlayerGameMasker<ObjectId, GameFeature, 
                 masked.playersAlive[md5] = state.alive
                 masked.playersScore[md5] = state.totalScore
                 masked.playersSetup[md5] = state.setup
-                if(state.totalScore > maxScore) {
+                if (state.totalScore > maxScore) {
                     winningPlayer = md5
                     maxScore = state.totalScore
                 }
@@ -91,8 +90,14 @@ class TBGameMasker extends AbstractMultiPlayerGameMasker<ObjectId, GameFeature, 
         maskedPlayerState.emergencyRepairsRemaining = playerState.emergencyRepairsRemaining
         maskedPlayerState.evasiveManeuversRemaining = playerState.evasiveManeuversRemaining
         maskedPlayerState.spysRemaining = playerState.spysRemaining
-        maskedPlayerState.lastActionMessage = playerState.lastActionMessage
         maskedPlayerState.startingShips = playerState.startingShips
+        maskedPlayerState.actionLog = playerState.actionLog.collect {
+            new TBMaskedActionLogEntry(
+                    description: it.description,
+                    actionType: it.actionType,
+                    timestamp: convertTime(it.timestamp)
+            )
+        }
 
         maskedPlayerState.opponentViews = (Map<String, Grid>) playerState.opponentViews.collectEntries {
             ObjectId id, Grid view ->

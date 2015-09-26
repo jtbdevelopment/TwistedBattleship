@@ -46,6 +46,9 @@ class AbstractPlayerMoveHandlerTest extends MongoGameCoreTestCase {
         @Override
         TBGame playMove(
                 final Player player, final TBGame game, final Player targetedPlayer, final GridCoordinate coordinate) {
+            if (game.playerDetails[PTHREE.id]) {
+                game.playerDetails[PTHREE.id].lastActionMessage = "3"
+            }
             return game
         }
     }

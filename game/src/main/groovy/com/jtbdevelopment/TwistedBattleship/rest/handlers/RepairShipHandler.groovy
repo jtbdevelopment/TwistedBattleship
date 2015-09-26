@@ -3,6 +3,7 @@ package com.jtbdevelopment.TwistedBattleship.rest.handlers
 import com.jtbdevelopment.TwistedBattleship.exceptions.CannotRepairADestroyedShipException
 import com.jtbdevelopment.TwistedBattleship.exceptions.NoRepairActionsRemainException
 import com.jtbdevelopment.TwistedBattleship.exceptions.NoShipAtCoordinateException
+import com.jtbdevelopment.TwistedBattleship.state.TBActionLogEntry
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
@@ -54,7 +55,9 @@ class RepairShipHandler extends AbstractSpecialMoveHandler {
         ShipState state = playerState.coordinateShipMap[coordinate]
 
         String message = player.displayName + " repaired their " + state.ship.description + "."
-        playerState.lastActionMessage = message
+
+        TBActionLogEntry actionLogEntry = new TBActionLogEntry(actionType: TBActionLogEntry.TBActionType.Repaired, description: message)
+        playerState.actionLog.add(actionLogEntry)
 
         --playerState.emergencyRepairsRemaining
 
@@ -76,8 +79,7 @@ class RepairShipHandler extends AbstractSpecialMoveHandler {
                             opponentView.set(shipCoordinate, GridCellState.Unknown)
                         }
                 }
-
-                opponent.lastActionMessage = message
+                opponent.actionLog.add(actionLogEntry)
         }
         state.healthRemaining = state.ship.gridSize
         state.shipSegmentHit = (1..state.healthRemaining).collect { false }

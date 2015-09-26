@@ -4,6 +4,7 @@ import com.jtbdevelopment.TwistedBattleship.exceptions.NoEmergencyManeuverAction
 import com.jtbdevelopment.TwistedBattleship.exceptions.NoShipAtCoordinateException
 import com.jtbdevelopment.TwistedBattleship.rest.handlers.helpers.FogCoordinatesGenerator
 import com.jtbdevelopment.TwistedBattleship.rest.handlers.helpers.ShipRelocator
+import com.jtbdevelopment.TwistedBattleship.state.TBActionLogEntry
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
@@ -60,9 +61,10 @@ class EvasiveManeuverHandler extends AbstractSpecialMoveHandler {
         Set<GridCoordinate> fogCoordinates = fogCoordinatesGenerator.generateFogCoordinates(game, ship.shipGridCells, newCoordinates)
         ship.shipGridCells = newCoordinates
         playerState.coordinateShipMap.clear()
-        String message = player.displayName + " performed evasive maneuvers."
-        playerState.lastActionMessage = message
-        fogGrids(game, player, playerState, message, fogCoordinates)
+        TBActionLogEntry actionLogEntry = new TBActionLogEntry(actionType: TBActionLogEntry.TBActionType.PerformedManeuvers,
+                description: player.displayName + " performed evasive maneuvers.")
+        playerState.actionLog.add(actionLogEntry)
+        fogGrids(game, player, playerState, actionLogEntry, fogCoordinates)
         --playerState.evasiveManeuversRemaining
         return game
     }
@@ -72,11 +74,11 @@ class EvasiveManeuverHandler extends AbstractSpecialMoveHandler {
             final TBGame game,
             final Player<ObjectId> player,
             final TBPlayerState playerState,
-            final String message,
+            final TBActionLogEntry actionLogEntry,
             final Set<GridCoordinate> fogCoordinates) {
         game.playerDetails.findAll { it.key != player.id }.each {
             ObjectId opponent, TBPlayerState opponentState ->
-                opponentState.lastActionMessage = message
+                opponentState.actionLog.add(actionLogEntry)
                 Grid opponentGrid = opponentState.opponentGrids[player.id]
                 Grid opponentView = playerState.opponentViews[opponent]
                 fogCoordinates.each {

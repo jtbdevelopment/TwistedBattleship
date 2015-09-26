@@ -1,6 +1,7 @@
 package com.jtbdevelopment.TwistedBattleship.state.masked
 
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
+import com.jtbdevelopment.TwistedBattleship.state.TBActionLogEntry
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
@@ -34,7 +35,6 @@ class TBGameMaskerTest extends MongoGameCoreTestCase {
                 movesForSpecials: -2,
                 remainingMoves: 4,
                 initiatingPlayer: PTHREE.id,
-                generalMessage: "All hands on deck!",
                 playerDetails: [
                         (PONE.id)  : new TBPlayerState(
                                 startingShips: Ship.values().toList(),
@@ -45,7 +45,13 @@ class TBGameMaskerTest extends MongoGameCoreTestCase {
                                 ecmsRemaining: 2,
                                 evasiveManeuversRemaining: 3,
                                 emergencyRepairsRemaining: 4,
-                                lastActionMessage: "P1 MESSAGE",
+                                actionLog: [new TBActionLogEntry(
+                                        description: "One",
+                                        actionType: TBActionLogEntry.TBActionType.Fired
+                                ), new TBActionLogEntry(
+                                        description: "Two",
+                                        actionType: TBActionLogEntry.TBActionType.DamagedByECM
+                                )],
                                 opponentViews: [
                                         (PTWO.id)  : new Grid(10),
                                         (PTHREE.id): new Grid(10)
@@ -88,13 +94,11 @@ class TBGameMaskerTest extends MongoGameCoreTestCase {
         assert game.gridSize == maskedGame.gridSize
         assert game.movesForSpecials == maskedGame.movesForSpecials
         assert game.startingShips == maskedGame.startingShips
-        assert "All hands on deck!" == maskedGame.generalMessage
         assert [(PONE.md5): true, (PTWO.md5): false, (PTHREE.md5): false] == maskedGame.playersAlive
         assert [(PONE.md5): 70, (PTWO.md5): 40, (PTHREE.md5): 20] == maskedGame.playersScore
         assert [(PONE.md5): true, (PTWO.md5): false, (PTHREE.md5): false] == maskedGame.playersSetup
 
         TBPlayerState playerState = game.playerDetails[PONE.id]
-        assert playerState.lastActionMessage == maskedGame.maskedPlayersState.lastActionMessage
         assert playerState.shipStates == maskedGame.maskedPlayersState.shipStates
         assert playerState.startingShips == maskedGame.maskedPlayersState.startingShips
         assert playerState.alive == maskedGame.maskedPlayersState.alive
@@ -106,6 +110,14 @@ class TBGameMaskerTest extends MongoGameCoreTestCase {
         assert playerState.ecmsRemaining == maskedGame.maskedPlayersState.ecmsRemaining
         assert playerState.emergencyRepairsRemaining == maskedGame.maskedPlayersState.emergencyRepairsRemaining
         assert playerState.shipStates == maskedGame.maskedPlayersState.shipStates
+        assert 2 == maskedGame.maskedPlayersState.actionLog.size()
+        assert playerState.actionLog[0].description == maskedGame.maskedPlayersState.actionLog[0].description
+        assert playerState.actionLog[1].description == maskedGame.maskedPlayersState.actionLog[1].description
+        assert playerState.actionLog[0].actionType == maskedGame.maskedPlayersState.actionLog[0].actionType
+        assert playerState.actionLog[1].actionType == maskedGame.maskedPlayersState.actionLog[1].actionType
+        assert playerState.actionLog[0].timestamp.toInstant().toEpochMilli() == maskedGame.maskedPlayersState.actionLog[0].timestamp
+        assert playerState.actionLog[1].timestamp.toInstant().toEpochMilli() == maskedGame.maskedPlayersState.actionLog[1].timestamp
+
         assert 2 == maskedGame.maskedPlayersState.opponentViews.size()
         assert 2 == maskedGame.maskedPlayersState.opponentGrids.size()
         assert 4 == maskedGame.remainingMoves

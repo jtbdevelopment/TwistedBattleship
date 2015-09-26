@@ -2,6 +2,7 @@ package com.jtbdevelopment.TwistedBattleship.rest.handlers
 
 import com.jtbdevelopment.TwistedBattleship.exceptions.NoSpyActionsRemainException
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
+import com.jtbdevelopment.TwistedBattleship.state.TBActionLogEntry
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
@@ -57,8 +58,18 @@ class SpyHandler extends AbstractSpecialMoveHandler {
             final Player<ObjectId> targetedPlayer,
             final Map<GridCoordinate, GridCellState> spyResults,
             final GridCoordinate targetCoordinate) {
-        String message = player.displayName + " spied on " + targetedPlayer.displayName + " at " + targetCoordinate + "."
+        game.playerDetails[player.id].actionLog.add(new TBActionLogEntry(
+                actionType: TBActionLogEntry.TBActionType.Spied,
+                description: "You spied on " + targetedPlayer.displayName + " at " + targetCoordinate + ".",
+        )
+        )
+        game.playerDetails[targetedPlayer.id].actionLog.add(new TBActionLogEntry(
+                actionType: TBActionLogEntry.TBActionType.Spied,
+                description: player.displayName + " spied on you at " + targetCoordinate + ".",
+        )
+        )
         boolean sharedIntel = game.features.contains(GameFeature.SharedIntel)
+        String messageForOthers = player.displayName + " spied on " + targetedPlayer.displayName + " at " + targetCoordinate + "."
         game.playerDetails.findAll {
             ObjectId id, TBPlayerState state ->
                 id != targetedPlayer.id && (sharedIntel || id == player.id)
@@ -67,9 +78,15 @@ class SpyHandler extends AbstractSpecialMoveHandler {
                 Grid playerGrid = state.opponentGrids[targetedPlayer.id]
                 Grid targetView = game.playerDetails[targetedPlayer.id].opponentViews[id]
                 updateGridForPlayer(playerGrid, targetView, spyResults)
-                state.lastActionMessage = message
+                if (id != player.id) {
+                    state.actionLog.add(0,
+                            new TBActionLogEntry(
+                                    actionType: TBActionLogEntry.TBActionType.Spied,
+                                    description: messageForOthers,
+                            )
+                    )
+                }
         }
-        game.playerDetails[targetedPlayer.id].lastActionMessage = message
     }
 
     @SuppressWarnings("GrMethodMayBeStatic")

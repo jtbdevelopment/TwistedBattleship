@@ -31,8 +31,7 @@ class TBPlayerState implements Serializable {
 
     Map<ObjectId, Grid> opponentGrids = [:]
     Map<ObjectId, Grid> opponentViews = [:]
-
-    String lastActionMessage = ""
+    List<TBActionLogEntry> actionLog = []
 
     void setStartingShips(final List<Ship> startingShips) {
         this.startingShips = startingShips

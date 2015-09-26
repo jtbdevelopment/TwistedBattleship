@@ -13,6 +13,5 @@ class TBGameTest extends GroovyTestCase {
         assert 0 == game.gridSize
         assertNull game.rematchTimestamp
         assertNull game.previousId
-        assert "" == game.generalMessage
     }
 }

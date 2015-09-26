@@ -1,6 +1,7 @@
 package com.jtbdevelopment.TwistedBattleship.rest.handlers
 
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
+import com.jtbdevelopment.TwistedBattleship.state.TBActionLogEntry
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
@@ -28,8 +29,13 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
 
         def coordinate = new GridCoordinate(7, 6)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
-        assert game.playerDetails[PTWO.id].lastActionMessage == "No enemy at (7,6)."
-        assert game.playerDetails[PONE.id].lastActionMessage == "2 missed at (7,6)."
+        assert "You fired at 1 (7,6) and missed." == game.playerDetails[PTWO.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTWO.id].actionLog[-1].actionType
+        assert "2 fired at (7,6) and missed." == game.playerDetails[PONE.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PONE.id].actionLog[-1].actionType
+        assert "2 fired at 1 (7,6) and missed." == game.playerDetails[PTHREE.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTHREE.id].actionLog[-1].actionType
+        assert "2 fired at 1 (7,6) and missed." == game.playerDetails[PFOUR.id].actionLog[-1].description
         game.playerDetails[PONE.id].shipStates.each {
             assert it.ship.gridSize == it.healthRemaining
             assertNull it.shipSegmentHit.find { it }
@@ -49,7 +55,6 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
             }
         }
         assert 0 == game.playerDetails[PTWO.id].scoreFromHits
-        assert "" == game.generalMessage
     }
 
     void testFireAndMissWithIsolatedIntel() {
@@ -57,8 +62,13 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
 
         def coordinate = new GridCoordinate(7, 6)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
-        assert game.playerDetails[PTWO.id].lastActionMessage == "No enemy at (7,6)."
-        assert game.playerDetails[PONE.id].lastActionMessage == "2 missed at (7,6)."
+        assert "You fired at 1 (7,6) and missed." == game.playerDetails[PTWO.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTWO.id].actionLog[-1].actionType
+        assert "2 fired at (7,6) and missed." == game.playerDetails[PONE.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PONE.id].actionLog[-1].actionType
+        assert "2 fired at 1." == game.playerDetails[PTHREE.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTHREE.id].actionLog[-1].actionType
+        assert "2 fired at 1." == game.playerDetails[PFOUR.id].actionLog[-1].description
         game.playerDetails[PONE.id].shipStates.each {
             assert it.ship.gridSize == it.healthRemaining
             assertNull it.shipSegmentHit.find { it }
@@ -78,7 +88,6 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
             }
         }
         assert 0 == game.playerDetails[PTWO.id].scoreFromHits
-        assert "" == game.generalMessage
     }
 
     void testFireAndHitWithSharedIntel() {
@@ -86,8 +95,14 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
 
         def coordinate = new GridCoordinate(7, 7)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
-        assert game.playerDetails[PTWO.id].lastActionMessage == "Direct hit at (7,7)!"
-        assert game.playerDetails[PONE.id].lastActionMessage == "2 hit your Destroyer at (7,7)!"
+        assert "You fired at 1 (7,7) and hit!" == game.playerDetails[PTWO.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTWO.id].actionLog[-1].actionType
+        assert "2 fired at (7,7) and hit your Destroyer!" == game.playerDetails[PONE.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PONE.id].actionLog[-1].actionType
+        assert "2 fired at 1 (7,7) and hit!" == game.playerDetails[PTHREE.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTHREE.id].actionLog[-1].actionType
+        assert "2 fired at 1 (7,7) and hit!" == game.playerDetails[PFOUR.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PFOUR.id].actionLog[-1].actionType
         game.playerDetails[PONE.id].shipStates.each {
             if (it.ship == Ship.Destroyer) {
                 assert 1 == it.healthRemaining
@@ -112,7 +127,6 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
             }
         }
         assert TBGameScorer.SCORE_FOR_HIT == game.playerDetails[PTWO.id].scoreFromHits
-        assert "" == game.generalMessage
     }
 
     void testFireAndHitWithIsolatedIntel() {
@@ -120,8 +134,14 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
 
         def coordinate = new GridCoordinate(7, 7)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
-        assert game.playerDetails[PTWO.id].lastActionMessage == "Direct hit at (7,7)!"
-        assert game.playerDetails[PONE.id].lastActionMessage == "2 hit your Destroyer at (7,7)!"
+        assert "You fired at 1 (7,7) and hit!" == game.playerDetails[PTWO.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTWO.id].actionLog[-1].actionType
+        assert "2 fired at (7,7) and hit your Destroyer!" == game.playerDetails[PONE.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PONE.id].actionLog[-1].actionType
+        assert "2 fired at 1." == game.playerDetails[PTHREE.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTHREE.id].actionLog[-1].actionType
+        assert "2 fired at 1." == game.playerDetails[PFOUR.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PFOUR.id].actionLog[-1].actionType
         game.playerDetails[PONE.id].shipStates.each {
             if (it.ship == Ship.Destroyer) {
                 assert 1 == it.healthRemaining
@@ -146,7 +166,6 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
             }
         }
         assert TBGameScorer.SCORE_FOR_HIT == game.playerDetails[PTWO.id].scoreFromHits
-        assert "" == game.generalMessage
     }
 
     void testFireAndReHitWithSharedIntel() {
@@ -158,8 +177,14 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         game.playerDetails[PFOUR.id].opponentGrids[PONE.id].set(coordinate, GridCellState.KnownByHit)
         game.playerDetails[PONE.id].opponentViews[PFOUR.id].set(coordinate, GridCellState.KnownByHit)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
-        assert game.playerDetails[PTWO.id].lastActionMessage == "Damaged area hit again at (7,7)."
-        assert game.playerDetails[PONE.id].lastActionMessage == "2 re-hit your Destroyer at (7,7)."
+        assert "You fired at 1 (7,7) and hit an already damaged area!" == game.playerDetails[PTWO.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTWO.id].actionLog[-1].actionType
+        assert "2 fired at (7,7) and re-hit your Destroyer!" == game.playerDetails[PONE.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PONE.id].actionLog[-1].actionType
+        assert "2 fired at 1 (7,7) and re-hit a damaged area!" == game.playerDetails[PTHREE.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTHREE.id].actionLog[-1].actionType
+        assert "2 fired at 1 (7,7) and re-hit a damaged area!" == game.playerDetails[PFOUR.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PFOUR.id].actionLog[-1].actionType
         game.playerDetails[PONE.id].shipStates.each {
             if (it.ship == Ship.Destroyer) {
                 assert 1 == it.healthRemaining
@@ -196,7 +221,6 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
             }
         }
         assert 0 == game.playerDetails[PTWO.id].scoreFromHits
-        assert "" == game.generalMessage
     }
 
     void testFireAndReHitWithIsolatedIntel() {
@@ -208,8 +232,14 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         game.playerDetails[PFOUR.id].opponentGrids[PONE.id].set(coordinate, GridCellState.KnownByHit)
         game.playerDetails[PONE.id].opponentViews[PFOUR.id].set(coordinate, GridCellState.KnownByHit)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
-        assert game.playerDetails[PTWO.id].lastActionMessage == "Damaged area hit again at (7,7)."
-        assert game.playerDetails[PONE.id].lastActionMessage == "2 re-hit your Destroyer at (7,7)."
+        assert "You fired at 1 (7,7) and hit an already damaged area!" == game.playerDetails[PTWO.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTWO.id].actionLog[-1].actionType
+        assert "2 fired at (7,7) and re-hit your Destroyer!" == game.playerDetails[PONE.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PONE.id].actionLog[-1].actionType
+        assert "2 fired at 1." == game.playerDetails[PTHREE.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTHREE.id].actionLog[-1].actionType
+        assert "2 fired at 1." == game.playerDetails[PFOUR.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PFOUR.id].actionLog[-1].actionType
         game.playerDetails[PONE.id].shipStates.each {
             if (it.ship == Ship.Destroyer) {
                 assert 1 == it.healthRemaining
@@ -246,7 +276,6 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
             }
         }
         assert 0 == game.playerDetails[PTWO.id].scoreFromHits
-        assert "" == game.generalMessage
     }
 
     void testFireAndSinkShipWithSharedIntel() {
@@ -256,8 +285,22 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         game.playerDetails[PONE.id].shipStates.find { it.ship == Ship.Destroyer }.healthRemaining = 1
         def coordinate = new GridCoordinate(7, 7)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
-        assert game.playerDetails[PTWO.id].lastActionMessage == "Direct hit at (7,7)!"
-        assert game.playerDetails[PONE.id].lastActionMessage == "2 sunk your Destroyer!"
+        assert "You fired at 1 (7,7) and hit!" == game.playerDetails[PTWO.id].actionLog[-2].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTWO.id].actionLog[-2].actionType
+        assert "2 fired at (7,7) and hit your Destroyer!" == game.playerDetails[PONE.id].actionLog[-2].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PONE.id].actionLog[-2].actionType
+        assert "2 fired at 1 (7,7) and hit!" == game.playerDetails[PTHREE.id].actionLog[-2].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTHREE.id].actionLog[-2].actionType
+        assert "2 fired at 1 (7,7) and hit!" == game.playerDetails[PFOUR.id].actionLog[-2].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PFOUR.id].actionLog[-2].actionType
+        assert "You sunk a Destroyer for 1!" == game.playerDetails[PTWO.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Sunk == game.playerDetails[PTWO.id].actionLog[-1].actionType
+        assert "2 sunk your Destroyer!" == game.playerDetails[PONE.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Sunk == game.playerDetails[PONE.id].actionLog[-1].actionType
+        assert "2 sunk a Destroyer for 1!" == game.playerDetails[PTHREE.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Sunk == game.playerDetails[PTHREE.id].actionLog[-1].actionType
+        assert "2 sunk a Destroyer for 1!" == game.playerDetails[PFOUR.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Sunk == game.playerDetails[PFOUR.id].actionLog[-1].actionType
         game.playerDetails[PONE.id].shipStates.each {
             if (it.ship == Ship.Destroyer) {
                 assert 0 == it.healthRemaining
@@ -289,7 +332,6 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         }
         assert TBGameScorer.SCORE_FOR_HIT == game.playerDetails[PTWO.id].scoreFromHits
         assert TBGameScorer.SCORE_FOR_SINK == game.playerDetails[PTWO.id].scoreFromSinks
-        assert "" == game.generalMessage
     }
 
     void testFireAndSinkShipWithIsolatedIntel() {
@@ -299,8 +341,18 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         game.playerDetails[PONE.id].shipStates.find { it.ship == Ship.Destroyer }.healthRemaining = 1
         def coordinate = new GridCoordinate(7, 7)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
-        assert game.playerDetails[PTWO.id].lastActionMessage == "Direct hit at (7,7)!"
-        assert game.playerDetails[PONE.id].lastActionMessage == "2 sunk your Destroyer!"
+        assert "You fired at 1 (7,7) and hit!" == game.playerDetails[PTWO.id].actionLog[-2].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTWO.id].actionLog[-2].actionType
+        assert "2 fired at (7,7) and hit your Destroyer!" == game.playerDetails[PONE.id].actionLog[-2].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PONE.id].actionLog[-2].actionType
+        assert "2 fired at 1." == game.playerDetails[PTHREE.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTHREE.id].actionLog[-1].actionType
+        assert "2 fired at 1." == game.playerDetails[PFOUR.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PFOUR.id].actionLog[-1].actionType
+        assert "You sunk a Destroyer for 1!" == game.playerDetails[PTWO.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Sunk == game.playerDetails[PTWO.id].actionLog[-1].actionType
+        assert "2 sunk your Destroyer!" == game.playerDetails[PONE.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Sunk == game.playerDetails[PONE.id].actionLog[-1].actionType
         game.playerDetails[PONE.id].shipStates.each {
             if (it.ship == Ship.Destroyer) {
                 assert 0 == it.healthRemaining
@@ -332,7 +384,6 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         }
         assert TBGameScorer.SCORE_FOR_HIT == game.playerDetails[PTWO.id].scoreFromHits
         assert TBGameScorer.SCORE_FOR_SINK == game.playerDetails[PTWO.id].scoreFromSinks
-        assert "" == game.generalMessage
     }
 
     void testFireAndSinkShipAndEndPlayerWithSharedIntel() {
@@ -353,8 +404,30 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         game.playerDetails[PONE.id].shipStates.find { it.ship == Ship.Destroyer }.healthRemaining = 1
         def coordinate = new GridCoordinate(7, 7)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
-        assert game.playerDetails[PTWO.id].lastActionMessage == "Direct hit at (7,7)!"
-        assert game.playerDetails[PONE.id].lastActionMessage == "2 sunk your Destroyer!"
+        assert "You fired at 1 (7,7) and hit!" == game.playerDetails[PTWO.id].actionLog[-3].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTWO.id].actionLog[-3].actionType
+        assert "2 fired at (7,7) and hit your Destroyer!" == game.playerDetails[PONE.id].actionLog[-3].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PONE.id].actionLog[-3].actionType
+        assert "2 fired at 1 (7,7) and hit!" == game.playerDetails[PTHREE.id].actionLog[-3].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTHREE.id].actionLog[-3].actionType
+        assert "2 fired at 1 (7,7) and hit!" == game.playerDetails[PFOUR.id].actionLog[-3].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PFOUR.id].actionLog[-3].actionType
+        assert "You sunk a Destroyer for 1!" == game.playerDetails[PTWO.id].actionLog[-2].description
+        assert TBActionLogEntry.TBActionType.Sunk == game.playerDetails[PTWO.id].actionLog[-2].actionType
+        assert "2 sunk your Destroyer!" == game.playerDetails[PONE.id].actionLog[-2].description
+        assert TBActionLogEntry.TBActionType.Sunk == game.playerDetails[PONE.id].actionLog[-2].actionType
+        assert "2 sunk a Destroyer for 1!" == game.playerDetails[PTHREE.id].actionLog[-2].description
+        assert TBActionLogEntry.TBActionType.Sunk == game.playerDetails[PTHREE.id].actionLog[-2].actionType
+        assert "2 sunk a Destroyer for 1!" == game.playerDetails[PFOUR.id].actionLog[-2].description
+        assert TBActionLogEntry.TBActionType.Sunk == game.playerDetails[PFOUR.id].actionLog[-2].actionType
+        assert "1 has been defeated!" == game.playerDetails[PTWO.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Defeated == game.playerDetails[PTWO.id].actionLog[-1].actionType
+        assert "1 has been defeated!" == game.playerDetails[PONE.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Defeated == game.playerDetails[PONE.id].actionLog[-1].actionType
+        assert "1 has been defeated!" == game.playerDetails[PTHREE.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Defeated == game.playerDetails[PTHREE.id].actionLog[-1].actionType
+        assert "1 has been defeated!" == game.playerDetails[PFOUR.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Defeated == game.playerDetails[PFOUR.id].actionLog[-1].actionType
         game.playerDetails[PONE.id].shipStates.each {
             if (it.ship == Ship.Destroyer) {
                 assert 0 == it.healthRemaining
@@ -386,7 +459,6 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         }
         assert TBGameScorer.SCORE_FOR_HIT == game.playerDetails[PTWO.id].scoreFromHits
         assert TBGameScorer.SCORE_FOR_SINK == game.playerDetails[PTWO.id].scoreFromSinks
-        assert "2 has defeated 1!" == game.generalMessage
     }
 
     void testFireAndSinkShipAndEndPlayerWithIsolatedIntel() {
@@ -407,8 +479,26 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         game.playerDetails[PONE.id].shipStates.find { it.ship == Ship.Destroyer }.healthRemaining = 1
         def coordinate = new GridCoordinate(7, 7)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
-        assert game.playerDetails[PTWO.id].lastActionMessage == "Direct hit at (7,7)!"
-        assert game.playerDetails[PONE.id].lastActionMessage == "2 sunk your Destroyer!"
+        assert "You fired at 1 (7,7) and hit!" == game.playerDetails[PTWO.id].actionLog[-3].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTWO.id].actionLog[-3].actionType
+        assert "2 fired at (7,7) and hit your Destroyer!" == game.playerDetails[PONE.id].actionLog[-3].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PONE.id].actionLog[-3].actionType
+        assert "2 fired at 1." == game.playerDetails[PTHREE.id].actionLog[-2].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTHREE.id].actionLog[-2].actionType
+        assert "2 fired at 1." == game.playerDetails[PFOUR.id].actionLog[-2].description
+        assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PFOUR.id].actionLog[-2].actionType
+        assert "You sunk a Destroyer for 1!" == game.playerDetails[PTWO.id].actionLog[-2].description
+        assert TBActionLogEntry.TBActionType.Sunk == game.playerDetails[PTWO.id].actionLog[-2].actionType
+        assert "2 sunk your Destroyer!" == game.playerDetails[PONE.id].actionLog[-2].description
+        assert TBActionLogEntry.TBActionType.Sunk == game.playerDetails[PONE.id].actionLog[-2].actionType
+        assert "1 has been defeated!" == game.playerDetails[PTWO.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Defeated == game.playerDetails[PTWO.id].actionLog[-1].actionType
+        assert "1 has been defeated!" == game.playerDetails[PONE.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Defeated == game.playerDetails[PONE.id].actionLog[-1].actionType
+        assert "1 has been defeated!" == game.playerDetails[PTHREE.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Defeated == game.playerDetails[PTHREE.id].actionLog[-1].actionType
+        assert "1 has been defeated!" == game.playerDetails[PFOUR.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Defeated == game.playerDetails[PFOUR.id].actionLog[-1].actionType
         game.playerDetails[PONE.id].shipStates.each {
             if (it.ship == Ship.Destroyer) {
                 assert 0 == it.healthRemaining
@@ -440,6 +530,5 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         }
         assert TBGameScorer.SCORE_FOR_HIT == game.playerDetails[PTWO.id].scoreFromHits
         assert TBGameScorer.SCORE_FOR_SINK == game.playerDetails[PTWO.id].scoreFromSinks
-        assert "2 has defeated 1!" == game.generalMessage
     }
 }

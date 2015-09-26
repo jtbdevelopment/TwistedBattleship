@@ -25,5 +25,4 @@ class TBGame extends AbstractMongoMultiPlayerGame<GameFeature> {
     ObjectId currentPlayer
     int remainingMoves
     int movesForSpecials
-    String generalMessage = ""
 }

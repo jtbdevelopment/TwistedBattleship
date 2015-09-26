@@ -14,7 +14,7 @@ class TBMaskedPlayerState {
     boolean setup
     boolean alive
 
-    String lastActionMessage
+    List<TBMaskedActionLogEntry> actionLog = []
 
     List<Ship> startingShips = []
     List<ShipState> shipStates = []

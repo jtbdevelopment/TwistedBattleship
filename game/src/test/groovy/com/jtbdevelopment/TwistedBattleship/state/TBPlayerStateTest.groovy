@@ -25,7 +25,7 @@ class TBPlayerStateTest extends GroovyTestCase {
         assert [:] == state.opponentGrids
         assert [] == state.shipStates
         assert [] == state.startingShips
-        assert "" == state.lastActionMessage
+        assert [] == state.actionLog
         assert [:] == state.coordinateShipMap
         assertFalse state.setup
         assertFalse state.alive

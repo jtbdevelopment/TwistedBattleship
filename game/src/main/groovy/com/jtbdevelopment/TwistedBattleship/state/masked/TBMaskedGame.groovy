@@ -16,7 +16,6 @@ class TBMaskedGame extends AbstractMaskedMultiPlayerGame<GameFeature> {
     Map<String, Integer> playersScore = [:]
     List<Ship> startingShips = []
     TBMaskedPlayerState maskedPlayersState
-    String generalMessage
     String currentPlayer
     String winningPlayer
     //  TODO support non-symmetrical

@@ -3,6 +3,7 @@ package com.jtbdevelopment.TwistedBattleship.rest.handlers
 import com.jtbdevelopment.TwistedBattleship.exceptions.CannotRepairADestroyedShipException
 import com.jtbdevelopment.TwistedBattleship.exceptions.NoRepairActionsRemainException
 import com.jtbdevelopment.TwistedBattleship.exceptions.NoShipAtCoordinateException
+import com.jtbdevelopment.TwistedBattleship.state.TBActionLogEntry
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
@@ -80,7 +81,8 @@ class RepairShipHandlerTest extends AbstractBaseHandlerTest {
         assert GridCellState.KnownShip == game.playerDetails[PTHREE.id].opponentGrids[PONE.id].get(3, 0)
         assert GridCellState.KnownShip == game.playerDetails[PONE.id].opponentViews[PTHREE.id].get(3, 0)
         game.playerDetails.each {
-            assert "1 repaired their Aircraft Carrier." == it.value.lastActionMessage
+            assert "1 repaired their Aircraft Carrier." == it.value.actionLog[-1].description
+            assert TBActionLogEntry.TBActionType.Repaired == it.value.actionLog[-1].actionType
         }
         assert 0 == game.playerDetails[PONE.id].emergencyRepairsRemaining
         assert 5 == game.playerDetails[PONE.id].shipStates.find { it.ship == Ship.Carrier }.healthRemaining

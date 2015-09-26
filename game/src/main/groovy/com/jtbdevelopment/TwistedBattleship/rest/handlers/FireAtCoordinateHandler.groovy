@@ -1,6 +1,7 @@
 package com.jtbdevelopment.TwistedBattleship.rest.handlers
 
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
+import com.jtbdevelopment.TwistedBattleship.state.TBActionLogEntry
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
@@ -67,9 +68,19 @@ class FireAtCoordinateHandler extends AbstractPlayerMoveHandler {
             final Player<ObjectId> targetedPlayer,
             final TBPlayerState targetedState,
             final GridCoordinate coordinate) {
-        playerState.lastActionMessage = "No enemy at " + coordinate + "."
-        targetedState.lastActionMessage = player.displayName + " missed at " + coordinate + "."
-        markGrids(game, player, targetedPlayer, targetedState, coordinate, GridCellState.KnownByMiss, GridCellState.KnownByOtherMiss)
+        playerState.actionLog.add(new TBActionLogEntry(
+                actionType: TBActionLogEntry.TBActionType.Fired,
+                description: "You fired at " + targetedPlayer.displayName + " " + coordinate + " and missed."
+        ))
+        targetedState.actionLog.add(new TBActionLogEntry(
+                actionType: TBActionLogEntry.TBActionType.Fired,
+                description: player.displayName + " fired at " + coordinate + " and missed."
+        ))
+        TBActionLogEntry sharedLogEntry = new TBActionLogEntry(
+                description: player.displayName + " fired at " + targetedPlayer.displayName + " " + coordinate + " and missed.",
+                actionType: TBActionLogEntry.TBActionType.Fired
+        )
+        markGrids(game, player, targetedPlayer, targetedState, coordinate, GridCellState.KnownByMiss, GridCellState.KnownByOtherMiss, sharedLogEntry)
     }
 
     protected void processHit(
@@ -83,11 +94,20 @@ class FireAtCoordinateHandler extends AbstractPlayerMoveHandler {
             final int hitIndex) {
         ship.shipSegmentHit[hitIndex] = true
         ship.healthRemaining -= 1
-        markGrids(game, player, targetedPlayer, targetedState, coordinate, GridCellState.KnownByHit, GridCellState.KnownByOtherHit)
-
         playerState.scoreFromHits += TBGameScorer.SCORE_FOR_HIT
-        playerState.lastActionMessage = "Direct hit at " + coordinate + "!"
-        targetedState.lastActionMessage = player.displayName + " hit your " + ship.ship.description + " at " + coordinate + "!"
+        playerState.actionLog.add(new TBActionLogEntry(
+                actionType: TBActionLogEntry.TBActionType.Fired,
+                description: "You fired at " + targetedPlayer.displayName + " " + coordinate + " and hit!"
+        ))
+        targetedState.actionLog.add(new TBActionLogEntry(
+                actionType: TBActionLogEntry.TBActionType.Fired,
+                description: player.displayName + " fired at " + coordinate + " and hit your " + ship.ship.description + "!"
+        ))
+        TBActionLogEntry sharedLogEntry = new TBActionLogEntry(
+                description: player.displayName + " fired at " + targetedPlayer.displayName + " " + coordinate + " and hit!",
+                actionType: TBActionLogEntry.TBActionType.Fired
+        )
+        markGrids(game, player, targetedPlayer, targetedState, coordinate, GridCellState.KnownByHit, GridCellState.KnownByOtherHit, sharedLogEntry)
         checkForShipSinking(game, player, playerState, targetedPlayer, targetedState, ship)
     }
 
@@ -100,10 +120,34 @@ class FireAtCoordinateHandler extends AbstractPlayerMoveHandler {
             final TBPlayerState targetedState,
             final ShipState ship) {
         if (ship.healthRemaining == 0) {
-            targetedState.lastActionMessage = player.displayName + " sunk your " + ship.ship.description + "!"
+            targetedState.actionLog.add(new TBActionLogEntry(
+                    actionType: TBActionLogEntry.TBActionType.Sunk,
+                    description: player.displayName + " sunk your " + ship.ship.description + "!"
+            ))
+            playerState.actionLog.add(new TBActionLogEntry(
+                    actionType: TBActionLogEntry.TBActionType.Sunk,
+                    description: "You sunk a " + ship.ship.description + " for " + targetedPlayer.displayName + "!"
+            ))
+            if (game.features.contains(GameFeature.SharedIntel)) {
+                TBActionLogEntry sharedLogEntry = new TBActionLogEntry(
+                        description: player.displayName + " sunk a " + ship.ship.description + " for " + targetedPlayer.displayName + "!",
+                        actionType: TBActionLogEntry.TBActionType.Sunk
+                )
+                game.playerDetails.findAll {
+                    it.key != player.id && it.key != targetedPlayer.id
+                }.each {
+                    it.value.actionLog.add(sharedLogEntry)
+                }
+            }
             playerState.scoreFromSinks += TBGameScorer.SCORE_FOR_SINK
             if (!targetedState.alive) {
-                game.generalMessage = player.displayName + " has defeated " + targetedPlayer.displayName + "!"
+                TBActionLogEntry logEntry = new TBActionLogEntry(
+                        actionType: TBActionLogEntry.TBActionType.Defeated,
+                        description: targetedPlayer.displayName + " has been defeated!"
+                )
+                game.playerDetails.each {
+                    it.value.actionLog.add(logEntry)
+                }
             }
         }
     }
@@ -116,9 +160,19 @@ class FireAtCoordinateHandler extends AbstractPlayerMoveHandler {
             final TBPlayerState targetedState,
             final GridCoordinate coordinate,
             final ShipState ship) {
-        markGrids(game, player, targetedPlayer, targetedState, coordinate, GridCellState.KnownByRehit, GridCellState.KnownByOtherHit)
-        playerState.lastActionMessage = "Damaged area hit again at " + coordinate + "."
-        targetedState.lastActionMessage = player.displayName + " re-hit your " + ship.ship.description + " at " + coordinate + "."
+        playerState.actionLog.add(new TBActionLogEntry(
+                actionType: TBActionLogEntry.TBActionType.Fired,
+                description: "You fired at " + targetedPlayer.displayName + " " + coordinate + " and hit an already damaged area!"
+        ))
+        targetedState.actionLog.add(new TBActionLogEntry(
+                actionType: TBActionLogEntry.TBActionType.Fired,
+                description: player.displayName + " fired at " + coordinate + " and re-hit your " + ship.ship.description + "!"
+        ))
+        TBActionLogEntry sharedLogEntry = new TBActionLogEntry(
+                description: player.displayName + " fired at " + targetedPlayer.displayName + " " + coordinate + " and re-hit a damaged area!",
+                actionType: TBActionLogEntry.TBActionType.Fired
+        )
+        markGrids(game, player, targetedPlayer, targetedState, coordinate, GridCellState.KnownByRehit, GridCellState.KnownByOtherHit, sharedLogEntry)
     }
 
     @SuppressWarnings("GrMethodMayBeStatic")
@@ -129,8 +183,13 @@ class FireAtCoordinateHandler extends AbstractPlayerMoveHandler {
             final TBPlayerState targetedState,
             final GridCoordinate coordinate,
             final GridCellState markForPlayer,
-            final GridCellState markForOthers) {
+            final GridCellState markForOthers,
+            final TBActionLogEntry sharedLogEntry) {
         boolean sharedState = game.features.contains(GameFeature.SharedIntel)
+        TBActionLogEntry nonSharedLogEntry = new TBActionLogEntry(
+                description: player.displayName + " fired at " + targetedPlayer.displayName + ".",
+                actionType: TBActionLogEntry.TBActionType.Fired
+        )
         game.playerDetails.each {
             ObjectId playerId, TBPlayerState state ->
                 switch (playerId) {
@@ -146,6 +205,9 @@ class FireAtCoordinateHandler extends AbstractPlayerMoveHandler {
                                 state.opponentGrids[targetedPlayer.id].set(coordinate, markForOthers)
                                 targetedState.opponentViews[playerId].set(coordinate, markForOthers)
                             }
+                            state.actionLog.add(sharedLogEntry)
+                        } else {
+                            state.actionLog.add(nonSharedLogEntry)
                         }
                 }
         }

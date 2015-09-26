@@ -4,6 +4,7 @@ import com.jtbdevelopment.TwistedBattleship.exceptions.NoEmergencyManeuverAction
 import com.jtbdevelopment.TwistedBattleship.exceptions.NoShipAtCoordinateException
 import com.jtbdevelopment.TwistedBattleship.rest.handlers.helpers.FogCoordinatesGenerator
 import com.jtbdevelopment.TwistedBattleship.rest.handlers.helpers.ShipRelocator
+import com.jtbdevelopment.TwistedBattleship.state.TBActionLogEntry
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
@@ -121,7 +122,10 @@ class EvasiveManeuverHandlerTest extends AbstractBaseHandlerTest {
         assert GridCellState.ObscuredRehit == game.playerDetails[PONE.id].opponentViews[PTHREE.id].get(1, 0)
         assert GridCellState.ObscuredHit == game.playerDetails[PONE.id].opponentViews[PTHREE.id].get(2, 0)
 
-        game.playerDetails.each { assert "1 performed evasive maneuvers." == it.value.lastActionMessage }
+        game.playerDetails.each {
+            assert "1 performed evasive maneuvers." == it.value.actionLog[-1].description
+            assert TBActionLogEntry.TBActionType.PerformedManeuvers == it.value.actionLog[-1].actionType
+        }
         assert 2 == game.playerDetails[PONE.id].evasiveManeuversRemaining
     }
 

@@ -8,6 +8,7 @@ import com.jtbdevelopment.TwistedBattleship.rest.Target
 import com.jtbdevelopment.TwistedBattleship.rest.services.messages.FeaturesAndPlayers
 import com.jtbdevelopment.TwistedBattleship.rest.services.messages.ShipAndCoordinates
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
+import com.jtbdevelopment.TwistedBattleship.state.TBActionLogEntry
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
@@ -317,8 +318,9 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
         assert GamePhase.Playing == game.gamePhase
         assert 5 == game.remainingMoves
         assert [TEST_PLAYER2.md5, TEST_PLAYER1.md5, TEST_PLAYER3.md5].contains(game.currentPlayer)
-        assert "Begin!" == game.generalMessage
-        assert "" == game.maskedPlayersState.lastActionMessage
+        assert TBActionLogEntry.TBActionType.Begin == game.maskedPlayersState.actionLog[0].actionType
+        assert "Game ready to play." == game.maskedPlayersState.actionLog[0].description
+        assert 0 != game.maskedPlayersState.actionLog[0].timestamp
     }
 
     @Test
@@ -346,19 +348,20 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
 
         game = fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 7))
         assert GamePhase.Playing == game.gamePhase
-        assert "Direct hit at (7,7)!" == game.maskedPlayersState.lastActionMessage
+        assert "You fired at TEST PLAYER1 (7,7) and hit!" == game.maskedPlayersState.actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Fired == game.maskedPlayersState.actionLog[-1].actionType
         assert 1 == game.playersScore[TEST_PLAYER2.md5]
         assert 4 == game.remainingMoves
         assert TEST_PLAYER2.md5 == game.currentPlayer
         game = fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 8))
-        assert "No enemy at (7,8)." == game.maskedPlayersState.lastActionMessage
+        assert "You fired at TEST PLAYER1 (7,8) and missed." == game.maskedPlayersState.actionLog[-1].description
         game = fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 6))
-        assert "No enemy at (7,6)." == game.maskedPlayersState.lastActionMessage
+        assert "You fired at TEST PLAYER1 (7,6) and missed." == game.maskedPlayersState.actionLog[-1].description
         game = fire(P2G, TEST_PLAYER1, new GridCoordinate(8, 7))
-        assert "Direct hit at (8,7)!" == game.maskedPlayersState.lastActionMessage
+        assert "You fired at TEST PLAYER1 (8,7) and hit!" == game.maskedPlayersState.actionLog[-1].description
         assert 1 == game.remainingMoves
         game = fire(P2G, TEST_PLAYER1, new GridCoordinate(9, 7))
-        assert "Direct hit at (9,7)!" == game.maskedPlayersState.lastActionMessage
+        assert "You fired at TEST PLAYER1 (9,7) and hit!" == game.maskedPlayersState.actionLog[-1].description
         assert 3 == game.playersScore[TEST_PLAYER2.md5]
         assert 5 == game.remainingMoves
         assert TEST_PLAYER2.md5 != game.currentPlayer
@@ -391,12 +394,12 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
 
         game = spy(P2G, TEST_PLAYER1, new GridCoordinate(7, 8))
         assert GamePhase.Playing == game.gamePhase
-        assert "TEST PLAYER2 spied on TEST PLAYER1 at (7,8)." == game.maskedPlayersState.lastActionMessage
+        assert "You spied on TEST PLAYER1 at (7,8)." == game.maskedPlayersState.actionLog[-1].description
         assert 2 == game.remainingMoves
         assert 1 == game.maskedPlayersState.spysRemaining
         assert TEST_PLAYER2.md5 == game.currentPlayer
         game = spy(P2G, TEST_PLAYER1, new GridCoordinate(2, 6))
-        assert "TEST PLAYER2 spied on TEST PLAYER1 at (2,6)." == game.maskedPlayersState.lastActionMessage
+        assert "You spied on TEST PLAYER1 at (2,6)." == game.maskedPlayersState.actionLog[-1].description
         assert 1 == game.playersScore[TEST_PLAYER2.md5]
         assert 0 == game.maskedPlayersState.spysRemaining
         assert TEST_PLAYER2.md5 != game.currentPlayer
@@ -455,7 +458,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
         fire(P1G, TEST_PLAYER2, new GridCoordinate(7, 0))
         game = repair(P1G, TEST_PLAYER1, new GridCoordinate(8, 7))
         assert 2 == game.remainingMoves
-        assert "TEST PLAYER1 repaired their Aircraft Carrier."
+        assert "TEST PLAYER1 repaired their Aircraft Carrier." == game.maskedPlayersState.actionLog[-1].description
         assert 5 == game.maskedPlayersState.shipStates.find { it.ship == Ship.Carrier }.healthRemaining
         assert [false, false, false, false, false] == game.maskedPlayersState.shipStates.find {
             it.ship == Ship.Carrier
@@ -466,7 +469,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
 
 
         game = repair(P1G, TEST_PLAYER1, new GridCoordinate(8, 0))
-        assert "TEST PLAYER1 repaired their Cruiser."
+        assert "TEST PLAYER1 repaired their Cruiser." == game.maskedPlayersState.actionLog[-1].description
         assert 3 == game.maskedPlayersState.shipStates.find { it.ship == Ship.Cruiser }.healthRemaining
         assert [false, false, false] == game.maskedPlayersState.shipStates.find {
             it.ship == Ship.Cruiser
@@ -518,14 +521,14 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
         assert GridCellState.KnownByHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 0)
         game = ecm(P1G, TEST_PLAYER1, new GridCoordinate(8, 7))
         assert 2 == game.remainingMoves
-        assert "TEST PLAYER1 deployed an ECM at (8,7)."
+        assert "TEST PLAYER1 deployed an ECM." == game.maskedPlayersState.actionLog[-1].description
         assert 1 == game.maskedPlayersState.ecmsRemaining
         assert GridCellState.HiddenHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 7)
         assert GridCellState.KnownByHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 0)
 
 
         game = ecm(P1G, TEST_PLAYER1, new GridCoordinate(6, 0))
-        assert "TEST PLAYER1 deployed an ECM at (6,0)."
+        assert "TEST PLAYER1 deployed an ECM." == game.maskedPlayersState.actionLog[-1].description
         assert GamePhase.Playing == game.gamePhase
         assert GridCellState.HiddenHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 7)
         assert GridCellState.HiddenHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 0)
@@ -581,7 +584,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
         }.shipGridCells
         game = move(P1G, TEST_PLAYER1, new GridCoordinate(8, 7))
         assert 2 == game.remainingMoves
-        assert "TEST PLAYER1 performed evasive maneuvers."
+        assert "TEST PLAYER1 performed evasive maneuvers." == game.maskedPlayersState.actionLog[-1].description
         assert 1 == game.maskedPlayersState.evasiveManeuversRemaining
         assert GridCellState.ObscuredHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 7)
         assert GridCellState.KnownByHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 0)
@@ -741,7 +744,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
         assert !game.playersAlive[TEST_PLAYER2.md5]
         assert game.playersAlive[TEST_PLAYER1.md5]
         assert 72 == game.playersScore[TEST_PLAYER1.md5]
-        assert "TEST PLAYER1 defeated all challengers!" == game.generalMessage
+        assert "TEST PLAYER1 defeated all challengers!" == game.maskedPlayersState.actionLog[-1].description
         assert TEST_PLAYER1.md5 == game.winningPlayer
 
         TBMaskedGame newGame = rematchGame(P1G)

@@ -2,6 +2,7 @@ package com.jtbdevelopment.TwistedBattleship.rest.handlers
 
 import com.jtbdevelopment.TwistedBattleship.exceptions.NoSpyActionsRemainException
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
+import com.jtbdevelopment.TwistedBattleship.state.TBActionLogEntry
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
@@ -87,8 +88,8 @@ class SpyHandlerTest extends AbstractBaseHandlerTest {
                         assert GridCellState.Unknown == game.playerDetails[PONE.id].opponentViews[PTHREE.id].get(row, col)
                 }
         }
-        assert "" == game.playerDetails[PTHREE.id].lastActionMessage
-        assert "" == game.playerDetails[PFOUR.id].lastActionMessage
+        assert 0 == game.playerDetails[PTHREE.id].actionLog.size()
+        assert 0 == game.playerDetails[PFOUR.id].actionLog.size()
     }
 
     void testSpyWithSharedIntel() {
@@ -130,8 +131,10 @@ class SpyHandlerTest extends AbstractBaseHandlerTest {
                         }
                 }
         }
-        assert "2 spied on 1 at (2,1)." == game.playerDetails[PTHREE.id].lastActionMessage
-        assert "2 spied on 1 at (2,1)." == game.playerDetails[PFOUR.id].lastActionMessage
+        assert "2 spied on 1 at (2,1)." == game.playerDetails[PTHREE.id].actionLog[-1].description
+        assert "2 spied on 1 at (2,1)." == game.playerDetails[PFOUR.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Spied == game.playerDetails[PFOUR.id].actionLog[-1].actionType
+        assert TBActionLogEntry.TBActionType.Spied == game.playerDetails[PTHREE.id].actionLog[-1].actionType
     }
 
     protected void coreSpyAsserts() {
@@ -139,8 +142,10 @@ class SpyHandlerTest extends AbstractBaseHandlerTest {
         assert 3 == game.playerDetails[PFOUR.id].spysRemaining
         assert 3 == game.playerDetails[PONE.id].spysRemaining
         assert 2 == game.playerDetails[PTWO.id].spysRemaining
-        assert "2 spied on 1 at (2,1)." == game.playerDetails[PONE.id].lastActionMessage
-        assert "2 spied on 1 at (2,1)." == game.playerDetails[PTWO.id].lastActionMessage
+        assert "2 spied on you at (2,1)." == game.playerDetails[PONE.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Spied == game.playerDetails[PONE.id].actionLog[-1].actionType
+        assert "You spied on 1 at (2,1)." == game.playerDetails[PTWO.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.Spied == game.playerDetails[PTWO.id].actionLog[-1].actionType
         assert GridCellState.Unknown == game.playerDetails[PTWO.id].opponentGrids[PONE.id].get(4, 0)
         assert GridCellState.KnownEmpty == game.playerDetails[PTWO.id].opponentGrids[PONE.id].get(4, 1)
         assert GridCellState.Unknown == game.playerDetails[PTWO.id].opponentGrids[PONE.id].get(4, 2)

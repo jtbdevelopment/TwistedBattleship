@@ -22,9 +22,12 @@ class GamePhaseTransitionEngine extends AbstractGamePhaseTransitionEngine<TBGame
         } != null) {
             return game
         }
-        game.generalMessage = "Begin!"
+        TBActionLogEntry entry = new TBActionLogEntry(
+                actionType: TBActionLogEntry.TBActionType.Begin,
+                description: "Game ready to play."
+        )
         game.playerDetails.each {
-            it.value.lastActionMessage = "";
+            it.value.actionLog.add(entry)
         }
         return changeStateAndReevaluate(GamePhase.Playing, game)
     }
@@ -35,10 +38,15 @@ class GamePhaseTransitionEngine extends AbstractGamePhaseTransitionEngine<TBGame
             it.value.alive
         }
         if (alivePlayers.size() == 1) {
-            game.generalMessage = game.players.find {
-                it.id == alivePlayers.keySet().iterator().next()
-            }.displayName + " defeated all challengers!"
-            game.playerDetails.each { it.value.lastActionMessage = "" }
+            TBActionLogEntry entry = new TBActionLogEntry(
+                    actionType: TBActionLogEntry.TBActionType.Victory,
+                    description: game.players.find {
+                        it.id == alivePlayers.keySet().iterator().next()
+                    }.displayName + " defeated all challengers!"
+            )
+            game.playerDetails.each {
+                it.value.actionLog.add(entry)
+            }
             gameScorer.scoreGame(game)
             game.playerDetails.each {
                 ObjectId myId, TBPlayerState myState ->

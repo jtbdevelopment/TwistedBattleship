@@ -1,6 +1,7 @@
 package com.jtbdevelopment.TwistedBattleship.rest.handlers
 
 import com.jtbdevelopment.TwistedBattleship.exceptions.NoECMActionsRemainException
+import com.jtbdevelopment.TwistedBattleship.state.TBActionLogEntry
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
@@ -42,22 +43,33 @@ class ECMHandler extends AbstractSpecialMoveHandler {
     TBGame playMove(
             final Player<ObjectId> player,
             final TBGame game, final Player<ObjectId> targetedPlayer, final GridCoordinate coordinate) {
-        TBPlayerState state = game.playerDetails[player.id]
-        String message = player.displayName + " deployed an ECM at " + coordinate + "."
+        TBActionLogEntry logEntry = new TBActionLogEntry(
+                actionType: TBActionLogEntry.TBActionType.UsedECM,
+                description: player.displayName + " deployed an ECM."
+        )
+        game.playerDetails.each {
+            it.value.actionLog.add(logEntry)
+        }
 
+        TBPlayerState state = game.playerDetails[player.id]
         --state.ecmsRemaining
-        state.lastActionMessage = message
 
         Set<GridCoordinate> ecmCoordinates = gridCircleUtil.computeCircleCoordinates(game, coordinate)
 
         game.playerDetails.findAll { it.key != player.id }.each {
             ObjectId pid, TBPlayerState opponent ->
-                opponent.lastActionMessage = message
                 Grid opponentGrid = opponent.opponentGrids[player.id]
                 Grid opponentView = state.opponentViews[pid]
                 ecmCoordinates.each {
                     opponentGrid.set(it, GridCellState.Unknown)
                     opponentView.set(it, GridCellState.Unknown)
+                    String start = "You fired at " + player.displayName + " " + it
+                    opponent.actionLog.findAll {
+                        it.actionType == TBActionLogEntry.TBActionType.Fired && it.description.startsWith(start)
+                    }.each {
+                        it.description = "Log damaged by ECM."
+                        it.actionType = TBActionLogEntry.TBActionType.DamagedByECM
+                    }
                 }
         }
 

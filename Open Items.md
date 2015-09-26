@@ -1,7 +1,8 @@
 Consolidated To Do's
 ====================
 
-- android websocket issue?
+- android websocket issue? - likely some crosswalk/atmosphere issue - patch
+- genymotion / virtuabox seems to interfere with multicast
 -  better / quieter check on re-open?
 - add user profile in ui
 - add game detail popup
@@ -16,12 +17,4 @@ Consolidated To Do's
 - hazelcast cluster group name?
 - refresh on web page not working if on root (ok via FB Canvas)
 - sounds
-- review server side messages
 
---  Notes on messages 
- - ecm, repair, evasive: message to all players
- - spy goes to all players if in shared intel mode
- - fire target/player only, sink/defeat to all
- - victory should be reversed
- - lack of history renders most messages pointless, history would render ecm useless
- - make history list and have ecm wipe history list?
