@@ -46,6 +46,7 @@
           font-size: xx-small;
         }
       }
+
       .badge {
         background: $paler_blue;
         color: black;
@@ -65,7 +66,6 @@
         background-color: transparent;
         top: 15px;
       }
-
 
     }
     .item-divider {
@@ -139,6 +139,29 @@
   .viewToggleRow {
     padding-top: 0;
     margin-top: 0;
+    .button-bar {
+      padding: 0;
+      .button {
+        overflow: visible;
+        white-space: normal;
+        margin: auto;
+      }
+      .button:before {
+        overflow: visible;
+        white-space: normal;
+        margin: auto;
+      }
+    }
   }
+
+  .lastActionTimestamp {
+    @media (max-width: $screen-sm-max) {
+      font-size: x-small;
+    }
+    @media (max-width: $screen-xs-max) {
+      font-size: xx-small;
+    }
+  }
+
 }
 

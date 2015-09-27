@@ -136,12 +136,14 @@
                         </div>
                     </div>
                     <div class="col-50">
-                        <div class="item item-text-wrap item-icon-right">
-                            <i class="icon icon-right ion-more" ng-click="showActionLog()"></i>
+                        <div class="item item-text-wrap item-button-right lastAction">
                             {{gameDetails.lastActionLog(game)}}
-                            <p>
+                            <p class="lastActionTimestamp">
                                 {{gameDetails.lastActionTime(game)}}
                             </p>
+                            <a class="button button-action-log" ng-click="showActionLog()">
+                                <i class="icon icon-right ion-more"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
