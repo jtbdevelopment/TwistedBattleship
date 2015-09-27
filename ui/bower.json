@@ -6,7 +6,7 @@
     "angular-multi-select-alexandernst": "https://github.com/jtbdevelopment/angular-multi-select.git#master",
     "angular-resource": "1.4.3",
     "angular-route": "1.4.3",
-    "ionic": "v1.0.0-rc.3",
+    "ionic": "driftyco/ionic-bower#1.1.0",
     "jtb-core-games-ui": "~1.0.2",
     "ngCordova": "v0.1.14-alpha",
     "phaser": "~2.4.3"
