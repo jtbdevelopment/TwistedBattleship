@@ -13,9 +13,9 @@ class TBPlayerAttributesTest extends MongoGameCoreTestCase {
     void testSetPlayer() {
         Player p = makeSimplePlayer(new ObjectId().toString())
         p.payLevel = PlayerPayLevel.FreeToPlay
-        assert new TBPlayerAttributes(player: p).maxDailyFreeGames == 10
+        assert new TBPlayerAttributes(player: p).maxDailyFreeGames == 20
         p.payLevel = PlayerPayLevel.PremiumPlayer
-        assert new TBPlayerAttributes(player: p).maxDailyFreeGames == 25
+        assert new TBPlayerAttributes(player: p).maxDailyFreeGames == 50
     }
 
     void testDefaultThemes() {
