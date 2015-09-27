@@ -24,6 +24,9 @@
         <string>UIInterfaceOrientationLandscapeRight</string>
       </array>
     </config-file>
+    <config-file platform="ios" target="*-Info.plist" parent="UIRequiresFullScreen">
+      <true/>
+    </config-file>
     <icon src="resources/ios/icon/icon.png" width="57" height="57"/>
     <icon src="resources/ios/icon/icon@2x.png" width="114" height="114"/>
     <icon src="resources/ios/icon/icon-40.png" width="40" height="40"/>
