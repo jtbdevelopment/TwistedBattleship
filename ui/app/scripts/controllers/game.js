@@ -126,10 +126,24 @@ angular.module('tbs.controllers').controller('GameCtrl',
                 });
                 tbsShipGrid.initialize($scope.game, [], [], function () {
                     $timeout(function() {
+                        $scope.switchView(false);
                         if ($scope.game.gamePhase === 'Playing') {
                             tbsShipGrid.activateHighlighting(highlightCallback);
+                        } else {
+                            if ($scope.game.gamePhase === 'RoundOver') {
+                                if ($scope.game.winningPlayer === $scope.player.md5) {
+                                    $ionicPopup.alert({
+                                        title: 'Game is over!',
+                                        template: 'Congratulations Winner!'
+                                    });
+                                } else {
+                                    $ionicPopup.alert({
+                                        title: 'Game is over!',
+                                        template: 'Better luck next time...'
+                                    });
+                                }
+                            }
                         }
-                        $scope.switchView(false);
                         $ionicLoading.hide();
                     });
                 });
@@ -137,22 +151,15 @@ angular.module('tbs.controllers').controller('GameCtrl',
 
             $scope.$on('gameUpdated', function (event, oldGame, newGame) {
                 if ($scope.gameID === newGame.id) {
-                    //  TODO - show ad if turn over
                     $scope.game = newGame;
                     $scope.changePlayer($scope.showing);
-                    if ($scope.game.gamePhase !== 'Playing') {
-                        tbsShipGrid.deactivateHighlighting();
+                    if (oldGame.gamePhase !== newGame.gamePhase) {
+                        $state.go('app.' + $scope.game.gamePhase.toLowerCase(), {gameID: $scope.gameID});
+                    } else {
+                        if (oldGame.currentPlayer === $scope.player.md5 && newGame.currentPlayer !== $scope.player.md5) {
+                            //  TODO - Ad
+                        }
                     }
-                    /*
-                     var message = $scope.game.maskedPlayersState.lastActionMessage;
-                    if (angular.isDefined(message) && message !== '') {
-                        $ionicPopup.alert({
-                            title: 'Move Completed!',
-                            template: message
-                        }).then(function () {
-                        });
-                    }
-                     */
                 }
             });
         }
