@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('tbs.controllers').controller('MainCtrl',
-    ['$scope', 'jtbPlayerService', 'jtbLiveGameFeed', '$state', 'ENV', '$document', 'tbsVersionNotes',
-        function ($scope, jtbPlayerService, jtbLiveGameFeed, $state, ENV, $document, tbsVersionNotes) {
+    ['$scope', 'jtbPlayerService', 'jtbLiveGameFeed', '$state', 'ENV', '$document', 'tbsVersionNotes', 'tbsCircles', 'jtbGameFeatureService', 'tbsCellStates', 'tbsShips', 'jtbGamePhaseService',
+        function ($scope, jtbPlayerService, jtbLiveGameFeed, $state, ENV, $document, tbsVersionNotes, tbsCircles, jtbGameFeatureService, tbsCellStates, tbsShips, jtbGamePhaseService) {
 
             function checkNetworkStatusAndLogin() {
                 $state.go('network');
@@ -16,6 +16,17 @@ angular.module('tbs.controllers').controller('MainCtrl',
 
             $scope.$on('playerLoaded', function () {
                 $scope.theme = jtbPlayerService.currentPlayer().gameSpecificPlayerAttributes.theme;
+                //  Kick off some precaching of info
+                tbsCircles.circles().then(function () {
+                });
+                jtbGameFeatureService.features().then(function () {
+                });
+                tbsCellStates.cellStates().then(function () {
+                });
+                tbsShips.ships().then(function () {
+                });
+                jtbGamePhaseService.phases().then(function () {
+                });
                 tbsVersionNotes.showReleaseNotes();
             });
 
