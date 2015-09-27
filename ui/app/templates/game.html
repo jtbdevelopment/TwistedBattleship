@@ -125,15 +125,15 @@
             </div>
             <div class="col-80">
                 <div class="row viewToggleRow">
-                    <div class="col-50">
-                        <div class="button-bar">
-                            <a class="button button-switch-view icon-left {{showingSelf ? 'ion-checkmark' : '' }} button-defend"
-                               ng-click="switchView(true)">Their view of you
+                    <div class="col-25">
+                        <a class="button button-full button-switch-view icon-left {{showingSelf ? 'ion-checkmark' : '' }} button-defend"
+                           ng-click="switchView(true)">They see..
                             </a>
-                            <a class="button button-switch-view icon-left {{showingSelf ? '' : 'ion-checkmark' }} button-attack"
-                               ng-click="switchView(false)" ng-disabled="showing == 'ALL'">Your view of them
-                            </a>
-                        </div>
+                    </div>
+                    <div class="col-25">
+                        <a class="button button-full button-switch-view icon-left {{showingSelf ? '' : 'ion-checkmark' }} button-attack"
+                           ng-click="switchView(false)" ng-disabled="showing == 'ALL'">You see..
+                        </a>
                     </div>
                     <div class="col-50">
                         <div class="item item-text-wrap item-icon-right">
