@@ -54,6 +54,21 @@
   margin-top: 0;
 }
 
+@mixin flex($fg: 1, $fs: null, $fb: null) {
+  -webkit-box-flex: $fg;
+  -webkit-flex: $fg $fs $fb;
+  -moz-box-flex: $fg;
+  -moz-flex: $fg $fs $fb;
+  -ms-flex: $fg $fs $fb;
+  flex: $fg $fs $fb;
+}
+
+.col-40 {
+  @include flex(0, 0, 40%);
+  max-width: 40%;
+}
+
+
 @import "default/default-theme";
 
 

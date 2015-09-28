@@ -6,20 +6,21 @@
     <ion-content has-bouncing="false">
         <div class="row">
             <div class="list col-20">
-                <div class="item item-avatar item-text-wrap" ng-show="game.gamePhase === 'Playing'">
+                <div class="item item-avatar item-text-wrap {{game.currentPlayer == player.md5 ? 'activePlayer' : 'inactivePlayer'}}"
+                     ng-show="game.gamePhase === 'Playing'">
                     <img ng-src="{{gameDetails.imageForPlayer(game, game.currentPlayer)}}">
 
-                    <h3 class="activePlayer">Turn: {{game.players[game.currentPlayer]}}</h3>
+                    <h3>Turn: {{game.players[game.currentPlayer]}}</h3>
 
                     <p>{{game.remainingMoves}} moves left.</p>
                 </div>
-                <div class="item item-avatar item-text-wrap" ng-hide="game.gamePhase === 'Playing'">
+                <div class="item item-avatar item-text-wrap {{(game.winningPlayer === player.md5) ? 'winner' : 'loser'}}"
+                     ng-hide="game.gamePhase === 'Playing'">
                     <img ng-src="{{gameDetails.imageForPlayer(game, game.winningPlayer)}}">
 
-                    <h3 class="activePlayer">Winner: {{game.players[game.winningPlayer]}}</h3>
-
-                    <p>Winning Score: {{game.playersScore[game.winningPlayer]}}</p>
+                    <h3>Winner: {{game.players[game.winningPlayer]}}</h3>
                 </div>
+                <div class="item item-divider">You</div>
                 <div class="item item-avatar item-text-wrap {{showing == 'ALL' ? 'chosen' : ''}}"
                      ng-click="changePlayer('ALL')">
                     <img ng-src="{{gameDetails.imageForPlayer(game, player.md5)}}">
@@ -128,23 +129,25 @@
                     <div class="col-25">
                         <a class="button button-full button-switch-view icon-left {{showingSelf ? 'ion-checkmark' : '' }} button-defend"
                            ng-click="switchView(true)">They see..
-                            </a>
+                        </a>
                     </div>
                     <div class="col-25">
                         <a class="button button-full button-switch-view icon-left {{showingSelf ? '' : 'ion-checkmark' }} button-attack"
                            ng-click="switchView(false)" ng-disabled="showing == 'ALL'">You see..
                         </a>
                     </div>
-                    <div class="col-50">
+                    <div class="col-40">
                         <div class="item item-text-wrap item-button-right lastAction">
                             {{gameDetails.lastActionLog(game)}}
                             <p class="lastActionTimestamp">
                                 {{gameDetails.lastActionTime(game)}}
                             </p>
-                            <a class="button button-action-log" ng-click="showActionLog()">
-                                <i class="icon icon-right ion-more"></i>
-                            </a>
                         </div>
+                    </div>
+                    <div class="col-10">
+                        <a class="button button-action-log" ng-click="showActionLog()">
+                            <i class="icon icon-right ion-more"></i>
+                        </a>
                     </div>
                 </div>
                 <div class="row">

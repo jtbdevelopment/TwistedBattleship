@@ -66,7 +66,6 @@
         top: 15px;
       }
 
-
     }
     .item-divider {
       border-color: $boatgray;
@@ -83,51 +82,31 @@
 
   }
 
-  .gameSummary {
-    .item {
-      font-weight: bold;
-      text-align: left;
-      border: none;
-      padding: 2px;
+  .activePlayer {
+    background-color: $medium_green;
+  }
 
-      @media (max-width: $screen-xs-max) {
-        font-size: x-small;
-      }
+  .inactivePlayer {
+    background-color: $medium_blue;
+  }
 
-      .item-note {
-        text-align: left;
-        color: black;
-        float: left;
+  .winner {
+    background-color: $darker_green;
+  }
 
-        @media (max-width: $screen-xs-max) {
-          font-size: xx-small;
-          font-weight: normal;
-          width: 100%;
-        }
-      }
-      .activePlayer {
-        background-color: $medium_green;
-      }
+  .loser {
+    background-color: red;
+    h3 {
+      color: white;
+    }
+  }
 
-      .inactivePlayer {
-        .badge {
-          background-color: $medium_blue;
-        }
-      }
-
-      .winner {
-        .badge {
-          background-color: $darker_green;
-          color: black;
-        }
-      }
-
-      .loser {
-        .badge {
-          background-color: red;
-          color: black;
-        }
-      }
+  .lastActionTimestamp {
+    @media (max-width: $screen-sm-max) {
+      font-size: x-small;
+    }
+    @media (max-width: $screen-xs-max) {
+      font-size: xx-small;
     }
   }
 
