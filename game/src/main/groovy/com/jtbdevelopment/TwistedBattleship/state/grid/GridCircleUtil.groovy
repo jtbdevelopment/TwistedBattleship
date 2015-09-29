@@ -46,6 +46,7 @@ class GridCircleUtil {
             ] as Set,  // 25 of 400 = 6.25%
     ]
 
+    @SuppressWarnings("GrMethodMayBeStatic")
     Set<GridCoordinate> computeCircleCoordinates(
             final TBGame game, final GridCoordinate centerCoordinate) {
         return new HashSet(CIRCLE_OFFSETS.findAll {

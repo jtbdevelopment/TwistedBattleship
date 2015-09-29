@@ -63,7 +63,7 @@ class SimpleAI implements AI {
         List<ShipState> shipStates = (List<ShipState>) game.startingShips.collect {
             Ship ship ->
                 boolean horizontal = random.nextInt(100) < 50
-                TreeSet<GridCoordinate> set
+                TreeSet<GridCoordinate> set = new TreeSet<>()
                 if (horizontal) {
                     boolean ok = false
                     while (!ok) {
@@ -180,6 +180,7 @@ class SimpleAI implements AI {
                 game.playerDetails[it.key].alive
             }.collectMany {
                 ObjectId opponent, Grid grid ->
+                    String md5 = game.players.find { it.id == opponent }
                     List<WeightedTarget> weightedTargets = []
                     for (int row = 0; row < game.gridSize; ++row) {
                         for (int col = 0; col < game.gridSize; ++col) {
@@ -204,7 +205,7 @@ class SimpleAI implements AI {
                                 }
                             }
                             weightedTargets.add(new WeightedTarget(
-                                    player: opponent,
+                                    player: md5,
                                     coordinate: new GridCoordinate(row, col),
                                     weight: currentValue))
                         }
@@ -225,7 +226,7 @@ class SimpleAI implements AI {
             spyHandler.handleAction(
                     player.id,
                     game.id,
-                    new Target(player: game.players.find { it.id == target.player }.md5, coordinate: target.coordinate))
+                    new Target(player: target.player, coordinate: target.coordinate))
 
             return true
         }
@@ -265,7 +266,7 @@ class SimpleAI implements AI {
                             }
                             if (currentValue >= 6) {
                                 weightedTargets.add(new WeightedTarget(
-                                        player: opponent,
+                                        player: player.md5,
                                         coordinate: new GridCoordinate(row, col),
                                         weight: currentValue))
                             }
@@ -291,7 +292,7 @@ class SimpleAI implements AI {
             ecmHandler.handleAction(
                     player.id,
                     game.id,
-                    new Target(player: player.md5, coordinate: target.coordinate))
+                    new Target(player: target.player, coordinate: target.coordinate))
 
             return true
         }
@@ -304,6 +305,7 @@ class SimpleAI implements AI {
         }.collectMany {
             ObjectId opponent, Grid grid ->
                 List<WeightedTarget> weightedTargets = []
+                String md5 = game.players.find { it.id == opponent }
                 for (int row = 0; row < game.gridSize; ++row) {
                     for (int col = 0; col < game.gridSize; ++col) {
                         int currentValue;
@@ -327,7 +329,7 @@ class SimpleAI implements AI {
                                 break
                         }
                         weightedTargets.add(new WeightedTarget(
-                                player: opponent,
+                                player: md5,
                                 coordinate: new GridCoordinate(row, col),
                                 weight: currentValue))
                     }
@@ -348,7 +350,7 @@ class SimpleAI implements AI {
         fireAtCoordinateHandler.handleAction(
                 player.id,
                 game.id,
-                new Target(player: game.players.find { it.id == target.player }.md5, coordinate: target.coordinate))
+                new Target(player: target.player, coordinate: target.coordinate))
 
         return true
     }
