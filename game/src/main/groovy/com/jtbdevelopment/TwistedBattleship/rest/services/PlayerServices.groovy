@@ -1,7 +1,6 @@
 package com.jtbdevelopment.TwistedBattleship.rest.services
 
 import com.jtbdevelopment.TwistedBattleship.ai.AI
-import com.jtbdevelopment.TwistedBattleship.ai.simple.SimpleAIPlayerCreator
 import com.jtbdevelopment.TwistedBattleship.exceptions.NotAValidThemeException
 import com.jtbdevelopment.TwistedBattleship.player.TBPlayerAttributes
 import com.jtbdevelopment.TwistedBattleship.rest.handlers.PlayerGamesFinderHandler
@@ -43,7 +42,9 @@ class PlayerServices extends AbstractPlayerServices<ObjectId> {
     public void setup() {
         aiPlayers = aiList.collectEntries {
             AI ai ->
-                [(ai.player.md5): ai.player.displayName]
+                ai.players.collectEntries {
+                    [(it.md5): it.displayName]
+                }
         }
     }
 

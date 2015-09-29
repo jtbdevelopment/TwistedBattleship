@@ -45,6 +45,7 @@ class AIGameListener implements GameListener {
 
     private Map<Player, AI> playerAIMap
     private Map<ObjectId, AI> playerIDAIMap
+    private Map<ObjectId, Player> playerIDPlayerMap
     private List<Player> aiPlayers
     private Set<ObjectId> aiIDs
 
@@ -52,14 +53,24 @@ class AIGameListener implements GameListener {
     public void setup() {
         playerAIMap = aiList.collectEntries {
             AI ai ->
-                [(ai.player): ai]
+                ai.players.collectEntries {
+                    [(it): ai]
+                }
         }
         aiPlayers = playerAIMap.keySet().toList()
         playerIDAIMap = aiList.collectEntries {
             AI ai ->
-                [((ObjectId) ai.player.id): ai]
+                ai.players.collectEntries {
+                    [((ObjectId) it.id): ai]
+                }
         }
         aiIDs = playerIDAIMap.keySet()
+        playerIDPlayerMap = aiList.collectEntries {
+            AI ai ->
+                ai.players.collectEntries {
+                    [((ObjectId) it.id): it]
+                }
+        }
     }
 
     private final Map<ObjectId, Integer> problemGames = [:]
@@ -131,12 +142,12 @@ class AIGameListener implements GameListener {
                     case GamePhase.Setup:
                         ObjectId aiToSetup = playerToSetup(game)
                         if (aiToSetup) {
-                            playerIDAIMap[aiToSetup].setup(game)
+                            playerIDAIMap[aiToSetup].setup(game, playerIDPlayerMap[aiToSetup])
                         }
                         break
                     case GamePhase.Playing:
                         if (aiIDs.contains(game.currentPlayer)) {
-                            playerIDAIMap[game.currentPlayer].playOneMove(game)
+                            playerIDAIMap[game.currentPlayer].playOneMove(game, playerIDPlayerMap[game.currentPlayer])
                         }
                         break
                 }
