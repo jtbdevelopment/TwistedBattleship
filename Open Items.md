@@ -8,6 +8,7 @@ Consolidated To Do's
 - add game detail popup
 - zoom controls on phaser
 - add nudge player
+- infinite scroll on action log 
 - revamp game list to be your action, their action, older
 - test war with non / roots
 - push notifications
@@ -18,4 +19,5 @@ Consolidated To Do's
 - refresh on web page not working if on root (ok via FB Canvas)
 - sounds
 -  move logback to core?
+- release process for phones
 
