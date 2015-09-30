@@ -1,4 +1,4 @@
-package com.jtbdevelopment.TwistedBattleship.ai.simple
+package com.jtbdevelopment.TwistedBattleship.ai.regular
 
 import com.jtbdevelopment.TwistedBattleship.ai.common.AbstractAIPlayerCreator
 import groovy.transform.CompileStatic
@@ -12,8 +12,8 @@ import javax.annotation.PostConstruct
  */
 @Component
 @CompileStatic
-class SimpleAIPlayerCreator extends AbstractAIPlayerCreator {
-    private static final String DISPLAY_NAME_BASE = "Simple AI #"
+class RegularAIPlayerCreator extends AbstractAIPlayerCreator {
+    private static final String DISPLAY_NAME_BASE = "Regular AI #"
 
     @PostConstruct
     void setup() {

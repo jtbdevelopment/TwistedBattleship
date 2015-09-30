@@ -2,6 +2,7 @@ package com.jtbdevelopment.TwistedBattleship.ai.simple
 
 import com.jtbdevelopment.TwistedBattleship.ai.AI
 import com.jtbdevelopment.TwistedBattleship.ai.WeightedTarget
+import com.jtbdevelopment.TwistedBattleship.ai.common.RandomizedSetup
 import com.jtbdevelopment.TwistedBattleship.rest.Target
 import com.jtbdevelopment.TwistedBattleship.rest.handlers.*
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
@@ -46,10 +47,10 @@ class SimpleAI implements AI {
     ECMHandler ecmHandler
 
     @Autowired
-    SetupShipsHandler setupShipsHandler
+    GridCircleUtil gridCircleUtil
 
     @Autowired
-    GridCircleUtil gridCircleUtil
+    RandomizedSetup randomizedSetup
 
     private Random random = new Random()
 
@@ -59,42 +60,7 @@ class SimpleAI implements AI {
     }
 
     void setup(final TBGame game, final Player player) {
-        Set<GridCoordinate> used = [] as Set
-        List<ShipState> shipStates = (List<ShipState>) game.startingShips.collect {
-            Ship ship ->
-                boolean horizontal = random.nextInt(100) < 50
-                TreeSet<GridCoordinate> set = new TreeSet<>()
-                if (horizontal) {
-                    boolean ok = false
-                    while (!ok) {
-                        int row = random.nextInt(game.gridSize)
-                        int startCol = random.nextInt(game.gridSize - ship.gridSize)
-                        set = new TreeSet<GridCoordinate>((startCol..(startCol + ship.gridSize - 1)).collect {
-                            int col ->
-                                new GridCoordinate(row, col)
-                        })
-                        ok = set.find {
-                            used.contains(it)
-                        } == null
-                    }
-                } else {
-                    boolean ok = false
-                    while (!ok) {
-                        int startRow = random.nextInt(game.gridSize - ship.gridSize)
-                        int col = random.nextInt(game.gridSize)
-                        set = new TreeSet<GridCoordinate>((startRow..(startRow + ship.gridSize - 1)).collect {
-                            int row ->
-                                new GridCoordinate(row, col)
-                        })
-                        ok = set.find {
-                            used.contains(it)
-                        } == null
-                    }
-                }
-                used.addAll(set)
-                return new ShipState(ship, set)
-        }
-        setupShipsHandler.handleAction(player.id, game.id, shipStates)
+        randomizedSetup.setup(game, player)
     }
 
     void playOneMove(final TBGame game, final Player player) {
@@ -180,13 +146,13 @@ class SimpleAI implements AI {
                 game.playerDetails[it.key].alive
             }.collectMany {
                 ObjectId opponent, Grid grid ->
-                    String md5 = game.players.find { it.id == opponent }
+                    String md5 = game.players.find { it.id == opponent }.md5
                     List<WeightedTarget> weightedTargets = []
                     for (int row = 0; row < game.gridSize; ++row) {
                         for (int col = 0; col < game.gridSize; ++col) {
                             int currentValue = 0;
                             gridCircleUtil.computeCircleCoordinates(game, new GridCoordinate(row, col)).each {
-                                switch (grid.get(row, col)) {
+                                switch (grid.get(it)) {
                                     case GridCellState.KnownEmpty:
                                     case GridCellState.KnownByRehit:
                                     case GridCellState.KnownByHit:
@@ -244,7 +210,7 @@ class SimpleAI implements AI {
                         for (int col = 0; col < game.gridSize; ++col) {
                             int currentValue = 0;
                             gridCircleUtil.computeCircleCoordinates(game, new GridCoordinate(row, col)).each {
-                                switch (grid.get(row, col)) {
+                                switch (grid.get(it)) {
                                     case GridCellState.KnownShip:
                                         currentValue += 4
                                         break
@@ -305,7 +271,7 @@ class SimpleAI implements AI {
         }.collectMany {
             ObjectId opponent, Grid grid ->
                 List<WeightedTarget> weightedTargets = []
-                String md5 = game.players.find { it.id == opponent }
+                String md5 = game.players.find { it.id == opponent }.md5
                 for (int row = 0; row < game.gridSize; ++row) {
                     for (int col = 0; col < game.gridSize; ++col) {
                         int currentValue;

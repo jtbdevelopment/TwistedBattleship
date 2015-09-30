@@ -14,5 +14,6 @@ class WeightedTarget extends Target {
         Repair,
         Move
     }
+    Action action
     int weight
 }
