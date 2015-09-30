@@ -11,8 +11,6 @@ import org.springframework.stereotype.Component
 @Component
 @CompileStatic
 class ConsolidateGridViews {
-    //  TODO - move tests from game masker to here
-
     @SuppressWarnings("GrMethodMayBeStatic")
     Grid createConsolidatedView(final TBGame game, final Iterable<Grid> views) {
         int size = game.gridSize

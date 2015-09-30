@@ -1,6 +1,21 @@
 package com.jtbdevelopment.TwistedBattleship.state.masked
 
+import com.jtbdevelopment.TwistedBattleship.state.GameFeature
+import com.jtbdevelopment.TwistedBattleship.state.TBActionLogEntry
+import com.jtbdevelopment.TwistedBattleship.state.TBGame
+import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
+import com.jtbdevelopment.TwistedBattleship.state.grid.ConsolidateGridViews
+import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
+import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
+import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
+import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
+import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
 import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
+import com.jtbdevelopment.games.players.Player
+import com.jtbdevelopment.games.state.GamePhase
+import org.bson.types.ObjectId
+
+import java.time.ZonedDateTime
 
 /**
  * Date: 4/2/15
@@ -10,7 +25,6 @@ class TBGameMaskerTest extends MongoGameCoreTestCase {
     TBGameMasker masker = new TBGameMasker()
 
     void testMaskingGame() {
-        /*
         TBGame game = new TBGame(
                 rematchTimestamp: ZonedDateTime.now(),
                 gamePhase: GamePhase.Playing,
@@ -76,6 +90,15 @@ class TBGameMaskerTest extends MongoGameCoreTestCase {
         game.playerDetails[PONE.id].opponentViews[PTWO.id].set(5, 4, GridCellState.KnownByHit)
         game.playerDetails[PONE.id].opponentViews[PTHREE.id].set(5, 4, GridCellState.KnownByRehit)
 
+        Grid consolidated = new Grid(1)
+        masker.consolidateGridViews = [
+                createConsolidatedView: {
+                    TBGame g, Iterable<Grid> views ->
+                        assert g.is(game)
+                        assert views.toList() == game.playerDetails[PONE.id].opponentViews.values().toList()
+                        return consolidated
+                }
+        ] as ConsolidateGridViews
         TBMaskedGame maskedGame = masker.maskGameForPlayer(game, PONE)
         assert maskedGame
         assert game.gridSize == maskedGame.gridSize
@@ -121,34 +144,7 @@ class TBGameMaskerTest extends MongoGameCoreTestCase {
                 Player p = game.players.find { it.id == id }
                 assert grid == maskedGame.maskedPlayersState.opponentViews[p.md5]
         }
-        assertNotNull maskedGame.maskedPlayersState.consolidatedOpponentView
-        for (int row = 0; row < 10; ++row) {
-            for (int col = 0; col < 10; ++col) {
-                def state = maskedGame.maskedPlayersState.consolidatedOpponentView.get(row, col)
-                if (row != 5 || col > 4) {
-                    assert state == GridCellState.Unknown
-                } else {
-                    switch (col) {
-                        case 0:
-                            assert GridCellState.KnownByHit == state
-                            break
-                        case 1:
-                            assert GridCellState.KnownByMiss == state;
-                            break
-                        case 2:
-                            assert GridCellState.KnownShip == state;
-                            break
-                        case 3:
-                            assert GridCellState.KnownByHit == state;
-                            break
-                        case 4:
-                            assert GridCellState.KnownByHit == state
-                            break
-                    }
-                }
-            }
-        }
+        assert consolidated.is(maskedGame.maskedPlayersState.consolidatedOpponentView)
         assert PONE.md5 == maskedGame.winningPlayer
-        */
     }
 }
