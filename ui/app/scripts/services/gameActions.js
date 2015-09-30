@@ -79,10 +79,7 @@ angular.module('tbs.services').factory('tbsActions',
 
             return {
                 accept: function ($scope) {
-//  TODO
-//                twAds.showAdPopup().result.then(function () {
                     takeAction($scope, 'accept');
-//                });
                 },
 
                 reject: function ($scope) {
@@ -94,10 +91,7 @@ angular.module('tbs.services').factory('tbsActions',
                 },
 
                 rematch: function ($scope) {
-//  TODO
-//                twAds.showAdPopup().result.then(function () {
                     takeAction($scope, 'rematch');
-//                });
                 },
 
                 quit: function ($scope) {

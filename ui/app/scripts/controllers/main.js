@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('tbs.controllers').controller('MainCtrl',
-    ['$scope', 'jtbPlayerService', 'jtbLiveGameFeed', '$state', 'ENV', '$document', 'tbsVersionNotes', 'tbsCircles', 'jtbGameFeatureService', 'tbsCellStates', 'tbsShips', 'jtbGamePhaseService',
-        function ($scope, jtbPlayerService, jtbLiveGameFeed, $state, ENV, $document, tbsVersionNotes, tbsCircles, jtbGameFeatureService, tbsCellStates, tbsShips, jtbGamePhaseService) {
+    ['$scope', 'jtbPlayerService', 'jtbLiveGameFeed', '$state', 'ENV', '$document', 'tbsVersionNotes', 'tbsCircles', 'jtbGameFeatureService', 'tbsCellStates', 'tbsShips', 'jtbGamePhaseService', 'tbsAds',
+        function ($scope, jtbPlayerService, jtbLiveGameFeed, $state, ENV, $document, tbsVersionNotes, tbsCircles, jtbGameFeatureService, tbsCellStates, tbsShips, jtbGamePhaseService, tbsAds) {
 
             function checkNetworkStatusAndLogin() {
                 $state.go('network');
@@ -15,6 +15,8 @@ angular.module('tbs.controllers').controller('MainCtrl',
                 jtbPlayerService.currentPlayer().gameSpecificPlayerAttributes.theme : 'default-theme';
 
             $scope.$on('playerLoaded', function () {
+                //  TODO - preload ship images?
+                tbsAds.initialize();
                 $scope.theme = jtbPlayerService.currentPlayer().gameSpecificPlayerAttributes.theme;
                 //  Kick off some precaching of info
                 tbsCircles.circles().then(function () {

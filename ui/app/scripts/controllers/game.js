@@ -3,8 +3,8 @@
 var ALL = 'ALL';
 
 angular.module('tbs.controllers').controller('GameCtrl',
-    ['$rootScope', '$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', 'shipInfo', 'tbsShipGrid', '$ionicPopup', '$ionicLoading', '$timeout', // 'twAds',
-        function ($rootScope, $scope, tbsGameDetails, tbsActions, jtbGameCache, jtbPlayerService, $state, shipInfo, tbsShipGrid, $ionicPopup, $ionicLoading, $timeout /*, twAds*/) {
+    ['$rootScope', '$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', 'shipInfo', 'tbsShipGrid', '$ionicPopup', '$ionicLoading', '$timeout', 'tbsAds',
+        function ($rootScope, $scope, tbsGameDetails, tbsActions, jtbGameCache, jtbPlayerService, $state, shipInfo, tbsShipGrid, $ionicPopup, $ionicLoading, $timeout, tbsAds) {
             $scope.gameID = $state.params.gameID;
             $scope.game = jtbGameCache.getGameForID($scope.gameID);
             $scope.playerKeys = Object.keys($scope.game.players);
@@ -111,7 +111,7 @@ angular.module('tbs.controllers').controller('GameCtrl',
             }
 
             function highlightCallback() {
-                $timeout(function() {
+                $timeout(function () {
                     $scope.shipHighlighted = (tbsShipGrid.selectedShip() !== null);
                 });
             }
@@ -125,7 +125,7 @@ angular.module('tbs.controllers').controller('GameCtrl',
                     template: 'Loading...'
                 });
                 tbsShipGrid.initialize($scope.game, [], [], function () {
-                    $timeout(function() {
+                    $timeout(function () {
                         $scope.switchView(false);
                         if ($scope.game.gamePhase === 'Playing') {
                             tbsShipGrid.activateHighlighting(highlightCallback);
@@ -157,7 +157,7 @@ angular.module('tbs.controllers').controller('GameCtrl',
                         $state.go('app.' + $scope.game.gamePhase.toLowerCase(), {gameID: $scope.gameID});
                     } else {
                         if (oldGame.currentPlayer === $scope.player.md5 && newGame.currentPlayer !== $scope.player.md5) {
-                            //  TODO - Ad
+                            tbsAds.showInterstitial();
                         }
                     }
                 }
