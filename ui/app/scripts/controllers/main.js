@@ -44,7 +44,7 @@ angular.module('tbs.controllers').controller('MainCtrl',
                     } else {
                         console.info('ignoring pauseResume, stack back to 0');
                     }
-                }, 2 * 60 * 1000);
+                }, 3 * 60 * 1000); //  delay between checks should not match delay between interstitials
             });
 
             $document.bind('resume', function () {
