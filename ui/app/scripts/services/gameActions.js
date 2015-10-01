@@ -3,24 +3,23 @@
 angular.module('tbs.services').factory('tbsActions',
     ['$http', '$state', 'jtbGameCache', 'jtbPlayerService', '$ionicActionSheet', '$ionicLoading', '$ionicPopup',
         function ($http, $state, jtbGameCache, jtbPlayerService, $ionicActionSheet, $ionicLoading, $ionicPopup) {
-            function updateGame($scope, updatedGame) {
-                var currentPhase = $scope.game.gamePhase;
-                $scope.game = updatedGame;
+            function updateGame(game, updatedGame) {
+                var previousPhase = game.gamePhase;
                 jtbGameCache.putUpdatedGame(updatedGame);
-                if ($scope.game.gamePhase !== currentPhase &&
-                    $scope.game.gamePhase !== 'Challenged' &&
-                    $scope.game.gamePhase !== 'NextRoundStarted' &&
-                    $scope.game.gamePhase !== 'Declined') {
-                    $state.go('app.' + $scope.game.gamePhase.toLowerCase(), {gameID: $scope.gameID});
+                if (updatedGame.gamePhase !== previousPhase &&
+                    updatedGame.gamePhase !== 'Challenged' &&
+                    updatedGame.gamePhase !== 'NextRoundStarted' &&
+                    updatedGame.gamePhase !== 'Declined') {
+                    $state.go('app.' + updatedGame.gamePhase.toLowerCase(), {gameID: game.id});
                 } else {
-                    if ($scope.game.gamePhase !== 'Playing') {
+                    if (game.gamePhase !== 'Playing') {
                         $state.go('app.games');
                     }
                 }
             }
 
-            function gameURL($scope) {
-                return jtbPlayerService.currentPlayerBaseURL() + '/game/' + $scope.gameID + '/';
+            function gameURL(game) {
+                return jtbPlayerService.currentPlayerBaseURL() + '/game/' + game.id + '/';
             }
 
             function createTarget(opponent, cell) {
@@ -33,11 +32,11 @@ angular.module('tbs.services').factory('tbsActions',
                 });
             }
 
-            function takeAction($scope, action) {
+            function takeAction(game, action) {
                 showSending();
-                $http.put(gameURL($scope) + action).success(function (data) {
+                $http.put(gameURL(game) + action).success(function (data) {
                     $ionicLoading.hide();
-                    updateGame($scope, data);
+                    updateGame(game, data);
                 }).error(function (data, status, headers, config) {
                     $ionicLoading.hide();
                     $ionicPopup.alert({
@@ -49,11 +48,11 @@ angular.module('tbs.services').factory('tbsActions',
                 });
             }
 
-            function makeMove($scope, action, opponent, cell) {
+            function makeMove(game, action, opponent, cell) {
                 showSending();
-                $http.put(gameURL($scope) + action, createTarget(opponent, cell)).success(function (data) {
+                $http.put(gameURL(game) + action, createTarget(opponent, cell)).success(function (data) {
                     $ionicLoading.hide();
-                    updateGame($scope, data);
+                    updateGame(game, data);
                 }).error(function (data, status, headers, config) {
                     $ionicLoading.hide();
                     $ionicPopup.alert({
@@ -65,44 +64,44 @@ angular.module('tbs.services').factory('tbsActions',
                 });
             }
 
-            function confirmableAction(destructiveText, action, $scope) {
+            function confirmableAction(destructiveText, action, game) {
                 $ionicActionSheet.show({
                     buttons: [],
                     destructiveText: destructiveText,
                     titleText: 'Are you sure?',
                     cancelText: 'Cancel',
                     destructiveButtonClicked: function () {
-                        takeAction($scope, action);
+                        takeAction(game, action);
                     }
                 });
             }
 
             return {
-                accept: function ($scope) {
-                    takeAction($scope, 'accept');
+                accept: function (game) {
+                    takeAction(game, 'accept');
                 },
 
-                reject: function ($scope) {
-                    confirmableAction('Reject this game!', 'reject', $scope);
+                reject: function (game) {
+                    confirmableAction('Reject this game!', 'reject', game);
                 },
 
-                declineRematch: function ($scope) {
-                    confirmableAction('Decline further rematches.', 'endRematch', $scope);
+                declineRematch: function (game) {
+                    confirmableAction('Decline further rematches.', 'endRematch', game);
                 },
 
-                rematch: function ($scope) {
-                    takeAction($scope, 'rematch');
+                rematch: function (game) {
+                    takeAction(game, 'rematch');
                 },
 
-                quit: function ($scope) {
-                    confirmableAction('Quit this game!', 'quit', $scope);
+                quit: function (game) {
+                    confirmableAction('Quit this game!', 'quit', game);
                 },
 
-                setup: function ($scope, positions) {
+                setup: function (game, positions) {
                     showSending();
-                    $http.put(gameURL($scope) + 'setup', positions).success(function (data) {
+                    $http.put(gameURL(game) + 'setup', positions).success(function (data) {
                         $ionicLoading.hide();
-                        updateGame($scope, data);
+                        updateGame(game, data);
                     }).error(function (data, status, headers, config) {
                         $ionicLoading.hide();
                         $ionicPopup.alert({
@@ -114,24 +113,24 @@ angular.module('tbs.services').factory('tbsActions',
                     });
                 },
 
-                fire: function ($scope, opponent, cell) {
-                    makeMove($scope, 'fire', opponent, cell);
+                fire: function (game, opponent, cell) {
+                    makeMove(game, 'fire', opponent, cell);
                 },
 
-                spy: function ($scope, opponent, cell) {
-                    makeMove($scope, 'spy', opponent, cell);
+                spy: function (game, opponent, cell) {
+                    makeMove(game, 'spy', opponent, cell);
                 },
 
-                repair: function ($scope, opponent, cell) {
-                    makeMove($scope, 'repair', opponent, cell);
+                repair: function (game, opponent, cell) {
+                    makeMove(game, 'repair', opponent, cell);
                 },
 
-                move: function ($scope, opponent, cell) {
-                    makeMove($scope, 'move', opponent, cell);
+                move: function (game, opponent, cell) {
+                    makeMove(game, 'move', opponent, cell);
                 },
 
-                ecm: function ($scope, opponent, cell) {
-                    makeMove($scope, 'ecm', opponent, cell);
+                ecm: function (game, opponent, cell) {
+                    makeMove(game, 'ecm', opponent, cell);
                 }
             };
         }

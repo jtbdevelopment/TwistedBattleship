@@ -65,8 +65,17 @@
     "org.apache.cordova.device",
     "com.ionic.keyboard",
     "com.ionic.keyboard",
-    "cordova-plugin-whitelist",
-    "cordova-plugin-whitelist"
+    "cordova-plugin-admob",
+    "org.apache.cordova.console",
+    "org.apache.cordova.console",
+    "org.apache.cordova.device",
+    "org.apache.cordova.device",
+    "org.apache.cordova.device",
+    "org.apache.cordova.device",
+    "com.ionic.keyboard",
+    "com.ionic.keyboard",
+    "com.ionic.keyboard",
+    "com.ionic.keyboard"
   ],
   "cordovaPlatforms": [
     "ios",

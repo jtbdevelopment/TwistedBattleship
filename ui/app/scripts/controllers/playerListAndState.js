@@ -29,11 +29,11 @@ angular.module('tbs.controllers').controller('PlayerListAndStateCtrl',
             };
 
             $scope.accept = function () {
-                tbsActions.accept($scope);
+                tbsActions.accept($scope.game);
             };
 
             $scope.reject = function () {
-                tbsActions.reject($scope);
+                tbsActions.reject($scope.game);
             };
 
             $scope.$on('gameUpdated', function (event, oldGame, newGame) {

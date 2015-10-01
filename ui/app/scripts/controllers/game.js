@@ -24,40 +24,40 @@ angular.module('tbs.controllers').controller('GameCtrl',
             };
 
             $scope.declineRematch = function () {
-                tbsActions.declineRematch($scope);
+                tbsActions.declineRematch($scope.game);
             };
 
             $scope.rematch = function () {
-                tbsActions.rematch($scope);
+                tbsActions.rematch($scope.game);
             };
 
             $scope.fire = function () {
                 var cell = tbsShipGrid.selectedCell();
-                tbsActions.fire($scope, $scope.showingSelf ? $scope.player.md5 : $scope.showing, cell);
+                tbsActions.fire($scope.game, $scope.showingSelf ? $scope.player.md5 : $scope.showing, cell);
             };
 
             $scope.move = function () {
                 var cell = tbsShipGrid.selectedCell();
-                tbsActions.move($scope, $scope.showingSelf ? $scope.player.md5 : $scope.showing, cell);
+                tbsActions.move($scope.game, $scope.showingSelf ? $scope.player.md5 : $scope.showing, cell);
             };
 
             $scope.spy = function () {
                 var cell = tbsShipGrid.selectedCell();
-                tbsActions.spy($scope, $scope.showingSelf ? $scope.player.md5 : $scope.showing, cell);
+                tbsActions.spy($scope.game, $scope.showingSelf ? $scope.player.md5 : $scope.showing, cell);
             };
 
             $scope.repair = function () {
                 var cell = tbsShipGrid.selectedCell();
-                tbsActions.repair($scope, $scope.showingSelf ? $scope.player.md5 : $scope.showing, cell);
+                tbsActions.repair($scope.game, $scope.showingSelf ? $scope.player.md5 : $scope.showing, cell);
             };
 
             $scope.ecm = function () {
                 var cell = tbsShipGrid.selectedCell();
-                tbsActions.ecm($scope, $scope.showingSelf ? $scope.player.md5 : $scope.showing, cell);
+                tbsActions.ecm($scope.game, $scope.showingSelf ? $scope.player.md5 : $scope.showing, cell);
             };
 
             $scope.quit = function () {
-                tbsActions.quit($scope);
+                tbsActions.quit($scope.game);
             };
 
             $scope.changePlayer = function (md5) {

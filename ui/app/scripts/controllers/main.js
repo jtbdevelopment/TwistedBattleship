@@ -33,14 +33,17 @@ angular.module('tbs.controllers').controller('MainCtrl',
             });
 
             $document.bind('pause', function () {
+                console.warn('pause');
                 jtbLiveGameFeed.suspendFeed();
             });
 
             $document.bind('resume', function () {
+                console.warn('resume');
                 checkNetworkStatusAndLogin();
             });
 
             $scope.$on('$cordovaNetwork:offline', function () {
+                console.warn('offline');
                 checkNetworkStatusAndLogin();
             });
 
@@ -50,15 +53,17 @@ angular.module('tbs.controllers').controller('MainCtrl',
                 }
             });
 
-            $scope.$on('$stateChangeStart', function (event, toState, toParams, fromState) {
-                console.log('change start from ' + fromState + ' to state ' + toState);
-            });
-            $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState) {
-                console.log('change success from ' + fromState + ' to state ' + toState);
-            });
-            $scope.$on('$stateChangeError', function (event, toState, toParams, fromState) {
-                console.log('change error from ' + fromState + ' to state ' + toState);
-            });
+            /*
+             $scope.$on('$stateChangeStart', function (event, toState, toParams, fromState) {
+             console.log('change start from ' + JSON.stringify(fromState) + ' to state ' + JSON.stringify(toState));
+             });
+             $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState) {
+             console.log('change success from ' + JSON.stringify(fromState) + ' to state ' + JSON.stringify(toState));
+             });
+             $scope.$on('$stateChangeError', function (event, toState, toParams, fromState) {
+             console.log('change error from ' + JSON.stringify(fromState) + ' to state ' + JSON.stringify(toState));
+             });
+             */
         }
     ]
 );

@@ -33,7 +33,7 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
             });
 
             $scope.quit = function () {
-                tbsActions.quit($scope);
+                tbsActions.quit($scope.game);
             };
 
             $scope.submit = function () {
@@ -55,7 +55,7 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                     info.push({ship: ship.info.ship, coordinates: cells});
                 });
 
-                tbsActions.setup($scope, info);
+                tbsActions.setup($scope.game, info);
             };
 
             function moveOutOfBoundShip(shipData) {
