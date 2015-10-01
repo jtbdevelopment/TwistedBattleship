@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('tbs.controllers').controller('MainCtrl',
-    ['$scope', 'jtbPlayerService', 'jtbLiveGameFeed', '$state', 'ENV', '$document', 'tbsVersionNotes', 'tbsCircles', 'jtbGameFeatureService', 'tbsCellStates', 'tbsShips', 'jtbGamePhaseService', 'tbsAds',
-        function ($scope, jtbPlayerService, jtbLiveGameFeed, $state, ENV, $document, tbsVersionNotes, tbsCircles, jtbGameFeatureService, tbsCellStates, tbsShips, jtbGamePhaseService, tbsAds) {
+    ['$scope', '$timeout', 'jtbPlayerService', 'jtbLiveGameFeed', '$state', 'ENV', '$document', 'tbsVersionNotes', 'tbsCircles', 'jtbGameFeatureService', 'tbsCellStates', 'tbsShips', 'jtbGamePhaseService', 'tbsAds',
+        function ($scope, $timeout, jtbPlayerService, jtbLiveGameFeed, $state, ENV, $document, tbsVersionNotes, tbsCircles, jtbGameFeatureService, tbsCellStates, tbsShips, jtbGamePhaseService, tbsAds) {
 
             function checkNetworkStatusAndLogin() {
                 $state.go('network');
@@ -32,14 +32,30 @@ angular.module('tbs.controllers').controller('MainCtrl',
                 tbsVersionNotes.showReleaseNotes();
             });
 
+            var pauseResumeStack = 0;
             $document.bind('pause', function () {
-                console.warn('pause');
-                jtbLiveGameFeed.suspendFeed();
+                console.warn('pause detected');
+                ++pauseResumeStack;
+                $timeout(function () {
+                    if (pauseResumeStack > 0) {
+                        console.info('pauseResumeStack still in pause - shutting down livefeed');
+                        pauseResumeStack = 0;
+                        jtbLiveGameFeed.suspendFeed();
+                    } else {
+                        console.info('ignoring pauseResume, stack back to 0');
+                    }
+                }, 2 * 60 * 1000);
             });
 
             $document.bind('resume', function () {
-                console.warn('resume');
-                checkNetworkStatusAndLogin();
+                console.warn('resume detected');
+                if (pauseResumeStack > 0) {
+                    console.info('pauseresume stack reduced');
+                    --pauseResumeStack;
+                } else {
+                    console.info('pauseresumestack empty - full reconnect');
+                    checkNetworkStatusAndLogin();
+                }
             });
 
             $scope.$on('$cordovaNetwork:offline', function () {
