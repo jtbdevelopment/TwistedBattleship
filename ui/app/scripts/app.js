@@ -184,6 +184,16 @@ angular.module('tbs', ['ionic', 'tbs.controllers', 'tbs.directives', 'config'])
                 }
 
             })
+            .state('app.playerDetails', {
+                url: '/games/playerDetails',
+                views: {
+                    'menuContent': {
+                        templateUrl: 'templates/playerDetails.html',
+                        controller: 'PlayerDetailsCtrl'
+                    }
+                }
+
+            })
             .state('app.playhelp', {
                 url: '/play-help',
                 views: {

@@ -8,6 +8,10 @@ angular.module('tbs.controllers').controller('MainCtrl',
                 $state.go('network');
             }
 
+            $scope.showPlayer = function () {
+                $state.go('app.playerDetails');
+            };
+
             //  Set here to avoid causing circular dependency in app.js
             jtbLiveGameFeed.setEndPoint(ENV.apiEndpoint);
 

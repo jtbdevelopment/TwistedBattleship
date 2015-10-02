@@ -25,7 +25,7 @@ angular.module('tbs.controllers').controller('GameDetailsCtrl',
                             $scope.phase = values[1];
                         }
                     });
-                })
+                });
             });
 
         }

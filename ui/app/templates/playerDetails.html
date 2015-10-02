@@ -1,0 +1,22 @@
+<ion-view class="playerDetails">
+    <ion-content class="has-header" ng-cloak>
+        <ion-list>
+            <ion-item class="item">
+                Name
+                <span class="item-note">{{player.displayName}}</span>
+            </ion-item>
+            <ion-item class="item">
+                Free Games Played or Accepted Today
+                <span class="item-note">{{player.gameSpecificPlayerAttributes.freeGamesUsedToday}}</span>
+            </ion-item>
+            <ion-item class="item">
+                Maximum Free Games Per Day
+                <span class="item-note">{{player.gameSpecificPlayerAttributes.maxDailyFreeGames}}</span>
+            </ion-item>
+            <ion-item class="item">
+                Current Theme
+                <span class="item-note">{{player.gameSpecificPlayerAttributes.theme}}</span>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>

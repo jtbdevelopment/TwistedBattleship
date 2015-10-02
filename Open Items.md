@@ -4,7 +4,6 @@ Consolidated To Do's
 - android websocket issue? - likely some crosswalk/atmosphere issue - patch
 - genymotion / virtuabox seems to interfere with multicast
 -  better / quieter check on re-open?
-- add user profile in ui
 - zoom controls on phaser
 - add nudge player
 - revamp game list to be your action, their action, older
