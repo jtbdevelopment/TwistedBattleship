@@ -112,8 +112,6 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
             });
 
             $scope.createGame = function () {
-                //  TODO
-//                twAds.showAdPopup().result.then(function () {
                 var features = [];
                 angular.forEach($scope.featureData, function (feature) {
                     if (feature.checkBox) {
@@ -152,7 +150,6 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
 
                     console.error(data + status + headers + config);
                 });
-//                });
             };
         }
     ]

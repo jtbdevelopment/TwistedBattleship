@@ -537,8 +537,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
         assert TEST_PLAYER1.md5 != game.currentPlayer
     }
 
-    //  TODO
-    //  Unfortunately, for the possibility of it remaining in place this test can fail randomly
+    //  TODO - Unfortunately, for the possibility of it remaining in place this test can fail randomly
     @Test
     void testMoveForTurnInGame() {
         def P3 = createPlayerAPITarget(TEST_PLAYER3)

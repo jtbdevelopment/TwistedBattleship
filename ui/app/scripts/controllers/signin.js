@@ -2,7 +2,6 @@
 
 angular.module('tbs.controllers')
     //  TODO - finish and move to core
-    //  TODO - investigate cordova facebook plugin instead of custom
     .controller('CoreMobileSignInCtrl',
     ['$scope', '$window', '$cookies', '$http', '$state', '$cacheFactory', '$ionicHistory', '$rootScope', 'jtbFacebook', 'ENV', '$ionicLoading',
         function ($scope, $window, $cookies, $http, $state, $cacheFactory, $ionicHistory, $rootScope, jtbFacebook, ENV, $ionicLoading) {
