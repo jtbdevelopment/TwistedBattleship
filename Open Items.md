@@ -7,7 +7,6 @@ Consolidated To Do's
 - add user profile in ui
 - zoom controls on phaser
 - add nudge player
-- infinite scroll on action log 
 - revamp game list to be your action, their action, older
 - test war with non / roots
 - push notifications
