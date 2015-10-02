@@ -21,13 +21,34 @@ angular.module('tbs.services').factory('tbsAds',
                 $cordovaGoogleAds.prepareInterstitial({adId: amInter, autoShow: false});
             }
 
-            //  Admob
-            document.addEventListener('onAdDismiss', function () {
-                lastInter = new Date();
-                requestAMInter();
-            });
-
             var lastInter = new Date(0);
+
+            //  Admob
+            document.addEventListener('onAdDismiss', function (e) {
+                console.info('Ad Dismiss:' + JSON.stringify(e));
+                if (e.adType === 'interstitial') {
+                    lastInter = new Date();
+                    requestAMInter();
+                }
+            });
+            document.addEventListener('onAdLoaded', function (e) {
+                console.info('Ad Loaded:' + JSON.stringify(e));
+            });
+            document.addEventListener('onAdFailLoad', function (e) {
+                console.info('Ad Load Failed:' + JSON.stringify(e));
+                if (e.adType === 'interstitial') {
+                    requestAMInter();
+                }
+            });
+            document.addEventListener('onAdPresent', function (e) {
+                console.info('Ad Present:' + JSON.stringify(e));
+            });
+            document.addEventListener('onAdLeaveApp', function (e) {
+                console.info('Ad Leave App:' + JSON.stringify(e));
+                if (e.adType === 'interstitial') {
+                    requestAMInter();
+                }
+            });
 
             return {
                 initialize: function () {
@@ -69,7 +90,12 @@ angular.module('tbs.services').factory('tbsAds',
                         switch (platform) {
                             case IOS:
                             case ANDROID:
-                                $cordovaGoogleAds.showInterstitial();
+                                try {
+                                    $cordovaGoogleAds.showInterstitial();
+                                } catch (ex) {
+                                    console.warn(JSON.stringify(ex));
+                                    requestAMInter();
+                                }
                                 break;
                             default:
                                 break;
