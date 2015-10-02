@@ -39,7 +39,7 @@
         </init-param>
         <init-param>
             <param-name>org.atmosphere.interceptor.HeartbeatInterceptor.heartbeatFrequencyInSeconds</param-name>
-            <param-value>20</param-value>
+            <param-value>45</param-value>
         </init-param>
         <async-supported>true</async-supported>
         <load-on-startup>0</load-on-startup>

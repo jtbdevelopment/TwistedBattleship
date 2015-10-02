@@ -153,12 +153,12 @@ angular.module('tbs.controllers').controller('GameCtrl',
                 if ($scope.gameID === newGame.id) {
                     $scope.game = newGame;
                     $scope.changePlayer($scope.showing);
-                    if (oldGame.gamePhase !== newGame.gamePhase) {
-                        $state.go('app.' + $scope.game.gamePhase.toLowerCase(), {gameID: $scope.gameID});
-                    } else {
+                    if (oldGame.gamePhase === newGame.gamePhase) {
                         if (oldGame.currentPlayer === $scope.player.md5 && newGame.currentPlayer !== $scope.player.md5) {
                             tbsAds.showInterstitial();
                         }
+                    } else {
+                        tbsActions.updateCurrentView(oldGame, newGame);
                     }
                 }
             });

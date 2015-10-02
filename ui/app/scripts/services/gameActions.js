@@ -3,19 +3,8 @@
 angular.module('tbs.services').factory('tbsActions',
     ['$http', '$state', 'jtbGameCache', 'jtbPlayerService', '$ionicActionSheet', '$ionicLoading', '$ionicPopup',
         function ($http, $state, jtbGameCache, jtbPlayerService, $ionicActionSheet, $ionicLoading, $ionicPopup) {
-            function updateGame(game, updatedGame) {
-                var previousPhase = game.gamePhase;
+            function updateGame(updatedGame) {
                 jtbGameCache.putUpdatedGame(updatedGame);
-                if (updatedGame.gamePhase !== previousPhase &&
-                    updatedGame.gamePhase !== 'Challenged' &&
-                    updatedGame.gamePhase !== 'NextRoundStarted' &&
-                    updatedGame.gamePhase !== 'Declined') {
-                    $state.go('app.' + updatedGame.gamePhase.toLowerCase(), {gameID: game.id});
-                } else {
-                    if (game.gamePhase !== 'Playing') {
-                        $state.go('app.games');
-                    }
-                }
             }
 
             function gameURL(game) {
@@ -36,7 +25,7 @@ angular.module('tbs.services').factory('tbsActions',
                 showSending();
                 $http.put(gameURL(game) + action).success(function (data) {
                     $ionicLoading.hide();
-                    updateGame(game, data);
+                    updateGame(data);
                 }).error(function (data, status, headers, config) {
                     $ionicLoading.hide();
                     $ionicPopup.alert({
@@ -52,7 +41,7 @@ angular.module('tbs.services').factory('tbsActions',
                 showSending();
                 $http.put(gameURL(game) + action, createTarget(opponent, cell)).success(function (data) {
                     $ionicLoading.hide();
-                    updateGame(game, data);
+                    updateGame(data);
                 }).error(function (data, status, headers, config) {
                     $ionicLoading.hide();
                     $ionicPopup.alert({
@@ -77,6 +66,18 @@ angular.module('tbs.services').factory('tbsActions',
             }
 
             return {
+                updateCurrentView: function (oldGame, newGame) {
+                    if (newGame.gamePhase !== oldGame.gamePhase) {
+                        if (newGame.gamePhase !== 'Challenged' &&
+                            newGame.gamePhase !== 'NextRoundStarted' &&
+                            newGame.gamePhase !== 'Declined') {
+                            $state.go('app.' + newGame.gamePhase.toLowerCase(), {gameID: newGame.id});
+                        } else {
+                            $state.go('app.games');
+                        }
+                    }
+                },
+
                 accept: function (game) {
                     takeAction(game, 'accept');
                 },
@@ -101,7 +102,7 @@ angular.module('tbs.services').factory('tbsActions',
                     showSending();
                     $http.put(gameURL(game) + 'setup', positions).success(function (data) {
                         $ionicLoading.hide();
-                        updateGame(game, data);
+                        updateGame(data);
                     }).error(function (data, status, headers, config) {
                         $ionicLoading.hide();
                         $ionicPopup.alert({
