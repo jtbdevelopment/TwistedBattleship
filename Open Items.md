@@ -5,7 +5,6 @@ Consolidated To Do's
 - genymotion / virtuabox seems to interfere with multicast
 -  better / quieter check on re-open?
 - add user profile in ui
-- add game detail popup
 - zoom controls on phaser
 - add nudge player
 - infinite scroll on action log 

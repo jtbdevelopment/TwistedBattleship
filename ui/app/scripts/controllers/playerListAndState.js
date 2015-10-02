@@ -28,6 +28,10 @@ angular.module('tbs.controllers').controller('PlayerListAndStateCtrl',
                 return '';
             };
 
+            $scope.showDetails = function () {
+                $state.go('app.gameDetails', {gameID: $scope.gameID});
+            };
+
             $scope.accept = function () {
                 tbsActions.accept($scope.game);
             };

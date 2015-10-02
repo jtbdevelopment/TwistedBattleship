@@ -1,0 +1,17 @@
+@import "default-theme-colors";
+
+.gameDetails {
+  .list {
+    .item {
+      .item-note {
+        color: black;
+      }
+      .checkmark {
+        color: $darker_green;
+      }
+      .close {
+        color: red;
+      }
+    }
+  }
+}

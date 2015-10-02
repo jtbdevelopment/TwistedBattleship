@@ -20,6 +20,10 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                 $scope.helpModal = modal;
             });
 
+            $scope.showDetails = function () {
+                $state.go('app.gameDetails', {gameID: $scope.gameID});
+            };
+
             $scope.showHelp = function () {
                 $scope.helpModal.show();
             };

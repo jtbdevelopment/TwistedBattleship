@@ -23,6 +23,10 @@ angular.module('tbs.controllers').controller('GameCtrl',
                 $state.go('app.playhelp');
             };
 
+            $scope.showDetails = function () {
+                $state.go('app.gameDetails', {gameID: $scope.gameID});
+            };
+
             $scope.declineRematch = function () {
                 tbsActions.declineRematch($scope.game);
             };
