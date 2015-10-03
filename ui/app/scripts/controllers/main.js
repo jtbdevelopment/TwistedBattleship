@@ -37,13 +37,15 @@ angular.module('tbs.controllers').controller('MainCtrl',
             });
 
             var pauseResumeStack = 0;
+            var pausePromise;
             $document.bind('pause', function () {
                 console.warn('pause detected');
                 ++pauseResumeStack;
-                $timeout(function () {
+                pausePromise = $timeout(function () {
                     if (pauseResumeStack > 0) {
                         console.info('pauseResumeStack still in pause - shutting down livefeed');
                         pauseResumeStack = 0;
+                        pausePromise = undefined;
                         jtbLiveGameFeed.suspendFeed();
                     } else {
                         console.info('ignoring pauseResume, stack back to 0');
@@ -56,6 +58,11 @@ angular.module('tbs.controllers').controller('MainCtrl',
                 if (pauseResumeStack > 0) {
                     console.info('pauseresume stack reduced');
                     --pauseResumeStack;
+                    if (pauseResumeStack === 0 && angular.isDefined(pausePromise)) {
+                        console.info('clearing pause promise');
+                        $timeout.cancel(pausePromise);
+                        pausePromise = undefined;
+                    }
                 } else {
                     console.info('pauseresumestack empty - full reconnect');
                     checkNetworkStatusAndLogin();
