@@ -3,8 +3,8 @@
 angular.module('tbs.services').factory('tbsVersionNotes',
     ['$http', 'jtbPlayerService', '$ionicPopup',
         function ($http, jtbPlayerService, $ionicPopup) {
-            var currentVersion = '0.3BETA';
-            var currentNotes = 'We have added a very simple AI player.';
+            var currentVersion = '0.6BETA';
+            var currentNotes = 'Ad supported now.  Added general game and player detail screen.';
             return {
                 showReleaseNotes: function () {
                     if (jtbPlayerService.currentPlayer().lastVersionNotes < currentVersion) {
