@@ -71,7 +71,7 @@ angular.module('tbs', ['ionic', 'tbs.controllers', 'tbs.directives', 'config'])
             .state('signin', {
                 url: '/signin',
                 templateUrl: 'templates/signin.html',
-                controller: 'CoreMobileSignInCtrl'
+                controller: 'CoreIonicSignInCtrl'
             })
             .state('signedin', {
                 url: '/signedin',
