@@ -2,7 +2,7 @@
 
 angular.module('tbs.controllers')
     //  TODO - finish and move to core?
-    .controller('NetworkCtrl',
+    .controller('CoreIonicNetworkCtrl',
     ['$scope', '$state', '$cordovaNetwork', '$timeout', '$window', 'ENV',
         function ($scope, $state, $cordovaNetwork, $timeout, $window, ENV) {
 

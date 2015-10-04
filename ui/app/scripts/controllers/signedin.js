@@ -2,7 +2,7 @@
 
 angular.module('tbs.controllers')
     //  TODO - finish and move to core?
-    .controller('CoreMobileSignedInCtrl',
+    .controller('CoreIonicSignedInCtrl',
     ['$scope', '$state', '$rootScope', '$cacheFactory',
         function ($scope, $state, $rootScope, $cacheFactory) {
 

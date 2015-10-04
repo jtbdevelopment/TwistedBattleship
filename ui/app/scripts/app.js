@@ -66,7 +66,7 @@ angular.module('tbs', ['ionic', 'tbs.controllers', 'tbs.directives', 'config'])
             .state('network', {
                 url: '/network',
                 templateUrl: 'templates/network.html',
-                controller: 'NetworkCtrl'
+                controller: 'CoreIonicNetworkCtrl'
             })
             .state('signin', {
                 url: '/signin',
@@ -76,7 +76,7 @@ angular.module('tbs', ['ionic', 'tbs.controllers', 'tbs.directives', 'config'])
             .state('signedin', {
                 url: '/signedin',
                 templateUrl: 'templates/signedin.html',
-                controller: 'CoreMobileSignedInCtrl'
+                controller: 'CoreIonicSignedInCtrl'
             })
             .state('app', {
                 url: '/app',
