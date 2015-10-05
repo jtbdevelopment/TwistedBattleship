@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('tbs', ['ionic', 'tbs.controllers', 'tbs.directives', 'config'])
+angular.module('tbs', ['ionic', 'tbs.controllers', 'tbs.directives', 'config', 'coreGamesIonicUi'])
     .config(['$httpProvider', function ($httpProvider) {
         $httpProvider.defaults.withCredentials = true;
     }])
