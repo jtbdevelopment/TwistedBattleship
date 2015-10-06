@@ -14,11 +14,10 @@ import javax.annotation.PostConstruct
 @CompileStatic
 class SimpleAIPlayerCreator extends AbstractAIPlayerCreator {
     private static final String DISPLAY_NAME_BASE = "Simple AI #"
+    public static final String ICON = "images/avatars/robot4.png"
 
     @PostConstruct
     void setup() {
-        String baseName = DISPLAY_NAME_BASE;
-        String icon = ""
-        loadOrCreateAIPlayers(baseName)
+        loadOrCreateAIPlayers(DISPLAY_NAME_BASE, ICON)
     }
 }

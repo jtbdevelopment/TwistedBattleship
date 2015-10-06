@@ -98,7 +98,7 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
                 angular.forEach(friendsToInvite, function (friend) {
                     ids.push(friend.id);
                 });
-                jtbFacebook.inviteFriends(ids, 'Come play Twisted Battling Ships with me!');
+                jtbFacebook.inviteFriends(ids, 'Come play Twisted Naval Battles with me!');
                 $scope.inviteModal.hide();
             };
 

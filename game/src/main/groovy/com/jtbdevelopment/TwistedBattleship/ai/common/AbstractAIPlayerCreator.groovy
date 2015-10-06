@@ -24,7 +24,7 @@ class AbstractAIPlayerCreator {
     @Autowired
     PlayerFactory playerFactory
 
-    protected void loadOrCreateAIPlayers(String baseName) {
+    protected void loadOrCreateAIPlayers(final String baseName, final String icon) {
         logger.info('Checking for ' + baseName + ' system players.')
         players = (1..AI.PLAYERS_TO_MAKE).collect {
             String name = baseName + it
@@ -35,6 +35,7 @@ class AbstractAIPlayerCreator {
                 player = playerFactory.newSystemPlayer()
                 player.displayName = name
                 player.sourceId = name
+                player.imageUrl = icon
                 player = playerRepository.save(player)
             }
             player
