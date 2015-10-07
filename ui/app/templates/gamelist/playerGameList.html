@@ -18,7 +18,8 @@
                           ng-init="detail = gameDetails.shortGameDescription(game, md5)"
                           href="#/app/games/{{game.gamePhase.toLowerCase()}}/{{game.id}}"
                           class="item {{detail.playerAction ? 'playable' : 'waiting'}} item-text-wrap">
-                    <span ng-repeat="(key, value) in game.players">{{value}}, </span>
+                    <img ng-repeat="(key, value) in game.players" ng-src="{{gameDetails.imageForPlayer(game, key)}}"
+                         class="gameListAvatar">
 
                     <p>
                         {{detail.sizeText}}, {{detail.actionsText}}
