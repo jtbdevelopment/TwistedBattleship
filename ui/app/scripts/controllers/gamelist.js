@@ -1,5 +1,6 @@
 'use strict';
 
+/*
 var phasesAndIcons = {
     Playing: 'play',
     Setup: 'hammer',
@@ -9,22 +10,23 @@ var phasesAndIcons = {
     NextRoundStarted: 'checkmark',
     Quit: 'flag'
 };
+ */
 
 angular.module('tbs.controllers').controller('MobileGameListCtrl',
-    ['$rootScope', '$scope', '$state', 'jtbPlayerService', 'jtbGameCache', 'tbsGameDetails', 'jtbGamePhaseService',
-        function ($rootScope, $scope, $state, jtbPlayerService, jtbGameCache, tbsGameDetails, jtbGamePhaseService) {
+    ['$rootScope', '$scope', '$state', 'jtbPlayerService', 'jtbGameCache', 'tbsGameDetails', 'jtbGamePhaseService', 'jtbGameClassifier',
+        function ($rootScope, $scope, $state, jtbPlayerService, jtbGameCache, tbsGameDetails, jtbGamePhaseService, jtbGameClassifier) {
             $scope.games = {};
             $scope.phasesInOrder = [];
             $scope.gameDetails = tbsGameDetails;
             $scope.md5 = '';
-            angular.forEach(phasesAndIcons, function (icon, phase) {
-                $scope.phasesInOrder.push(phase);
-                $scope.games[phase] = {};
-                $scope.games[phase].games = [];
-                $scope.games[phase].icon = icon;
-                $scope.games[phase].style = phase.toLowerCase() + 'Button';
-                $scope.games[phase].hideGames = false;
-                $scope.games[phase].label = '';
+            var icons = jtbGameClassifier.getIcons();
+            angular.forEach(jtbGameClassifier.getClassifications(), function (classification) {
+                $scope.phasesInOrder.push(classification);
+                $scope.games[classification] = {};
+                $scope.games[classification].games = [];
+                $scope.games[classification].icon = icons[classification];
+                $scope.games[classification].hideGames = false;
+                $scope.games[classification].label = classification;
             });
 
             $scope.createNew = function () {
@@ -40,13 +42,6 @@ angular.module('tbs.controllers').controller('MobileGameListCtrl',
             };
 
             function reloadFromCaches() {
-                jtbGamePhaseService.phases().then(function (phases) {
-                    angular.forEach(phases, function (values, phase) {
-                        $scope.games[phase].label = values[1];
-                    });
-
-                });
-
                 $scope.md5 = jtbPlayerService.currentPlayer().md5;
                 angular.forEach($scope.games, function (phaseData, phase) {
                     phaseData.games = jtbGameCache.getGamesForPhase(phase);
