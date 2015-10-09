@@ -5,11 +5,14 @@
     .newGame {
       background-color: $paler_green;
       color: black;
+      font-size: large;
     }
 
     .item {
       border-width: 1px;
-
+      p {
+        font-size: large;
+      }
     }
 
     .gameListAvatar {

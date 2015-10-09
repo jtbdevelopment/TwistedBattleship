@@ -2,7 +2,7 @@
 
 //  TODO - review each is used
 angular.module('tbs.services').factory('tbsGameDetails',
-    function () {
+    ['jtbGamePhaseService', function (jtbGamePhaseService) {
         var iconMap = {
             'SpyEnabled': 'eye',
             'ECMEnabled': 'eye-disabled',
@@ -18,11 +18,22 @@ angular.module('tbs.services').factory('tbsGameDetails',
             'Grid20x20': 'crop'
         };
 
+        var phaseDescriptions = {};
+        jtbGamePhaseService.phases().then(function (phases) {
+            angular.forEach(phases, function (details, phase) {
+                phaseDescriptions[phase] = details[1];
+            });
+        });
+
         function checkParams(game, md5) {
             return !(angular.isUndefined(game) || angular.isUndefined(md5) || md5.trim() === '');
         }
 
         return {
+            descriptionForPhase: function (phase) {
+                return phaseDescriptions[phase];
+            },
+
             iconForFeature: function (feature) {
                 return iconMap[feature];
             },
@@ -236,5 +247,6 @@ angular.module('tbs.services').factory('tbsGameDetails',
             }
         };
     }
+    ]
 );
 

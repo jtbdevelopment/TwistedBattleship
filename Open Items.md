@@ -6,7 +6,6 @@ Consolidated To Do's
 -  better / quieter check on re-open?
 - zoom controls on phaser
 - add nudge player
-- revamp game list to be your action, their action, older
 - test war with non / roots
 - push notifications
 - a.i. players - more
