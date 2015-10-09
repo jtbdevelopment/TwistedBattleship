@@ -59,7 +59,7 @@ angular.module('tbs.controllers').controller('MobileGameListCtrl',
             }
 
             $scope.$on('phaseChangeAlert', function (/*event, game*/) {
-                //  TODO
+                //  TODO?
             });
         }
     ]);

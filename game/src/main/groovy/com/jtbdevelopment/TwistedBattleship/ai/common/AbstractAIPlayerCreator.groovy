@@ -29,7 +29,6 @@ class AbstractAIPlayerCreator {
         players = (1..AI.PLAYERS_TO_MAKE).collect {
             String name = baseName + it
             Player player = (Player) playerRepository.findByDisplayName(name)
-            //  TODO - Need icon
             if (player == null) {
                 logger.info("Making system id for " + name)
                 player = playerFactory.newSystemPlayer()
