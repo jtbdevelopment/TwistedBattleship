@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 import javax.annotation.PostConstruct
+import java.time.ZonedDateTime
 import java.util.concurrent.LinkedBlockingDeque
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
@@ -124,6 +125,12 @@ class AIGameListener implements GameListener {
             try {
                 //  Too fast and UI can't tell difference between updates since only looks at second level
                 game = gameRepository.findOne(game.id)
+                while ((
+                        ZonedDateTime.now(((ZonedDateTime) game.lastUpdate).zone).toInstant().toEpochMilli() -
+                                ((ZonedDateTime) game.lastUpdate).toInstant().toEpochMilli()) < 1) {
+                    sleep(1)
+                    game = gameRepository.findOne(game.id)
+                }
                 logger.debug('AI Playing ' + game.id)
                 switch (game.gamePhase) {
                     case GamePhase.Challenged:
