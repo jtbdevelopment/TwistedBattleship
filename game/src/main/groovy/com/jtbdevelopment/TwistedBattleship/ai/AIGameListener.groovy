@@ -127,8 +127,8 @@ class AIGameListener implements GameListener {
                 game = gameRepository.findOne(game.id)
                 while ((
                         ZonedDateTime.now(((ZonedDateTime) game.lastUpdate).zone).toInstant().toEpochMilli() -
-                                ((ZonedDateTime) game.lastUpdate).toInstant().toEpochMilli()) < 100) {
-                    sleep(100)
+                                ((ZonedDateTime) game.lastUpdate).toInstant().toEpochMilli()) < 250) {
+                    sleep(250)
                     game = gameRepository.findOne(game.id)
                 }
                 logger.debug('AI Playing ' + game.id)
