@@ -107,6 +107,7 @@ class AIGameListener implements GameListener {
             case GamePhase.Playing:
                 return aiIDs.contains(game.currentPlayer)
         }
+        false
     }
 
     //  TODO - messages to surrender/quit/decline?
