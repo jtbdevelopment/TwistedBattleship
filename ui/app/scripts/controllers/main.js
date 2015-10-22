@@ -15,6 +15,7 @@ angular.module('tbs.controllers').controller('MainCtrl',
             //  Set here to avoid causing circular dependency in app.js
             jtbLiveGameFeed.setEndPoint(ENV.apiEndpoint);
 
+            console.log('Have push' + jtbPushNotifications);
             $scope.theme = angular.isDefined(jtbPlayerService.currentPlayer()) ?
                 jtbPlayerService.currentPlayer().gameSpecificPlayerAttributes.theme : 'default-theme';
 
