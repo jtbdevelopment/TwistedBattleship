@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.jtbdevelopment.TwistedBattleship" version="0.8.0" xmlns="http://www.w3.org/ns/widgets">
+<widget id="com.jtbdevelopment.TwistedBattleship" version="1.0.0" xmlns="http://www.w3.org/ns/widgets">
     <name>Twisted Naval Battles</name>
     <description>
         Twisted Naval Battles - Rule the 7 seas!

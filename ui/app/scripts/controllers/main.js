@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('tbs.controllers').controller('MainCtrl',
-    ['$scope', '$timeout', 'jtbPlayerService', 'jtbLiveGameFeed', '$state', 'ENV', '$document', 'tbsVersionNotes', 'tbsCircles', 'jtbGameFeatureService', 'tbsCellStates', 'tbsShips', 'jtbGamePhaseService', 'tbsAds',
-        function ($scope, $timeout, jtbPlayerService, jtbLiveGameFeed, $state, ENV, $document, tbsVersionNotes, tbsCircles, jtbGameFeatureService, tbsCellStates, tbsShips, jtbGamePhaseService, tbsAds) {
+    ['$scope', '$timeout', 'jtbPlayerService', 'jtbLiveGameFeed', '$state', 'ENV', '$document', 'tbsVersionNotes', 'tbsCircles', 'jtbGameFeatureService', 'tbsCellStates', 'tbsShips', 'jtbGamePhaseService', 'tbsAds', 'jtbPushNotifications',
+        function ($scope, $timeout, jtbPlayerService, jtbLiveGameFeed, $state, ENV, $document, tbsVersionNotes, tbsCircles, jtbGameFeatureService, tbsCellStates, tbsShips, jtbGamePhaseService, tbsAds, jtbPushNotifications) {
 
             function checkNetworkStatusAndLogin() {
                 $state.go('network');
@@ -33,6 +33,7 @@ angular.module('tbs.controllers').controller('MainCtrl',
                 });
                 jtbGamePhaseService.phases().then(function () {
                 });
+
                 tbsVersionNotes.showReleaseNotes();
             });
 
@@ -79,18 +80,6 @@ angular.module('tbs.controllers').controller('MainCtrl',
                     checkNetworkStatusAndLogin();
                 }
             });
-
-            /*
-             $scope.$on('$stateChangeStart', function (event, toState, toParams, fromState) {
-             console.log('change start from ' + JSON.stringify(fromState) + ' to state ' + JSON.stringify(toState));
-             });
-             $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState) {
-             console.log('change success from ' + JSON.stringify(fromState) + ' to state ' + JSON.stringify(toState));
-             });
-             $scope.$on('$stateChangeError', function (event, toState, toParams, fromState) {
-             console.log('change error from ' + JSON.stringify(fromState) + ' to state ' + JSON.stringify(toState));
-             });
-             */
         }
     ]
 );

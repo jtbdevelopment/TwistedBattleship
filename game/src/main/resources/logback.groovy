@@ -9,5 +9,6 @@ appender("CONSOLE", ConsoleAppender) {
     }
 }
 
+logger("com.jtbdevelopment.games.push", TRACE)
 //logger("com.jtbdevelopment.games.websocket.AtmosphereListener", TRACE)
 root(INFO, ["CONSOLE"])
