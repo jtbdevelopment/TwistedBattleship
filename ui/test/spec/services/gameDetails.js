@@ -4,6 +4,7 @@ describe('Service: gameDetails', function () {
     // load the controller's module
     beforeEach(module('tbs.services'));
 
+
     var phases = ['Challenged', 'Declined', 'Quit', 'Setup', 'Playing', 'RoundOver', 'NextRoundStarted'];
     var players = ['md1', 'md2', 'md3', 'md4', 'md5'];
 
@@ -29,7 +30,7 @@ describe('Service: gameDetails', function () {
             md2: 'anotherprofile'
         },
         featureData: {},
-        features: ['Grid10x10', 'ECMEnabled', 'SpyingEnabled', 'EREnabled', 'EMEnabled', 'SharedIntel', 'Single', 'CriticalEnabled'],
+        features: ['Grid10x10', 'ECMEnabled', 'SpyingEnabled', 'EREnabled', 'EMEnabled', 'SharedIntel', 'Single'],
         gridSize: 10,
         playersScore: {'md1': 1, 'md2': 0, 'md3': -1, 'md4': 3, 'md5': 2},
         playersSetup: {'md1': true, 'md2': false, 'md3': false, 'md4': true, 'md5': false},
@@ -39,25 +40,147 @@ describe('Service: gameDetails', function () {
 
     var service;
 
+    var phaseDeferred;
+    beforeEach(module(function ($provide) {
+        $provide.factory('jtbGamePhaseService', ['$q', function ($q) {
+            return {
+                phases: function () {
+                    phaseDeferred = $q.defer();
+                    return phaseDeferred.promise;
+                }
+            };
+        }]);
+    }));
+
+    var serverPhases = {
+        Phase1: ['', 'Phase 1'],
+        Phase2: ['x', 'A 2nd Phase'],
+        Phase3: ['hh', '']
+    };
+
+    var rootScope;
     // Initialize the controller and a mock scope
-    beforeEach(inject(function ($injector) {
+    beforeEach(inject(function ($injector, $rootScope) {
         game = angular.copy(gameBase);
+        rootScope = $rootScope;
         service = $injector.get('tbsGameDetails');
     }));
-    /*
-    it('player icon based on state', function () {
-        expect(service.stateIconForPlayer(game, 'md1')).to.equal('speakerphone');
-        expect(service.stateIconForPlayer(game, 'md2')).to.equal('thumbsup');
-        expect(service.stateIconForPlayer(game, 'md3')).to.equal('help');
-        expect(service.stateIconForPlayer(game, 'md4')).to.equal('flag');
-        expect(service.stateIconForPlayer(game, 'md5')).to.equal('thumbsup');
-        expect(service.stateIconForPlayer(game, 'md6')).to.equal('thumbsdown');
+
+    it('phase descriptions', function () {
+        phaseDeferred.resolve(serverPhases);
+        rootScope.$apply();
+        expect(service.descriptionForPhase('Phase1')).to.equal(serverPhases.Phase1[1]);
+        expect(service.descriptionForPhase('Phase2')).to.equal(serverPhases.Phase2[1]);
+        expect(service.descriptionForPhase('Phase3')).to.equal(serverPhases.Phase3[1]);
     });
 
-    it('test state icon - bad parameters', function () {
-        expect(service.stateIconForPlayer()).to.equal('help');
-        expect(service.stateIconForPlayer({})).to.equal('help');
-        expect(service.stateIconForPlayer({}, '  ')).to.equal('help');
+    it('icons for features', function () {
+        expect(service.iconForFeature('SpyEnabled')).to.equal('eye');
+        expect(service.iconForFeature('ECMEnabled')).to.equal('eye-disabled');
+        expect(service.iconForFeature('SharedIntel')).to.equal('images');
+        expect(service.iconForFeature('IsolatedIntel')).to.equal('image');
+        expect(service.iconForFeature('EREnabled')).to.equal('wrench');
+        expect(service.iconForFeature('EMEnabled')).to.equal('shuffle');
+        expect(service.iconForFeature('Single')).to.equal('chatbox');
+        expect(service.iconForFeature('PerShip')).to.equal('chatboxes');
+        expect(service.iconForFeature('Grid10x10')).to.equal('crop');
+        expect(service.iconForFeature('Grid15x15')).to.equal('crop');
+        expect(service.iconForFeature('Grid20x20')).to.equal('crop');
+    });
+
+    describe('testing enabled flags for player not current turn', function () {
+        beforeEach(function () {
+            game.currentPlayer = 'md2';
+            game.gamePhase = 'Playing';
+        });
+
+        it('ecm', function () {
+            expect(service.ecmPossible(game, 'md1')).to.equal(false);
+        });
+        it('spy', function () {
+            expect(service.spyPossible(game, 'md1')).to.equal(false);
+        });
+        it('repair', function () {
+            expect(service.repairPossible(game, 'md1')).to.equal(false);
+        });
+        it('move', function () {
+            expect(service.evasiveMovePossible(game, 'md1')).to.equal(false);
+        });
+    });
+
+    describe('testing enabled flags for player current turn', function () {
+        beforeEach(function () {
+            game.currentPlayer = 'md1';
+            game.gamePhase = 'Playing';
+            game.maskedPlayersState = {};
+        });
+
+        describe('with no specials remaining', function () {
+            beforeEach(function () {
+                game.maskedPlayersState.ecmsRemaining = 0;
+                game.maskedPlayersState.spysRemaining = 0;
+                game.maskedPlayersState.emergencyRepairsRemaining = 0;
+                game.maskedPlayersState.evasiveManeuversRemaining = 0;
+            });
+            it('ecm', function () {
+                expect(service.ecmPossible(game, 'md1')).to.equal(false);
+            });
+            it('spy', function () {
+                expect(service.spyPossible(game, 'md1')).to.equal(false);
+            });
+            it('repair', function () {
+                expect(service.repairPossible(game, 'md1')).to.equal(false);
+            });
+            it('move', function () {
+                expect(service.evasiveMovePossible(game, 'md1')).to.equal(false);
+            });
+        });
+
+        describe('with specials remaining, but insufficient remaining moves', function () {
+            beforeEach(function () {
+                game.maskedPlayersState.ecmsRemaining = 1;
+                game.maskedPlayersState.spysRemaining = 1;
+                game.maskedPlayersState.emergencyRepairsRemaining = 1;
+                game.maskedPlayersState.evasiveManeuversRemaining = 1;
+                game.remainingMoves = 1;
+                game.movesForSpecials = 2;
+            });
+            it('ecm', function () {
+                expect(service.ecmPossible(game, 'md1')).to.equal(false);
+            });
+            it('spy', function () {
+                expect(service.spyPossible(game, 'md1')).to.equal(false);
+            });
+            it('repair', function () {
+                expect(service.repairPossible(game, 'md1')).to.equal(false);
+            });
+            it('move', function () {
+                expect(service.evasiveMovePossible(game, 'md1')).to.equal(false);
+            });
+        });
+
+        describe('with specials remaining and sufficient remaining moves', function () {
+            beforeEach(function () {
+                game.maskedPlayersState.ecmsRemaining = 1;
+                game.maskedPlayersState.spysRemaining = 1;
+                game.maskedPlayersState.emergencyRepairsRemaining = 1;
+                game.maskedPlayersState.evasiveManeuversRemaining = 1;
+                game.remainingMoves = 2;
+                game.movesForSpecials = 2;
+            });
+            it('ecm', function () {
+                expect(service.ecmPossible(game, 'md1')).to.equal(true);
+            });
+            it('spy', function () {
+                expect(service.spyPossible(game, 'md1')).to.equal(true);
+            });
+            it('repair', function () {
+                expect(service.repairPossible(game, 'md1')).to.equal(true);
+            });
+            it('move', function () {
+                expect(service.evasiveMovePossible(game, 'md1')).to.equal(true);
+            });
+        });
     });
 
     it('test player response needed for non challenged phases', function () {
@@ -132,90 +255,22 @@ describe('Service: gameDetails', function () {
         expect(service.playerSetupEntryRequired({}, '  ')).to.equal(false);
     });
 
-    it('test player end for non end phases', function () {
-        angular.forEach(phases, function (phase) {
-            if (phase !== 'Playing' && phase !== 'RoundOver' && phase !== 'NextRoundStarted') {
-                game.gamePhase = phase;
-                angular.forEach(players, function (player) {
-                    expect(service.gameEndForPlayer(game, player)).to.equal('');
-                });
-            }
+    it('test player rematch not possible - bad parameters', function () {
+        expect(service.playerRematchPossible()).to.equal(false);
+        expect(service.playerRematchPossible({})).to.equal(false);
+        expect(service.playerRematchPossible({}, '  ')).to.equal(false);
+    });
+
+    it('test player rematch possible for RoundOver', function () {
+        game.gamePhase = 'RoundOver';
+        expect(service.playerRematchPossible(game, 'md1')).to.equal(true);
+    });
+
+    it('test player rematch not possible for other phases', function () {
+        angular.forEach(['Playing', 'Setup', 'Challenged', 'NextRoundStarted', 'Quit', 'Declined'], function (phase) {
+            game.gamePhase = phase;
+            expect(service.playerRematchPossible(game, 'md1')).to.equal(false);
         });
-    });
-
-    it('test player end needed for end phases', function () {
-        angular.forEach(phases, function (phase) {
-            if (phase === 'Playing' || phase === 'RoundOver' || phase === 'NextRoundStarted') {
-                game.gamePhase = phase;
-                var alive = (phase === 'Playing') ? 'Still Playing.' : 'Winner!';
-                angular.forEach(players, function (player) {
-                    expect(service.gameEndForPlayer(game, player)).to.equal((player === 'md4' || player === 'md3') ? alive : 'Defeated!');
-                });
-            }
-        });
-    });
-
-    it('test player end - bad parameters', function () {
-        expect(service.gameEndForPlayer()).to.equal('');
-        expect(service.gameEndForPlayer({})).to.equal('');
-        expect(service.gameEndForPlayer({}, '  ')).to.equal('');
-    });
-
-    it('test player end icon for non end phases', function () {
-        angular.forEach(phases, function (phase) {
-            if (phase !== 'Playing' && phase !== 'RoundOver' && phase !== 'NextRoundStarted') {
-                game.gamePhase = phase;
-                angular.forEach(players, function (player) {
-                    expect(service.gameEndIconForPlayer(game, player)).to.equal('help');
-                });
-            }
-        });
-    });
-
-    it('test player end needed for end phases', function () {
-        angular.forEach(phases, function (phase) {
-            if (phase === 'Playing' || phase === 'RoundOver' || phase === 'NextRoundStarted') {
-                game.gamePhase = phase;
-                var alive = (phase === 'Playing') ? 'load-a' : 'ribbon-a';
-                angular.forEach(players, function (player) {
-                    expect(service.gameEndIconForPlayer(game, player)).to.equal((player === 'md4' || player === 'md3') ? alive : 'sad-outline');
-                });
-            }
-        });
-    });
-
-    it('test player end icon - bad parameters', function () {
-        expect(service.gameEndIconForPlayer()).to.equal('help');
-        expect(service.gameEndIconForPlayer({})).to.equal('help');
-        expect(service.gameEndIconForPlayer({}, '  ')).to.equal('help');
-    });
-
-    it('test player score', function () {
-        expect(service.gameScoreForPlayer(game, 'md1')).to.equal(1);
-        expect(service.gameScoreForPlayer(game, 'md2')).to.equal(0);
-        expect(service.gameScoreForPlayer(game, 'md3')).to.equal(-1);
-        expect(service.gameScoreForPlayer(game, 'md4')).to.equal(3);
-        expect(service.gameScoreForPlayer(game, 'md5')).to.equal(2);
-    });
-
-    it('test player score - bad parameters', function () {
-        expect(service.gameScoreForPlayer()).to.equal('');
-        expect(service.gameScoreForPlayer({})).to.equal('');
-        expect(service.gameScoreForPlayer({}, '  ')).to.equal('');
-    });
-
-    it('test player profile', function () {
-        expect(service.profileForPlayer(game, 'md1')).to.equal('someprofile');
-        expect(service.profileForPlayer(game, 'md2')).to.equal('anotherprofile');
-        expect(service.profileForPlayer(game, 'md3')).to.equal('');
-        expect(service.profileForPlayer(game, 'md4')).to.equal('');
-        expect(service.profileForPlayer(game, 'md5')).to.equal('');
-    });
-
-    it('test player profile - bad parameters', function () {
-        expect(service.profileForPlayer()).to.equal('');
-        expect(service.profileForPlayer({})).to.equal('');
-        expect(service.profileForPlayer({}, '  ')).to.equal('');
     });
 
     it('test player image', function () {
@@ -236,16 +291,16 @@ describe('Service: gameDetails', function () {
         expect(service.shortGameDescription(game, 'md1')).to.deep.equal({
             sizeText: '10x10',
             actionsText: 'Single',
-            icons: ["eye-disabled", "wrench", "shuffle", "images", "alert"],
+            icons: ["eye-disabled", "shuffle", "wrench", "crop", "images"],
             playerAction: false
         });
 
-        game.features = ['Grid15x15', 'ECMDisabled', 'SpyingEnabled', 'EREnabled', 'EMEnabled', 'SharedIntel', 'Single', 'CriticalDisabled'];
+        game.features = ['Grid15x15', 'ECMDisabled', 'SpyingEnabled', 'EREnabled', 'EMEnabled', 'SharedIntel', 'Single'];
         game.gridSize = 15;
         expect(service.shortGameDescription(game, 'md1')).to.deep.equal({
             sizeText: '15x15',
             actionsText: 'Single',
-            icons: ["wrench", "shuffle", "images"],
+            icons: ["shuffle", "wrench", "crop", "images"],
             playerAction: false
         });
 
@@ -255,7 +310,7 @@ describe('Service: gameDetails', function () {
         expect(service.shortGameDescription(game, 'md1')).to.deep.equal({
             sizeText: '20x20',
             actionsText: 'Multiple',
-            icons: ["eye-disabled", "image"],
+            icons: ["eye-disabled", "crop", "image"],
             playerAction: false
         });
 
@@ -266,13 +321,13 @@ describe('Service: gameDetails', function () {
         expect(service.shortGameDescription(game, 'md1')).to.deep.equal({
             sizeText: '10x10',
             actionsText: 'Single',
-            icons: ["eye-disabled", "wrench", "shuffle", "images", "alert"],
+            icons: ["eye-disabled", "shuffle", "wrench", "crop", "images"],
             playerAction: false
         });
         expect(service.shortGameDescription(game, 'md2')).to.deep.equal({
             sizeText: '10x10',
             actionsText: 'Single',
-            icons: ["eye-disabled", "wrench", "shuffle", "images", "alert"],
+            icons: ["eye-disabled", "shuffle", "wrench", "crop", "images"],
             playerAction: true
         });
 
@@ -280,13 +335,13 @@ describe('Service: gameDetails', function () {
         expect(service.shortGameDescription(game, 'md1')).to.deep.equal({
             sizeText: '10x10',
             actionsText: 'Single',
-            icons: ["eye-disabled", "wrench", "shuffle", "images", "alert"],
+            icons: ["eye-disabled", "shuffle", "wrench", "crop", "images"],
             playerAction: true
         });
         expect(service.shortGameDescription(game, 'md2')).to.deep.equal({
             sizeText: '10x10',
             actionsText: 'Single',
-            icons: ["eye-disabled", "wrench", "shuffle", "images", "alert"],
+            icons: ["eye-disabled", "shuffle", "wrench", "crop", "images"],
             playerAction: false
         });
 
@@ -294,13 +349,13 @@ describe('Service: gameDetails', function () {
         expect(service.shortGameDescription(game, 'md1')).to.deep.equal({
             sizeText: '10x10',
             actionsText: 'Single',
-            icons: ["eye-disabled", "wrench", "shuffle", "images", "alert"],
+            icons: ["eye-disabled", "shuffle", "wrench", "crop", "images"],
             playerAction: false
         });
         expect(service.shortGameDescription(game, 'md2')).to.deep.equal({
             sizeText: '10x10',
             actionsText: 'Single',
-            icons: ["eye-disabled", "wrench", "shuffle", "images", "alert"],
+            icons: ["eye-disabled", "shuffle", "wrench", "crop", "images"],
             playerAction: true
         });
     });
@@ -312,7 +367,37 @@ describe('Service: gameDetails', function () {
     it('test shorten grid description bad game', function () {
         expect(service.shortenGridSize()).to.equal('');
     });
-     */
+
+    it('test last action log for bad game', function () {
+        expect(service.lastActionLog()).to.equal('');
+    });
+
+    it('test last action log for game', function () {
+        game.maskedPlayersState = {};
+        game.maskedPlayersState.actionLog = [];
+        game.maskedPlayersState.actionLog.push({description: 'Line1'});
+        game.maskedPlayersState.actionLog.push({description: 'Line2'});
+        game.maskedPlayersState.actionLog.push({description: 'Line3'});
+        expect(service.lastActionLog(game)).to.equal('Line3');
+    });
+
+    it('test last action time for bad game', function () {
+        expect(service.lastActionTime()).to.equal('');
+    });
+
+    it('test last action time for game', function () {
+        game.maskedPlayersState = {};
+        game.maskedPlayersState.actionLog = [];
+        game.maskedPlayersState.actionLog.push({timestamp: 12878});
+        game.maskedPlayersState.actionLog.push({timestamp: 38989});
+        game.maskedPlayersState.actionLog.push({timestamp: 918311109983});
+        expect(service.lastActionTime(game)).to.equal('Sat Feb  6 09:25:09 1999');
+    });
+
+
+    it('test format action time', function () {
+        expect(service.formatActionTime(1023149344)).to.equal('Mon Jan 12 15:12:29 1970');
+    });
 });
 
 

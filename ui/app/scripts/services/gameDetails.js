@@ -1,12 +1,10 @@
 'use strict';
 
-//  TODO - review each is used
 angular.module('tbs.services').factory('tbsGameDetails',
     ['jtbGamePhaseService', function (jtbGamePhaseService) {
         var iconMap = {
             'SpyEnabled': 'eye',
             'ECMEnabled': 'eye-disabled',
-            'CriticalEnabled': 'alert',
             'SharedIntel': 'images',
             'IsolatedIntel': 'image',
             'EREnabled': 'wrench',
@@ -110,43 +108,6 @@ angular.module('tbs.services').factory('tbsGameDetails',
                 return game.playersSetup[md5] === false;
             },
 
-            gameEndForPlayer: function (game, md5) {
-                if (!checkParams(game, md5)) {
-                    return '';
-                }
-
-                if (game.gamePhase !== 'Playing' && game.gamePhase !== 'RoundOver' && game.gamePhase !== 'NextRoundStarted') {
-                    return '';
-                }
-
-                if (game.playersAlive[md5] === false) {
-                    return 'Defeated!';
-                } else {
-                    if (game.gamePhase === 'Playing') {
-                        return 'Still Playing.';
-                    } else {
-                        return 'Winner!';
-                    }
-                }
-            },
-
-            gameScoreForPlayer: function (game, md5) {
-                if (!checkParams(game, md5)) {
-                    return '';
-                }
-
-                return game.playersScore[md5];
-            },
-
-            profileForPlayer: function (game, md5) {
-                if (checkParams(game, md5)) {
-                    if (angular.isDefined(game.playerProfiles[md5])) {
-                        return game.playerProfiles[md5];
-                    }
-                }
-                return '';
-            },
-
             imageForPlayer: function (game, md5) {
                 if (checkParams(game, md5)) {
                     if (angular.isDefined(game.playerImages[md5]) && game.playerImages[md5] !== null) {
@@ -155,36 +116,6 @@ angular.module('tbs.services').factory('tbsGameDetails',
                 }
                 //  TODO
                 return 'images/ionic.png';
-            },
-
-            stateIconForPlayer: function (game, md5) {
-                if (checkParams(game, md5)) {
-                    switch (game.playerStates[md5]) {
-                        case 'Quit':
-                            return 'flag';
-                        case 'Pending':
-                            return 'speakerphone';
-                        case 'Accepted':
-                            return 'thumbsup';
-                        case 'Rejected':
-                            return 'thumbsdown';
-                    }
-                }
-                return 'help';
-            },
-
-            gameEndIconForPlayer: function (game, md5) {
-                if (checkParams(game, md5)) {
-                    switch (this.gameEndForPlayer(game, md5)) {
-                        case 'Winner!':
-                            return 'ribbon-a';
-                        case 'Defeated!':
-                            return 'sad-outline';
-                        case 'Still Playing.':
-                            return 'load-a';
-                    }
-                }
-                return 'help';
             },
 
             shortenGridSize: function (game) {
