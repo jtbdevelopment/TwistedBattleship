@@ -53,12 +53,60 @@
     "test": "grunt test"
   },
   "cordovaPlugins": [
+    "org.apache.cordova.device",
     "org.apache.cordova.console",
     "com.ionic.keyboard",
+    "org.apache.cordova.splashscreen",
+    "org.apache.cordova.statusbar",
+    "org.apache.cordova.media",
+    "org.apache.cordova.dialogs",
+    "org.apache.cordova.vibration",
+    "org.apache.cordova.file",
+    "cordova-plugin-network-information",
+    "cordova-plugin-extension",
+    "cordova-plugin-admob",
+    "cordova-plugin-googleplayservices",
+    "cordova-plugin-crosswalk-webview",
+    "cordova-plugin-whitelist",
+    {
+      "locator": "https://github.com/phonegap-build/PushPlugin.git",
+      "id": "com.phonegap.plugins.PushPlugin"
+    },
+    {
+      "id": "phonegap-facebook-plugin",
+      "locator": "../../phongegap-facebook-plugin/phonegap-facebook-plugin",
+      "variables": {
+        "APP_ID": "100714310269707",
+        "APP_NAME": "TwistedBattleship"
+      }
+    },
+    "cordova-plugin-whitelist",
     "org.apache.cordova.device",
-    "cordova-plugin-admob"
+    "cordova-plugin-googleplayservices",
+    "cordova-plugin-crosswalk-webview",
+    "org.apache.cordova.console",
+    "cordova-plugin-network-information",
+    "org.apache.cordova.statusbar",
+    "com.ionic.keyboard",
+    "cordova-plugin-extension",
+    "org.apache.cordova.splashscreen",
+    "org.apache.cordova.dialogs",
+    "org.apache.cordova.vibration",
+    "org.apache.cordova.file",
+    "cordova-plugin-admob",
+    "org.apache.cordova.media"
   ],
   "cordovaPlatforms": [
+    {
+      "platform": "android",
+      "version": "",
+      "locator": "android"
+    },
+    {
+      "platform": "browser",
+      "version": "",
+      "locator": "browser"
+    },
     "ios"
   ]
 }
