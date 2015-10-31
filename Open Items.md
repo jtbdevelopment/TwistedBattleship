@@ -7,7 +7,6 @@ Consolidated To Do's
 - zoom controls on phaser
 - add nudge player
 - test war with non / roots
-- push notifications
 - a.i. players - more
 - many ui tests
 - core lib error handling
@@ -18,3 +17,6 @@ Consolidated To Do's
 - release process for phones
 
 - update facebook review images
+
+- broke end rematches?
+- ios action sheet?
