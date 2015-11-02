@@ -88,7 +88,6 @@ angular.module('tbs.services').factory('tbsActions',
 
                 declineRematch: function (game) {
                     confirmableAction('Decline further rematches.', 'endRematch', game);
-                    $state.go('app.games');
                 },
 
                 rematch: function (game) {
