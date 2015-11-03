@@ -3,7 +3,7 @@ Consolidated To Do's
 
 - android websocket issue? - likely some crosswalk/atmosphere issue - patch
 - genymotion / virtuabox seems to interfere with multicast
--  better / quieter check on re-open?
+- better / quieter check on re-open?
 - zoom controls on phaser
 - add nudge player
 - test war with non / roots
@@ -13,10 +13,12 @@ Consolidated To Do's
 - hazelcast cluster group name?
 - refresh on web page not working if on root (ok via FB Canvas)
 - sounds
--  move logback to core?
+- move logback to core?
 - release process for phones
 
 - update facebook review images
 
-- broke end rematches?
-- ios action sheet?
+- push ios certificates?
+- chrome push
+
+- try ssl/tcp to get websockets?
