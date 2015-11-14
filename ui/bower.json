@@ -7,8 +7,8 @@
     "angular-resource": "~1.4.3",
     "angular-route": "~1.4.3",
     "ionic": "driftyco/ionic-bower#1.1.0",
-    "jtb-core-games-ui": "~1.2.1",
-    "jtb-core-games-ionic-ui": "~1.1.4",
+    "jtb-core-games-ui": "~1.2.3",
+    "jtb-core-games-ionic-ui": "~1.1.5",
     "ngCordova": "v0.1.14-alpha",
     "phaser": "~2.4.3"
   },
@@ -18,6 +18,8 @@
     "ionic": "driftyco/ionic-bower#1.1.0"
   },
   "resolutions": {
-    "angular": "1.4.7"
+    "angular": "1.4.7",
+    "angular-animate": "~1.4.7",
+    "angular-sanitize": "~1.4.7"
   }
 }
