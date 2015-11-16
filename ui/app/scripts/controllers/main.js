@@ -18,8 +18,12 @@ angular.module('tbs.controllers').controller('MainCtrl',
             console.log('Have push' + jtbPushNotifications);
             $scope.theme = angular.isDefined(jtbPlayerService.currentPlayer()) ?
                 jtbPlayerService.currentPlayer().gameSpecificPlayerAttributes.theme : 'default-theme';
+            $scope.player = jtbPlayerService.currentPlayer();
+
 
             $scope.$on('playerLoaded', function () {
+                $scope.player = jtbPlayerService.currentPlayer();
+
                 //  TODO - preload ship images?
                 tbsAds.initialize();
                 $scope.theme = jtbPlayerService.currentPlayer().gameSpecificPlayerAttributes.theme;

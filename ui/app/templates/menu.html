@@ -18,7 +18,7 @@
         </ion-header-bar>
         <ion-content>
             <ion-list>
-                <ion-item menu-close href="#/signin">
+                <ion-item menu-close href="#/signin" ng-show="player.source == 'MANUAL'">
                     Login
                 </ion-item>
                 <player-game-list></player-game-list>

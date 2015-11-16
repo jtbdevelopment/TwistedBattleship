@@ -1,17 +1,5 @@
 'use strict';
 
-/*
-var phasesAndIcons = {
-    Playing: 'play',
-    Setup: 'hammer',
-    Challenged: 'chatboxes',
-    RoundOver: 'refresh',
-    Declined: 'thumbsdown',
-    NextRoundStarted: 'checkmark',
-    Quit: 'flag'
-};
- */
-
 angular.module('tbs.controllers').controller('MobileGameListCtrl',
     ['$rootScope', '$scope', '$state', 'jtbPlayerService', 'jtbGameCache', 'tbsGameDetails', 'jtbGamePhaseService', 'jtbGameClassifier',
         function ($rootScope, $scope, $state, jtbPlayerService, jtbGameCache, tbsGameDetails, jtbGamePhaseService, jtbGameClassifier) {
