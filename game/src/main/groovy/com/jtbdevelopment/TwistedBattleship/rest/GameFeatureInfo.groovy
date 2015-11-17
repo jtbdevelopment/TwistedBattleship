@@ -1,6 +1,7 @@
 package com.jtbdevelopment.TwistedBattleship.rest
 
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
+import com.jtbdevelopment.TwistedBattleship.state.GameFeatureGroupType
 import groovy.transform.CompileStatic
 
 /**
@@ -10,7 +11,7 @@ import groovy.transform.CompileStatic
 @CompileStatic
 class GameFeatureInfo {
     static class Detail {
-        @SuppressWarnings("unused")
+        @SuppressWarnings("GroovyUnusedDeclaration")
         Detail() {
         }
 
@@ -18,6 +19,7 @@ class GameFeatureInfo {
             this.feature = feature
             this.description = feature.description
             this.label = feature.label
+            this.groupType = feature.groupType
         }
 
         boolean equals(final o) {
@@ -35,6 +37,7 @@ class GameFeatureInfo {
         int hashCode() {
             return feature.hashCode()
         }
+        GameFeatureGroupType groupType
         GameFeature feature
         String label
         String description
@@ -43,7 +46,7 @@ class GameFeatureInfo {
     Detail feature
     List<Detail> options = []
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings("GroovyUnusedDeclaration")
     GameFeatureInfo() {
     }
 

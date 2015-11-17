@@ -115,11 +115,6 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
                                 new GameFeatureInfo.Detail(GameFeature.ECMEnabled),
                                 new GameFeatureInfo.Detail(GameFeature.ECMDisabled),
                         ]),
-                new GameFeatureInfo(GameFeature.Spy,
-                        [
-                                new GameFeatureInfo.Detail(GameFeature.SpyEnabled),
-                                new GameFeatureInfo.Detail(GameFeature.SpyDisabled),
-                        ]),
                 new GameFeatureInfo(GameFeature.EvasiveManeuvers,
                         [
                                 new GameFeatureInfo.Detail(GameFeature.EMEnabled),
@@ -129,6 +124,11 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
                         [
                                 new GameFeatureInfo.Detail(GameFeature.EREnabled),
                                 new GameFeatureInfo.Detail(GameFeature.ERDisabled),
+                        ]),
+                new GameFeatureInfo(GameFeature.Spy,
+                        [
+                                new GameFeatureInfo.Detail(GameFeature.SpyEnabled),
+                                new GameFeatureInfo.Detail(GameFeature.SpyDisabled),
                         ]),
                 /*
                 new GameFeatureInfo(GameFeature.Critical,
