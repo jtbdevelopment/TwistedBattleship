@@ -1,0 +1,190 @@
+<ion-view class="createGame" cache-view="false">
+    <ion-nav-buttons side="right">
+        <a class="button button-icon button-clear ion-person-add" ng-show="invitableFriends.length >= 0"
+           ng-click="showInviteFriends()"></a>
+        <a class="button button-icon button-clear ion-help-circled" ng-click="showHelp(0)"></a>
+    </ion-nav-buttons>
+    <ion-content>
+        <ion-slide-box does-continue="true" auto-play="false" show-pager="false">
+            <ion-slide>
+                <div class="list create">
+                    <div class="item-divider">Difficulty Settings</div>
+                    <div ng-repeat="feature in featureData | propsFilter: { checkBox: 'false' } | propsFilter: { groupType: 'Difficulty'}">
+                        <label class="item item-input item-select">
+                            <div class="input-label">
+                                <i class="icon optionOn ion-{{gameDetails.iconForFeature(currentOptions[feature.index])}}"></i>
+                                {{feature.feature.label}}
+                            </div>
+                            <select ng-model="currentOptions[feature.index]">
+                                <option ng-repeat="option in feature.options" value="{{option.feature}}">
+                                    {{option.label}}
+                                </option>
+                            </select>
+                        </label>
+                    </div>
+                    <div ng-repeat="feature in featureData | propsFilter: { checkBox: 'true' } | propsFilter: { groupType: 'Difficulty'}">
+                        <ion-toggle ng-model="currentOptions[feature.index]">
+                            <i class="icon ion-{{gameDetails.iconForFeature(feature.options[0].feature)}} {{currentOptions[feature.index] ? 'optionOn' : 'optionOff'}}"></i>
+                            {{feature.feature.label}}
+                        </ion-toggle>
+                    </div>
+                </div>
+            </ion-slide>
+            <ion-slide>
+                <div class="list create">
+                    <div class="item-divider">Defensive Options</div>
+                    <div ng-repeat="feature in featureData | propsFilter: { checkBox: 'false' } | propsFilter: { groupType: 'Defensive'}">
+                        <label class="item item-input item-select">
+                            <div class="input-label">
+                                <i class="icon optionOn ion-{{gameDetails.iconForFeature(currentOptions[feature.index])}}"></i>
+                                {{feature.feature.label}}
+                            </div>
+                            <select ng-model="currentOptions[feature.index]">
+                                <option ng-repeat="option in feature.options" value="{{option.feature}}">
+                                    {{option.label}}
+                                </option>
+                            </select>
+                        </label>
+                    </div>
+                    <div ng-repeat="feature in featureData | propsFilter: { checkBox: 'true' } | propsFilter: { groupType: 'Defensive'}">
+                        <ion-toggle ng-model="currentOptions[feature.index]">
+                            <i class="icon ion-{{gameDetails.iconForFeature(feature.options[0].feature)}} {{currentOptions[feature.index] ? 'optionOn' : 'optionOff'}}"></i>
+                            {{feature.feature.label}}
+                        </ion-toggle>
+                    </div>
+                </div>
+            </ion-slide>
+            <ion-slide>
+                <div class="list create">
+                    <div class="item-divider">Offensive Options</div>
+                    <div ng-repeat="feature in featureData | propsFilter: { checkBox: 'false' } | propsFilter: { groupType: 'Offensive'}">
+                        <label class="item item-input item-select">
+                            <div class="input-label">
+                                <i class="icon optionOn ion-{{gameDetails.iconForFeature(currentOptions[feature.index])}}"></i>
+                                {{feature.feature.label}}
+                            </div>
+                            <select ng-model="currentOptions[feature.index]">
+                                <option ng-repeat="option in feature.options" value="{{option.feature}}">
+                                    {{option.label}}
+                                </option>
+                            </select>
+                        </label>
+                    </div>
+                    <div ng-repeat="feature in featureData | propsFilter: { checkBox: 'true' } | propsFilter: { groupType: 'Offensive'}">
+                        <ion-toggle ng-model="currentOptions[feature.index]">
+                            <i class="icon ion-{{gameDetails.iconForFeature(feature.options[0].feature)}} {{currentOptions[feature.index] ? 'optionOn' : 'optionOff'}}"></i>
+                            {{feature.feature.label}}
+                        </ion-toggle>
+                    </div>
+                </div>
+            </ion-slide>
+            <ion-slide>
+                <div class="list create">
+                    <div class="item item-divider">
+                        Choose your opponents (maximum of 5):
+                    </div>
+                    <div ng-repeat="inviteCounter in inviteArray" angular-multi-select
+                         class="ams_container"
+                         helper-elements="filter noall nonone noreset"
+                         min-search-length="1"
+                         selection-mode="single"
+                         on-item-click="playersChanged(item)"
+                         input-model="friendInputs[inviteCounter]"
+                         single-output-model="$parent.$parent.$parent.playerChoices[inviteCounter]"
+                         button-template="angular-multi-select-btn-data.htm"
+                         item-label="<[ displayName ]>"
+                         search-property="displayName"
+                         button-label="<[ displayName ]>">
+                    </div>
+                    <!--
+                    <div angular-multi-select
+                         class="ams_container"
+                         helper-elements="filter noall nonone noreset"
+                         min-search-length="1"
+                         selection-mode="single"
+                         on-close="playersChanged()"
+                         on-item-click="playersChanged(item)"
+                         input-model="friends"
+                         single-output-model="$parent.$parent.$parent.playerChoice1"
+                         button-template="angular-multi-select-btn-data.htm"
+                         item-label="<[ displayName ]>"
+                         search-property="displayName"
+                         button-label="<[ displayName ]>">
+                    </div>
+                    <div angular-multi-select
+                         class="ams_container"
+                         helper-elements="filter noall nonone noreset"
+                         min-search-length="1"
+                         selection-mode="single"
+                         on-close="playersChanged()"
+                         on-item-click="playersChanged(item)"
+                         input-model="friends"
+                         single-output-model="$parent.$parent.$parent.playerChoice2"
+                         button-template="angular-multi-select-btn-data.htm"
+                         item-label="<[ displayName ]>"
+                         search-property="displayName"
+                         button-label="<[ displayName ]>">
+                    </div>
+                    <div angular-multi-select
+                         class="ams_container"
+                         helper-elements="filter noall nonone noreset"
+                         min-search-length="1"
+                         selection-mode="single"
+                         on-close="playersChanged()"
+                         on-item-click="playersChanged(item)"
+                         input-model="friends"
+                         single-output-model="$parent.$parent.$parent.playerChoice3"
+                         button-template="angular-multi-select-btn-data.htm"
+                         item-label="<[ displayName ]>"
+                         search-property="displayName"
+                         button-label="<[ displayName ]>">
+                    </div>
+                    <div angular-multi-select
+                         class="ams_container"
+                         helper-elements="filter noall nonone noreset"
+                         min-search-length="1"
+                         selection-mode="single"
+                         on-close="playersChanged()"
+                         on-item-click="playersChanged(item)"
+                         input-model="friends"
+                         single-output-model="$parent.$parent.$parent.playerChoice4"
+                         button-template="angular-multi-select-btn-data.htm"
+                         item-label="<[ displayName ]>"
+                         search-property="displayName"
+                         button-label="<[ displayName ]>">
+                    </div>
+                    <div angular-multi-select
+                         class="ams_container"
+                         helper-elements="filter noall nonone noreset"
+                         min-search-length="1"
+                         selection-mode="single"
+                         on-close="playersChanged()"
+                         on-item-click="playersChanged(item)"
+                         input-model="friends"
+                         single-output-model="$parent.$parent.$parent.playerChoice5"
+                         button-template="angular-multi-select-btn-data.htm"
+                         item-label="<[ displayName ]>"
+                         search-property="displayName"
+                         button-label="<[ displayName ]>">
+                    </div>
+                    -->
+                </div>
+            </ion-slide>
+        </ion-slide-box>
+        <div class="list create">
+            <div class="item">
+                <div class="button-bar">
+                    <a class="button button-rotatehelp button-icon icon-left ion-arrow-left-b"
+                       ng-click="previous()">Previous</a>
+                    <a class="button button-rotatehelp button-icon icon-right ion-arrow-right-b"
+                       ng-click="next()">Next</a>
+                </div>
+            </div>
+            <div class="item">
+                <a class="button-full button-submit button" ng-disabled="!(submitEnabled)" ng-click="createGame()">
+                    Start Game!
+                </a>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

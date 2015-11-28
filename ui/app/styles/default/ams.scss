@@ -5,6 +5,7 @@
   width: 100%;
 
   .ams {
+    position: relative;
     .ams_search {
       height: auto;
       max-height: inherit;
@@ -37,6 +38,8 @@
     }
 
     .ams_layer {
+      position: relative;
+
       background-color: $medium_blue;
       width: 100%;
       font-size: 16px;

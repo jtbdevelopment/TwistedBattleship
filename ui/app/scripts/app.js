@@ -87,7 +87,7 @@ angular.module('tbs', ['ionic', 'tbs.controllers', 'tbs.directives', 'config', '
                 url: '/create',
                 views: {
                     'menuContent': {
-                        templateUrl: 'templates/create.html',
+                        templateUrl: 'templates/createWizard.html',
                         controller: 'CreateGameCtrl',
                         resolve: {
                             features: function (jtbGameFeatureService) {
