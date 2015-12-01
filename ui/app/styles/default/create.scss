@@ -6,7 +6,6 @@
   @include defaultInput;
 
   .item {
-
     @media (max-width: $screen-xs-max) {
       font-size: small;
     }
@@ -31,5 +30,10 @@
   .item-toggle {
     padding-top: 12px;
     padding-bottom: 12px;
+  }
+
+  .invite-button {
+    background-color: $paler_green;
+    color: black;
   }
 }

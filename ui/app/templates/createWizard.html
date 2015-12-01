@@ -1,14 +1,12 @@
 <ion-view class="createGame" cache-view="false">
     <ion-nav-buttons side="right">
-        <a class="button button-icon button-clear ion-person-add" ng-show="invitableFriends.length >= 0"
-           ng-click="showInviteFriends()"></a>
         <a class="button button-icon button-clear ion-help-circled" ng-click="showHelp(0)"></a>
     </ion-nav-buttons>
     <ion-content>
         <ion-slide-box does-continue="true" auto-play="false" show-pager="false">
             <ion-slide>
                 <div class="list create">
-                    <div class="item-divider">Difficulty Settings</div>
+                    <div class="item-divider">Difficulty</div>
                     <div ng-repeat="feature in featureData | propsFilter: { checkBox: 'false' } | propsFilter: { groupType: 'Difficulty'}">
                         <label class="item item-input item-select">
                             <div class="input-label">
@@ -32,7 +30,7 @@
             </ion-slide>
             <ion-slide>
                 <div class="list create">
-                    <div class="item-divider">Defensive Options</div>
+                    <div class="item-divider">Defend</div>
                     <div ng-repeat="feature in featureData | propsFilter: { checkBox: 'false' } | propsFilter: { groupType: 'Defensive'}">
                         <label class="item item-input item-select">
                             <div class="input-label">
@@ -56,7 +54,7 @@
             </ion-slide>
             <ion-slide>
                 <div class="list create">
-                    <div class="item-divider">Offensive Options</div>
+                    <div class="item-divider">Attack</div>
                     <div ng-repeat="feature in featureData | propsFilter: { checkBox: 'false' } | propsFilter: { groupType: 'Offensive'}">
                         <label class="item item-input item-select">
                             <div class="input-label">
@@ -96,78 +94,11 @@
                          search-property="displayName"
                          button-label="<[ displayName ]>">
                     </div>
-                    <!--
-                    <div angular-multi-select
-                         class="ams_container"
-                         helper-elements="filter noall nonone noreset"
-                         min-search-length="1"
-                         selection-mode="single"
-                         on-close="playersChanged()"
-                         on-item-click="playersChanged(item)"
-                         input-model="friends"
-                         single-output-model="$parent.$parent.$parent.playerChoice1"
-                         button-template="angular-multi-select-btn-data.htm"
-                         item-label="<[ displayName ]>"
-                         search-property="displayName"
-                         button-label="<[ displayName ]>">
+                    <div class="item">
+                        <a class="button button-full button-icon icon-left ion-person-add invite-button"
+                           ng-show="invitableFriends.length > 0"
+                           ng-click="showInviteFriends()">Need more opponents? Invite friends!</a>
                     </div>
-                    <div angular-multi-select
-                         class="ams_container"
-                         helper-elements="filter noall nonone noreset"
-                         min-search-length="1"
-                         selection-mode="single"
-                         on-close="playersChanged()"
-                         on-item-click="playersChanged(item)"
-                         input-model="friends"
-                         single-output-model="$parent.$parent.$parent.playerChoice2"
-                         button-template="angular-multi-select-btn-data.htm"
-                         item-label="<[ displayName ]>"
-                         search-property="displayName"
-                         button-label="<[ displayName ]>">
-                    </div>
-                    <div angular-multi-select
-                         class="ams_container"
-                         helper-elements="filter noall nonone noreset"
-                         min-search-length="1"
-                         selection-mode="single"
-                         on-close="playersChanged()"
-                         on-item-click="playersChanged(item)"
-                         input-model="friends"
-                         single-output-model="$parent.$parent.$parent.playerChoice3"
-                         button-template="angular-multi-select-btn-data.htm"
-                         item-label="<[ displayName ]>"
-                         search-property="displayName"
-                         button-label="<[ displayName ]>">
-                    </div>
-                    <div angular-multi-select
-                         class="ams_container"
-                         helper-elements="filter noall nonone noreset"
-                         min-search-length="1"
-                         selection-mode="single"
-                         on-close="playersChanged()"
-                         on-item-click="playersChanged(item)"
-                         input-model="friends"
-                         single-output-model="$parent.$parent.$parent.playerChoice4"
-                         button-template="angular-multi-select-btn-data.htm"
-                         item-label="<[ displayName ]>"
-                         search-property="displayName"
-                         button-label="<[ displayName ]>">
-                    </div>
-                    <div angular-multi-select
-                         class="ams_container"
-                         helper-elements="filter noall nonone noreset"
-                         min-search-length="1"
-                         selection-mode="single"
-                         on-close="playersChanged()"
-                         on-item-click="playersChanged(item)"
-                         input-model="friends"
-                         single-output-model="$parent.$parent.$parent.playerChoice5"
-                         button-template="angular-multi-select-btn-data.htm"
-                         item-label="<[ displayName ]>"
-                         search-property="displayName"
-                         button-label="<[ displayName ]>">
-                    </div>
-                    -->
                 </div>
             </ion-slide>
         </ion-slide-box>

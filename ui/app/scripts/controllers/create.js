@@ -3,10 +3,10 @@
 var MAX_OPPONENTS = 5;
 
 angular.module('tbs.controllers').controller('CreateGameCtrl',
-    ['friends', 'features', '$scope', 'jtbGameCache', 'jtbPlayerService', 'jtbFacebook', '$http', '$state',
-        'tbsGameDetails', '$ionicModal', '$ionicHistory', '$ionicLoading', '$ionicPopup', '$ionicSlideBoxDelegate', // 'twAds',
-        function (friends, features, $scope, jtbGameCache, jtbPlayerService, jtbFacebook, $http, $state,
-                  tbsGameDetails, $ionicModal, $ionicHistory, $ionicLoading, $ionicPopup, $ionicSlideBoxDelegate /*, twAds*/) {
+    ['features', '$scope', 'jtbGameCache', 'jtbPlayerService', 'jtbFacebook', '$http', '$state',
+        'tbsGameDetails', '$ionicModal', '$ionicHistory', '$ionicLoading', '$ionicPopup', '$ionicSlideBoxDelegate',
+        function (features, $scope, jtbGameCache, jtbPlayerService, jtbFacebook, $http, $state,
+                  tbsGameDetails, $ionicModal, $ionicHistory, $ionicLoading, $ionicPopup, $ionicSlideBoxDelegate) {
 
             $scope.gameDetails = tbsGameDetails;
             $scope.featureData = features;
@@ -38,68 +38,40 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
                     $scope.currentOptions.push(defaultOption.feature);
                 }
             });
-            angular.forEach(friends.maskedFriends, function (displayName, hash) {
-                var friend = {
-                    md5: hash,
-                    displayName: displayName,
-                    checked: false
-                };
-                $scope.friends.push(friend);
-            });
-            angular.forEach($scope.inviteArray, function (index) {
-                angular.copy($scope.friends, $scope.friendInputs[index]);
+            jtbPlayerService.currentPlayerFriends().then(function (friends) {
+                angular.forEach(friends.maskedFriends, function (displayName, hash) {
+                    var friend = {
+                        md5: hash,
+                        displayName: displayName,
+                        checked: false
+                    };
+                    $scope.friends.push(friend);
+                });
+                angular.forEach($scope.inviteArray, function (index) {
+                    angular.copy($scope.friends, $scope.friendInputs[index]);
+                });
+
+                if (jtbPlayerService.currentPlayer().source === 'facebook') {
+                    angular.forEach(friends.invitableFriends, function (friend) {
+                        var invite = {
+                            id: friend.id,
+                            name: friend.name
+                        };
+                        if (angular.isDefined(friend.picture) && angular.isDefined(friend.picture.url)) {
+                            invite.url = friend.picture.url;
+                        }
+                        $scope.invitableFriends.push(invite);
+                    });
+                }
             });
 
             $scope.playersChanged = function () {
                 var chosenPlayers = $scope.playerChoices.filter(function (value) {
-                    return angular.isDefined(value.md5) && value.md5 != "";
+                    return angular.isDefined(value.md5) && value.md5 !== '';
                 });
                 $scope.submitEnabled = chosenPlayers.length > 0;
-                /*
-                 for(var i = 0; i < $scope.inviteArray.length; ++i) {
-                 var otherChosenPlayers = $scope.playerChoices.filter(function(value, index) {
-                 return index != i && angular.isDefined(value.md5) && value.md5 != "";
-                 });
-                 var thisChosenPlayer = $scope.playerChoices.filter(function(value, index) {
-                 return index === i;
-                 })[0];
-                 var otherChosenMD5s = [];
-                 angular.forEach(otherChosenPlayers, function(otherChosenPlayer) {
-                 otherChosenMD5s.push(otherChosenPlayer.md5);
-                 });
-                 var newFriends = $scope.friends.filter(function(value){
-                 return otherChosenMD5s.indexOf(value.md5) < 0;
-                 });
-                 console.log('B' + i + ':' + JSON.stringify($scope.friendInputs[i]));
-                 console.log('B' + i + ':' + JSON.stringify(thisChosenPlayer));
-                 if(angular.isDefined(thisChosenPlayer) && angular.isDefined(thisChosenPlayer.md5)) {
-                 var selected = newFriends.filter(function(value) {
-                 return value.md5 === thisChosenPlayer.md5;
-                 });
-                 selected[0].checked = true;
-                 }
-                 console.log('A' + i + ':' + JSON.stringify(newFriends));
-                 angular.copy(newFriends, $scope.friendInputs[i]);
-                 console.log('A' + i + ':' + JSON.stringify($scope.friendInputs[i]));
-                 console.log('A' + i + ':' + JSON.stringify(thisChosenPlayer));
-                 console.log($scope.playerChoices);
-                 }
-                 */
             };
 
-
-            if (jtbPlayerService.currentPlayer().source === 'facebook') {
-                angular.forEach(friends.invitableFriends, function (friend) {
-                    var invite = {
-                        id: friend.id,
-                        name: friend.name
-                    };
-                    if (angular.isDefined(friend.picture) && angular.isDefined(friend.picture.url)) {
-                        invite.url = friend.picture.url;
-                    }
-                    $scope.invitableFriends.push(invite);
-                });
-            }
 
             $ionicModal.fromTemplateUrl('templates/help/help-create.html', {
                 scope: $scope,
@@ -186,11 +158,11 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
                 });
 
                 var players = $scope.playerChoices.filter(function (value) {
-                    return angular.isDefined(value.md5) && value.md5 != "";
+                    return angular.isDefined(value.md5) && value.md5 !== '';
                 }).map(function (player) {
                     return player.md5;
                 }).filter(function (value, index, self) {
-                    return self.indexOf(value) == index;
+                    return self.indexOf(value) === index;
                 });
                 var playersAndFeatures = {'players': players, 'features': features};
                 $ionicLoading.show({

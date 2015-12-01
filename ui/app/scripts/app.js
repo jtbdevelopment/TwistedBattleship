@@ -92,9 +92,6 @@ angular.module('tbs', ['ionic', 'tbs.controllers', 'tbs.directives', 'config', '
                         resolve: {
                             features: function (jtbGameFeatureService) {
                                 return jtbGameFeatureService.features();
-                            },
-                            friends: function (jtbPlayerService) {
-                                return jtbPlayerService.currentPlayerFriends();
                             }
                         }
                     }
