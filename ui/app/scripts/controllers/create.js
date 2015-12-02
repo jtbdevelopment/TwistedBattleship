@@ -38,6 +38,7 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
                     $scope.currentOptions.push(defaultOption.feature);
                 }
             });
+
             jtbPlayerService.currentPlayerFriends().then(function (friends) {
                 angular.forEach(friends.maskedFriends, function (displayName, hash) {
                     var friend = {
@@ -65,13 +66,36 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
                 }
             });
 
-            $scope.playersChanged = function () {
-                var chosenPlayers = $scope.playerChoices.filter(function (value) {
-                    return angular.isDefined(value.md5) && value.md5 !== '';
-                });
-                $scope.submitEnabled = chosenPlayers.length > 0;
-            };
+            function validMD5(value) {
+                return angular.isDefined(value.md5) && value.md5 !== '';
+            }
 
+            $scope.playersChanged = function () {
+                var chosenPlayers = $scope.playerChoices.filter(validMD5);
+                $scope.submitEnabled = chosenPlayers.length > 0;
+
+                angular.forEach($scope.inviteArray, function (index) {
+                    var otherMD5s = $scope.playerChoices.filter(function (value, valueIndex) {
+                        return index !== valueIndex && validMD5(value);
+                    }).map(function (value) {
+                        return value.md5;
+                    });
+
+                    var updatedList = angular.copy($scope.friends.filter(function (value) {
+                        return otherMD5s.indexOf(value.md5) < 0;
+                    }));
+
+                    if (validMD5($scope.playerChoices[index])) {
+                        var md5 = $scope.playerChoices[index].md5;
+                        updatedList.filter(function (value) {
+                            return value.md5 === md5;
+                        })[0].checked = true;
+                    }
+
+                    $scope.friendInputs[index] = updatedList;
+                });
+
+            };
 
             $ionicModal.fromTemplateUrl('templates/help/help-create.html', {
                 scope: $scope,
@@ -157,9 +181,7 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
                     }
                 });
 
-                var players = $scope.playerChoices.filter(function (value) {
-                    return angular.isDefined(value.md5) && value.md5 !== '';
-                }).map(function (player) {
+                var players = $scope.playerChoices.filter(validMD5).map(function (player) {
                     return player.md5;
                 }).filter(function (value, index, self) {
                     return self.indexOf(value) === index;
