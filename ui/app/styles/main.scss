@@ -68,6 +68,30 @@
   max-width: 40%;
 }
 
+.mobile-links {
+  div {
+    width: 100%;
+    .ios {
+      height: 45px;
+      width: 129px;
+      border: 10px;
+      position: absolute;
+      right: 33%;
+      right: calc(20% - 129px);
+    }
+
+    .android {
+      height: 45px;
+      width: 129px;
+      border: 10px;
+      position: absolute;
+      right: 66%;
+      right: calc(10% - 129px);
+    }
+  }
+  border-bottom: 10px;
+  height: 55px;
+}
 
 @import "default/default-theme";
 
