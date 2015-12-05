@@ -21,4 +21,3 @@ Consolidated To Do's
 - push ios certificates?
 - chrome push
 
-- try ssl/tcp to get websockets?
