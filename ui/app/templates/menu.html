@@ -17,6 +17,16 @@
             <h1 class="title">Menu</h1>
         </ion-header-bar>
         <ion-content>
+            <div ng-hide="mobile" class="mobile-links">
+                <a href="https://itunes.apple.com/app/id1038538980" target="_blank">
+                    <img ng-src="images/appstore.svg" class="ios"/>
+                </a>
+                <a href="https://play.google.com/store/apps/details?id=com.jtbdevelopment.TwistedBattleship"
+                   target="_blank">
+                    <img class="android" ng-src="images/googleplay.png"/>
+                </a>
+            </div>
+
             <ion-list>
                 <ion-item menu-close href="#/signin" ng-hide="player.source == 'facebook'">
                     Login
@@ -26,3 +36,4 @@
         </ion-content>
     </ion-side-menu>
 </ion-side-menus>
+<div id="adImport" ng-include="adImport"></div>
