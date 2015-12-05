@@ -1,7 +1,7 @@
 'use strict';
 
-var CURRENT_VERSION = '1.0';
-var CURRENT_NOTES = 'Added background notifications when you are offline for a while.';
+var CURRENT_VERSION = '1.1';
+var CURRENT_NOTES = 'Revamped create game screens and small fixes.';
 angular.module('tbs.services').factory('tbsVersionNotes',
     ['$http', 'jtbPlayerService', '$ionicPopup',
         function ($http, jtbPlayerService, $ionicPopup) {

@@ -1,3 +1,4 @@
+/*global invokeApplixirVideoUnitExtended:false */
 /*global AdMob:false */
 'use strict';
 
@@ -79,6 +80,18 @@ angular.module('tbs.services').factory('tbsAds',
                                     autoShow: true
                                 });
                                 break;
+                            case BROWSER:
+                                (function (d, s, id) {
+                                    var js, fjs = d.getElementsByTagName(s)[0];
+                                    if (d.getElementById(id)) {
+                                        return;
+                                    }
+                                    js = d.createElement(s);
+                                    js.id = id;
+                                    js.src = '//developer.appprizes.com/applixir_richmedia.js';
+                                    fjs.parentNode.insertBefore(js, fjs);
+                                }(document, 'script', 'applixir-jssdk'));
+                                break;
                             default:
                                 break;
                         }
@@ -96,6 +109,15 @@ angular.module('tbs.services').factory('tbsAds',
                                 } catch (ex) {
                                     console.warn(JSON.stringify(ex));
                                     requestAMInter();
+                                }
+                                break;
+                            case BROWSER:
+                                try {
+                                    invokeApplixirVideoUnitExtended(false, 'middle', function () {
+                                        lastInter = new Date();
+                                    });
+                                } catch (ex) {
+                                    console.warn(JSON.stringify(ex));
                                 }
                                 break;
                             default:

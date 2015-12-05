@@ -23,6 +23,7 @@ angular.module('tbs.controllers').controller('MainCtrl',
             $scope.player = jtbPlayerService.currentPlayer();
 
             $scope.mobile = $window.location.href.indexOf('file') === 0;
+            $scope.adImport = 'templates/ads/' + ($scope.mobile ? 'mobile' : 'non-mobile') + '.html';
 
             $scope.$on('playerLoaded', function () {
                 $scope.player = jtbPlayerService.currentPlayer();

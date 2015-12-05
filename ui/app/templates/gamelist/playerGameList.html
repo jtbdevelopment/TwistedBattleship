@@ -13,7 +13,8 @@
             </div>
 
             <div ng-hide="games[phase].hideGames">
-                <ion-item menu-close ng-repeat="game in games[phase].games | orderBy:['-lastUpdate', '-created']"
+                <ion-item menu-close
+                          ng-repeat="game in games[phase].games track by game.id | orderBy:['-lastUpdate', '-created']"
                           ng-init="detail = gameDetails.shortGameDescription(game, md5)"
                           href="#/app/games/{{game.gamePhase.toLowerCase()}}/{{game.id}}"
                           class="item {{detail.playerAction ? 'playable' : 'waiting'}} item-text-wrap">
