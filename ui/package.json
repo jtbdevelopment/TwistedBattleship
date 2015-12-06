@@ -64,22 +64,22 @@
     "org.apache.cordova.file",
     "cordova-plugin-network-information",
     "cordova-plugin-extension",
-    "cordova-plugin-admob",
     "cordova-plugin-googleplayservices",
     "cordova-plugin-crosswalk-webview",
     "cordova-plugin-whitelist",
     {
-      "locator": "https://github.com/phonegap-build/PushPlugin.git",
-      "id": "com.phonegap.plugins.PushPlugin"
-    },
-    {
-      "id": "phonegap-facebook-plugin",
-      "locator": "../../phongegap-facebook-plugin/phonegap-facebook-plugin",
+      "id": "cordova-plugin-facebook4",
+      "locator": "cordova-plugin-facebook4",
       "variables": {
         "APP_ID": "100714310269707",
         "APP_NAME": "TwistedBattleship"
       }
-    }
+    },
+    {
+      "locator": "../../phonegap-plugin-push",
+      "id": "phonegap-plugin-push"
+    },
+    "cordova-plugin-admobpro"
   ],
   "cordovaPlatforms": [
     {
