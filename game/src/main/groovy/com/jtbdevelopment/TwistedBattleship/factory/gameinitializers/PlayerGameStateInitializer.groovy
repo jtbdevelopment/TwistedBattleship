@@ -42,6 +42,7 @@ class PlayerGameStateInitializer implements GameInitializer<TBGame> {
                 game.playerDetails[p.id] = new TBPlayerState(
                         startingShips: game.startingShips,
                         ecmsRemaining: game.features.contains(GameFeature.ECMEnabled) ? specialMoves : 0,
+                        cruiseMissilesRemaining: game.features.contains(GameFeature.CruiseMissileEnabled) ? 1 : 0,
                         emergencyRepairsRemaining: game.features.contains(GameFeature.EREnabled) ? specialMoves : 0,
                         evasiveManeuversRemaining: game.features.contains(GameFeature.EMEnabled) ? specialMoves : 0,
                         spysRemaining: game.features.contains(GameFeature.SpyEnabled) ? specialMoves : 0,

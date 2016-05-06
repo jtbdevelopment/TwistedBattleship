@@ -19,7 +19,7 @@ class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
 
     void testInitializeGame() {
         TBGame game = new TBGame(
-                features: [GameFeature.Grid15x15, GameFeature.Single, GameFeature.ECMEnabled, GameFeature.EREnabled, GameFeature.SpyEnabled, GameFeature.EMEnabled],
+                features: [GameFeature.Grid15x15, GameFeature.Single, GameFeature.ECMEnabled, GameFeature.EREnabled, GameFeature.SpyEnabled, GameFeature.EMEnabled, GameFeature.CruiseMissileEnabled],
                 players: [PONE, PTWO, PTHREE]
         )
 
@@ -40,7 +40,7 @@ class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
 
     void testInitializePerShipGame() {
         TBGame game = new TBGame(
-                features: [GameFeature.Grid15x15, GameFeature.PerShip, GameFeature.ECMEnabled, GameFeature.EREnabled, GameFeature.SpyEnabled, GameFeature.EMEnabled],
+                features: [GameFeature.Grid15x15, GameFeature.PerShip, GameFeature.ECMEnabled, GameFeature.EREnabled, GameFeature.SpyEnabled, GameFeature.EMEnabled, GameFeature.CruiseMissileEnabled],
                 players: [PONE, PTWO, PTHREE]
         )
 
@@ -61,7 +61,7 @@ class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
 
     void testInitializeGameGrid10x10() {
         TBGame game = new TBGame(
-                features: [GameFeature.Grid10x10, GameFeature.Single, GameFeature.ECMEnabled, GameFeature.EREnabled, GameFeature.SpyEnabled, GameFeature.EMEnabled],
+                features: [GameFeature.Grid10x10, GameFeature.Single, GameFeature.ECMEnabled, GameFeature.EREnabled, GameFeature.SpyEnabled, GameFeature.EMEnabled, GameFeature.CruiseMissileEnabled],
                 players: [PONE, PTWO, PTHREE]
         )
 
@@ -108,6 +108,7 @@ class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
         assert expectedSpecials == playerState.evasiveManeuversRemaining
         assert expectedSpecials == playerState.emergencyRepairsRemaining
         assert expectedSpecials == playerState.spysRemaining
+        assert ((expectedSpecials > 0) ? 1 : 0) == playerState.cruiseMissilesRemaining
         assert opponentIds == playerState.opponentGrids.keySet()
         assert game.startingShips == playerState.startingShips
         playerState.opponentGrids.values().each {
