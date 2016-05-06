@@ -21,6 +21,7 @@ class TBPlayerState implements Serializable {
     Map<GridCoordinate, ShipState> coordinateShipMap = null
 
     int spysRemaining = 0
+    int cruiseMissilesRemaining = 0
     int evasiveManeuversRemaining = 0
     int ecmsRemaining = 0
     int emergencyRepairsRemaining = 0

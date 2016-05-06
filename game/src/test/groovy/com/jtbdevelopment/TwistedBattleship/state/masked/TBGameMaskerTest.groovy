@@ -43,6 +43,7 @@ class TBGameMaskerTest extends MongoGameCoreTestCase {
                                 scoreFromLiving: 20,
                                 scoreFromSinks: 40,
                                 spysRemaining: 1,
+                                cruiseMissilesRemaining: 5,
                                 ecmsRemaining: 2,
                                 evasiveManeuversRemaining: 3,
                                 emergencyRepairsRemaining: 4,
@@ -116,6 +117,7 @@ class TBGameMaskerTest extends MongoGameCoreTestCase {
         assert playerState.totalScore == maskedGame.maskedPlayersState.totalScore
         assert playerState.activeShipsRemaining == maskedGame.maskedPlayersState.activeShipsRemaining
         assert playerState.spysRemaining == maskedGame.maskedPlayersState.spysRemaining
+        assert playerState.cruiseMissilesRemaining == maskedGame.maskedPlayersState.cruiseMissilesRemaining
         assert playerState.evasiveManeuversRemaining == maskedGame.maskedPlayersState.evasiveManeuversRemaining
         assert playerState.ecmsRemaining == maskedGame.maskedPlayersState.ecmsRemaining
         assert playerState.emergencyRepairsRemaining == maskedGame.maskedPlayersState.emergencyRepairsRemaining

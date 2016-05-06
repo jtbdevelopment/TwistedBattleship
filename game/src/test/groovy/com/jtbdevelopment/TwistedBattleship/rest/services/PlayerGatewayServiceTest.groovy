@@ -58,13 +58,11 @@ class PlayerGatewayServiceTest extends GroovyTestCase {
                                 new GameFeatureInfo.Detail(GameFeature.SpyEnabled),
                                 new GameFeatureInfo.Detail(GameFeature.SpyDisabled),
                         ]),
-                /*
-                new GameFeatureInfo(GameFeature.Critical,
+                new GameFeatureInfo(GameFeature.CruiseMissile,
                         [
-                                new GameFeatureInfo.Detail(GameFeature.CriticalEnabled),
-                                new GameFeatureInfo.Detail(GameFeature.CriticalDisabled),
+                                new GameFeatureInfo.Detail(GameFeature.CruiseMissileDisabled),
+                                new GameFeatureInfo.Detail(GameFeature.CruiseMissileEnabled),
                         ]),
-                        */
         ]
     }
 

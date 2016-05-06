@@ -97,6 +97,7 @@ class TBGameMasker extends AbstractMultiPlayerGameMasker<ObjectId, GameFeature, 
         maskedPlayerState.emergencyRepairsRemaining = playerState.emergencyRepairsRemaining
         maskedPlayerState.evasiveManeuversRemaining = playerState.evasiveManeuversRemaining
         maskedPlayerState.spysRemaining = playerState.spysRemaining
+        maskedPlayerState.cruiseMissilesRemaining = playerState.cruiseMissilesRemaining
         maskedPlayerState.startingShips = playerState.startingShips
         maskedPlayerState.actionLog = playerState.actionLog.collect {
             new TBMaskedActionLogEntry(

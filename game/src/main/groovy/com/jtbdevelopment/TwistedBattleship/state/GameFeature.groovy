@@ -37,14 +37,9 @@ enum GameFeature {
     SpyEnabled(1, 'Enabled', "Players can use spy drones to get a glimpse of an area of an opponent's grid.  Bigger grids show more area.", Spy),
     SpyDisabled(2, 'Disabled', 'Spy drones disabled.', Spy),
 
-    //  TODO - implement or completely remove
-    /*
-    Critical(8, CriticalEnabled, 'Critical Hits', 'Allow duds and critical hits (NOT IMPLEMENTED CURRENTLY).'),
-    CriticalEnabled(1, 'Criticals', 'Small chance a hit can damage an adjacent boat segment OR be a dud missile and do no damage.', Critical),
-    CriticalDisabled(2, '', 'No critical hits or duds.', Critical)
-    */
-
-    //  TODO - cruise missiles?
+    CruiseMissile(8, GameFeatureGroupType.Offensive, CruiseMissileDisabled, 'Cruise Missile', "Single use attack that sinks a ship with a single hit on any location."),
+    CruiseMissileDisabled(1, 'Disabled', 'Cruise missile disabled.', CruiseMissile),
+    CruiseMissileEnabled(2, 'Enabled', "Single use per game, sinks a ship by hitting any single ship location.", CruiseMissile),
 
     final GameFeatureGroupType groupType
     final GameFeature group

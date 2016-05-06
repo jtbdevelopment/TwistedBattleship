@@ -19,6 +19,7 @@ class TBPlayerStateTest extends GroovyTestCase {
         assert 0 == state.totalScore
         assert 0 == state.activeShipsRemaining
         assert 0 == state.spysRemaining
+        assert 0 == state.cruiseMissilesRemaining
         assert 0 == state.ecmsRemaining
         assert 0 == state.evasiveManeuversRemaining
         assert 0 == state.emergencyRepairsRemaining

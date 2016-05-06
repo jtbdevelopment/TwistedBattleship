@@ -4,6 +4,7 @@ angular.module('tbs.services').factory('tbsGameDetails',
     ['jtbGamePhaseService', function (jtbGamePhaseService) {
         var iconMap = {
             'SpyEnabled': 'eye',
+            'CruiseMissileDisabled': 'fireball',
             'ECMEnabled': 'eye-disabled',
             'SharedIntel': 'images',
             'IsolatedIntel': 'image',
@@ -48,6 +49,13 @@ angular.module('tbs.services').factory('tbsGameDetails',
                     return false;
                 }
                 return game.maskedPlayersState.spysRemaining > 0 && game.remainingMoves >= game.movesForSpecials;
+            },
+
+            cruiseMissilePossible: function (game, md5) {
+                if (!this.playerCanPlay(game, md5)) {
+                    return false;
+                }
+                return game.maskedPlayersState.cruiseMissilesRemaining > 0 && game.remainingMoves >= game.movesForSpecials;
             },
 
             repairPossible: function (game, md5) {

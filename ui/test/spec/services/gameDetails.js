@@ -76,6 +76,7 @@ describe('Service: gameDetails', function () {
 
     it('icons for features', function () {
         expect(service.iconForFeature('SpyEnabled')).to.equal('eye');
+        expect(service.iconForFeature('CruiseMissileDisabled')).to.equal('fireball');
         expect(service.iconForFeature('ECMEnabled')).to.equal('eye-disabled');
         expect(service.iconForFeature('SharedIntel')).to.equal('images');
         expect(service.iconForFeature('IsolatedIntel')).to.equal('image');
@@ -100,6 +101,9 @@ describe('Service: gameDetails', function () {
         it('spy', function () {
             expect(service.spyPossible(game, 'md1')).to.equal(false);
         });
+        it('cruise missle', function () {
+            expect(service.cruiseMissilePossible(game, 'md1')).to.equal(false);
+        });
         it('repair', function () {
             expect(service.repairPossible(game, 'md1')).to.equal(false);
         });
@@ -119,6 +123,7 @@ describe('Service: gameDetails', function () {
             beforeEach(function () {
                 game.maskedPlayersState.ecmsRemaining = 0;
                 game.maskedPlayersState.spysRemaining = 0;
+                game.maskedPlayersState.cruiseMissilesRemaining = 0;
                 game.maskedPlayersState.emergencyRepairsRemaining = 0;
                 game.maskedPlayersState.evasiveManeuversRemaining = 0;
             });
@@ -127,6 +132,9 @@ describe('Service: gameDetails', function () {
             });
             it('spy', function () {
                 expect(service.spyPossible(game, 'md1')).to.equal(false);
+            });
+            it('cruise missile', function () {
+                expect(service.cruiseMissilePossible(game, 'md1')).to.equal(false);
             });
             it('repair', function () {
                 expect(service.repairPossible(game, 'md1')).to.equal(false);
@@ -142,6 +150,7 @@ describe('Service: gameDetails', function () {
                 game.maskedPlayersState.spysRemaining = 1;
                 game.maskedPlayersState.emergencyRepairsRemaining = 1;
                 game.maskedPlayersState.evasiveManeuversRemaining = 1;
+                game.maskedPlayersState.cruiseMissilesRemaining = 1;
                 game.remainingMoves = 1;
                 game.movesForSpecials = 2;
             });
@@ -150,6 +159,9 @@ describe('Service: gameDetails', function () {
             });
             it('spy', function () {
                 expect(service.spyPossible(game, 'md1')).to.equal(false);
+            });
+            it('cruise missile', function () {
+                expect(service.cruiseMissilePossible(game, 'md1')).to.equal(false);
             });
             it('repair', function () {
                 expect(service.repairPossible(game, 'md1')).to.equal(false);
@@ -165,6 +177,7 @@ describe('Service: gameDetails', function () {
                 game.maskedPlayersState.spysRemaining = 1;
                 game.maskedPlayersState.emergencyRepairsRemaining = 1;
                 game.maskedPlayersState.evasiveManeuversRemaining = 1;
+                game.maskedPlayersState.cruiseMissilesRemaining = 1;
                 game.remainingMoves = 2;
                 game.movesForSpecials = 2;
             });
@@ -173,6 +186,9 @@ describe('Service: gameDetails', function () {
             });
             it('spy', function () {
                 expect(service.spyPossible(game, 'md1')).to.equal(true);
+            });
+            it('cruise missile', function () {
+                expect(service.cruiseMissilePossible(game, 'md1')).to.equal(true);
             });
             it('repair', function () {
                 expect(service.repairPossible(game, 'md1')).to.equal(true);
