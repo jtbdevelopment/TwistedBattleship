@@ -17,6 +17,7 @@ class TBActionLogEntry implements Serializable {
         UsedECM,
         DamagedByECM,
         PerformedManeuvers,
+        CruiseMissile,
 
         Sunk,
         Defeated,
