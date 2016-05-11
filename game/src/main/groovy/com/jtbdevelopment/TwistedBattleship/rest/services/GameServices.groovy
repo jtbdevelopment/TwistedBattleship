@@ -42,6 +42,9 @@ class GameServices extends AbstractMultiPlayerGameServices<ObjectId> {
     @Autowired
     EvasiveManeuverHandler evasiveManeuverHandler
 
+    @Autowired
+    CruiseMissileHandler cruiseMissileHandler
+
     @PUT
     @Path("setup")
     @Produces(MediaType.APPLICATION_JSON)
@@ -60,6 +63,14 @@ class GameServices extends AbstractMultiPlayerGameServices<ObjectId> {
     @Consumes(MediaType.APPLICATION_JSON)
     Object fire(final Target target) {
         fireAtCoordinateHandler.handleAction((ObjectId) playerID.get(), (ObjectId) gameID.get(), target)
+    }
+
+    @PUT
+    @Path("missile")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    Object cruiseMissile(final Target target) {
+        cruiseMissileHandler.handleAction((ObjectId) playerID.get(), (ObjectId) gameID.get(), target)
     }
 
     @PUT

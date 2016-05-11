@@ -24,12 +24,13 @@ class GameServicesTest extends MongoGameCoreTestCase {
     void testActionAnnotations() {
         Map<String, List<Object>> stuff = [
                 //  method: [name, params, path, path param values, consumes
-                "setupShips": ["setup", [List.class], [], [MediaType.APPLICATION_JSON]],
-                "fire": ["fire", [Target.class], [], [MediaType.APPLICATION_JSON]],
-                "spy": ["spy", [Target.class], [], [MediaType.APPLICATION_JSON]],
-                "repair": ["repair", [Target.class], [], [MediaType.APPLICATION_JSON]],
-                "ecm": ["ecm", [Target.class], [], [MediaType.APPLICATION_JSON]],
-                "move": ["move", [Target.class], [], [MediaType.APPLICATION_JSON]],
+                "setupShips"   : ["setup", [List.class], [], [MediaType.APPLICATION_JSON]],
+                "fire"         : ["fire", [Target.class], [], [MediaType.APPLICATION_JSON]],
+                "cruiseMissile": ["missile", [Target.class], [], [MediaType.APPLICATION_JSON]],
+                "spy"          : ["spy", [Target.class], [], [MediaType.APPLICATION_JSON]],
+                "repair"       : ["repair", [Target.class], [], [MediaType.APPLICATION_JSON]],
+                "ecm"          : ["ecm", [Target.class], [], [MediaType.APPLICATION_JSON]],
+                "move"         : ["move", [Target.class], [], [MediaType.APPLICATION_JSON]],
         ]
         stuff.each {
             String method, List<Object> details ->
@@ -121,6 +122,24 @@ class GameServicesTest extends MongoGameCoreTestCase {
                 }
         ] as FireAtCoordinateHandler
         assert maskedGame.is(services.fire(target))
+    }
+
+    void testMissile() {
+        TBMaskedGame maskedGame = new TBMaskedGame()
+        Target target = new Target(player: PONE.md5, coordinate: new GridCoordinate(10, 5))
+        ObjectId gameId = new ObjectId()
+        services.playerID.set(PONE.id)
+        services.gameID.set(gameId)
+        services.cruiseMissileHandler = [
+                handleAction: {
+                    Serializable p, Serializable g, Target t ->
+                        assert PONE.id.is(p)
+                        assert gameId.is(g)
+                        assert target.is(t)
+                        maskedGame
+                }
+        ] as CruiseMissileHandler
+        assert maskedGame.is(services.cruiseMissile(target))
     }
 
     void testSpy() {
