@@ -18,11 +18,11 @@ import org.bson.types.ObjectId
 class CruiseMissileHandlerTest extends AbstractBaseHandlerTest {
     CruiseMissileHandler handler = new CruiseMissileHandler();
 
-    List<Object> calls = [];
+    List<Object> callsToFireHandler = [];
     FireAtCoordinateHandler fireAtCoordinateHandler = [
             playMove: {
                 Player<ObjectId> player, TBGame game, Player<ObjectId> targetted, GridCoordinate coordinate ->
-                    calls += [
+                    callsToFireHandler += [
                             Player    : player,
                             Game      : game,
                             Target    : targetted,
@@ -36,7 +36,7 @@ class CruiseMissileHandlerTest extends AbstractBaseHandlerTest {
     @Override
     protected void setUp() throws Exception {
         super.setUp()
-        calls.clear()
+        callsToFireHandler.clear()
         game.playerDetails[PTWO.id].opponentGrids[PONE.id].set(1, 0, GridCellState.KnownByHit)
         game.playerDetails[PTWO.id].opponentGrids[PONE.id].set(2, 0, GridCellState.KnownByOtherHit)
         game.playerDetails[PTWO.id].opponentGrids[PONE.id].set(1, 1, GridCellState.KnownByMiss)
@@ -92,7 +92,27 @@ class CruiseMissileHandlerTest extends AbstractBaseHandlerTest {
         assert TBActionLogEntry.TBActionType.CruiseMissile == game.playerDetails[PTHREE.id].actionLog[-1].actionType
         assert "2 fired a cruise missile at 1 (7,6) and missed." == game.playerDetails[PFOUR.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.CruiseMissile == game.playerDetails[PFOUR.id].actionLog[-1].actionType
-        assert [[Player: PTWO, Game: game, Target: PONE, Coordinate: coordinate]] == calls
+        assert [[Player: PTWO, Game: game, Target: PONE, Coordinate: coordinate]] == callsToFireHandler
+    }
+
+    void testCruiseMissileHitAndSharedIntel() {
+        game.features.add(GameFeature.SharedIntel)
+
+        def coordinate = new GridCoordinate(13, 0)
+        assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
+        assert "You fired a cruise missile at 1 (13,0) and hit!" == game.playerDetails[PTWO.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.CruiseMissile == game.playerDetails[PTWO.id].actionLog[-1].actionType
+        assert "2 fired a cruise missile at (13,0) and hit!" == game.playerDetails[PONE.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.CruiseMissile == game.playerDetails[PONE.id].actionLog[-1].actionType
+        assert "2 fired a cruise missile at 1 (13,0) and hit!" == game.playerDetails[PTHREE.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.CruiseMissile == game.playerDetails[PTHREE.id].actionLog[-1].actionType
+        assert "2 fired a cruise missile at 1 (13,0) and hit!" == game.playerDetails[PFOUR.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.CruiseMissile == game.playerDetails[PFOUR.id].actionLog[-1].actionType
+        assert [
+                [Player: PTWO, Game: game, Target: PONE, Coordinate: new GridCoordinate(12, 0)],
+                [Player: PTWO, Game: game, Target: PONE, Coordinate: new GridCoordinate(13, 0)],
+                [Player: PTWO, Game: game, Target: PONE, Coordinate: new GridCoordinate(14, 0)]
+        ] == callsToFireHandler
     }
 
     void testCruiseMissileMissAndIsolatedIntel() {
@@ -108,6 +128,27 @@ class CruiseMissileHandlerTest extends AbstractBaseHandlerTest {
         assert TBActionLogEntry.TBActionType.CruiseMissile == game.playerDetails[PTHREE.id].actionLog[-1].actionType
         assert "2 fired a cruise missile at 1." == game.playerDetails[PFOUR.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.CruiseMissile == game.playerDetails[PFOUR.id].actionLog[-1].actionType
-        assert [[Player: PTWO, Game: game, Target: PONE, Coordinate: coordinate]] == calls
+        assert [[Player: PTWO, Game: game, Target: PONE, Coordinate: coordinate]] == callsToFireHandler
     }
+
+    void testCruiseMissileHitAndIsolatedIntel() {
+        game.features.add(GameFeature.IsolatedIntel)
+
+        def coordinate = new GridCoordinate(13, 0)
+        assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
+        assert "You fired a cruise missile at 1 (13,0) and hit!" == game.playerDetails[PTWO.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.CruiseMissile == game.playerDetails[PTWO.id].actionLog[-1].actionType
+        assert "2 fired a cruise missile at (13,0) and hit!" == game.playerDetails[PONE.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.CruiseMissile == game.playerDetails[PONE.id].actionLog[-1].actionType
+        assert "2 fired a cruise missile at 1." == game.playerDetails[PTHREE.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.CruiseMissile == game.playerDetails[PTHREE.id].actionLog[-1].actionType
+        assert "2 fired a cruise missile at 1." == game.playerDetails[PFOUR.id].actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.CruiseMissile == game.playerDetails[PFOUR.id].actionLog[-1].actionType
+        assert [
+                [Player: PTWO, Game: game, Target: PONE, Coordinate: new GridCoordinate(12, 0)],
+                [Player: PTWO, Game: game, Target: PONE, Coordinate: new GridCoordinate(13, 0)],
+                [Player: PTWO, Game: game, Target: PONE, Coordinate: new GridCoordinate(14, 0)]
+        ] == callsToFireHandler
+    }
+
 }
