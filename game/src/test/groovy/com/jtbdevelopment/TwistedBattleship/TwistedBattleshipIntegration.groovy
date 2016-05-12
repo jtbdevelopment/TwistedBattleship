@@ -130,13 +130,6 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
                                 new GameFeatureInfo.Detail(GameFeature.SpyEnabled),
                                 new GameFeatureInfo.Detail(GameFeature.SpyDisabled),
                         ]),
-                /*
-                new GameFeatureInfo(GameFeature.Critical,
-                        [
-                                new GameFeatureInfo.Detail(GameFeature.CriticalEnabled),
-                                new GameFeatureInfo.Detail(GameFeature.CriticalDisabled),
-                        ]),
-                        */
         ]
     }
 
@@ -151,7 +144,6 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
                                 GameFeature.ECMEnabled,
                                 GameFeature.EREnabled,
                                 GameFeature.EMDisabled,
-                                //GameFeature.CriticalEnabled,
                                 GameFeature.SpyDisabled,
                                 GameFeature.PerShip
                         ] as Set,
@@ -363,6 +355,54 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
         game = fire(P2G, TEST_PLAYER1, new GridCoordinate(9, 7))
         assert "You fired at TEST PLAYER1 (9,7) and hit!" == game.maskedPlayersState.actionLog[-1].description
         assert 3 == game.playersScore[TEST_PLAYER2.md5]
+        assert 5 == game.remainingMoves
+        assert TEST_PLAYER2.md5 != game.currentPlayer
+    }
+
+    @Test
+    void testCruiseMissileForTurnInGame() {
+        def P3 = createPlayerAPITarget(TEST_PLAYER3)
+        TBMaskedGame game = newGame(P3, STANDARD_PLAYERS_AND_FEATURES)
+        assert game
+        def P3G = createGameTarget(P3, game)
+        def P1G = createGameTarget(createPlayerAPITarget(TEST_PLAYER1), game)
+        def P2G = createGameTarget(createPlayerAPITarget(TEST_PLAYER2), game)
+
+        acceptGame(P1G)
+        acceptGame(P2G)
+        setup(P3G, P3POSITIONS)
+        setup(P1G, P1POSITIONS)
+        setup(P2G, P2POSITIONS)
+
+        //  Force turn to P2
+        TBGame dbGame = gameRepository.findOne(new ObjectId(game.idAsString))
+        dbGame.currentPlayer = TEST_PLAYER2.id
+        gameRepository.save(dbGame)
+        cacheManager.cacheNames.each {
+            cacheManager.getCache(it).clear()
+        }
+
+        fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 7))
+        game = cruiseMissile(P2G, TEST_PLAYER1, new GridCoordinate(7, 7))
+        assert GamePhase.Playing == game.gamePhase
+        assert "You fired a cruise missile at TEST PLAYER1 (7,7) and hit!" == game.maskedPlayersState.actionLog[-7].description
+        assert "You fired at TEST PLAYER1 (5,7) and hit!" == game.maskedPlayersState.actionLog[-6].description
+        assert "You fired at TEST PLAYER1 (6,7) and hit!" == game.maskedPlayersState.actionLog[-5].description
+        assert "You fired at TEST PLAYER1 (7,7) and hit an already damaged area!" == game.maskedPlayersState.actionLog[-4].description
+        assert "You fired at TEST PLAYER1 (8,7) and hit!" == game.maskedPlayersState.actionLog[-3].description
+        assert "You fired at TEST PLAYER1 (9,7) and hit!" == game.maskedPlayersState.actionLog[-2].description
+        assert "You sunk a Aircraft Carrier for TEST PLAYER1!" == game.maskedPlayersState.actionLog[-1].description
+        assert TBActionLogEntry.TBActionType.CruiseMissile == game.maskedPlayersState.actionLog[-7].actionType
+        assert 10 == game.playersScore[TEST_PLAYER2.md5]
+        assert 2 == game.remainingMoves
+        assert 0 == game.maskedPlayersState.cruiseMissilesRemaining
+        assert TEST_PLAYER2.md5 == game.currentPlayer
+        game = fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 8))
+        assert "You fired at TEST PLAYER1 (7,8) and missed." == game.maskedPlayersState.actionLog[-1].description
+        assert 1 == game.remainingMoves
+        game = fire(P2G, TEST_PLAYER1, new GridCoordinate(9, 7))
+        assert "You fired at TEST PLAYER1 (9,7) and hit an already damaged area!" == game.maskedPlayersState.actionLog[-1].description
+        assert 10 == game.playersScore[TEST_PLAYER2.md5]
         assert 5 == game.remainingMoves
         assert TEST_PLAYER2.md5 != game.currentPlayer
     }
@@ -629,7 +669,6 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
                         GameFeature.ECMEnabled,
                         GameFeature.EREnabled,
                         GameFeature.EMEnabled,
-                        //GameFeature.CriticalDisabled,
                         GameFeature.SpyEnabled,
                         GameFeature.PerShip
                 ] as Set,
@@ -788,7 +827,6 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
                                 GameFeature.ECMDisabled,  // Double
                                 GameFeature.EREnabled,
                                 GameFeature.EMDisabled,
-                                //GameFeature.CriticalEnabled,
                                 GameFeature.SpyDisabled,
                                 GameFeature.PerShip
                         ] as Set,
@@ -823,6 +861,10 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
 
     protected TBMaskedGame fire(WebTarget target, Player player, GridCoordinate coordinate) {
         makeMove(player, coordinate, target, "fire")
+    }
+
+    protected TBMaskedGame cruiseMissile(WebTarget target, Player player, GridCoordinate coordinate) {
+        makeMove(player, coordinate, target, "missile")
     }
 
     protected TBMaskedGame move(WebTarget target, Player player, GridCoordinate coordinate) {
@@ -946,7 +988,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
                     GameFeature.ECMEnabled,
                     GameFeature.EREnabled,
                     GameFeature.EMEnabled,
-                    //GameFeature.CriticalEnabled,
+                    GameFeature.CruiseMissileEnabled,
                     GameFeature.SpyEnabled,
                     GameFeature.PerShip
             ] as Set,
