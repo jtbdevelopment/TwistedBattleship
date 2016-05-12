@@ -130,6 +130,11 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
                                 new GameFeatureInfo.Detail(GameFeature.SpyEnabled),
                                 new GameFeatureInfo.Detail(GameFeature.SpyDisabled),
                         ]),
+                new GameFeatureInfo(GameFeature.CruiseMissile,
+                        [
+                                new GameFeatureInfo.Detail(GameFeature.CruiseMissileDisabled),
+                                new GameFeatureInfo.Detail(GameFeature.CruiseMissileEnabled),
+                        ]),
         ]
     }
 
@@ -145,7 +150,8 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
                                 GameFeature.EREnabled,
                                 GameFeature.EMDisabled,
                                 GameFeature.SpyDisabled,
-                                GameFeature.PerShip
+                                GameFeature.PerShip,
+                                GameFeature.CruiseMissileDisabled
                         ] as Set,
                         players: [TEST_PLAYER2.md5, TEST_PLAYER3.md5, TEST_PLAYER1.md5],
                 ))
@@ -577,7 +583,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
         assert TEST_PLAYER1.md5 != game.currentPlayer
     }
 
-    //  TODO - Unfortunately, for the possibility of it remaining in place this test can fail randomly
+    //  TODO - Unfortunately, for the possibility of random == ship remaining in place this test can fail randomly
     @Test
     void testMoveForTurnInGame() {
         def P3 = createPlayerAPITarget(TEST_PLAYER3)
@@ -670,6 +676,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
                         GameFeature.EREnabled,
                         GameFeature.EMEnabled,
                         GameFeature.SpyEnabled,
+                        GameFeature.CruiseMissileDisabled,
                         GameFeature.PerShip
                 ] as Set,
                 players: [TEST_PLAYER2.md5, TEST_PLAYER3.md5, TEST_PLAYER1.md5]
@@ -828,7 +835,8 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
                                 GameFeature.EREnabled,
                                 GameFeature.EMDisabled,
                                 GameFeature.SpyDisabled,
-                                GameFeature.PerShip
+                                GameFeature.PerShip,
+                                GameFeature.CruiseMissileDisabled
                         ] as Set,
                         players: [TEST_PLAYER2.md5, TEST_PLAYER3.md5, TEST_PLAYER1.md5]
                 ),
