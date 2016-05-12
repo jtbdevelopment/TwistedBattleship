@@ -1,3 +1,3 @@
 'use strict';
 
-angular.module('tbs.controllers', ['ionic', 'coreGamesUi', 'tbs.services', 'ngCordova', 'angular-multi-select']);
+angular.module('tbs.controllers', ['coreGamesUi', 'tbs.services']);
