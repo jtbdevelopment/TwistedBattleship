@@ -50,6 +50,11 @@ angular.module('tbs.controllers').controller('GameCtrl',
                 tbsActions.spy($scope.game, $scope.showingSelf ? $scope.player.md5 : $scope.showing, cell);
             };
 
+            $scope.missile = function () {
+                var cell = tbsShipGrid.selectedCell();
+                tbsActions.missile($scope.game, $scope.showingSelf ? $scope.player.md5 : $scope.showing, cell);
+            };
+
             $scope.repair = function () {
                 var cell = tbsShipGrid.selectedCell();
                 tbsActions.repair($scope.game, $scope.showingSelf ? $scope.player.md5 : $scope.showing, cell);

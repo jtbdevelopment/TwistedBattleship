@@ -94,6 +94,16 @@
                                 <span class="badge">{{game.maskedPlayersState.spysRemaining}}</span>
                             </div>
                         </div>
+                        <div class="item action-item">
+                            <div class="button-bar">
+                                <a class="button button-attack icon-left ion-{{gameDetails.iconForFeature('CruiseMissileDisabled')}}"
+                                   ng-disabled="!gameDetails.cruiseMissilePossible(game, player.md5)"
+                                   ng-click="missile()">
+                                    <span>Cruise Missile</span>
+                                </a>
+                                <span class="badge">{{game.maskedPlayersState.cruiseMissilesRemaining}}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div ng-show="game.gamePhase === 'Playing'">

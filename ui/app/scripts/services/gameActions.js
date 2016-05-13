@@ -119,6 +119,10 @@ angular.module('tbs.services').factory('tbsActions',
                     makeMove(game, 'fire', opponent, cell);
                 },
 
+                missile: function (game, opponent, cell) {
+                    makeMove(game, 'missile', opponent, cell);
+                },
+
                 spy: function (game, opponent, cell) {
                     makeMove(game, 'spy', opponent, cell);
                 },
