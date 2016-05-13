@@ -18,18 +18,18 @@ angular.module('tbs.services').factory('tbsAds',
             var platform = '';
             var amInter = '';
 
-            function requestAMInter() {
+            var lastInter = new Date(0);
+
+            function requestAdMobInterstitialAd() {
                 $cordovaGoogleAds.prepareInterstitial({adId: amInter, autoShow: false});
             }
-
-            var lastInter = new Date(0);
 
             //  Admob
             document.addEventListener('onAdDismiss', function (e) {
                 console.info('Ad Dismiss:' + JSON.stringify(e));
                 if (e.adType === 'interstitial') {
                     lastInter = new Date();
-                    requestAMInter();
+                    requestAdMobInterstitialAd();
                 }
             });
             document.addEventListener('onAdLoaded', function (e) {
@@ -38,7 +38,7 @@ angular.module('tbs.services').factory('tbsAds',
             document.addEventListener('onAdFailLoad', function (e) {
                 console.info('Ad Load Failed:' + JSON.stringify(e));
                 if (e.adType === 'interstitial') {
-                    requestAMInter();
+                    requestAdMobInterstitialAd();
                 }
             });
             document.addEventListener('onAdPresent', function (e) {
@@ -47,7 +47,7 @@ angular.module('tbs.services').factory('tbsAds',
             document.addEventListener('onAdLeaveApp', function (e) {
                 console.info('Ad Leave App:' + JSON.stringify(e));
                 if (e.adType === 'interstitial') {
-                    requestAMInter();
+                    requestAdMobInterstitialAd();
                 }
             });
 
@@ -63,7 +63,7 @@ angular.module('tbs.services').factory('tbsAds',
                         switch (platform) {
                             case IOS:
                                 amInter = AM_IOS_INTER;
-                                requestAMInter();
+                                requestAdMobInterstitialAd();
                                 $cordovaGoogleAds.createBanner({
                                     adId: AM_IOS_BANNER,
                                     position: AdMob.AD_POSITION.BOTTOM_CENTER,
@@ -72,7 +72,7 @@ angular.module('tbs.services').factory('tbsAds',
                                 break;
                             case ANDROID:
                                 amInter = AM_ANDROID_INTER;
-                                requestAMInter();
+                                requestAdMobInterstitialAd();
                                 $cordovaGoogleAds.createBanner({
                                     adId: AM_ANDROID_BANNER,
                                     position: AdMob.AD_POSITION.BOTTOM_CENTER,
@@ -107,7 +107,7 @@ angular.module('tbs.services').factory('tbsAds',
                                     $cordovaGoogleAds.showInterstitial();
                                 } catch (ex) {
                                     console.warn(JSON.stringify(ex));
-                                    requestAMInter();
+                                    requestAdMobInterstitialAd();
                                 }
                                 break;
                             case BROWSER:
