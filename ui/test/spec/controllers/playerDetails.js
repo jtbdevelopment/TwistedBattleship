@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Service: gameCells', function () {
+describe('Controller: playerDetails', function () {
     // load the controller's module
     beforeEach(module('tbs.controllers'));
 

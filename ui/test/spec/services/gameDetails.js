@@ -407,12 +407,12 @@ describe('Service: gameDetails', function () {
         game.maskedPlayersState.actionLog.push({timestamp: 12878});
         game.maskedPlayersState.actionLog.push({timestamp: 38989});
         game.maskedPlayersState.actionLog.push({timestamp: 918311109983});
-        expect(service.lastActionTime(game)).to.equal('Sat Feb  6 09:25:09 1999');
+        expect(service.lastActionTime(game)).to.equal(new Date(918311109983).toLocaleString());
     });
 
 
     it('test format action time', function () {
-        expect(service.formatActionTime(1023149344)).to.equal('Mon Jan 12 15:12:29 1970');
+        expect(service.formatActionTime(1023149344)).to.equal(new Date(1023149344).toLocaleString());
     });
 });
 
