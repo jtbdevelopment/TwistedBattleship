@@ -131,6 +131,13 @@ describe('Service: gameActions', function () {
             });
         });
 
+        it('can setup game', function () {
+            var positions = {some: 'stuff', here: 32};
+            httpBackend.expectPUT(gameUrl + 'setup', positions).respond(returnedGame);
+            service.setup(game, positions);
+            standardAssertsForSuccess();
+        });
+
         angular.forEach(['fire', 'spy', 'missile', 'repair', 'move', 'ecm'], function (action) {
             var opponent = 'opp';
             var gridCell = {x: 5, y: 10};
@@ -143,7 +150,7 @@ describe('Service: gameActions', function () {
         });
     });
 
-    describe('for each failed action', function () {
+    describe('for each failed action on server side', function () {
         function standardAssertsForError(error) {
             assert(ionicLoadingSpy.show.calledOnce);
             assert(ionicLoadingSpy.show.calledWithMatch(expectedSendingLoading));
@@ -206,6 +213,50 @@ describe('Service: gameActions', function () {
                 standardAssertsForError(error);
             });
         });
+
+        it('can setup game fails server side', function () {
+            var positions = {some: 'stuff', here: 32};
+            var error = 'Cannot for some reason!';
+            httpBackend.expectPUT(gameUrl + 'setup', positions).respond(-30, error);
+            service.setup(game, positions);
+            standardAssertsForError(error);
+        });
+    });
+
+    var phases = ['Challenged', 'Declined', 'Quit', 'Setup', 'Playing', 'RoundOver', 'NextRoundStarted'];
+    describe('update current view does nothing when phases match', function () {
+        angular.forEach(phases, function (phase) {
+            it('testing phase ' + phase + ' to ' + phase, function () {
+                var oldGame = {gamePhase: phase};
+                var updatedGame = {gamePhase: phase};
+                service.updateCurrentView(oldGame, updatedGame);
+                expect(stateSpy.go.callCount).to.equal(0);
+            });
+        })
+    });
+
+    describe('update current view goes to app.games when challenged/next round/declined', function () {
+        angular.forEach(['Challenged', 'NextRoundStarted', 'Declined'], function (phase) {
+            it('testing phase switch  to ' + phase, function () {
+                var oldGame = {gamePhase: 'X'};
+                var updatedGame = {gamePhase: phase};
+                service.updateCurrentView(oldGame, updatedGame);
+                expect(stateSpy.go.callCount).to.equal(1);
+                assert(stateSpy.go.calledWithMatch('app.games'));
+            });
+        })
+    });
+
+    describe('update current view goes to game detail when not challenged/next round/declined', function () {
+        angular.forEach(['Quit', 'Setup', 'Playing', 'RoundOver'], function (phase) {
+            it('testing phase switch  to ' + phase, function () {
+                var oldGame = {gamePhase: 'X'};
+                var updatedGame = {gamePhase: phase, id: 'X'};
+                service.updateCurrentView(oldGame, updatedGame);
+                expect(stateSpy.go.callCount).to.equal(1);
+                assert(stateSpy.go.calledWithMatch('app.' + phase.toLowerCase(), {gameID: updatedGame.id}));
+            });
+        })
     });
 });
 
