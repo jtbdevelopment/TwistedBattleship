@@ -118,23 +118,23 @@ describe('Service: ads', function () {
                     assert(googleAdSpy.showInterstitial.calledWithMatch());
                 });
 
-                //  TODO - figure out firing custom events under phantom/karma
-                /*
-                 it('show interstitial rapidly after first time does nothing second time', function () {
-                 window.invokeApplixirVideoUnitExtended = sinon.spy();
-                 service.showInterstitial();
-                 var event = new CustomEvent('build', {adType: 'interstitial'});
-                 console.log(JSON.stringify(event));
-                 event.initEvent('AdDismiss', true, false);
-                 console.log(JSON.stringify(event));
-                 event.adType = 'interstitial';
-                 console.log(JSON.stringify(event));
-                 expect(googleAdSpy.showInterstitial.callCount).to.equal(1);
-                 assert(googleAdSpy.showInterstitial.calledWithMatch());
-                 service.showInterstitial();
-                 expect(googleAdSpy.showInterstitial.callCount).to.equal(1);
-                 });
-                 */
+                it('show interstitial rapidly after first time does nothing second time', function () {
+                    window.invokeApplixirVideoUnitExtended = sinon.spy();
+                    service.showInterstitial();
+
+                    //  TODO - ugly
+                    var event = document.createEvent('CustomEvent');
+                    console.log(JSON.stringify(event));
+                    event.initEvent('onAdDismiss', true, false);
+                    event.adType = 'interstitial';
+                    console.log(JSON.stringify(event));
+                    document.dispatchEvent(event);
+
+                    expect(googleAdSpy.showInterstitial.callCount).to.equal(1);
+                    assert(googleAdSpy.showInterstitial.calledWithMatch());
+                    service.showInterstitial();
+                    expect(googleAdSpy.showInterstitial.callCount).to.equal(1);
+                });
             });
         });
     });

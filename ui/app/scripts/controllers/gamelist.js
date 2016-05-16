@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('tbs.controllers').controller('MobileGameListCtrl',
-    ['$rootScope', '$scope', '$state', 'jtbPlayerService', 'jtbGameCache', 'tbsGameDetails', 'jtbGamePhaseService', 'jtbGameClassifier',
-        function ($rootScope, $scope, $state, jtbPlayerService, jtbGameCache, tbsGameDetails, jtbGamePhaseService, jtbGameClassifier) {
+    ['$rootScope', '$scope', '$state', 'jtbPlayerService', 'jtbGameCache', 'tbsGameDetails', 'jtbGameClassifier',
+        function ($rootScope, $scope, $state, jtbPlayerService, jtbGameCache, tbsGameDetails, jtbGameClassifier) {
             $scope.games = {};
             $scope.phasesInOrder = [];
             $scope.gameDetails = tbsGameDetails;
@@ -42,13 +42,9 @@ angular.module('tbs.controllers').controller('MobileGameListCtrl',
                 $state.go('app.games');
             });
 
-            if(jtbGameCache.initialized()) {
+            if (jtbGameCache.initialized()) {
                 reloadFromCaches();
             }
-
-            $scope.$on('phaseChangeAlert', function (/*event, game*/) {
-                //  TODO?
-            });
         }
     ]);
 

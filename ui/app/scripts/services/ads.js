@@ -26,26 +26,47 @@ angular.module('tbs.services').factory('tbsAds',
 
             //  Admob
             document.addEventListener('onAdDismiss', function (e) {
-                console.info('Ad Dismiss:' + JSON.stringify(e));
+                try {
+                    console.info('Ad Dismiss:' + JSON.stringify(e));
+                } catch (ex) {
+                    console.info('Ad Dismiss, not serializable');
+                }
                 if (e.adType === 'interstitial') {
                     lastInter = new Date();
                     requestAdMobInterstitialAd();
                 }
             });
             document.addEventListener('onAdLoaded', function (e) {
-                console.info('Ad Loaded:' + JSON.stringify(e));
+                try {
+                    console.info('Ad Loaded:' + JSON.stringify(e));
+                } catch (ex) {
+                    console.info('Ad Loaded, not serializable');
+                }
+
             });
             document.addEventListener('onAdFailLoad', function (e) {
-                console.info('Ad Load Failed:' + JSON.stringify(e));
+                try {
+                    console.info('Ad Load Failed:' + JSON.stringify(e));
+                } catch (ex) {
+                    console.info('Ad Load Failed, not serializable');
+                }
                 if (e.adType === 'interstitial') {
                     requestAdMobInterstitialAd();
                 }
             });
             document.addEventListener('onAdPresent', function (e) {
-                console.info('Ad Present:' + JSON.stringify(e));
+                try {
+                    console.info('Ad Present:' + JSON.stringify(e));
+                } catch (ex) {
+                    console.info('Ad Present, not serializable');
+                }
             });
             document.addEventListener('onAdLeaveApp', function (e) {
-                console.info('Ad Leave App:' + JSON.stringify(e));
+                try {
+                    console.info('Ad Leave App:' + JSON.stringify(e));
+                } catch (ex) {
+                    console.info('Ad Leave App, not serializable');
+                }
                 if (e.adType === 'interstitial') {
                     requestAdMobInterstitialAd();
                 }
@@ -59,7 +80,6 @@ angular.module('tbs.services').factory('tbsAds',
                         } catch (ex) {
                             platform = BROWSER;
                         }
-                        console.log('Platform: ' + platform);
                         switch (platform) {
                             case IOS:
                                 amInter = AM_IOS_INTER;
