@@ -123,10 +123,6 @@ angular.module('tbs.services').factory('tbsAds',
                                 break;
                         }
                     }
-                },
-
-                showBanner: function () {
-
                 }
             };
         }
