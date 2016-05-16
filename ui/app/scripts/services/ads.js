@@ -25,6 +25,27 @@ angular.module('tbs.services').factory('tbsAds',
             }
 
             //  Admob
+
+            //  Debugging 
+            /*
+             document.addEventListener('onAdLoaded', function (e) {
+             try {
+             console.info('Ad Loaded:' + JSON.stringify(e));
+             } catch (ex) {
+             console.info('Ad Loaded, not serializable');
+             }
+
+             });
+
+             document.addEventListener('onAdPresent', function (e) {
+             try {
+             console.info('Ad Present:' + JSON.stringify(e));
+             } catch (ex) {
+             console.info('Ad Present, not serializable');
+             }
+             });
+             */
+            
             document.addEventListener('onAdDismiss', function (e) {
                 try {
                     console.info('Ad Dismiss:' + JSON.stringify(e));
@@ -36,14 +57,7 @@ angular.module('tbs.services').factory('tbsAds',
                     requestAdMobInterstitialAd();
                 }
             });
-            document.addEventListener('onAdLoaded', function (e) {
-                try {
-                    console.info('Ad Loaded:' + JSON.stringify(e));
-                } catch (ex) {
-                    console.info('Ad Loaded, not serializable');
-                }
 
-            });
             document.addEventListener('onAdFailLoad', function (e) {
                 try {
                     console.info('Ad Load Failed:' + JSON.stringify(e));
@@ -54,13 +68,8 @@ angular.module('tbs.services').factory('tbsAds',
                     requestAdMobInterstitialAd();
                 }
             });
-            document.addEventListener('onAdPresent', function (e) {
-                try {
-                    console.info('Ad Present:' + JSON.stringify(e));
-                } catch (ex) {
-                    console.info('Ad Present, not serializable');
-                }
-            });
+
+            //  they clicked on ad
             document.addEventListener('onAdLeaveApp', function (e) {
                 try {
                     console.info('Ad Leave App:' + JSON.stringify(e));
