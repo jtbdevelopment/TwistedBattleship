@@ -16,7 +16,6 @@ angular.module('tbs.controllers').controller('GameDetailsCtrl',
                 $scope.cruiseMissileEnabled = $scope.game.features.indexOf('CruiseMissileEnabled') >= 0 ? YES : NO;
                 $scope.repairsEnabled = $scope.game.features.indexOf('EREnabled') >= 0 ? YES : NO;
                 $scope.moveEnabled = $scope.game.features.indexOf('EMEnabled') >= 0 ? YES : NO;
-                $scope.criticalsEnabled = $scope.game.features.indexOf('CriticalEnabled') >= 0 ? YES : NO;
                 $scope.gridSize = tbsGameDetails.shortenGridSize($scope.game);
                 $scope.intel = $scope.game.features.indexOf('IsolatedIntel') >= 0 ? 'Isolated' : 'Shared';
                 $scope.moves = $scope.game.features.indexOf('Single') >= 0 ? '1' : 'Per Ship';
