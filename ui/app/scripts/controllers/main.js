@@ -1,5 +1,6 @@
 'use strict';
 
+//  Deals with the crud of initializing and various platform messages
 angular.module('tbs.controllers').controller('MainCtrl',
     ['$window', '$scope', '$timeout', 'jtbPlayerService', 'jtbLiveGameFeed', '$state', 'ENV', '$document', 'tbsVersionNotes',
         'tbsCircles', 'jtbGameFeatureService', 'tbsCellStates', 'tbsShips', 'jtbGamePhaseService', 'tbsAds', 'jtbPushNotifications',
@@ -27,10 +28,10 @@ angular.module('tbs.controllers').controller('MainCtrl',
 
             $scope.$on('playerLoaded', function () {
                 $scope.player = jtbPlayerService.currentPlayer();
+                $scope.theme = jtbPlayerService.currentPlayer().gameSpecificPlayerAttributes.theme;
 
                 //  TODO - preload ship images?
                 tbsAds.initialize();
-                $scope.theme = jtbPlayerService.currentPlayer().gameSpecificPlayerAttributes.theme;
                 //  Kick off some precaching of info
                 tbsCircles.circles().then(function () {
                 });
