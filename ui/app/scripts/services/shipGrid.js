@@ -1,9 +1,8 @@
-/*global Phaser:false */
 'use strict';
 
 angular.module('tbs.services').factory('tbsShipGrid',
-    ['jtbPlayerService', 'tbsCircles', 'tbsCellStates', 'tbsShips',
-        function (jtbPlayerService, tbsCircles, tbsCellStates, tbsShips) {
+    ['jtbPlayerService', 'tbsCircles', 'tbsCellStates', 'tbsShips', 'Phaser',
+        function (jtbPlayerService, tbsCircles, tbsCellStates, tbsShips, Phaser) {
             var CELL_SIZE = 100;
             var HALF_CELL_SIZE = CELL_SIZE / 2;
 

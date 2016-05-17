@@ -1,6 +1,7 @@
 'use strict';
 
 angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.controllers', 'tbs.directives', 'config', 'coreGamesIonicUi'])
+    .constant('Phaser', window.Phaser)
     .config(['$httpProvider', function ($httpProvider) {
         $httpProvider.defaults.withCredentials = true;
     }])
