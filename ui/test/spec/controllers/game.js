@@ -10,6 +10,7 @@ describe('Controller: GameCtrl', function () {
     var expectedId = 'tada!';
     var expectedPhase = 'APhase';
     var currentPlayer = {source: 'MANUAL', md5: 'my md 5', theme: 'theme!'};
+    var selectedOpponent = 'md5number2';
     var mockPlayerService = {
         currentPlayer: function () {
             return currentPlayer;
@@ -60,6 +61,7 @@ describe('Controller: GameCtrl', function () {
         scope = rootScope.$new();
         mockShipService.placeShips = sinon.spy();
         mockShipService.placeCellMarkers = sinon.spy();
+        mockShipService.stop = sinon.spy();
         actionsSpy = {
             repair: sinon.spy(),
             missile: sinon.spy(),
@@ -101,4 +103,91 @@ describe('Controller: GameCtrl', function () {
         expect(scope.shipHighlighted).to.be.false;
     });
 
+    it('shows action log', function () {
+        scope.showActionLog();
+        assert(stateSpy.go.calledWithMatch('app.actionLog', {gameID: expectedId}));
+    });
+
+    it('shows game details', function () {
+        scope.showDetails();
+        assert(stateSpy.go.calledWithMatch('app.gameDetails', {gameID: expectedId}));
+    });
+
+    it('shows help', function () {
+        scope.showHelp();
+        assert(stateSpy.go.calledWithMatch('app.playhelp'));
+    });
+
+    it('declines rematch', function () {
+        scope.declineRematch();
+        assert(actionsSpy.declineRematch.calledWithMatch(expectedGame));
+    });
+
+    it('start rematch', function () {
+        scope.rematch();
+        assert(actionsSpy.rematch.calledWithMatch(expectedGame));
+    });
+
+
+    it('quit game', function () {
+        scope.quit();
+        assert(actionsSpy.quit.calledWithMatch(expectedGame));
+    });
+
+    describe('tests with cell selected', function () {
+        angular.forEach([true, false], function (self) {
+            beforeEach(function () {
+                mockSelectedCell = {x: 1, y: 2};
+                if (self) {
+                    scope.showing = selectedOpponent;
+                }
+            });
+            it('ecm on self=' + self, function () {
+                scope.showingSelf = self;
+                scope.ecm();
+                console.log(scope.showingSelf);
+                assert(actionsSpy.ecm.calledWith(expectedGame, self ? currentPlayer.md5 : selectedOpponent, mockSelectedCell));
+            });
+
+            it('repair on self=' + self, function () {
+                scope.showingSelf = self;
+                scope.repair();
+                console.log(scope.showingSelf);
+                assert(actionsSpy.repair.calledWith(expectedGame, self ? currentPlayer.md5 : selectedOpponent, mockSelectedCell));
+            });
+
+            it('spy on self=' + self, function () {
+                scope.showingSelf = self;
+                scope.spy();
+                console.log(scope.showingSelf);
+                assert(actionsSpy.spy.calledWith(expectedGame, self ? currentPlayer.md5 : selectedOpponent, mockSelectedCell));
+            });
+
+            it('missile on self=' + self, function () {
+                scope.showingSelf = self;
+                scope.missile();
+                console.log(scope.showingSelf);
+                assert(actionsSpy.missile.calledWith(expectedGame, self ? currentPlayer.md5 : selectedOpponent, mockSelectedCell));
+            });
+
+            it('fire on self=' + self, function () {
+                scope.showingSelf = self;
+                scope.fire();
+                console.log(scope.showingSelf);
+                assert(actionsSpy.fire.calledWith(expectedGame, self ? currentPlayer.md5 : selectedOpponent, mockSelectedCell));
+            });
+
+            it('move on self=' + self, function () {
+                scope.showingSelf = self;
+                scope.move();
+                console.log(scope.showingSelf);
+                assert(actionsSpy.move.calledWith(expectedGame, self ? currentPlayer.md5 : selectedOpponent, mockSelectedCell));
+            });
+        });
+    });
+
+    it('shuts down ship grid on view exit', function () {
+        rootScope.$broadcast('$ionicView.leave');
+        assert(mockShipService.stop.calledWithMatch());
+    });
 });
