@@ -13,9 +13,10 @@ angular.module('tbs.services').factory('tbsVersionNotes',
                             template: CURRENT_NOTES
                         });
                         $http.post('/api/player/lastVersionNotes/' + CURRENT_VERSION).success(function () {
-
-                        }).error(function () {
+                            console.log('successfully updated version');
+                        }).error(function (data, status, headers, config) {
                             //  TODO
+                            console.error(data + status + headers + config);
                         });
                     }
 

@@ -5,7 +5,6 @@ describe('Service: playerVersion', function () {
     beforeEach(module('tbs.services'));
 
     var service, httpBackend;
-    var result = {'10': [{row: 1, column: 0}, {row: -1, column: 0}], '20': [{row: -2, column: -5}]};
     var url = '/api/player/lastVersionNotes/';
 
     var popupCalled;
@@ -54,5 +53,13 @@ describe('Service: playerVersion', function () {
         player.lastVersionNotes = '0.1'; // low version
         httpBackend.expectPOST(url + CURRENT_VERSION).respond(200);
         service.showReleaseNotes();
+        httpBackend.flush();
+    });
+
+    it('generates alert if player version is less than current but update server fails', function () {
+        player.lastVersionNotes = '0.1'; // low version
+        httpBackend.expectPOST(url + CURRENT_VERSION).respond(500, 'someerror');
+        service.showReleaseNotes();
+        httpBackend.flush();
     });
 });
