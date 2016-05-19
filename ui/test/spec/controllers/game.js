@@ -4,8 +4,6 @@ describe('Controller: GameCtrl', function () {
     // load the controller's module
     beforeEach(module('tbs.controllers'));
 
-    ['tbsActions'];
-
     var shipInfo = {};  //  TODO
     var expectedId = 'tada!';
     var expectedPhase = 'APhase';
@@ -16,25 +14,6 @@ describe('Controller: GameCtrl', function () {
             return currentPlayer;
         }
     };
-    var expectedGame = {
-        id: expectedId,
-        features: [],
-        gamePhase: expectedPhase,
-        currentPlayer: currentPlayer.md5,
-        players: {
-            md1: {},
-            md2: {},
-            md3: {}
-        },
-        maskedPlayersState: {
-            opponentGrids: {
-                md3: {
-                    table: {x: 1, y: 2, s: 'X'}
-                }
-            }
-        }
-    };
-    expectedGame.maskedPlayersState.opponentGrids[selectedOpponent] = {table: {x: 1, y: 2, s: 'X'}};
     var mockGameCache = {
         getGameForID: function (id) {
             expect(id).to.equal(expectedId);
@@ -49,6 +28,10 @@ describe('Controller: GameCtrl', function () {
 
     var mockSelectedCell, mockSelectedShip;
     var mockShipService = {
+        highlightCB: undefined,
+        activateHighlighting: function (cb) {
+            this.highlightCB = cb;
+        },
         selectedCell: function () {
             return mockSelectedCell;
         },
@@ -62,9 +45,28 @@ describe('Controller: GameCtrl', function () {
             cb();
         }
     };
-    var rootScope, scope, ctrl, stateSpy, q, phasePromise, ionicLoadingSpy, ionicPopupSpy, timeout, ads, actionsSpy;
+    var rootScope, scope, ctrl, stateSpy, q, phasePromise, ionicLoadingSpy, ionicPopupSpy, timeout, ads, actionsSpy, expectedGame;
 
     beforeEach(inject(function ($rootScope, $controller, $q, $timeout) {
+        expectedGame = {
+            id: expectedId,
+            features: [],
+            gamePhase: expectedPhase,
+            currentPlayer: currentPlayer.md5,
+            players: {
+                md1: {},
+                md2: {},
+                md3: {}
+            },
+            maskedPlayersState: {
+                opponentGrids: {
+                    md3: {
+                        table: {x: 1, y: 2, s: 'X'}
+                    }
+                }
+            }
+        };
+        expectedGame.maskedPlayersState.opponentGrids[selectedOpponent] = {table: {x: 1, y: 2, s: 'X'}};
         stateSpy = {go: sinon.spy(), params: {gameID: expectedId}};
         ionicLoadingSpy = {show: sinon.spy(), hide: sinon.spy()};
         ionicPopupSpy = {alert: sinon.spy()};
@@ -74,6 +76,8 @@ describe('Controller: GameCtrl', function () {
         timeout = $timeout;
         phasePromise = $q.defer();
         scope = rootScope.$new();
+        mockSelectedCell = null;
+        mockSelectedShip = null;
         mockShipService.placeShips = sinon.spy();
         mockShipService.placeCellMarkers = sinon.spy();
         mockShipService.stop = sinon.spy();
@@ -198,6 +202,69 @@ describe('Controller: GameCtrl', function () {
                 console.log(scope.showingSelf);
                 assert(actionsSpy.move.calledWith(expectedGame, self ? currentPlayer.md5 : selectedOpponent, mockSelectedCell));
             });
+        });
+    });
+
+    describe('enter view tests', function () {
+        afterEach(function () {
+            expect(ionicLoadingSpy.show.calledWithMatch({template: 'Loading..'}));
+            expect(ionicLoadingSpy.show.callCount).to.equal(1);
+            expect(ionicLoadingSpy.hide.callCount).to.equal(1);
+            expect(ionicLoadingSpy.hide.calledWithMatch());
+        });
+        it('game is round over, player is winner', function () {
+            expectedGame.gamePhase = 'RoundOver';
+            expectedGame.winningPlayer = currentPlayer.md5;
+            scope.showing = selectedOpponent;
+            scope.showingSelf = false;
+            rootScope.$broadcast('$ionicView.enter');
+            timeout.flush();
+            expect(ionicPopupSpy.alert.callCount).to.equal(1);
+            expect(ionicPopupSpy.alert.calledWithMatch({
+                title: 'Game is over!',
+                template: 'Congratulations Winner!'
+            }));
+        });
+
+        it('game is round over, player is not winner', function () {
+            expectedGame.gamePhase = 'RoundOver';
+            expectedGame.winningPlayer = currentPlayer.md5 + 'X';
+            scope.showing = selectedOpponent;
+            scope.showingSelf = false;
+            rootScope.$broadcast('$ionicView.enter');
+            timeout.flush();
+            expect(ionicPopupSpy.alert.callCount).to.equal(1);
+            expect(ionicPopupSpy.alert.calledWithMatch({
+                title: 'Game is over!',
+                template: 'Better luck next time...'
+            }));
+        });
+
+        it('game is neither playing or round over', function () {
+            expectedGame.gamePhase = 'Other';
+            expectedGame.winningPlayer = currentPlayer.md5 + 'X';
+            scope.showing = selectedOpponent;
+            scope.showingSelf = false;
+            rootScope.$broadcast('$ionicView.enter');
+            timeout.flush();
+        });
+
+        it('game is playing, sets highlighting callback', function () {
+            expectedGame.gamePhase = 'Playing';
+            expectedGame.winningPlayer = currentPlayer.md5 + 'X';
+            scope.showing = selectedOpponent;
+            scope.showingSelf = false;
+            rootScope.$broadcast('$ionicView.enter');
+            timeout.flush();
+            expect(mockShipService.highlightCB).to.not.be.undefined;
+            mockSelectedShip = {hfh: '33', jhf: 33.3};
+            mockShipService.highlightCB();
+            timeout.flush();
+            expect(scope.shipHighlighted).to.be.true;
+            mockSelectedShip = null;
+            mockShipService.highlightCB();
+            timeout.flush();
+            expect(scope.shipHighlighted).to.be.false;
         });
     });
 
