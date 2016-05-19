@@ -10,7 +10,7 @@ describe('Controller: GameCtrl', function () {
     var expectedId = 'tada!';
     var expectedPhase = 'APhase';
     var currentPlayer = {source: 'MANUAL', md5: 'my md 5', theme: 'theme!'};
-    var selectedOpponent = 'md5number2';
+    var selectedOpponent = 'md3';
     var mockPlayerService = {
         currentPlayer: function () {
             return currentPlayer;
@@ -20,12 +20,21 @@ describe('Controller: GameCtrl', function () {
         id: expectedId,
         features: [],
         gamePhase: expectedPhase,
+        currentPlayer: currentPlayer.md5,
         players: {
             md1: {},
             md2: {},
             md3: {}
+        },
+        maskedPlayersState: {
+            opponentGrids: {
+                md3: {
+                    table: {x: 1, y: 2, s: 'X'}
+                }
+            }
         }
     };
+    expectedGame.maskedPlayersState.opponentGrids[selectedOpponent] = {table: {x: 1, y: 2, s: 'X'}};
     var mockGameCache = {
         getGameForID: function (id) {
             expect(id).to.equal(expectedId);
@@ -45,6 +54,12 @@ describe('Controller: GameCtrl', function () {
         },
         selectedShip: function () {
             return mockSelectedShip;
+        },
+        initialize: function (game, ships, markers, cb) {
+            expect(game).to.equal(expectedGame);
+            expect([]).to.deep.equal(ships);
+            expect([]).to.deep.equal(markers);
+            cb();
         }
     };
     var rootScope, scope, ctrl, stateSpy, q, phasePromise, ionicLoadingSpy, ionicPopupSpy, timeout, ads, actionsSpy;
@@ -186,6 +201,71 @@ describe('Controller: GameCtrl', function () {
         });
     });
 
+    describe('testing game updates', function () {
+        //  Minimal testing up changePlayer here - test elsewhere
+
+        it('handles game update for different game', function () {
+            rootScope.$broadcast('gameUpdated', {id: expectedId + 'X'}, {id: expectedId + 'X'});
+            expect(ads.showInterstitial.callCount).to.equal(0);
+            expect(actionsSpy.updateCurrentView.callCount).to.equal(0);
+        });
+
+        it('handles game update for game but not phase change, player was current player, player is current player', function () {
+            var updatedGame = {id: expectedId, gamePhase: expectedPhase, currentPlayer: currentPlayer.md5};
+            updatedGame.maskedPlayersState = expectedGame.maskedPlayersState;
+            scope.showing = selectedOpponent;
+            scope.showingSelf = false;
+            rootScope.$broadcast('gameUpdated', expectedGame, updatedGame);
+            expect(ads.showInterstitial.callCount).to.equal(0);
+            expect(actionsSpy.updateCurrentView.callCount).to.equal(0);
+            expect(mockShipService.placeShips.calledWithMatch([]));
+            expect(mockShipService.placeCellMarkers.calledWithMatch(expectedGame.maskedPlayersState.opponentGrids.md3.table));
+            expect(scope.game).to.equal(updatedGame);
+        });
+
+        it('handles game update for game but not phase change, player was not current player, player is current player', function () {
+            var updatedGame = {id: expectedId, gamePhase: expectedPhase, currentPlayer: currentPlayer.md5};
+            updatedGame.maskedPlayersState = expectedGame.maskedPlayersState;
+            var oldGame = {id: expectedId, gamePhase: expectedPhase, currentPlayer: 'XYZ'};
+            scope.showing = selectedOpponent;
+            scope.showingSelf = false;
+            rootScope.$broadcast('gameUpdated', oldGame, updatedGame);
+            expect(ads.showInterstitial.callCount).to.equal(0);
+            expect(actionsSpy.updateCurrentView.callCount).to.equal(0);
+            expect(mockShipService.placeShips.calledWithMatch([]));
+            expect(mockShipService.placeCellMarkers.calledWithMatch(expectedGame.maskedPlayersState.opponentGrids.md3.table));
+            expect(scope.game).to.equal(updatedGame);
+        });
+
+        it('handles game update for game but not phase change, player was current player, player is not current player', function () {
+            var updatedGame = {id: expectedId, gamePhase: expectedPhase, currentPlayer: 'X'};
+            updatedGame.maskedPlayersState = expectedGame.maskedPlayersState;
+            var oldGame = {id: expectedId, gamePhase: expectedPhase, currentPlayer: currentPlayer.md5};
+            scope.showing = selectedOpponent;
+            scope.showingSelf = false;
+            rootScope.$broadcast('gameUpdated', oldGame, updatedGame);
+            expect(ads.showInterstitial.callCount).to.equal(1);
+            expect(actionsSpy.updateCurrentView.callCount).to.equal(0);
+            expect(mockShipService.placeShips.calledWithMatch([]));
+            expect(mockShipService.placeCellMarkers.calledWithMatch(expectedGame.maskedPlayersState.opponentGrids.md3.table));
+            expect(scope.game).to.equal(updatedGame);
+        });
+
+        it('handles game update for game for phase change, player was current player, player is current player', function () {
+            var updatedGame = {id: expectedId, gamePhase: expectedPhase + 'X', currentPlayer: currentPlayer.md5};
+            updatedGame.maskedPlayersState = expectedGame.maskedPlayersState;
+            var oldGame = {id: expectedId, gamePhase: expectedPhase, currentPlayer: currentPlayer.md5};
+            scope.showing = selectedOpponent;
+            scope.showingSelf = false;
+            rootScope.$broadcast('gameUpdated', oldGame, updatedGame);
+            expect(ads.showInterstitial.callCount).to.equal(0);
+            expect(actionsSpy.updateCurrentView.callCount).to.equal(1);
+            expect(mockShipService.placeShips.calledWithMatch([]));
+            expect(mockShipService.placeCellMarkers.calledWithMatch(expectedGame.maskedPlayersState.opponentGrids.md3.table));
+            expect(scope.game).to.equal(updatedGame);
+        });
+
+    });
     it('shuts down ship grid on view exit', function () {
         rootScope.$broadcast('$ionicView.leave');
         assert(mockShipService.stop.calledWithMatch());
