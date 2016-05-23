@@ -257,6 +257,7 @@ describe('Controller: GameCtrl', function () {
             rootScope.$broadcast('$ionicView.enter');
             timeout.flush();
             expect(mockShipService.highlightCB).to.not.be.undefined;
+            //noinspection JSUnusedAssignment
             mockSelectedShip = {hfh: '33', jhf: 33.3};
             mockShipService.highlightCB();
             timeout.flush();
