@@ -4,7 +4,28 @@ describe('Controller: GameCtrl', function () {
     // load the controller's module
     beforeEach(module('tbs.controllers'));
 
-    var shipInfo = {};  //  TODO
+    var shipInfo = {
+        Type4: {
+            ship: 'Type4',
+            gridSize: 1,
+            description: 'Not used'
+        },
+        Type1: {
+            ship: 'Type1',
+            gridSize: 3,
+            description: 'Type 1'
+        },
+        Type2: {
+            ship: 'Type2',
+            gridSize: 2,
+            description: 'Type 2'
+        },
+        Type3: {
+            ship: 'Type3',
+            gridSize: 4,
+            description: 'Not used'
+        }
+    };
     var expectedId = 'tada!';
     var expectedPhase = 'APhase';
     var currentPlayer = {source: 'MANUAL', md5: 'my md 5', theme: 'theme!'};
@@ -45,7 +66,8 @@ describe('Controller: GameCtrl', function () {
             cb();
         }
     };
-    var rootScope, scope, ctrl, stateSpy, q, phasePromise, ionicLoadingSpy, ionicPopupSpy, timeout, ads, actionsSpy, expectedGame;
+    var rootScope, scope, ctrl, stateSpy, q, phasePromise, ionicLoadingSpy, ionicPopupSpy, timeout,
+        ads, actionsSpy, expectedGame, expectedComputedShips;
 
     beforeEach(inject(function ($rootScope, $controller, $q, $timeout) {
         expectedGame = {
@@ -54,18 +76,56 @@ describe('Controller: GameCtrl', function () {
             gamePhase: expectedPhase,
             currentPlayer: currentPlayer.md5,
             players: {
+                md3: {},
                 md1: {},
-                md2: {},
-                md3: {}
+                md2: {}
             },
             maskedPlayersState: {
+                shipStates: [
+                    {
+                        ship: 'Type1',
+                        healthRemaining: 3,
+                        shipGridCells: [{row: 0, column: 0}, {row: 0, column: 1}, {row: 0, column: 2}],
+                        shipSegmentHit: [false, false, false]
+                    },
+                    {
+                        ship: 'Type2',
+                        healthRemaining: 2,
+                        shipGridCells: [{row: 5, column: 5}, {row: 6, column: 5}],
+                        shipSegmentHit: [false, false]
+                    }
+                ],
+                consolidatedOpponentView: {
+                    table: {a: 'X', b: 2}
+                },
                 opponentGrids: {
                     md3: {
                         table: {x: 1, y: 2, s: 'X'}
                     }
+                },
+                opponentViews: {
+                    md3: {
+                        table: {x: 5, y: 1, s: 'XXX'}
+                    }
                 }
             }
         };
+
+        expectedComputedShips = [
+            {
+                horizontal: true,
+                row: 0,
+                column: 0,
+                shipInfo: shipInfo.Type1
+            },
+            {
+                horizontal: false,
+                row: 5,
+                column: 5,
+                shipInfo: shipInfo.Type2
+            }
+        ];
+
         expectedGame.maskedPlayersState.opponentGrids[selectedOpponent] = {table: {x: 1, y: 2, s: 'X'}};
         stateSpy = {go: sinon.spy(), params: {gameID: expectedId}};
         ionicLoadingSpy = {show: sinon.spy(), hide: sinon.spy()};
@@ -115,42 +175,113 @@ describe('Controller: GameCtrl', function () {
         expect(scope.gameID).to.equal(expectedId);
         expect(scope.game).to.equal(expectedGame);
         expect(scope.gameDetails).to.equal(mockGameDetails);
-        expect(scope.playerKeys).to.deep.equal(['md1', 'md2', 'md3']);
+        expect(scope.playerKeys).to.deep.equal(['md3', 'md1', 'md2']);
         expect(scope.player).to.equal(currentPlayer);
         expect(scope.showing).to.equal('ALL');
         expect(scope.showingSelf).to.be.false;
         expect(scope.shipHighlighted).to.be.false;
     });
 
-    it('shows action log', function () {
-        scope.showActionLog();
-        assert(stateSpy.go.calledWithMatch('app.actionLog', {gameID: expectedId}));
+    describe('tests that involve changing display', function () {
+        it('switching to ALL from showing opponent', function () {
+            scope.showingSelf = false;
+            scope.showing = 'X';
+
+            scope.changePlayer('ALL');
+            assert(mockShipService.placeShips.calledWithMatch(expectedComputedShips));
+            assert(mockShipService.placeCellMarkers.calledWithMatch(expectedGame.maskedPlayersState.consolidatedOpponentView.table));
+            expect(scope.showing).to.equal('ALL');
+            expect(scope.showingSelf).to.be.true;
+        });
+
+        it('switching from ALL to showing md3, self', function () {
+            scope.showingSelf = true;
+            scope.showing = 'ALL';
+
+            scope.changePlayer('md3');
+            assert(mockShipService.placeShips.calledWithMatch(expectedComputedShips));
+            assert(mockShipService.placeCellMarkers.calledWithMatch(expectedGame.maskedPlayersState.opponentViews.md3.table));
+            expect(scope.showing).to.equal('md3');
+            expect(scope.showingSelf).to.be.true;
+        });
+
+        it('switching from another opponent to showing md3, them', function () {
+            scope.showingSelf = false;
+            scope.showing = 'md2';
+
+            scope.changePlayer('md3');
+            assert(mockShipService.placeShips.calledWithMatch([]));
+            assert(mockShipService.placeCellMarkers.calledWithMatch(expectedGame.maskedPlayersState.opponentGrids.md3.table));
+            expect(scope.showing).to.equal('md3');
+            expect(scope.showingSelf).to.be.false;
+        });
+
+        it('switching from md3/them to md3/self', function () {
+            scope.showingSelf = false;
+            scope.showing = 'md3';
+
+            scope.switchView(true);
+            assert(mockShipService.placeShips.calledWithMatch(expectedComputedShips));
+            assert(mockShipService.placeCellMarkers.calledWithMatch(expectedGame.maskedPlayersState.opponentViews.md3.table));
+            expect(scope.showing).to.equal('md3');
+            expect(scope.showingSelf).to.be.true;
+        });
+
+        it('switching from ALL/self to not self, self is not first player', function () {
+            scope.showingSelf = true;
+            scope.showing = 'ALL';
+
+            scope.switchView(false);
+            assert(mockShipService.placeShips.calledWithMatch([]));
+            assert(mockShipService.placeCellMarkers.calledWithMatch(expectedGame.maskedPlayersState.opponentGrids.md3.table));
+            expect(scope.showing).to.equal('md3');
+            expect(scope.showingSelf).to.be.false;
+        });
+
+        it('switching from ALL/self to not self, self is first player', function () {
+            scope.showingSelf = true;
+            scope.showing = 'ALL';
+            scope.playerKeys = [currentPlayer.md5, 'md3', 'md2', 'md1'];
+
+            scope.switchView(false);
+            assert(mockShipService.placeShips.calledWithMatch([]));
+            assert(mockShipService.placeCellMarkers.calledWithMatch(expectedGame.maskedPlayersState.opponentGrids.md3.table));
+            expect(scope.showing).to.equal('md3');
+            expect(scope.showingSelf).to.be.false;
+        });
     });
 
-    it('shows game details', function () {
-        scope.showDetails();
-        assert(stateSpy.go.calledWithMatch('app.gameDetails', {gameID: expectedId}));
-    });
+    describe('general navigation and simple actions', function () {
+        it('shows action log', function () {
+            scope.showActionLog();
+            assert(stateSpy.go.calledWithMatch('app.actionLog', {gameID: expectedId}));
+        });
 
-    it('shows help', function () {
-        scope.showHelp();
-        assert(stateSpy.go.calledWithMatch('app.playhelp'));
-    });
+        it('shows game details', function () {
+            scope.showDetails();
+            assert(stateSpy.go.calledWithMatch('app.gameDetails', {gameID: expectedId}));
+        });
 
-    it('declines rematch', function () {
-        scope.declineRematch();
-        assert(actionsSpy.declineRematch.calledWithMatch(expectedGame));
-    });
+        it('shows help', function () {
+            scope.showHelp();
+            assert(stateSpy.go.calledWithMatch('app.playhelp'));
+        });
 
-    it('start rematch', function () {
-        scope.rematch();
-        assert(actionsSpy.rematch.calledWithMatch(expectedGame));
-    });
+        it('declines rematch', function () {
+            scope.declineRematch();
+            assert(actionsSpy.declineRematch.calledWithMatch(expectedGame));
+        });
+
+        it('start rematch', function () {
+            scope.rematch();
+            assert(actionsSpy.rematch.calledWithMatch(expectedGame));
+        });
 
 
-    it('quit game', function () {
-        scope.quit();
-        assert(actionsSpy.quit.calledWithMatch(expectedGame));
+        it('quit game', function () {
+            scope.quit();
+            assert(actionsSpy.quit.calledWithMatch(expectedGame));
+        });
     });
 
     describe('tests with cell selected', function () {
@@ -334,6 +465,7 @@ describe('Controller: GameCtrl', function () {
         });
 
     });
+
     it('shuts down ship grid on view exit', function () {
         rootScope.$broadcast('$ionicView.leave');
         assert(mockShipService.stop.calledWithMatch());
