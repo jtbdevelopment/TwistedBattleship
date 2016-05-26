@@ -43,7 +43,7 @@ angular.module('tbs.controllers').controller('ActionLogCtrl',
                     if ($scope.game.maskedPlayersState.actionLog.length !== $scope.totalEntries) {
                         var newEntries = $scope.game.maskedPlayersState.actionLog.length - $scope.totalEntries;
                         $scope.totalEntries = $scope.game.maskedPlayersState.actionLog.length;
-                        $scope.shownEntries.concat($scope.maskedPlayersState.actionLog.slice(0, newEntries));
+                        $scope.shownEntries = $scope.shownEntries.concat($scope.game.maskedPlayersState.actionLog.slice(0, newEntries));
                     }
                 }
             });
