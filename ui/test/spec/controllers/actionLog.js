@@ -24,13 +24,11 @@ describe('Controller: ActionLogCtrl', function () {
         something: function () {
         }
     };
-    var rootScope, scope, ctrl, stateSpy, q, phasePromise;
+    var rootScope, scope, ctrl, stateSpy;
 
-    beforeEach(inject(function ($rootScope, $controller, $q) {
+    beforeEach(inject(function ($rootScope, $controller) {
         stateSpy = {go: sinon.spy(), params: {gameID: expectedId}};
         rootScope = $rootScope;
-        q = $q;
-        phasePromise = $q.defer();
         scope = rootScope.$new();
 
         expectedGame.maskedPlayersState.actionLog = [
