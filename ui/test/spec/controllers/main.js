@@ -6,10 +6,10 @@ describe('Controller: MainCtrl', function () {
 
     var ctrl, stateSpy, rootScope, scope, timeout, window, q;
 
-    var url = 'http://xtz.com';
+    var url;
     window = {
         location: {
-            href: url
+            href: ''
         }
     };
 
@@ -40,7 +40,9 @@ describe('Controller: MainCtrl', function () {
     var pushNotifications = {x: '334'};
     var features, circles, cells, ships, phases, ads, livefeed, version;
     beforeEach(inject(function ($rootScope, $controller, $timeout, $q) {
-        currentPlayer = {source: 'MANUAL', gameSpecificPlayerAttributes: {theme: 'atheme'}};
+        url = 'http://xtz.com';
+        window.location.href = url;
+        currentPlayer = undefined;
         stateSpy = {go: sinon.spy()};
         rootScope = $rootScope;
         scope = rootScope.$new();
@@ -52,7 +54,7 @@ describe('Controller: MainCtrl', function () {
         cells = {cellStates: sinon.stub()};
         circles = {circles: sinon.stub()};
         ships = {ships: sinon.stub()};
-        livefeed = {setEndPoint: sinon.spy()};
+        livefeed = {setEndPoint: sinon.spy(), suspendFeed: sinon.spy()};
         version = {showReleaseNotes: sinon.spy()};
 
         ctrl = $controller('MainCtrl', {
@@ -79,9 +81,127 @@ describe('Controller: MainCtrl', function () {
         expect(mockDoc.pauseFunction).to.be.defined;
         expect(mockDoc.resumeFunction).to.be.defined;
         assert(livefeed.setEndPoint.calledWithMatch(env.apiEndpoint));
-        expect(scope.theme).to.equal(currentPlayer.gameSpecificPlayerAttributes.theme);
+        expect(scope.theme).to.equal('default-theme');
         expect(scope.mobile).to.be.false;
         expect(scope.adImport).to.equal('templates/ads/non-mobile.html');
         expect(scope.player).to.equal(currentPlayer);
+    });
+
+    describe('initialize with player and mobile', function () {
+        beforeEach(inject(function ($controller) {
+            currentPlayer = {id: 'initial', gameSpecificPlayerAttributes: {theme: 'initial'}};
+            window.location.href = 'file://';
+            ctrl = $controller('MainCtrl', {
+                $scope: scope,
+                $state: stateSpy,
+                $document: mockDoc,
+                $timeout: timeout,
+                $window: window,
+                tbsAds: ads,
+                ENV: env,
+                jtbPlayerService: mockPlayerService,
+                jtbGameFeatureService: features,
+                jtbGamePhaseService: phases,
+                tbsCellStates: cells,
+                tbsCircles: circles,
+                tbsShips: ships,
+                jtbLiveGameFeed: livefeed,
+                tbsVersionNotes: version,
+                jtbPushNotifications: pushNotifications
+            });
+        }));
+
+        it('initializes', function () {
+            expect(mockDoc.pauseFunction).to.be.defined;
+            expect(mockDoc.resumeFunction).to.be.defined;
+            assert(livefeed.setEndPoint.calledWithMatch(env.apiEndpoint));
+            expect(scope.theme).to.equal('initial');
+            expect(scope.mobile).to.be.true;
+            expect(scope.adImport).to.equal('templates/ads/mobile.html');
+            expect(scope.player).to.equal(currentPlayer);
+        });
+
+    });
+
+    it('initializes on player loaded', function () {
+        var circlePromise = q.defer(), featurePromise = q.defer(),
+            cellPromise = q.defer(), shipPromise = q.defer(), phasePromise = q.defer();
+
+        currentPlayer = {id: 'replaced', gameSpecificPlayerAttributes: {theme: 'replacedtheme'}};
+        features.features.returns(featurePromise.promise);
+        circles.circles.returns(circlePromise.promise);
+        cells.cellStates.returns(cellPromise.promise);
+        ships.ships.returns(shipPromise.promise);
+        phases.phases.returns(phasePromise.promise);
+        rootScope.$broadcast('playerLoaded');
+
+        featurePromise.resolve();
+        phasePromise.resolve();
+        cellPromise.resolve();
+        circlePromise.resolve();
+        shipPromise.resolve();
+        rootScope.$apply();
+        expect(scope.theme).to.equal(currentPlayer.gameSpecificPlayerAttributes.theme);
+        expect(scope.player).to.equal(currentPlayer);
+        assert(version.showReleaseNotes.calledWithMatch());
+        assert(ads.initialize.calledWithMatch());
+    });
+
+    it('show player', function () {
+        scope.showPlayer();
+        assert(stateSpy.go.calledWithMatch('app.playerDetails'));
+    });
+
+    it('handles offline', function () {
+        rootScope.$broadcast('$cordovaNetwork:offline');
+        assert(stateSpy.go.calledWith('network'));
+    });
+
+    it('handles invalid session when current state is signin', function () {
+        stateSpy.$current = {
+            name: 'signin'
+        };
+        rootScope.$broadcast('InvalidSession');
+        assert(!stateSpy.go.calledWith('network'));
+    });
+
+    it('handles invalid session when current state is not signin', function () {
+        stateSpy.$current = {
+            name: 'other'
+        };
+        rootScope.$broadcast('InvalidSession');
+        assert(stateSpy.go.calledWith('network'));
+    });
+
+    it('if resume is called after no pauses, goes to network reconnect', function () {
+        mockDoc.resumeFunction();
+        assert(stateSpy.go.calledWith('network'));
+    });
+
+    it('receiving pause sets up timeout that goes to network after timeout', function () {
+        mockDoc.pauseFunction();
+        timeout.flush();
+        assert(livefeed.suspendFeed.calledWithMatch());
+    });
+
+    it('receiving pause and then resume cancels timeout', function () {
+        mockDoc.pauseFunction();
+        mockDoc.resumeFunction();
+        var exception = false;
+        try {
+            timeout.flush();
+        } catch (ex) {
+            exception = true;
+        }
+        expect(exception).to.be.true;
+        assert(!livefeed.suspendFeed.calledWithMatch());
+    });
+
+    it('receiving multiple pauses requires multiple resumes or timeout fires', function () {
+        mockDoc.pauseFunction();
+        mockDoc.pauseFunction();
+        mockDoc.resumeFunction();
+        timeout.flush();
+        assert(livefeed.suspendFeed.calledWithMatch());
     });
 });
