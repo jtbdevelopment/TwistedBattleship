@@ -4,9 +4,9 @@ var MAX_OPPONENTS = 5;
 
 angular.module('tbs.controllers').controller('CreateGameCtrl',
     ['features', '$scope', 'jtbGameCache', 'jtbPlayerService', 'jtbFacebook', '$http', '$state',
-        'tbsGameDetails', '$ionicModal', '$ionicHistory', '$ionicLoading', '$ionicPopup', '$ionicSlideBoxDelegate',
+        'tbsGameDetails', '$ionicModal', '$ionicLoading', '$ionicPopup', '$ionicSlideBoxDelegate',
         function (features, $scope, jtbGameCache, jtbPlayerService, jtbFacebook, $http, $state,
-                  tbsGameDetails, $ionicModal, $ionicHistory, $ionicLoading, $ionicPopup, $ionicSlideBoxDelegate) {
+                  tbsGameDetails, $ionicModal, $ionicLoading, $ionicPopup, $ionicSlideBoxDelegate) {
 
             $scope.gameDetails = tbsGameDetails;
             $scope.featureData = features;

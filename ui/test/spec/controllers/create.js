@@ -9,7 +9,7 @@ describe('Controller: CreateGameCtrl', function () {
 
     var httpBackend;
     var gameCache, facebook, gameDetails, playerService;
-    var ionicModal, ionicHistory, ionicLoading, ionicPopup, ionicSlideBox;
+    var ionicModal, ionicLoading, ionicPopup, ionicSlideBox;
     var features = [
         {
             'feature': {
@@ -161,8 +161,9 @@ describe('Controller: CreateGameCtrl', function () {
                 'description': 'Single use per game, sinks a ship by hitting any single ship location.'
             }]
         }];
-    var friendsPromise, modalPromiseHelp, modalPromiseInvite;
+    var friendsPromise, modalPromiseHelp, modalPromiseInvite, alertPromise;
     var helpModal, inviteModal;
+    var playerUrl = 'http://game.com/u/r/l';
     var defaultOptions = ['Grid10x10', 'PerShip', 'SharedIntel', true, true, true, true, false];
     var friends = {
         'maskedFriends': {
@@ -184,6 +185,7 @@ describe('Controller: CreateGameCtrl', function () {
         q = $q;
         modalPromiseHelp = q.defer();
         modalPromiseInvite = q.defer();
+        alertPromise = q.defer();
         ionicModal = {fromTemplateUrl: sinon.stub()};
         ionicModal.fromTemplateUrl.withArgs('templates/help/help-create.html', {
             scope: scope,
@@ -195,18 +197,21 @@ describe('Controller: CreateGameCtrl', function () {
         }).returns(modalPromiseInvite.promise);
         helpModal = {hide: sinon.spy(), show: sinon.spy(), remove: sinon.spy()};
         inviteModal = {hide: sinon.spy(), show: sinon.spy(), remove: sinon.spy()};
-        ionicLoading = {};
-        ionicHistory = {};
-        ionicPopup = {};
+        ionicLoading = {show: sinon.spy(), hide: sinon.spy()};
+        ionicPopup = {alert: sinon.stub()};
         ionicSlideBox = {next: sinon.spy(), previous: sinon.spy()};
         friendsPromise = q.defer();
         facebook = {inviteFriends: sinon.spy()};
+        gameCache = {putUpdatedGame: sinon.spy()};
         playerService = {
             currentPlayerFriends: function () {
                 return friendsPromise.promise;
             },
             currentPlayer: function () {
                 return currentPlayer;
+            },
+            currentPlayerBaseURL: function () {
+                return playerUrl;
             }
         };
 
@@ -217,10 +222,8 @@ describe('Controller: CreateGameCtrl', function () {
             jtbPlayerService: playerService,
             jtbGameCache: gameCache,
             jtbFacebook: facebook,
-            $http: httpBackend,
             tbsGameDetails: gameDetails,
             $ionicModal: ionicModal,
-            $ionicHistory: ionicHistory,
             $ionicLoading: ionicLoading,
             $ionicPopup: ionicPopup,
             $ionicSlideBoxDelegate: ionicSlideBox,
@@ -932,6 +935,42 @@ describe('Controller: CreateGameCtrl', function () {
                     }
                 ]
             ]).to.deep.equal(scope.friendInputs);
+        });
+    });
+
+    describe('submitting game', function () {
+        beforeEach(function () {
+            friendsPromise.resolve(friends);
+            rootScope.$apply();
+        });
+
+        it('submit a game with friends and default options', function () {
+            scope.playerChoices[2] = {
+                "md5": "md3",
+                "displayName": "friend3",
+                "checked": false
+            };
+            scope.playerChoices[4] = {
+                "md5": "md1",
+                "displayName": "friend1",
+                "checked": false
+            };
+
+
+            var expectedOptions = {
+                'players': ['md3', 'md1'],
+                'features': ['Grid10x10', 'PerShip', 'SharedIntel', 'ECMEnabled', 'EMEnabled', 'EREnabled', 'SpyEnabled', 'CruiseMissileDisabled']
+            };
+            var newGame = {id: 'someid'};
+            httpBackend.expectPOST(playerUrl + '/new', expectedOptions).respond(200, newGame);
+            scope.createGame();
+            assert(ionicLoading.show.calledWithMatch({
+                template: 'Creating game and issuing challenges..'
+            }));
+            httpBackend.flush();
+            assert(gameCache.putUpdatedGame.calledWithMatch(newGame));
+            assert(ionicLoading.hide.calledWithMatch());
+            assert(stateSpy.go.calledWithMatch('app.games'));
         });
     });
 });
