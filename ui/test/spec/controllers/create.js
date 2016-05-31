@@ -233,6 +233,7 @@ describe('Controller: CreateGameCtrl', function () {
         expect(scope.inviteModal).to.be.undefined;
         expect(scope.helpIndex).to.be.undefined;
 
+        expect([0, 1, 2, 3, 4]).to.deep.equal(scope.inviteArray);
         expect([{}, {}, {}, {}, {}]).to.deep.equal(scope.playerChoices);
         expect([[], [], [], [], []]).to.deep.equal(scope.friendInputs);
         expect([]).to.deep.equal(scope.friends);
