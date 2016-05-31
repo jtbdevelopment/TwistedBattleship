@@ -441,4 +441,497 @@ describe('Controller: CreateGameCtrl', function () {
             assert(helpModal.remove.calledWithMatch());
         });
     });
+
+    describe('choosing and unchoosing opponents', function () {
+        beforeEach(function () {
+            friendsPromise.resolve(friends);
+            rootScope.$apply();
+        });
+
+        it('choosing a player removes from other lists and enables submit', function () {
+            expect([{}, {}, {}, {}, {}]).to.deep.equal(scope.playerChoices);
+            expect([
+                [
+                    {
+                        "md5": "md1",
+                        "displayName": "friend1",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md3",
+                        "displayName": "friend3",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md2",
+                        "displayName": "friend2",
+                        "checked": false
+                    }
+                ],
+                [
+                    {
+                        "md5": "md1",
+                        "displayName": "friend1",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md3",
+                        "displayName": "friend3",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md2",
+                        "displayName": "friend2",
+                        "checked": false
+                    }
+                ],
+                [
+                    {
+                        "md5": "md1",
+                        "displayName": "friend1",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md3",
+                        "displayName": "friend3",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md2",
+                        "displayName": "friend2",
+                        "checked": false
+                    }
+                ],
+                [
+                    {
+                        "md5": "md1",
+                        "displayName": "friend1",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md3",
+                        "displayName": "friend3",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md2",
+                        "displayName": "friend2",
+                        "checked": false
+                    }
+                ],
+                [
+                    {
+                        "md5": "md1",
+                        "displayName": "friend1",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md3",
+                        "displayName": "friend3",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md2",
+                        "displayName": "friend2",
+                        "checked": false
+                    }
+                ]
+            ]).to.deep.equal(scope.friendInputs);
+
+            scope.playerChoices[2] = {
+                "md5": "md3",
+                "displayName": "friend3",
+                "checked": false
+            };
+            expect(scope.submitEnabled).to.be.false;
+            scope.playersChanged();
+
+            expect(scope.submitEnabled).to.be.true;
+
+            expect([
+                [
+                    {
+                        "md5": "md1",
+                        "displayName": "friend1",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md2",
+                        "displayName": "friend2",
+                        "checked": false
+                    }
+                ],
+                [
+                    {
+                        "md5": "md1",
+                        "displayName": "friend1",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md2",
+                        "displayName": "friend2",
+                        "checked": false
+                    }
+                ],
+                [
+                    {
+                        "md5": "md1",
+                        "displayName": "friend1",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md3",
+                        "displayName": "friend3",
+                        "checked": true
+                    },
+                    {
+                        "md5": "md2",
+                        "displayName": "friend2",
+                        "checked": false
+                    }
+                ],
+                [
+                    {
+                        "md5": "md1",
+                        "displayName": "friend1",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md2",
+                        "displayName": "friend2",
+                        "checked": false
+                    }
+                ],
+                [
+                    {
+                        "md5": "md1",
+                        "displayName": "friend1",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md2",
+                        "displayName": "friend2",
+                        "checked": false
+                    }
+                ]
+            ]).to.deep.equal(scope.friendInputs);
+        });
+
+        it('choosing a player and then unchoosing them puts them back on other lists', function () {
+            expect([{}, {}, {}, {}, {}]).to.deep.equal(scope.playerChoices);
+            expect([
+                [
+                    {
+                        "md5": "md1",
+                        "displayName": "friend1",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md3",
+                        "displayName": "friend3",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md2",
+                        "displayName": "friend2",
+                        "checked": false
+                    }
+                ],
+                [
+                    {
+                        "md5": "md1",
+                        "displayName": "friend1",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md3",
+                        "displayName": "friend3",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md2",
+                        "displayName": "friend2",
+                        "checked": false
+                    }
+                ],
+                [
+                    {
+                        "md5": "md1",
+                        "displayName": "friend1",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md3",
+                        "displayName": "friend3",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md2",
+                        "displayName": "friend2",
+                        "checked": false
+                    }
+                ],
+                [
+                    {
+                        "md5": "md1",
+                        "displayName": "friend1",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md3",
+                        "displayName": "friend3",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md2",
+                        "displayName": "friend2",
+                        "checked": false
+                    }
+                ],
+                [
+                    {
+                        "md5": "md1",
+                        "displayName": "friend1",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md3",
+                        "displayName": "friend3",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md2",
+                        "displayName": "friend2",
+                        "checked": false
+                    }
+                ]
+            ]).to.deep.equal(scope.friendInputs);
+
+            scope.playerChoices[2] = {
+                "md5": "md3",
+                "displayName": "friend3",
+                "checked": false
+            };
+            scope.playerChoices[4] = {
+                "md5": "md1",
+                "displayName": "friend1",
+                "checked": false
+            };
+            expect(scope.submitEnabled).to.be.false;
+
+            scope.playersChanged();
+
+            expect(scope.submitEnabled).to.be.true;
+            expect([
+                [
+                    {
+                        "md5": "md2",
+                        "displayName": "friend2",
+                        "checked": false
+                    }
+                ],
+                [
+                    {
+                        "md5": "md2",
+                        "displayName": "friend2",
+                        "checked": false
+                    }
+                ],
+                [
+                    {
+                        "md5": "md3",
+                        "displayName": "friend3",
+                        "checked": true
+                    },
+                    {
+                        "md5": "md2",
+                        "displayName": "friend2",
+                        "checked": false
+                    }
+                ],
+                [
+                    {
+                        "md5": "md2",
+                        "displayName": "friend2",
+                        "checked": false
+                    }
+                ],
+                [
+                    {
+                        "md5": "md1",
+                        "displayName": "friend1",
+                        "checked": true
+                    },
+                    {
+                        "md5": "md2",
+                        "displayName": "friend2",
+                        "checked": false
+                    }
+                ]
+            ]).to.deep.equal(scope.friendInputs);
+
+            scope.playerChoices[4] = {};
+            scope.playersChanged();
+            expect(scope.submitEnabled).to.be.true;
+
+            expect([
+                [
+                    {
+                        "md5": "md1",
+                        "displayName": "friend1",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md2",
+                        "displayName": "friend2",
+                        "checked": false
+                    }
+                ],
+                [
+                    {
+                        "md5": "md1",
+                        "displayName": "friend1",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md2",
+                        "displayName": "friend2",
+                        "checked": false
+                    }
+                ],
+                [
+                    {
+                        "md5": "md1",
+                        "displayName": "friend1",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md3",
+                        "displayName": "friend3",
+                        "checked": true
+                    },
+                    {
+                        "md5": "md2",
+                        "displayName": "friend2",
+                        "checked": false
+                    }
+                ],
+                [
+                    {
+                        "md5": "md1",
+                        "displayName": "friend1",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md2",
+                        "displayName": "friend2",
+                        "checked": false
+                    }
+                ],
+                [
+                    {
+                        "md5": "md1",
+                        "displayName": "friend1",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md2",
+                        "displayName": "friend2",
+                        "checked": false
+                    }
+                ]
+            ]).to.deep.equal(scope.friendInputs);
+
+            scope.playerChoices[2] = {};
+            scope.playersChanged();
+            expect(scope.submitEnabled).to.be.false;
+            expect([
+                [
+                    {
+                        "md5": "md1",
+                        "displayName": "friend1",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md3",
+                        "displayName": "friend3",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md2",
+                        "displayName": "friend2",
+                        "checked": false
+                    }
+                ],
+                [
+                    {
+                        "md5": "md1",
+                        "displayName": "friend1",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md3",
+                        "displayName": "friend3",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md2",
+                        "displayName": "friend2",
+                        "checked": false
+                    }
+                ],
+                [
+                    {
+                        "md5": "md1",
+                        "displayName": "friend1",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md3",
+                        "displayName": "friend3",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md2",
+                        "displayName": "friend2",
+                        "checked": false
+                    }
+                ],
+                [
+                    {
+                        "md5": "md1",
+                        "displayName": "friend1",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md3",
+                        "displayName": "friend3",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md2",
+                        "displayName": "friend2",
+                        "checked": false
+                    }
+                ],
+                [
+                    {
+                        "md5": "md1",
+                        "displayName": "friend1",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md3",
+                        "displayName": "friend3",
+                        "checked": false
+                    },
+                    {
+                        "md5": "md2",
+                        "displayName": "friend2",
+                        "checked": false
+                    }
+                ]
+            ]).to.deep.equal(scope.friendInputs);
+        });
+    });
 });
