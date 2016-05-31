@@ -12,12 +12,12 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
             $scope.featureData = features;
 
             $scope.playerChoices = [];
-            $scope.inviteArray = [];
+            var inviteArray = [];
             $scope.friendInputs = [];
             $scope.friends = [];
             $scope.invitableFriends = [];
             for (var i = 0; i < MAX_OPPONENTS; ++i) {
-                $scope.inviteArray.push(i);
+                inviteArray.push(i);
                 $scope.playerChoices.push({});
                 $scope.friendInputs.push([]);
 
@@ -48,7 +48,7 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
                     };
                     $scope.friends.push(friend);
                 });
-                angular.forEach($scope.inviteArray, function (index) {
+                angular.forEach(inviteArray, function (index) {
                     angular.copy($scope.friends, $scope.friendInputs[index]);
                 });
 
@@ -74,7 +74,7 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
                 var chosenPlayers = $scope.playerChoices.filter(validMD5);
                 $scope.submitEnabled = chosenPlayers.length > 0;
 
-                angular.forEach($scope.inviteArray, function (index) {
+                angular.forEach(inviteArray, function (index) {
                     var otherMD5s = $scope.playerChoices.filter(function (value, valueIndex) {
                         return index !== valueIndex && validMD5(value);
                     }).map(function (value) {
