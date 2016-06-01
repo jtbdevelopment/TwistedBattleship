@@ -2,8 +2,8 @@
 
 //  TODO - unsaved changes warning
 angular.module('tbs.controllers').controller('SetupGameCtrl',
-    ['$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', '$ionicSideMenuDelegate', 'shipInfo', 'tbsShipGrid', '$ionicModal', '$ionicLoading', '$timeout',  // 'twAds',
-        function ($scope, tbsGameDetails, tbsActions, jtbGameCache, jtbPlayerService, $state, $ionicSideMenuDelegate, shipInfo, tbsShipGrid, $ionicModal, $ionicLoading, $timeout /*, twAds*/) {
+    ['$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', '$state', '$ionicSideMenuDelegate', 'shipInfo', 'tbsShipGrid', '$ionicModal', '$ionicLoading', '$timeout',
+        function ($scope, tbsGameDetails, tbsActions, jtbGameCache, $state, $ionicSideMenuDelegate, shipInfo, tbsShipGrid, $ionicModal, $ionicLoading, $timeout) {
             $ionicSideMenuDelegate.canDragContent(false);
             $scope.gameID = $state.params.gameID;
             $scope.game = jtbGameCache.getGameForID($scope.gameID);
@@ -145,6 +145,7 @@ angular.module('tbs.controllers').controller('SetupGameCtrl',
                 });
             }
 
+            //noinspection JSUnusedLocalSymbols
             function onMove(pointer, x, y) {
                 $timeout(function () {
                     if ($scope.movingShip !== null) {
