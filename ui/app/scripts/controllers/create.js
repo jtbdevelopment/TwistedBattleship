@@ -199,7 +199,6 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
                     $ionicPopup.alert({
                         title: 'There was a problem creating the game!',
                         template: data
-                    }).then(function () {
                     });
 
                     console.error(data + status + headers + config);

@@ -198,7 +198,7 @@ describe('Controller: CreateGameCtrl', function () {
         helpModal = {hide: sinon.spy(), show: sinon.spy(), remove: sinon.spy()};
         inviteModal = {hide: sinon.spy(), show: sinon.spy(), remove: sinon.spy()};
         ionicLoading = {show: sinon.spy(), hide: sinon.spy()};
-        ionicPopup = {alert: sinon.stub()};
+        ionicPopup = {alert: sinon.spy()};
         ionicSlideBox = {next: sinon.spy(), previous: sinon.spy()};
         friendsPromise = q.defer();
         facebook = {inviteFriends: sinon.spy()};
@@ -959,6 +959,37 @@ describe('Controller: CreateGameCtrl', function () {
 
             var expectedOptions = {
                 'players': ['md3', 'md1'],
+                'features': ['Grid15x15', 'PerShip', 'IsolatedIntel', 'ECMEnabled', 'EMEnabled', 'EREnabled', 'SpyDisabled', 'CruiseMissileEnabled']
+            };
+            var newGame = {id: 'someid'};
+            scope.currentOptions = ['Grid15x15', 'PerShip', 'IsolatedIntel', true, true, true, false, true];
+
+            httpBackend.expectPOST(playerUrl + '/new', expectedOptions).respond(200, newGame);
+            scope.createGame();
+            assert(ionicLoading.show.calledWithMatch({
+                template: 'Creating game and issuing challenges..'
+            }));
+            httpBackend.flush();
+            assert(gameCache.putUpdatedGame.calledWithMatch(newGame));
+            assert(ionicLoading.hide.calledWithMatch());
+            assert(stateSpy.go.calledWithMatch('app.games'));
+        });
+
+        it('submit a game with friends and non-default options', function () {
+            scope.playerChoices[2] = {
+                "md5": "md3",
+                "displayName": "friend3",
+                "checked": false
+            };
+            scope.playerChoices[4] = {
+                "md5": "md1",
+                "displayName": "friend1",
+                "checked": false
+            };
+
+
+            var expectedOptions = {
+                'players': ['md3', 'md1'],
                 'features': ['Grid10x10', 'PerShip', 'SharedIntel', 'ECMEnabled', 'EMEnabled', 'EREnabled', 'SpyEnabled', 'CruiseMissileDisabled']
             };
             var newGame = {id: 'someid'};
@@ -971,6 +1002,37 @@ describe('Controller: CreateGameCtrl', function () {
             assert(gameCache.putUpdatedGame.calledWithMatch(newGame));
             assert(ionicLoading.hide.calledWithMatch());
             assert(stateSpy.go.calledWithMatch('app.games'));
+        });
+
+        it('submit a game with friends and default options and fail', function () {
+            scope.playerChoices[2] = {
+                "md5": "md3",
+                "displayName": "friend3",
+                "checked": false
+            };
+            scope.playerChoices[4] = {
+                "md5": "md1",
+                "displayName": "friend1",
+                "checked": false
+            };
+
+
+            var expectedOptions = {
+                'players': ['md3', 'md1'],
+                'features': ['Grid10x10', 'PerShip', 'SharedIntel', 'ECMEnabled', 'EMEnabled', 'EREnabled', 'SpyEnabled', 'CruiseMissileDisabled']
+            };
+            var error = 'Its a problem';
+            httpBackend.expectPOST(playerUrl + '/new', expectedOptions).respond(400, error);
+            scope.createGame();
+            assert(ionicLoading.show.calledWithMatch({
+                template: 'Creating game and issuing challenges..'
+            }));
+            httpBackend.flush();
+            assert(ionicLoading.hide.calledWithMatch());
+            ionicPopup.alert.calledWithMatch({
+                title: 'There was a problem creating the game!',
+                template: error
+            });
         });
     });
 });
