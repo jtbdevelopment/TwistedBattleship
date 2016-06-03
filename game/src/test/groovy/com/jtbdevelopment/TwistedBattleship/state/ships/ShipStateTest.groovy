@@ -23,6 +23,7 @@ class ShipStateTest extends GroovyTestCase {
         assert shipState.shipSegmentHit == [false, false, false]
         assert shipState.shipGridCells == (coordinates as List).sort()
         assert shipState.ship == Ship.Cruiser
+        assert shipState.horizontal
     }
 
     void testPersistenceConstructor() {
@@ -43,5 +44,60 @@ class ShipStateTest extends GroovyTestCase {
         assert shipState.shipSegmentHit == booleans
         assert shipState.shipGridCells == (coordinates as List).sort()
         assert shipState.ship == Ship.Cruiser
+        assert shipState.horizontal
+    }
+
+    void testSettingGridCellsRecomputesHorizontal() {
+        def coordinates = new TreeSet<GridCoordinate>(
+                [
+                        new GridCoordinate(0, 0),
+                        new GridCoordinate(0, 1),
+                        new GridCoordinate(0, 2)
+                ]
+        )
+        ShipState shipState = new ShipState(
+                Ship.Cruiser,
+                coordinates
+        )
+        assert shipState.horizontal
+        coordinates = new TreeSet<GridCoordinate>(
+                [
+                        new GridCoordinate(1, 0),
+                        new GridCoordinate(2, 0),
+                        new GridCoordinate(3, 0)
+                ]
+        )
+        shipState.shipGridCells = (coordinates as List)
+        assertFalse shipState.horizontal
+    }
+
+    void testExplicitlySettingHorizontalIgnored() {
+        def coordinates = new TreeSet<GridCoordinate>(
+                [
+                        new GridCoordinate(0, 0),
+                        new GridCoordinate(0, 1),
+                        new GridCoordinate(0, 2)
+                ]
+        )
+        ShipState shipState = new ShipState(
+                Ship.Cruiser,
+                coordinates
+        )
+        assert shipState.horizontal
+        shipState.horizontal = false
+        assert shipState.horizontal
+    }
+
+    void testSettingGridCellsToEmptyDoesntExplodeHorizontal() {
+        def coordinates = new TreeSet<GridCoordinate>(
+                [
+                        new GridCoordinate(0, 0)
+                ]
+        )
+        ShipState shipState = new ShipState(
+                Ship.Cruiser,
+                coordinates
+        )
+        assertFalse shipState.horizontal
     }
 }

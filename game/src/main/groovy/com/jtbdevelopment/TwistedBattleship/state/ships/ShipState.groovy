@@ -3,6 +3,7 @@ package com.jtbdevelopment.TwistedBattleship.state.ships
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import groovy.transform.CompileStatic
 import org.springframework.data.annotation.PersistenceConstructor
+import org.springframework.data.annotation.Transient
 
 /**
  * Date: 4/3/15
@@ -14,6 +15,8 @@ class ShipState implements Serializable {
     int healthRemaining
     List<GridCoordinate> shipGridCells // from front to back
     List<Boolean> shipSegmentHit
+    @Transient
+    boolean horizontal
 
     @SuppressWarnings("unused")
     protected ShipState() {
@@ -26,6 +29,7 @@ class ShipState implements Serializable {
         this.shipGridCells = (shipGridCells as List).sort()
         this.healthRemaining = ship.gridSize
         this.shipSegmentHit = shipGridCells.collect { false }
+        computeHorizontal()
     }
 
     @PersistenceConstructor
@@ -38,6 +42,19 @@ class ShipState implements Serializable {
         this.healthRemaining = healthRemaining
         this.shipGridCells = shipGridCells.sort()
         this.shipSegmentHit = shipSegmentHit
+        computeHorizontal()
     }
 
+    void setShipGridCells(final List<GridCoordinate> shipGridCells) {
+        this.shipGridCells = shipGridCells
+        computeHorizontal()
+    }
+
+    void setHorizontal(final boolean horizontal) {
+        //  ignore
+    }
+
+    private void computeHorizontal() {
+        this.horizontal = this.shipGridCells.size() >= 2 && this.shipGridCells[0].row == this.shipGridCells[1].row;
+    }
 }
