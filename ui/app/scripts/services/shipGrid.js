@@ -1,5 +1,7 @@
 'use strict';
 
+//  TODO - testing - Avoiding tests - plan to rewrite a fair bit to use a lot more native phaser functionality
+//  for drag/doubletap/compute overlap
 angular.module('tbs.services').factory('tbsShipGrid',
     ['jtbPlayerService', 'tbsCircles', 'tbsCellStates', 'tbsShips', 'Phaser',
         function (jtbPlayerService, tbsCircles, tbsCellStates, tbsShips, Phaser) {

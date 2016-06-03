@@ -1,10 +1,11 @@
 'use strict';
 
+//  TODO - avoiding testing a lot of the phaser/grid stuff as plan to revamp it to use more phaser native
+//  and remove so much self work
 describe('Controller: SetupGameCtrl', function () {
     // load the controller's module
     beforeEach(module('tbs.controllers'));
 
-//    [ , '$ionicSideMenuDelegate',
     var shipInfo = {
         Type4: {
             ship: 'Type4',
@@ -62,7 +63,7 @@ describe('Controller: SetupGameCtrl', function () {
         },
         initialize: function (game, ships, markers, cb) {
             expect(game).to.equal(expectedGame);
-            expect([]).to.deep.equal(ships);
+            expect(expectedComputedShips).to.deep.equal(ships);
             expect([]).to.deep.equal(markers);
             cb();
         }
@@ -202,6 +203,16 @@ describe('Controller: SetupGameCtrl', function () {
             rootScope.$broadcast('$destroy');
             expect(modalHelp.remove.calledWithMatch());
         });
+    });
+
+    it('navigate to game details', function () {
+        scope.showDetails();
+        assert(stateSpy.go.calledWithMatch('app.gameDetails', {gameID: expectedId}));
+    });
+
+    it('quit game', function () {
+        scope.quit();
+        assert(actionsSpy.quit.calledWithMatch(expectedGame));
     });
 
     it('shuts down ship grid on view exit', function () {
