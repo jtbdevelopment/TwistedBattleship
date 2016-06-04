@@ -4,10 +4,11 @@ import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
+import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
+import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
 import com.jtbdevelopment.games.factory.GameInitializer
 import com.jtbdevelopment.games.players.Player
-import groovy.transform.CompileStatic
 import org.bson.types.ObjectId
 import org.springframework.stereotype.Component
 
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Component
  * Date: 4/6/15
  * Time: 6:34 PM
  */
-@CompileStatic
 @Component
 class PlayerGameStateInitializer implements GameInitializer<TBGame> {
     private final static Map<GameFeature, Integer> sizeMap = [
@@ -28,8 +28,15 @@ class PlayerGameStateInitializer implements GameInitializer<TBGame> {
     void initializeGame(final TBGame game) {
         int specialMoves = game.players.size() - 1
 
-        //  TODO - offer more options in future
         game.startingShips = Ship.values().toList()
+        List<ShipState> defaultPlacements = game.startingShips.withIndex().collect {
+            Ship ship, int index ->
+                def coordinates = (1..ship.gridSize).collect {
+                    int gridIndex ->
+                        new GridCoordinate(index, gridIndex)
+                } as SortedSet
+                new ShipState(ship, coordinates)
+        }
 
         game.gridSize = sizeMap[game.features.find { GameFeature it -> it.group == GameFeature.GridSize }]
         game.currentPlayer = game.players[0].id
@@ -41,6 +48,7 @@ class PlayerGameStateInitializer implements GameInitializer<TBGame> {
                 opponents.remove(p)
                 game.playerDetails[p.id] = new TBPlayerState(
                         startingShips: game.startingShips,
+                        shipStates: new LinkedList<ShipState>(defaultPlacements),
                         ecmsRemaining: game.features.contains(GameFeature.ECMEnabled) ? specialMoves : 0,
                         cruiseMissilesRemaining: game.features.contains(GameFeature.CruiseMissileEnabled) ? 1 : 0,
                         emergencyRepairsRemaining: game.features.contains(GameFeature.EREnabled) ? specialMoves : 0,

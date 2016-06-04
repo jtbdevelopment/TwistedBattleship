@@ -5,6 +5,7 @@ import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
+import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
 import com.jtbdevelopment.games.players.Player
@@ -31,6 +32,18 @@ class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
         assert PONE.id == game.currentPlayer
         assert 1 == game.remainingMoves
         assert 1 == game.movesForSpecials
+        game.startingShips.eachWithIndex { Ship ship, int index ->
+            def expectedCoordinates = (1..ship.gridSize).collect {
+                int gridIndex ->
+                    new GridCoordinate(index, gridIndex)
+            }
+            game.playerDetails.forEach {
+                key, value ->
+                    assert ship == value.shipStates[index].ship
+                    assert expectedCoordinates == value.shipStates[index].shipGridCells
+            }
+        }
+
         game.players.each {
             Player p ->
                 def expectedSpecials = 2
