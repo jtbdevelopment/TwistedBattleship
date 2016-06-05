@@ -28,6 +28,12 @@ angular.module('tbs.services').factory('tbsShipGridV2',
             var postCreateCallback;
             var highlightCallback;
 
+            function render() {
+                angular.forEach(shipsOnGrid, function (shipOnGrid) {
+                    phaser.debug.body(shipOnGrid.shipSprite);
+                });
+            }
+
             function preload() {
                 circleCombinedRelativeCoordinates = [];
                 var json;
@@ -82,7 +88,7 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                 highlightedY = -1;
 
                 angular.forEach(shipsOnGrid, function (shipOnGrid) {
-                    shipOnGrid.destroy();
+                    shipOnGrid.shipSprite.destroy();
                 });
                 shipsOnGrid = [];
 
@@ -113,6 +119,7 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                 phaser.scale.pageAlignHorizontally = false;
                 phaser.scale.pageAlignVertically = false;
                 phaser.scale.windowConstraints.bottom = 'visual';
+                phaser.physics.startSystem(Phaser.Physics.ARCADE);
 
                 refreshShipsOnGrid();
                 refreshCellMarkersOnGrid();
@@ -146,24 +153,29 @@ angular.module('tbs.services').factory('tbsShipGridV2',
 
             //  Takes shipState from server
             function placeShip(shipState) {
-                var centerX, centerY;
                 var firstCell = shipState.shipGridCells[0];
                 var shipInfo = shipInfoMap[shipState.ship];
+                var shipSprite = phaser.add.sprite(0, 0, shipState.ship, 0);
+                shipSprite.angle = shipState.horizontal ? 0 : 90;
+                phaser.physics.arcade.enable(shipSprite);
+                shipSprite.body.collideWorldBounds = true;
+                shipSprite.body.debug = true;
+                shipSprite.anchor.setTo(0.5, 0.5);
+                var centerX, centerY;
                 if (shipState.horizontal) {
                     centerY = (firstCell.row * CELL_SIZE) + HALF_CELL_SIZE;
                     centerX = (firstCell.column * CELL_SIZE) + (shipInfo.gridSize * HALF_CELL_SIZE);
                 } else {
-                    centerX = (firstCell.column * CELL_SIZE) + HALF_CELL_SIZE;
                     centerY = (firstCell.row * CELL_SIZE) + (shipInfo.gridSize * HALF_CELL_SIZE);
+                    centerX = (firstCell.column * CELL_SIZE) + HALF_CELL_SIZE;
                 }
-                var ship = phaser.add.sprite(centerX, centerY, shipState.ship, 0);
-                ship.anchor.setTo(0.5, 0.5);
-                ship.angle = shipState.horizontal ? 0 : 90;
+                shipSprite.x = centerX;
+                shipSprite.y = centerY;
 
                 var shipOnGrid = {
-                    sprite: ship,
+                    shipSprite: shipSprite,
                     shipState: shipState,
-                    info: shipInfo
+                    shipInfo: shipInfo
                 };
                 shipsOnGrid.push(shipOnGrid);
             }
@@ -177,11 +189,11 @@ angular.module('tbs.services').factory('tbsShipGridV2',
 
              function highlightAShip(x, y) {
              if (highlightedShip !== null) {
-             highlightedShip.sprite.tint = 0xffffff;
+             highlightedShip.shipSprite.tint = 0xffffff;
              }
              highlightedShip = findShipByCoordinates({x: x, y: y});
              if (highlightedShip !== null) {
-             highlightedShip.sprite.tint = 0x00ff00;
+             highlightedShip.shipSprite.tint = 0x00ff00;
              }
              }
 
@@ -227,12 +239,24 @@ angular.module('tbs.services').factory('tbsShipGridV2',
 
             function refreshShipsOnGrid() {
                 angular.forEach(shipsOnGrid, function (ship) {
-                    ship.sprite.destroy();
+                    ship.shipSprite.destroy();
                 });
                 shipsOnGrid = [];
                 angular.forEach(shipStatesToPlace, function (shipState) {
                     placeShip(shipState);
                 });
+            }
+
+            function enableGridSnapping(shipOnGrid) {
+                var offsetX, offsetY;
+                if (shipOnGrid.shipState.horizontal) {
+                    offsetY = HALF_CELL_SIZE;
+                    offsetX = (shipOnGrid.shipInfo.gridSize % 2 == 0) ? 0 : HALF_CELL_SIZE;
+                } else {
+                    offsetX = HALF_CELL_SIZE;
+                    offsetY = (shipOnGrid.shipInfo.gridSize % 2 == 0) ? 0 : HALF_CELL_SIZE;
+                }
+                shipOnGrid.shipSprite.input.enableSnap(CELL_SIZE, CELL_SIZE, false, true, offsetX, offsetY);
             }
 
             return {
@@ -266,7 +290,7 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                                         gameHeight,
                                         Phaser.AUTO,
                                         'phaser',
-                                        {preload: preload, create: create, init: init});
+                                        {preload: preload, create: create, init: init, render: render});
                                 },
                                 function (error) {
                                     //  TODO
@@ -277,6 +301,28 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                     });
                 },
 
+                enableShipMovement: function () {
+                    angular.forEach(shipsOnGrid, function (shipOnGrid) {
+                        shipOnGrid.shipSprite.inputEnabled = true;
+                        shipOnGrid.shipSprite.input.enableDrag();
+                        enableGridSnapping(shipOnGrid);
+                    });
+                    phaser.input.onTap.add(function (context, isDouble) {
+                        if (isDouble) {
+                            angular.forEach(shipsOnGrid, function (shipOnGrid) {
+                                if (shipOnGrid.shipSprite.input.pointerOver()) {
+                                    shipOnGrid.shipState.horizontal = !shipOnGrid.shipState.horizontal;
+                                    shipOnGrid.shipSprite.angle = shipOnGrid.shipState.horizontal ? 0 : 90;
+                                    var swap = shipOnGrid.shipSprite.body.width;
+                                    //noinspection JSSuspiciousNameCombination
+                                    shipOnGrid.shipSprite.body.width = shipOnGrid.shipSprite.body.height;
+                                    shipOnGrid.shipSprite.body.height = swap;
+                                    enableGridSnapping(shipOnGrid);
+                                }
+                            });
+                        }
+                    }, this);
+                },
                 placeShips: function (newShipStates) {
                     shipStatesToPlace = newShipStates;
                     refreshShipsOnGrid();
