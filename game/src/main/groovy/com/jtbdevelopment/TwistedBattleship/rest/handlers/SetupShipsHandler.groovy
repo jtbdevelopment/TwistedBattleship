@@ -29,6 +29,7 @@ class SetupShipsHandler extends AbstractGameActionHandler<List<ShipState>, TBGam
         validateGame(game);
         validateShipStates(game, param)
         game.playerDetails[(ObjectId) player.id].shipStates = param
+        game.playerDetails[(ObjectId) player.id].setup = true;
 
         game
     }

@@ -164,9 +164,9 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
                 (TEST_PLAYER3.md5): PlayerState.Accepted
         ] == game.playerStates
         assert [
-                (TEST_PLAYER1.md5): false,
-                (TEST_PLAYER2.md5): false,
-                (TEST_PLAYER3.md5): false
+                (TEST_PLAYER1.md5): true,
+                (TEST_PLAYER2.md5): true,
+                (TEST_PLAYER3.md5): true
         ] == game.playersAlive
         assert [
                 (TEST_PLAYER1.md5): false,
@@ -178,7 +178,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
                 (TEST_PLAYER2.md5): 0,
                 (TEST_PLAYER3.md5): 0
         ] == game.playersScore
-        assert 0 == game.maskedPlayersState.activeShipsRemaining
+        assert 5 == game.maskedPlayersState.activeShipsRemaining
         assert [
                 (TEST_PLAYER1.md5): new Grid(20),
                 (TEST_PLAYER2.md5): new Grid(20)
@@ -199,25 +199,25 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
         }
 
         game = getGame(createGameTarget(P3, game))
-        assert game.playersScore == [
+        assert [
                 (TEST_PLAYER1.md5): 0,
                 (TEST_PLAYER2.md5): 0,
                 (TEST_PLAYER3.md5): 0
-        ]
-        assert game.maskedPlayersState.activeShipsRemaining == 0
-        assert game.maskedPlayersState.opponentGrids == [
+        ] == game.playersScore
+        assert 5 == game.maskedPlayersState.activeShipsRemaining
+        assert [
                 (TEST_PLAYER1.md5): new Grid(20),
                 (TEST_PLAYER2.md5): new Grid(20)
-        ]
-        assert game.maskedPlayersState.opponentViews == [
+        ] == game.maskedPlayersState.opponentGrids
+        assert [
                 (TEST_PLAYER1.md5): new Grid(20),
                 (TEST_PLAYER2.md5): new Grid(20)
-        ]
-        assert game.maskedPlayersState.spysRemaining == 0
-        assert game.maskedPlayersState.ecmsRemaining == 2
-        assert game.maskedPlayersState.emergencyRepairsRemaining == 2
-        assert game.maskedPlayersState.evasiveManeuversRemaining == 0
-        assert game.gamePhase == GamePhase.Challenged
+        ] == game.maskedPlayersState.opponentViews
+        assert 0 == game.maskedPlayersState.spysRemaining
+        assert 2 == game.maskedPlayersState.ecmsRemaining
+        assert 2 == game.maskedPlayersState.emergencyRepairsRemaining
+        assert 0 == game.maskedPlayersState.evasiveManeuversRemaining
+        assert GamePhase.Challenged == game.gamePhase
     }
 
     @Test

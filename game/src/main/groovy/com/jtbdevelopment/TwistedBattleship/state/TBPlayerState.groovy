@@ -29,6 +29,7 @@ class TBPlayerState implements Serializable {
     int scoreFromHits = 0
     int scoreFromSinks = 0
     int scoreFromLiving = 0
+    boolean setup = false
 
     Map<ObjectId, Grid> opponentGrids = [:]
     Map<ObjectId, Grid> opponentViews = [:]
@@ -47,18 +48,8 @@ class TBPlayerState implements Serializable {
         //  ignore
     }
 
-    boolean getSetup() {
-        return isSetup()
-    }
-
-    boolean isSetup() {
-        return startingShips.size() > 0 &&
-                shipStates.size() == startingShips.size() &&
-                shipStates.collect { it.ship } == startingShips
-    }
-
     void setSetup(final boolean isSetup) {
-        // ignore
+        this.setup = isSetup
     }
 
     boolean getAlive() {

@@ -62,6 +62,7 @@ class TBGameMaskerTest extends MongoGameCoreTestCase {
                                         (PTWO.id)  : new Grid(10),
                                         (PTHREE.id): new Grid(10)
                                 ],
+                                setup: true,
                                 shipStates: [
                                         new ShipState(Ship.Battleship, new TreeSet<GridCoordinate>()),
                                         new ShipState(Ship.Destroyer, new TreeSet<GridCoordinate>()),

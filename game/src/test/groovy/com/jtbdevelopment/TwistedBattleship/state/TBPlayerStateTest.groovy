@@ -90,6 +90,8 @@ class TBPlayerStateTest extends GroovyTestCase {
                 assertFalse state.setup
         }
         state.shipStates += new ShipState(Ship.Submarine, new TreeSet<GridCoordinate>())
+        assertFalse state.setup
+        state.setup = true
         assert state.setup
     }
 
@@ -115,13 +117,9 @@ class TBPlayerStateTest extends GroovyTestCase {
         state.shipStates += new ShipState(Ship.Destroyer, new TreeSet<GridCoordinate>())
         assertFalse state.setup
         state.shipStates += new ShipState(Ship.Carrier, new TreeSet<GridCoordinate>())
-        assert state.setup
-    }
-
-    void testIgnoresSettingIsSetup() {
         assertFalse state.setup
         state.setup = true
-        assertFalse state.setup
+        assert state.isSetup()
     }
 
     void testSettingShipStatesSetsTransientMap() {

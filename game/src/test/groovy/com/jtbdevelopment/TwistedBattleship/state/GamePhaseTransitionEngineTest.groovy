@@ -21,27 +21,9 @@ class GamePhaseTransitionEngineTest extends MongoGameCoreTestCase {
         game.gamePhase = GamePhase.RoundOver.Setup
         game.startingShips = Ship.values().toList()
         game.playerDetails = [
-                (PONE.id) : new TBPlayerState(shipStates: [
-                        new ShipState(Ship.Battleship, new TreeSet<GridCoordinate>()),
-                        new ShipState(Ship.Cruiser, new TreeSet<GridCoordinate>()),
-                        new ShipState(Ship.Carrier, new TreeSet<GridCoordinate>()),
-                        new ShipState(Ship.Submarine, new TreeSet<GridCoordinate>()),
-                        new ShipState(Ship.Destroyer, new TreeSet<GridCoordinate>())
-                ]),
-                (PFOUR.id): new TBPlayerState(shipStates: [
-                        new ShipState(Ship.Battleship, new TreeSet<GridCoordinate>()),
-                        new ShipState(Ship.Cruiser, new TreeSet<GridCoordinate>()),
-                        new ShipState(Ship.Carrier, new TreeSet<GridCoordinate>()),
-                        new ShipState(Ship.Submarine, new TreeSet<GridCoordinate>()),
-                        new ShipState(Ship.Destroyer, new TreeSet<GridCoordinate>())
-                ]),
-                (PTWO.id) : new TBPlayerState(shipStates: [
-                        new ShipState(Ship.Battleship, new TreeSet<GridCoordinate>()),
-                        new ShipState(Ship.Cruiser, new TreeSet<GridCoordinate>()),
-                        new ShipState(Ship.Carrier, new TreeSet<GridCoordinate>()),
-                        new ShipState(Ship.Submarine, new TreeSet<GridCoordinate>()),
-                        new ShipState(Ship.Destroyer, new TreeSet<GridCoordinate>())
-                ])
+                (PONE.id) : new TBPlayerState(setup: true),
+                (PFOUR.id): new TBPlayerState(setup: true),
+                (PTWO.id) : new TBPlayerState(setup: true)
         ]
         game.playerDetails.values().each {
             it.startingShips = game.startingShips
@@ -59,21 +41,9 @@ class GamePhaseTransitionEngineTest extends MongoGameCoreTestCase {
         TBGame game = new TBGame()
         game.gamePhase = GamePhase.RoundOver.Setup
         game.playerDetails = [
-                (PONE.id)  : new TBPlayerState(shipStates: [
-                        new ShipState(Ship.Battleship, new TreeSet<GridCoordinate>()),
-                        new ShipState(Ship.Cruiser, new TreeSet<GridCoordinate>()),
-                        new ShipState(Ship.Carrier, new TreeSet<GridCoordinate>()),
-                        new ShipState(Ship.Submarine, new TreeSet<GridCoordinate>()),
-                        new ShipState(Ship.Destroyer, new TreeSet<GridCoordinate>())
-                ]),
-                (PFOUR.id) : new TBPlayerState(shipStates: []),
-                (PTHREE.id): new TBPlayerState(shipStates: [
-                        new ShipState(Ship.Battleship, new TreeSet<GridCoordinate>()),
-                        new ShipState(Ship.Cruiser, new TreeSet<GridCoordinate>()),
-                        new ShipState(Ship.Carrier, new TreeSet<GridCoordinate>()),
-                        new ShipState(Ship.Submarine, new TreeSet<GridCoordinate>()),
-                        new ShipState(Ship.Destroyer, new TreeSet<GridCoordinate>())
-                ]),
+                (PONE.id)  : new TBPlayerState(setup: true),
+                (PFOUR.id) : new TBPlayerState(setup: false),
+                (PTHREE.id): new TBPlayerState(setup: true),
         ]
         TBGame result = engine.evaluateGame(game)
         assert result.gamePhase == GamePhase.Setup
@@ -84,9 +54,9 @@ class GamePhaseTransitionEngineTest extends MongoGameCoreTestCase {
         TBGame game = new TBGame()
         game.gamePhase = GamePhase.RoundOver.Setup
         game.playerDetails = [
-                (PONE.id) : new TBPlayerState(shipStates: []),
-                (PFOUR.id): new TBPlayerState(shipStates: []),
-                (PTWO.id) : new TBPlayerState(shipStates: [])
+                (PONE.id) : new TBPlayerState(setup: false),
+                (PFOUR.id): new TBPlayerState(setup: false),
+                (PTWO.id) : new TBPlayerState(setup: false)
         ]
         TBGame result = engine.evaluateGame(game)
         assert result.gamePhase == GamePhase.Setup
