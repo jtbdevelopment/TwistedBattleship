@@ -16,6 +16,7 @@ angular.module('tbs.services').factory('tbsShipGridV2',
 
             var shipNames = [], shipInfoMap = {};
             var shipsOnGrid = [], shipStatesToPlace = [];
+            var hasOverlaps = false;
 
             var highlightSprite = null, highlightedShip = null;
             var highlightedX, highlightedY;
@@ -28,10 +29,14 @@ angular.module('tbs.services').factory('tbsShipGridV2',
             var postCreateCallback;
             var highlightCallback;
 
+            function update() {
+                checkForOverlap();
+            }
+
             function render() {
-                angular.forEach(shipsOnGrid, function (shipOnGrid) {
-                    phaser.debug.body(shipOnGrid.shipSprite);
-                });
+//                angular.forEach(shipsOnGrid, function (shipOnGrid) {
+//                    phaser.debug.body(shipOnGrid.shipSprite);
+//                });
             }
 
             function preload() {
@@ -40,28 +45,28 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                 switch (gameHeight) {
                     case 1000:
                         json = '10x10.json';
-                        angular.forEach(circleDataFromServers['10'], function (coord) {
-                            circleCombinedRelativeCoordinates.push(coord);
+                        angular.forEach(circleDataFromServers['10'], function (coordinate) {
+                            circleCombinedRelativeCoordinates.push(coordinate);
                         });
                         break;
                     case 1500:
-                        angular.forEach(circleDataFromServers['10'], function (coord) {
-                            circleCombinedRelativeCoordinates.push(coord);
+                        angular.forEach(circleDataFromServers['10'], function (coordinate) {
+                            circleCombinedRelativeCoordinates.push(coordinate);
                         });
-                        angular.forEach(circleDataFromServers['15'], function (coord) {
-                            circleCombinedRelativeCoordinates.push(coord);
+                        angular.forEach(circleDataFromServers['15'], function (coordinate) {
+                            circleCombinedRelativeCoordinates.push(coordinate);
                         });
                         json = '15x15.json';
                         break;
                     case 2000:
-                        angular.forEach(circleDataFromServers['10'], function (coord) {
-                            circleCombinedRelativeCoordinates.push(coord);
+                        angular.forEach(circleDataFromServers['10'], function (coordinate) {
+                            circleCombinedRelativeCoordinates.push(coordinate);
                         });
-                        angular.forEach(circleDataFromServers['15'], function (coord) {
-                            circleCombinedRelativeCoordinates.push(coord);
+                        angular.forEach(circleDataFromServers['15'], function (coordinate) {
+                            circleCombinedRelativeCoordinates.push(coordinate);
                         });
-                        angular.forEach(circleDataFromServers['20'], function (coord) {
-                            circleCombinedRelativeCoordinates.push(coord);
+                        angular.forEach(circleDataFromServers['20'], function (coordinate) {
+                            circleCombinedRelativeCoordinates.push(coordinate);
                         });
                         json = '20x20.json';
                         break;
@@ -161,6 +166,8 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                 shipSprite.body.collideWorldBounds = true;
                 shipSprite.body.debug = true;
                 shipSprite.anchor.setTo(0.5, 0.5);
+                shipSprite.width = shipSprite.width - 2;
+                shipSprite.height = shipSprite.height - 2;
                 var centerX, centerY;
                 if (shipState.horizontal) {
                     centerY = (firstCell.row * CELL_SIZE) + HALF_CELL_SIZE;
@@ -248,6 +255,7 @@ angular.module('tbs.services').factory('tbsShipGridV2',
             }
 
             function enableGridSnapping(shipOnGrid) {
+                shipOnGrid.shipSprite.input.disableSnap();
                 var offsetX, offsetY;
                 if (shipOnGrid.shipState.horizontal) {
                     offsetY = HALF_CELL_SIZE;
@@ -257,6 +265,27 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                     offsetY = (shipOnGrid.shipInfo.gridSize % 2 == 0) ? 0 : HALF_CELL_SIZE;
                 }
                 shipOnGrid.shipSprite.input.enableSnap(CELL_SIZE, CELL_SIZE, false, true, offsetX, offsetY);
+            }
+
+            function checkForOverlap() {
+                hasOverlaps = false;
+                angular.forEach(shipsOnGrid, function (shipOnGrid) {
+                    shipOnGrid.shipSprite.tint = 0xffffff;
+                });
+
+                angular.forEach(shipsOnGrid, function (shipOnGrid1, index1) {
+                    var bounds1 = shipOnGrid1.shipSprite.getBounds();
+                    angular.forEach(shipsOnGrid, function (shipOnGrid2, index2) {
+                        if (index1 !== index2) {
+                            var bounds2 = shipOnGrid2.shipSprite.getBounds();
+                            if (Phaser.Rectangle.intersects(bounds1, bounds2)) {
+                                hasOverlaps = true;
+                                shipOnGrid1.shipSprite.tint = 0xff0000;
+                                shipOnGrid2.shipSprite.tint = 0xff0000;
+                            }
+                        }
+                    }, this);
+                }, this);
             }
 
             return {
@@ -290,7 +319,7 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                                         gameHeight,
                                         Phaser.AUTO,
                                         'phaser',
-                                        {preload: preload, create: create, init: init, render: render});
+                                        {preload: preload, create: create, init: init, update: update, render: render});
                                 },
                                 function (error) {
                                     //  TODO
@@ -305,6 +334,17 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                     angular.forEach(shipsOnGrid, function (shipOnGrid) {
                         shipOnGrid.shipSprite.inputEnabled = true;
                         shipOnGrid.shipSprite.input.enableDrag();
+                        shipOnGrid.shipSprite.events.onDragStart.add(function () {
+                            shipOnGrid.shipSprite.tint = 0x00ff00;
+                        });
+                        shipOnGrid.shipSprite.events.onDragStop.add(function () {
+                            shipOnGrid.shipSprite.tint = 0xffffff;
+                            if (shipOnGrid.shipState.horizontal) {
+
+                            } else {
+
+                            }
+                        });
                         enableGridSnapping(shipOnGrid);
                     });
                     phaser.input.onTap.add(function (context, isDouble) {
@@ -312,11 +352,12 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                             angular.forEach(shipsOnGrid, function (shipOnGrid) {
                                 if (shipOnGrid.shipSprite.input.pointerOver()) {
                                     shipOnGrid.shipState.horizontal = !shipOnGrid.shipState.horizontal;
-                                    shipOnGrid.shipSprite.angle = shipOnGrid.shipState.horizontal ? 0 : 90;
                                     var swap = shipOnGrid.shipSprite.body.width;
                                     //noinspection JSSuspiciousNameCombination
                                     shipOnGrid.shipSprite.body.width = shipOnGrid.shipSprite.body.height;
                                     shipOnGrid.shipSprite.body.height = swap;
+                                    shipOnGrid.shipSprite.angle = shipOnGrid.shipState.horizontal ? 0 : 90;
+                                    //  TODO - having issue with 4 length ship rotating near borders
                                     enableGridSnapping(shipOnGrid);
                                 }
                             });
