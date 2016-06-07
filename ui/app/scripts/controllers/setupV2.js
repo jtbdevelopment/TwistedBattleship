@@ -43,20 +43,7 @@ angular.module('tbs.controllers').controller('SetupGameV2Ctrl',
             $scope.submit = function () {
                 var info = [];
                 angular.forEach(tbsShipGridV2.currentShipsOnGrid(), function (ship) {
-                    var cells = [];
-                    var startX = ship.startX;
-                    var startY = ship.startY;
-                    var i = 0;
-                    if (ship.shipState.horizontal) {
-                        for (i = 0; i < ship.info.gridSize; ++i) {
-                            cells.push({column: startX + i, row: startY});
-                        }
-                    } else {
-                        for (i = 0; i < ship.info.gridSize; ++i) {
-                            cells.push({column: startX, row: startY + i});
-                        }
-                    }
-                    info.push({ship: ship.info.ship, coordinates: cells});
+                    info.push({ship: ship.ship, coordinates: ship.shipGridCells});
                 });
 
                 tbsActions.setup($scope.game, info);
