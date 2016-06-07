@@ -299,7 +299,6 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                     }
                 }
                 shipOnGrid.shipState.shipGridCells = cells;
-                console.log(JSON.stringify(shipOnGrid.shipState));
             }
 
             //noinspection JSUnusedLocalSymbols
@@ -361,7 +360,7 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                     theme = jtbPlayerService.currentPlayer().gameSpecificPlayerAttributes.theme;
                     gameWidth = loadedGame.gridSize * CELL_SIZE;
                     gameHeight = loadedGame.gridSize * CELL_SIZE;
-                    shipStatesToPlace = initialShipStates;
+                    shipStatesToPlace = angular.copy(initialShipStates);
                     cellMarkersToPlace = initialCellMarkers;
                     postCreateCallback = postCreateCB;
                     tbsShips.ships().then(function (shipData) {
@@ -411,7 +410,7 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                 },
 
                 placeShips: function (newShipStates) {
-                    shipStatesToPlace = newShipStates;
+                    shipStatesToPlace = angular.copy(newShipStates);
                     refreshShipsOnGrid();
                     //  TODO 
                     //highlightAShip(highlightedX * CELL_SIZE, highlightedY * CELL_SIZE);

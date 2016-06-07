@@ -29,11 +29,9 @@ describe('Controller: SetupGameV2Ctrl', function () {
         },
         initialize: function (game, ships, markers, cb) {
             expect(game).to.equal(expectedGame);
-            expect(ships).to.deep.equal(game.maskedPlayersState.shipStates);
-            expect(ships).to.not.equal(game.maskedPlayersState.shipStates);
+            expect(ships).to.equal(game.maskedPlayersState.shipStates);
             angular.forEach(ships, function (ship, index) {
-                expect(ship).to.deep.equal(game.maskedPlayersState.shipStates[index]);
-                expect(ship).to.not.equal(game.maskedPlayersState.shipStates[index]);
+                expect(ship).to.equal(game.maskedPlayersState.shipStates[index]);
             });
             expect([]).to.deep.equal(markers);
             cb();

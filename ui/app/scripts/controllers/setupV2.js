@@ -57,7 +57,7 @@ angular.module('tbs.controllers').controller('SetupGameV2Ctrl',
                 $ionicLoading.show({
                     template: 'Loading...'
                 });
-                tbsShipGridV2.initialize($scope.game, angular.copy($scope.game.maskedPlayersState.shipStates), [], function () {
+                tbsShipGridV2.initialize($scope.game, $scope.game.maskedPlayersState.shipStates, [], function () {
                     $timeout(function () {
                         tbsShipGridV2.enableShipMovement(function (hasOverlappingShips) {
                             $timeout(function () {
