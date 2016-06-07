@@ -7,6 +7,9 @@ angular.module('tbs.services').factory('tbsShipGridV2',
         function (jtbPlayerService, tbsCircles, tbsCellStates, tbsShips, Phaser) {
             var CELL_SIZE = 100;
             var HALF_CELL_SIZE = CELL_SIZE / 2;
+            var POSITIVE_TINT = 0x00ff00;
+            var NEGATIVE_TINT = 0xff0000;
+            var NO_TINT = 0xffffff;
 
             var cellStateMap;
             var cellMarkersToPlace = [], cellMarkersOnGrid = [];
@@ -16,7 +19,9 @@ angular.module('tbs.services').factory('tbsShipGridV2',
 
             var shipNames = [], shipInfoMap = {};
             var shipsOnGrid = [], shipStatesToPlace = [];
-            var hasOverlaps = false;
+            var hasOverlappingShips = undefined, movementEnabled = false;
+            var recomputeSnapping = [], recomputeNextLoop = [];
+            var shipsMovedCB = undefined;
 
             var highlightSprite = null, highlightedShip = null;
             var highlightedX, highlightedY;
@@ -30,7 +35,21 @@ angular.module('tbs.services').factory('tbsShipGridV2',
             var highlightCallback;
 
             function update() {
-                checkForOverlap();
+                if (movementEnabled) {
+                    //  Need to wait one loop because onTap is inside this cycle
+                    angular.forEach(recomputeNextLoop, function (shipOnGrid) {
+                        shipOnGrid.shipSprite.input.startDrag(phaser.input.activePointer);
+                        shipOnGrid.shipSprite.input.stopDrag(phaser.input.activePointer);
+                    });
+                    recomputeNextLoop = recomputeSnapping;
+                    recomputeSnapping = [];
+
+                    var lastHasOverlap = hasOverlappingShips;
+                    checkForOverlap();
+                    if (lastHasOverlap !== hasOverlappingShips && angular.isDefined(shipsMovedCB)) {
+                        shipsMovedCB(hasOverlappingShips);
+                    }
+                }
             }
 
             function render() {
@@ -259,18 +278,43 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                 var offsetX, offsetY;
                 if (shipOnGrid.shipState.horizontal) {
                     offsetY = HALF_CELL_SIZE;
-                    offsetX = (shipOnGrid.shipInfo.gridSize % 2 == 0) ? 0 : HALF_CELL_SIZE;
+                    offsetX = (shipOnGrid.shipInfo.gridSize % 2 === 0) ? 0 : HALF_CELL_SIZE;
                 } else {
                     offsetX = HALF_CELL_SIZE;
-                    offsetY = (shipOnGrid.shipInfo.gridSize % 2 == 0) ? 0 : HALF_CELL_SIZE;
+                    offsetY = (shipOnGrid.shipInfo.gridSize % 2 === 0) ? 0 : HALF_CELL_SIZE;
                 }
                 shipOnGrid.shipSprite.input.enableSnap(CELL_SIZE, CELL_SIZE, false, true, offsetX, offsetY);
             }
 
+            function recomputeGridCells(shipOnGrid) {
+                var cells = [], i;
+                var bounds = shipOnGrid.shipSprite.getBounds();
+                var column = Math.round((bounds.x - 1) / CELL_SIZE);
+                var row = Math.round((bounds.y - 1) / CELL_SIZE);
+                if (shipOnGrid.shipState.horizontal) {
+                    for (i = 0; i < shipOnGrid.shipInfo.gridSize; i++) {
+                        cells.push({row: row, column: column + i});
+                    }
+                } else {
+                    for (i = 0; i < shipOnGrid.shipInfo.gridSize; i++) {
+                        cells.push({row: row + i, column: column});
+                    }
+                }
+                shipOnGrid.shipState.shipGridCells = cells;
+            }
+
             function checkForOverlap() {
-                hasOverlaps = false;
+                hasOverlappingShips = false;
                 angular.forEach(shipsOnGrid, function (shipOnGrid) {
-                    shipOnGrid.shipSprite.tint = 0xffffff;
+                    if (shipOnGrid.shipSprite.tint === NEGATIVE_TINT) {
+                        if (angular.isDefined(shipOnGrid.shipSprite.input)) {
+                            if (shipOnGrid.shipSprite.input.isDragged) {
+                                shipOnGrid.shipSprite.tint = POSITIVE_TINT;
+                            } else {
+                                shipOnGrid.shipSprite.tint = NO_TINT;
+                            }
+                        }
+                    }
                 });
 
                 angular.forEach(shipsOnGrid, function (shipOnGrid1, index1) {
@@ -279,13 +323,13 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                         if (index1 !== index2) {
                             var bounds2 = shipOnGrid2.shipSprite.getBounds();
                             if (Phaser.Rectangle.intersects(bounds1, bounds2)) {
-                                hasOverlaps = true;
-                                shipOnGrid1.shipSprite.tint = 0xff0000;
-                                shipOnGrid2.shipSprite.tint = 0xff0000;
+                                hasOverlappingShips = true;
+                                shipOnGrid1.shipSprite.tint = NEGATIVE_TINT;
+                                shipOnGrid2.shipSprite.tint = NEGATIVE_TINT;
                             }
                         }
                     }, this);
-                }, this);
+                });
             }
 
             return {
@@ -330,20 +374,18 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                     });
                 },
 
-                enableShipMovement: function () {
+                enableShipMovement: function (movedCB) {
+                    shipsMovedCB = movedCB;
+                    movementEnabled = true;
                     angular.forEach(shipsOnGrid, function (shipOnGrid) {
                         shipOnGrid.shipSprite.inputEnabled = true;
                         shipOnGrid.shipSprite.input.enableDrag();
                         shipOnGrid.shipSprite.events.onDragStart.add(function () {
-                            shipOnGrid.shipSprite.tint = 0x00ff00;
+                            shipOnGrid.shipSprite.tint = NEGATIVE_TINT;
                         });
                         shipOnGrid.shipSprite.events.onDragStop.add(function () {
-                            shipOnGrid.shipSprite.tint = 0xffffff;
-                            if (shipOnGrid.shipState.horizontal) {
-
-                            } else {
-
-                            }
+                            shipOnGrid.shipSprite.tint = NO_TINT;
+                            recomputeGridCells(shipOnGrid);
                         });
                         enableGridSnapping(shipOnGrid);
                     });
@@ -357,17 +399,21 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                                     shipOnGrid.shipSprite.body.width = shipOnGrid.shipSprite.body.height;
                                     shipOnGrid.shipSprite.body.height = swap;
                                     shipOnGrid.shipSprite.angle = shipOnGrid.shipState.horizontal ? 0 : 90;
-                                    //  TODO - having issue with 4 length ship rotating near borders
                                     enableGridSnapping(shipOnGrid);
+                                    //  rotate can leave ship off snap lines
+                                    recomputeSnapping.push(shipOnGrid);
                                 }
                             });
                         }
                     }, this);
+
                 },
+
                 placeShips: function (newShipStates) {
                     shipStatesToPlace = newShipStates;
                     refreshShipsOnGrid();
-                    highlightAShip(highlightedX * CELL_SIZE, highlightedY * CELL_SIZE);
+                    //  TODO 
+                    //highlightAShip(highlightedX * CELL_SIZE, highlightedY * CELL_SIZE);
                 },
 
                 placeCellMarkers: function (newCellMarkers) {
@@ -376,13 +422,18 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                 },
 
                 currentShipsOnGrid: function () {
-                    return shipsOnGrid;
-                },
-                halfCellSize: function () {
-                    return HALF_CELL_SIZE;
+                    var ships = [];
+                    angular.forEach(shipsOnGrid, function (shipOnGrid) {
+                        ships.push(shipOnGrid.shipState);
+                    });
+                    return ships;
                 },
 
                 /*
+                 halfCellSize: function () {
+                 return HALF_CELL_SIZE;
+                 },
+
                  gameWidth: function () {
                  return gameWidth;
                  },
