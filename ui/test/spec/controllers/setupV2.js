@@ -2,32 +2,10 @@
 
 //  TODO - avoiding testing a lot of the phaser/grid stuff as plan to revamp it to use more phaser native
 //  and remove so much self work
-describe('Controller: SetupGameCtrl', function () {
+describe('Controller: SetupGameV2Ctrl', function () {
     // load the controller's module
     beforeEach(module('tbs.controllers'));
 
-    var shipInfo = {
-        Type4: {
-            ship: 'Type4',
-            gridSize: 1,
-            description: 'Not used'
-        },
-        Type1: {
-            ship: 'Type1',
-            gridSize: 3,
-            description: 'Type 1'
-        },
-        Type2: {
-            ship: 'Type2',
-            gridSize: 2,
-            description: 'Type 2'
-        },
-        Type3: {
-            ship: 'Type3',
-            gridSize: 4,
-            description: 'Not used'
-        }
-    };
     var expectedId = 'tada!';
     var expectedPhase = 'APhase';
     var selectedOpponent = 'md3';
@@ -43,33 +21,30 @@ describe('Controller: SetupGameCtrl', function () {
         }
     };
 
-    var mockSelectedCell, mockSelectedShip;
+    var shipsOnGrid;
     var mockShipService = {
-        onDownCB: undefined,
-        onMoveCB: undefined,
-        onTapCB: undefined,
-        onUpCB: undefined,
-        onDown: function (cb) {
-            this.onDownCB = cb;
-        },
-        onMove: function (cb) {
-            this.onMoveCB = cb;
-        },
-        onTap: function (cb) {
-            this.onTapCB = cb;
-        },
-        onUp: function (cb) {
-            this.onUpCB = cb;
+        overlapCB: undefined,
+        currentShipsOnGrid: function () {
+            return shipsOnGrid;
         },
         initialize: function (game, ships, markers, cb) {
             expect(game).to.equal(expectedGame);
-            expect(expectedComputedShips).to.deep.equal(ships);
+            expect(ships).to.deep.equal(game.maskedPlayersState.shipStates);
+            expect(ships).to.not.equal(game.maskedPlayersState.shipStates);
+            angular.forEach(ships, function (ship, index) {
+                expect(ship).to.deep.equal(game.maskedPlayersState.shipStates[index]);
+                expect(ship).to.not.equal(game.maskedPlayersState.shipStates[index]);
+            });
             expect([]).to.deep.equal(markers);
             cb();
+        },
+        enableShipMovement: function (cb) {
+            expect(cb).to.be.defined;
+            this.overlapCB = cb;
         }
     };
     var rootScope, scope, ctrl, stateSpy, q, phasePromise, ionicLoadingSpy, timeout, ionicModal,
-        actionsSpy, expectedGame, expectedComputedShips, ionicSideMenuDelegate;
+        actionsSpy, expectedGame, ionicSideMenuDelegate;
     var modalHelpPromise, modalHelp;
 
     beforeEach(inject(function ($rootScope, $controller, $q, $timeout) {
@@ -85,6 +60,7 @@ describe('Controller: SetupGameCtrl', function () {
             animation: 'slide-in-up'
         }).returns(modalHelpPromise.promise);
         ionicSideMenuDelegate = {canDragContent: sinon.spy()};
+        shipsOnGrid = [];
         expectedGame = {
             id: expectedId,
             features: [],
@@ -125,39 +101,23 @@ describe('Controller: SetupGameCtrl', function () {
             }
         };
 
-        expectedComputedShips = [
-            {
-                horizontal: true,
-                row: 0,
-                column: 0,
-                shipInfo: shipInfo.Type1
-            },
-            {
-                horizontal: false,
-                row: 5,
-                column: 5,
-                shipInfo: shipInfo.Type2
-            }
-        ];
-
         expectedGame.maskedPlayersState.opponentGrids[selectedOpponent] = {table: {x: 1, y: 2, s: 'X'}};
         stateSpy = {go: sinon.spy(), params: {gameID: expectedId}};
         ionicLoadingSpy = {show: sinon.spy(), hide: sinon.spy()};
         phasePromise = $q.defer();
-        mockSelectedCell = null;
-        mockSelectedShip = null;
         mockShipService.placeShips = sinon.spy();
         mockShipService.placeCellMarkers = sinon.spy();
         mockShipService.stop = sinon.spy();
         actionsSpy = {
             quit: sinon.spy(),
-            setup: sinon.spy()
+            setup: sinon.spy(),
+            submit: sinon.spy(),
+            updateCurrentView: sinon.spy()
         };
 
-        ctrl = $controller('SetupGameCtrl', {
+        ctrl = $controller('SetupGameV2Ctrl', {
             $scope: scope,
             $state: stateSpy,
-            shipInfo: shipInfo,
             tbsActions: actionsSpy,
             tbsGameDetails: mockGameDetails,
             jtbGameCache: mockGameCache,
@@ -165,7 +125,7 @@ describe('Controller: SetupGameCtrl', function () {
             $ionicLoading: ionicLoadingSpy,
             $ionicModal: ionicModal,
             $ionicSideMenuDelegate: ionicSideMenuDelegate,
-            tbsShipGrid: mockShipService
+            tbsShipGridV2: mockShipService
         });
     }));
 
@@ -181,6 +141,23 @@ describe('Controller: SetupGameCtrl', function () {
         modalHelpPromise.resolve(modalHelp);
         rootScope.$apply();
         expect(scope.helpModal).to.equal(modalHelp);
+    });
+
+    it('on enter, enables ship movement and registers callback', function () {
+        rootScope.$broadcast('$ionicView.enter');
+        timeout.flush();
+        expect(mockShipService.overlapCB).to.be.defined;
+    });
+
+    it('submit disabled driven by enable ship movement callback', function () {
+        rootScope.$broadcast('$ionicView.enter');
+        timeout.flush();
+        mockShipService.overlapCB(false);
+        timeout.flush();
+        expect(scope.submitDisabled).to.be.false;
+        mockShipService.overlapCB(true);
+        timeout.flush();
+        expect(scope.submitDisabled).to.be.true;
     });
 
     describe('tests involving help', function () {
@@ -220,4 +197,30 @@ describe('Controller: SetupGameCtrl', function () {
         assert(mockShipService.stop.calledWithMatch());
     });
 
+    it('submit sends in ships from grid', function () {
+        shipsOnGrid.push({ship: 'ship1', shipGridCells: [{}, {field: 'value'}], other: 'value'});
+        shipsOnGrid.push({ship: 'ship2', shipGridCells: [{a: 1}, {b: 'value'}], other: 'v'});
+        shipsOnGrid.push({ship: 'ship3', shipGridCells: [{a: 2}, {b: 3}]});
+        var expectedPayload = [];
+        angular.forEach(shipsOnGrid, function (shipOnGrid) {
+            expectedPayload.push({ship: shipOnGrid.ship, coordinates: shipOnGrid.shipGridCells});
+        });
+        scope.submit();
+        assert(actionsSpy.setup.calledWithMatch(expectedGame, expectedPayload));
+    });
+
+    describe('testing game updates', function () {
+        it('handles game update for different game', function () {
+            rootScope.$broadcast('gameUpdated', {id: expectedId + 'X'}, {id: expectedId + 'X'});
+            expect(actionsSpy.updateCurrentView.callCount).to.equal(0);
+        });
+
+        it('handles game update for game', function () {
+            var updatedGame = {id: expectedId};
+            rootScope.$broadcast('gameUpdated', expectedGame, updatedGame);
+            expect(actionsSpy.updateCurrentView.callCount).to.equal(1);
+            assert(actionsSpy.updateCurrentView.calledWithMatch(expectedGame, updatedGame));
+            expect(scope.game).to.equal(updatedGame);
+        });
+    });
 });

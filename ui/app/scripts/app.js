@@ -139,12 +139,7 @@ angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.contro
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/setup.html',
-                        controller: 'SetupGameV2Ctrl',
-                        resolve: {
-                            shipInfo: function (tbsShips) {
-                                return tbsShips.ships();
-                            }
-                        }
+                        controller: 'SetupGameV2Ctrl'
                     }
                 }
             })
