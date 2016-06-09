@@ -14,6 +14,7 @@ angular.module('tbs.controllers').controller('GameV2Ctrl',
             $scope.showingSelf = false;
 
             $scope.shipHighlighted = false;
+            $scope.selectedCell = undefined;
 
             $scope.showActionLog = function () {
                 $state.go('app.actionLog', {gameID: $scope.gameID});
@@ -36,33 +37,27 @@ angular.module('tbs.controllers').controller('GameV2Ctrl',
             };
 
             $scope.fire = function () {
-                var cell = tbsShipGridV2.selectedCell();
-                tbsActions.fire($scope.game, $scope.showingSelf ? $scope.player.md5 : $scope.showing, cell);
+                tbsActions.fire($scope.game, $scope.showingSelf ? $scope.player.md5 : $scope.showing, $scope.selectedCell);
             };
 
             $scope.move = function () {
-                var cell = tbsShipGridV2.selectedCell();
-                tbsActions.move($scope.game, $scope.showingSelf ? $scope.player.md5 : $scope.showing, cell);
+                tbsActions.move($scope.game, $scope.showingSelf ? $scope.player.md5 : $scope.showing, $scope.selectedCell);
             };
 
             $scope.spy = function () {
-                var cell = tbsShipGridV2.selectedCell();
-                tbsActions.spy($scope.game, $scope.showingSelf ? $scope.player.md5 : $scope.showing, cell);
+                tbsActions.spy($scope.game, $scope.showingSelf ? $scope.player.md5 : $scope.showing, $scope.selectedCell);
             };
 
             $scope.missile = function () {
-                var cell = tbsShipGridV2.selectedCell();
-                tbsActions.missile($scope.game, $scope.showingSelf ? $scope.player.md5 : $scope.showing, cell);
+                tbsActions.missile($scope.game, $scope.showingSelf ? $scope.player.md5 : $scope.showing, $scope.selectedCell);
             };
 
             $scope.repair = function () {
-                var cell = tbsShipGridV2.selectedCell();
-                tbsActions.repair($scope.game, $scope.showingSelf ? $scope.player.md5 : $scope.showing, cell);
+                tbsActions.repair($scope.game, $scope.showingSelf ? $scope.player.md5 : $scope.showing, $scope.selectedCell);
             };
 
             $scope.ecm = function () {
-                var cell = tbsShipGridV2.selectedCell();
-                tbsActions.ecm($scope.game, $scope.showingSelf ? $scope.player.md5 : $scope.showing, cell);
+                tbsActions.ecm($scope.game, $scope.showingSelf ? $scope.player.md5 : $scope.showing, $scope.selectedCell);
             };
 
             $scope.quit = function () {
@@ -70,6 +65,9 @@ angular.module('tbs.controllers').controller('GameV2Ctrl',
             };
 
             $scope.changePlayer = function (md5) {
+                $scope.shipHighlighted = false;
+                $scope.selectedCell = undefined;
+                $scope.selectedShip = undefined;
                 if (md5 === ALL) {
                     $scope.showingSelf = true;
                     tbsShipGridV2.placeShips($scope.game.maskedPlayersState.shipStates);
@@ -83,7 +81,6 @@ angular.module('tbs.controllers').controller('GameV2Ctrl',
                         tbsShipGridV2.placeCellMarkers($scope.game.maskedPlayersState.opponentGrids[md5].table);
                     }
                 }
-                $scope.shipHighlighted = (tbsShipGridV2.selectedShip() !== null);
                 $scope.showing = md5;
             };
 
@@ -99,9 +96,10 @@ angular.module('tbs.controllers').controller('GameV2Ctrl',
                 $scope.changePlayer($scope.showing);
             };
 
-            function highlightCallback() {
+            function cellSelectionCB(cell, ship) {
                 $timeout(function () {
-                    $scope.shipHighlighted = (tbsShipGridV2.selectedShip() !== null);
+                    $scope.shipHighlighted = angular.isDefined(ship);
+                    $scope.selectedCell = cell;
                 });
             }
 
@@ -117,7 +115,7 @@ angular.module('tbs.controllers').controller('GameV2Ctrl',
                     $timeout(function () {
                         $scope.switchView(false);
                         if ($scope.game.gamePhase === 'Playing') {
-                            tbsShipGridV2.activateHighlighting(highlightCallback);
+                            tbsShipGridV2.enableCellSelecting(cellSelectionCB);
                         } else {
                             if ($scope.game.gamePhase === 'RoundOver') {
                                 if ($scope.game.winningPlayer === $scope.player.md5) {

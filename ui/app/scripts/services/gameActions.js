@@ -12,7 +12,7 @@ angular.module('tbs.services').factory('tbsActions',
             }
 
             function createTarget(opponent, cell) {
-                return {player: opponent, coordinate: {row: cell.y, column: cell.x}};
+                return {player: opponent, coordinate: {row: cell.row, column: cell.column}};
             }
 
             function showSending() {

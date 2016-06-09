@@ -15,16 +15,15 @@ angular.module('tbs.services').factory('tbsShipGridV2',
             var cellMarkersToPlace = [], cellMarkersOnGrid = [];
 
             var circleDataFromServers, circleCombinedRelativeCoordinates;
-            var circleSprites = [];
+            var circleSprites = [], centerCircleSprite;
 
             var shipNames = [], shipInfoMap = {};
             var shipsOnGrid = [], shipStatesToPlace = [];
-            var hasOverlappingShips = undefined, movementEnabled = false;
+            var hasOverlappingShips, movementEnabled = false;
             var recomputeSnapping = [], recomputeNextLoop = [];
-            var shipsOverlappingChangedCB = undefined;
+            var shipsOverlappingChangedCB;
 
-            var highlightSprite = null, highlightedShip = null;
-            var highlightedX, highlightedY;
+            var selectedShip, lastSelectionContext;
 
             var theme;
 
@@ -32,7 +31,7 @@ angular.module('tbs.services').factory('tbsShipGridV2',
             var phaser;
 
             var postCreateCallback;
-            var highlightCallback;
+            var cellSelectionCB;
 
             function update() {
                 if (movementEnabled) {
@@ -90,29 +89,25 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                 //  Get rid of 0,0 so it can be highlighted explicitly
                 circleCombinedRelativeCoordinates.splice(0, 1);
 
-                angular.forEach(cellMarkersOnGrid, function (cellMarkerOnGrid) {
-                    cellMarkerOnGrid.destroy();
-                });
-                cellMarkersOnGrid = [];
+                clearExistingCellMarkersOnGrid();
+                clearExistingShipsOnGrid();
 
                 angular.forEach(circleSprites, function (circleSprite) {
                     circleSprite.destroy();
                 });
                 circleSprites = [];
 
-                if (highlightSprite !== null) {
-                    highlightSprite.destroy();
+                if (angular.isDefined(centerCircleSprite)) {
+                    centerCircleSprite.destroy();
                 }
-                highlightSprite = null;
-                highlightedX = -1;
-                highlightedY = -1;
+                centerCircleSprite = undefined;
+                selectedShip = undefined;
 
-                angular.forEach(shipsOnGrid, function (shipOnGrid) {
-                    shipOnGrid.shipSprite.destroy();
-                });
-                shipsOnGrid = [];
+                cellSelectionCB = undefined;
+                lastSelectionContext = undefined;
 
-                highlightCallback = null;
+                movementEnabled = false;
+
                 //  TODO - see if we can have one tilemap file
                 phaser.load.tilemap('grid', 'templates/gamefiles/' + json, null, Phaser.Tilemap.TILED_JSON);
                 phaser.load.image('tile', 'images/' + theme + '/tile.png');
@@ -144,20 +139,24 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                 refreshShipsOnGrid();
                 refreshCellMarkersOnGrid();
 
-                if (postCreateCallback !== null) {
+                if (angular.isDefined(postCreateCallback)) {
                     postCreateCallback();
                 }
 
                 hasOverlappingShips = undefined;
             }
 
-            function refreshCellMarkersOnGrid() {
+            function clearExistingCellMarkersOnGrid() {
                 angular.forEach(cellMarkersOnGrid, function (markersOnGridRow) {
                     angular.forEach(markersOnGridRow, function (markersOnGridCell) {
                         markersOnGridCell.destroy();
                     });
                 });
                 cellMarkersOnGrid = [];
+            }
+
+            function refreshCellMarkersOnGrid() {
+                clearExistingCellMarkersOnGrid();
                 var row = 0;
                 angular.forEach(cellMarkersToPlace, function (cellMarkerRow) {
                     var rowArray = [];
@@ -178,13 +177,13 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                 var firstCell = shipState.shipGridCells[0];
                 var shipInfo = shipInfoMap[shipState.ship];
                 var shipSprite = phaser.add.sprite(0, 0, shipState.ship, 0);
+                shipSprite.width = shipSprite.width - 2;
+                shipSprite.height = shipSprite.height - 2;
                 shipSprite.angle = shipState.horizontal ? 0 : 90;
                 phaser.physics.arcade.enable(shipSprite);
                 shipSprite.body.collideWorldBounds = true;
                 shipSprite.body.debug = true;
                 shipSprite.anchor.setTo(0.5, 0.5);
-                shipSprite.width = shipSprite.width - 2;
-                shipSprite.height = shipSprite.height - 2;
                 var centerX, centerY;
                 if (shipState.horizontal) {
                     centerY = (firstCell.row * CELL_SIZE) + HALF_CELL_SIZE;
@@ -192,6 +191,10 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                 } else {
                     centerY = (firstCell.row * CELL_SIZE) + (shipInfo.gridSize * HALF_CELL_SIZE);
                     centerX = (firstCell.column * CELL_SIZE) + HALF_CELL_SIZE;
+                    var swap = shipSprite.body.width;
+                    //noinspection JSSuspiciousNameCombination
+                    shipSprite.body.width = shipSprite.body.height;
+                    shipSprite.body.height = swap;
                 }
                 shipSprite.x = centerX;
                 shipSprite.y = centerY;
@@ -204,68 +207,70 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                 shipsOnGrid.push(shipOnGrid);
             }
 
-            /*
-             function currentContextCoordinates(context) {
-             var x = context.worldX;
-             var y = context.worldY;
-             return {x: x, y: y};
-             }
+            function drawCircleCenteredOnCell(row, column) {
+                var y = row * CELL_SIZE;
+                var x = column * CELL_SIZE;
+                if (angular.isUndefined(centerCircleSprite)) {
+                    centerCircleSprite = phaser.add.sprite(x, y, 'highlight', 0);
+                    angular.forEach(circleCombinedRelativeCoordinates, function () {
+                        circleSprites.push(phaser.add.sprite(x, y, 'extendedhighlight', 0));
+                    });
+                }
+                centerCircleSprite.x = x;
+                centerCircleSprite.y = y;
+                for (var i = 0; i < circleCombinedRelativeCoordinates.length; ++i) {
+                    var coordinate = circleCombinedRelativeCoordinates[i];
+                    var sprite = circleSprites[i];
+                    sprite.x = x + (coordinate.column * CELL_SIZE);
+                    sprite.y = y + (coordinate.row * CELL_SIZE);
+                }
+            }
 
-             function highlightAShip(x, y) {
-             if (highlightedShip !== null) {
-             highlightedShip.shipSprite.tint = 0xffffff;
-             }
-             highlightedShip = findShipByCoordinates({x: x, y: y});
-             if (highlightedShip !== null) {
-             highlightedShip.shipSprite.tint = 0x00ff00;
-             }
-             }
+            function highlightShipIfInSelectedCell(row, column) {
+                if (angular.isDefined(selectedShip)) {
+                    selectedShip.shipSprite.tint = NO_TINT;
+                }
+                angular.forEach(shipsOnGrid, function (shipOnGrid) {
+                    angular.forEach(shipOnGrid.shipState.shipGridCells, function (shipGridCell) {
+                        if (shipGridCell.row === row && shipGridCell.column === column) {
+                            selectedShip = shipOnGrid;
+                        }
+                    });
+                });
+                if (angular.isDefined(selectedShip)) {
+                    selectedShip.shipSprite.tint = POSITIVE_TINT;
+                }
+            }
 
-             function highlightCell(context) {
-             var coords = currentContextCoordinates(context);
-             var y = Math.floor(coords.y / CELL_SIZE) * CELL_SIZE;
-             var x = Math.floor(coords.x / CELL_SIZE) * CELL_SIZE;
-             if (highlightSprite === null) {
-             highlightSprite = phaser.add.sprite(x, y, 'highlight', 0);
-             angular.forEach(circleCombinedRelativeCoordinates, function () {
-             circleSprites.push(phaser.add.sprite(x, y, 'extendedhighlight', 0));
-             });
-             }
-             highlightSprite.x = x;
-             highlightSprite.y = y;
-             highlightedX = x / CELL_SIZE;
-             highlightedY = y / CELL_SIZE;
-             for (var i = 0; i < circleCombinedRelativeCoordinates.length; ++i) {
-             var coord = circleCombinedRelativeCoordinates[i];
-             var sprite = circleSprites[i];
-             sprite.x = x + (coord.column * CELL_SIZE);
-             sprite.y = y + (coord.row * CELL_SIZE);
-             }
-             highlightAShip(x, y);
-             if (highlightCallback !== null) {
-             highlightCallback();
-             }
-             }
+            function selectCellCB(context) {
+                if (angular.isUndefined(context)) {
+                    return;
+                }
+                //  phaser seems to reuse context so need to make a copy of variables
+                lastSelectionContext = {worldX: context.worldX, worldY: context.worldY};
+                var row = Math.floor(context.worldY / CELL_SIZE);
+                var column = Math.floor(context.worldX / CELL_SIZE);
+                drawCircleCenteredOnCell(row, column);
+                highlightShipIfInSelectedCell(row, column);
+                if (angular.isDefined(cellSelectionCB)) {
+                    cellSelectionCB(
+                        {
+                            row: row,
+                            column: column
+                        },
+                        angular.isDefined(selectedShip) ? selectedShip.shipState : undefined);
+                }
+            }
 
-             function findShipByCoordinates(coords) {
-             for (var i = 0; i < shipsOnGrid.length; ++i) {
-             var shipOnGrid = shipsOnGrid[i];
-             if (coords.x >= shipOnGrid.startX &&
-             coords.y >= shipOnGrid.startY &&
-             coords.x < shipOnGrid.endX &&
-             coords.y < shipOnGrid.endY) {
-             return shipOnGrid;
-             }
-             }
-             return null;
-             }
-             */
-
-            function refreshShipsOnGrid() {
+            function clearExistingShipsOnGrid() {
                 angular.forEach(shipsOnGrid, function (ship) {
                     ship.shipSprite.destroy();
                 });
                 shipsOnGrid = [];
+            }
+
+            function refreshShipsOnGrid() {
+                clearExistingShipsOnGrid();
                 angular.forEach(shipStatesToPlace, function (shipState) {
                     placeShip(shipState);
                 });
@@ -412,8 +417,7 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                 placeShips: function (newShipStates) {
                     shipStatesToPlace = angular.copy(newShipStates);
                     refreshShipsOnGrid();
-                    //  TODO 
-                    //highlightAShip(highlightedX * CELL_SIZE, highlightedY * CELL_SIZE);
+                    selectCellCB(lastSelectionContext);
                 },
 
                 placeCellMarkers: function (newCellMarkers) {
@@ -429,61 +433,9 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                     return ships;
                 },
 
-                /*
-                 halfCellSize: function () {
-                 return HALF_CELL_SIZE;
-                 },
-
-                 gameWidth: function () {
-                 return gameWidth;
-                 },
-                 gameHeight: function () {
-                 return gameHeight;
-                 },
-                 cellSize: function () {
-                 return CELL_SIZE;
-                 },
-
-                 activateHighlighting: function (highlightCB) {
-                 highlightCallback = highlightCB;
-                 this.onDown(highlightCell);
-                 },
-                 selectedCell: function () {
-                 return {x: highlightedX, y: highlightedY};
-                 },
-                 selectedShip: function () {
-                 return findShipByCoordinates({x: highlightedX * CELL_SIZE, y: highlightedY * CELL_SIZE});
-                 },
-
-                 computeShipCorners: function (shipData) {
-                 computeShipCorners(shipData);
-                 },
-
-                 currentContextCoordinates: function (context) {
-                 return currentContextCoordinates(context);
-                 },
-
-                 findShipByContextCoordinates: function (context) {
-                 return findShipByCoordinates(currentContextCoordinates(context));
-                 },
-
-                 onMove: function (cb) {
-                 phaser.input.addMoveCallback(cb);
-                 },
-
-                 onDown: function (cb) {
-                 phaser.input.onDown.add(cb);
-                 },
-
-                 onUp: function (cb) {
-                 phaser.input.onUp.add(cb);
-                 },
-
-                 onTap: function (cb) {
-                 phaser.input.onTap.add(cb);
-                 }
-                 */
-                placeholder: function () {
+                enableCellSelecting: function (selectionCB) {
+                    cellSelectionCB = selectionCB;
+                    phaser.input.onDown.add(selectCellCB);
                 }
             };
         }
