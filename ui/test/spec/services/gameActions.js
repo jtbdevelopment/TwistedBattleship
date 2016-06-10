@@ -140,9 +140,9 @@ describe('Service: gameActions', function () {
 
         angular.forEach(['fire', 'spy', 'missile', 'repair', 'move', 'ecm'], function (action) {
             var opponent = 'opp';
-            var gridCell = {x: 5, y: 10};
+            var gridCell = {column: 5, row: 10};
             it('can ' + action + ' game', function () {
-                var expectedTarget = {player: opponent, coordinate: {row: gridCell.y, column: gridCell.x}};
+                var expectedTarget = {player: opponent, coordinate: {row: gridCell.row, column: gridCell.column}};
                 httpBackend.expectPUT(gameUrl + action, expectedTarget).respond(returnedGame);
                 service[action](game, opponent, gridCell);
                 standardAssertsForSuccess();
@@ -204,10 +204,10 @@ describe('Service: gameActions', function () {
 
         angular.forEach(['fire', 'spy', 'missile', 'repair', 'move', 'ecm'], function (action) {
             var opponent = 'opp';
-            var gridCell = {x: 5, y: 10};
+            var gridCell = {column: 5, row: 10};
             it('can ' + action + ' game fails', function () {
                 var error = 'Cannot for some reason!';
-                var expectedTarget = {player: opponent, coordinate: {row: gridCell.y, column: gridCell.x}};
+                var expectedTarget = {player: opponent, coordinate: {row: gridCell.row, column: gridCell.column}};
                 httpBackend.expectPUT(gameUrl + action, expectedTarget).respond(600, error);
                 service[action](game, opponent, gridCell);
                 standardAssertsForError(error);

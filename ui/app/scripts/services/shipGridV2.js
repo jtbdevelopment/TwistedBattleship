@@ -436,6 +436,7 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                 enableCellSelecting: function (selectionCB) {
                     cellSelectionCB = selectionCB;
                     phaser.input.onDown.add(selectCellCB);
+                    selectCellCB({worldX: 0, worldY: 0});
                 }
             };
         }

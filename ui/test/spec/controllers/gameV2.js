@@ -49,9 +49,9 @@ describe('Controller: GameCtrl', function () {
 
     var mockSelectedCell, mockSelectedShip;
     var mockShipService = {
-        highlightCB: undefined,
-        activateHighlighting: function (cb) {
-            this.highlightCB = cb;
+        cellCB: undefined,
+        enableCellSelecting: function (cb) {
+            this.cellCB = cb;
         },
         selectedCell: function () {
             return mockSelectedCell;
@@ -136,8 +136,8 @@ describe('Controller: GameCtrl', function () {
         timeout = $timeout;
         phasePromise = $q.defer();
         scope = rootScope.$new();
-        mockSelectedCell = null;
-        mockSelectedShip = null;
+        mockSelectedCell = undefined;
+        mockSelectedShip = undefined;
         mockShipService.placeShips = sinon.spy();
         mockShipService.placeCellMarkers = sinon.spy();
         mockShipService.stop = sinon.spy();
@@ -154,7 +154,7 @@ describe('Controller: GameCtrl', function () {
             updateCurrentView: sinon.spy()
         };
 
-        ctrl = $controller('GameCtrl', {
+        ctrl = $controller('GameV2Ctrl', {
             $scope: scope,
             $state: stateSpy,
             tbsActions: actionsSpy,
@@ -166,8 +166,7 @@ describe('Controller: GameCtrl', function () {
             jtbPlayerService: mockPlayerService,
             $timeout: timeout,
             tbsAds: ads,
-            shipInfo: shipInfo,
-            tbsShipGrid: mockShipService
+            tbsShipGridV2: mockShipService
         });
     }));
 
@@ -180,6 +179,7 @@ describe('Controller: GameCtrl', function () {
         expect(scope.showing).to.equal('ALL');
         expect(scope.showingSelf).to.be.false;
         expect(scope.shipHighlighted).to.be.false;
+        expect(scope.selectedCell).to.be.undefined;
     });
 
     describe('tests that involve changing display', function () {
@@ -188,7 +188,7 @@ describe('Controller: GameCtrl', function () {
             scope.showing = 'X';
 
             scope.changePlayer('ALL');
-            assert(mockShipService.placeShips.calledWithMatch(expectedComputedShips));
+            assert(mockShipService.placeShips.calledWithMatch(expectedGame.maskedPlayersState.shipStates));
             assert(mockShipService.placeCellMarkers.calledWithMatch(expectedGame.maskedPlayersState.consolidatedOpponentView.table));
             expect(scope.showing).to.equal('ALL');
             expect(scope.showingSelf).to.be.true;
@@ -199,7 +199,7 @@ describe('Controller: GameCtrl', function () {
             scope.showing = 'ALL';
 
             scope.changePlayer('md3');
-            assert(mockShipService.placeShips.calledWithMatch(expectedComputedShips));
+            assert(mockShipService.placeShips.calledWithMatch(expectedGame.maskedPlayersState.shipStates));
             assert(mockShipService.placeCellMarkers.calledWithMatch(expectedGame.maskedPlayersState.opponentViews.md3.table));
             expect(scope.showing).to.equal('md3');
             expect(scope.showingSelf).to.be.true;
@@ -221,7 +221,7 @@ describe('Controller: GameCtrl', function () {
             scope.showing = 'md3';
 
             scope.switchView(true);
-            assert(mockShipService.placeShips.calledWithMatch(expectedComputedShips));
+            assert(mockShipService.placeShips.calledWithMatch(expectedGame.maskedPlayersState.shipStates));
             assert(mockShipService.placeCellMarkers.calledWithMatch(expectedGame.maskedPlayersState.opponentViews.md3.table));
             expect(scope.showing).to.equal('md3');
             expect(scope.showingSelf).to.be.true;
@@ -287,50 +287,51 @@ describe('Controller: GameCtrl', function () {
     describe('tests with cell selected', function () {
         angular.forEach([true, false], function (self) {
             beforeEach(function () {
-                mockSelectedCell = {x: 1, y: 2};
+                mockSelectedCell = {column: 1, row: 2};
                 if (self) {
                     scope.showing = selectedOpponent;
                 }
+                expectedGame.gamePhase = 'Playing';
+                rootScope.$broadcast('$ionicView.enter');
+                timeout.flush();
+                expect(mockShipService.cellCB).to.not.be.undefined;
+                mockShipService.cellCB(mockSelectedCell, mockSelectedShip);
+                timeout.flush();
             });
+
             it('ecm on self=' + self, function () {
                 scope.showingSelf = self;
                 scope.ecm();
-                console.log(scope.showingSelf);
                 assert(actionsSpy.ecm.calledWith(expectedGame, self ? currentPlayer.md5 : selectedOpponent, mockSelectedCell));
             });
 
             it('repair on self=' + self, function () {
                 scope.showingSelf = self;
                 scope.repair();
-                console.log(scope.showingSelf);
                 assert(actionsSpy.repair.calledWith(expectedGame, self ? currentPlayer.md5 : selectedOpponent, mockSelectedCell));
             });
 
             it('spy on self=' + self, function () {
                 scope.showingSelf = self;
                 scope.spy();
-                console.log(scope.showingSelf);
                 assert(actionsSpy.spy.calledWith(expectedGame, self ? currentPlayer.md5 : selectedOpponent, mockSelectedCell));
             });
 
             it('missile on self=' + self, function () {
                 scope.showingSelf = self;
                 scope.missile();
-                console.log(scope.showingSelf);
                 assert(actionsSpy.missile.calledWith(expectedGame, self ? currentPlayer.md5 : selectedOpponent, mockSelectedCell));
             });
 
             it('fire on self=' + self, function () {
                 scope.showingSelf = self;
                 scope.fire();
-                console.log(scope.showingSelf);
                 assert(actionsSpy.fire.calledWith(expectedGame, self ? currentPlayer.md5 : selectedOpponent, mockSelectedCell));
             });
 
             it('move on self=' + self, function () {
                 scope.showingSelf = self;
                 scope.move();
-                console.log(scope.showingSelf);
                 assert(actionsSpy.move.calledWith(expectedGame, self ? currentPlayer.md5 : selectedOpponent, mockSelectedCell));
             });
         });
@@ -387,15 +388,19 @@ describe('Controller: GameCtrl', function () {
             scope.showingSelf = false;
             rootScope.$broadcast('$ionicView.enter');
             timeout.flush();
-            expect(mockShipService.highlightCB).to.not.be.undefined;
+            expect(mockShipService.cellCB).to.not.be.undefined;
             //noinspection JSUnusedAssignment
             mockSelectedShip = {hfh: '33', jhf: 33.3};
-            mockShipService.highlightCB();
+            mockSelectedCell = {x: '1'};
+            mockShipService.cellCB(mockSelectedCell, mockSelectedShip);
             timeout.flush();
             expect(scope.shipHighlighted).to.be.true;
-            mockSelectedShip = null;
-            mockShipService.highlightCB();
+            expect(scope.selectedCell).to.equal(mockSelectedCell);
+            mockSelectedShip = undefined;
+            mockSelectedCell = undefined;
+            mockShipService.cellCB(mockSelectedCell, mockSelectedShip);
             timeout.flush();
+            expect(scope.selectedCell).to.be.undefined;
             expect(scope.shipHighlighted).to.be.false;
         });
     });
