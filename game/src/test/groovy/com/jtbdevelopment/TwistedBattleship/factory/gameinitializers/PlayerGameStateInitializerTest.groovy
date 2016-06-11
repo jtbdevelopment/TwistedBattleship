@@ -7,6 +7,7 @@ import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
+import com.jtbdevelopment.games.factory.GameInitializer
 import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
 import com.jtbdevelopment.games.players.Player
 import org.bson.types.ObjectId
@@ -18,20 +19,21 @@ import org.bson.types.ObjectId
 class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
     PlayerGameStateInitializer initializer = new PlayerGameStateInitializer()
 
+    void testGetOrder() {
+        assert GameInitializer.LATE_ORDER == initializer.order
+    }
+
     void testInitializeGame() {
         TBGame game = new TBGame(
                 features: [GameFeature.Grid15x15, GameFeature.Single, GameFeature.ECMEnabled, GameFeature.EREnabled, GameFeature.SpyEnabled, GameFeature.EMEnabled, GameFeature.CruiseMissileEnabled],
-                players: [PONE, PTWO, PTHREE]
+                players: [PONE, PTWO, PTHREE],
+                gridSize: 12,
+                startingShips: Ship.values().toList()
         )
 
         assert [:] == game.playerDetails
         initializer.initializeGame(game)
-        assert Ship.values().toList() == game.startingShips
-        assert 15 == game.gridSize
         assert 3 == game.playerDetails.size()
-        assert PONE.id == game.currentPlayer
-        assert 1 == game.remainingMoves
-        assert 1 == game.movesForSpecials
         game.startingShips.eachWithIndex { Ship ship, int index ->
             def expectedCoordinates = (1..ship.gridSize).collect {
                 int gridIndex ->
@@ -51,61 +53,17 @@ class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
         }
     }
 
-    void testInitializePerShipGame() {
-        TBGame game = new TBGame(
-                features: [GameFeature.Grid15x15, GameFeature.PerShip, GameFeature.ECMEnabled, GameFeature.EREnabled, GameFeature.SpyEnabled, GameFeature.EMEnabled, GameFeature.CruiseMissileEnabled],
-                players: [PONE, PTWO, PTHREE]
-        )
-
-        assert [:] == game.playerDetails
-        initializer.initializeGame(game)
-        assert Ship.values().toList() == game.startingShips
-        assert 15 == game.gridSize
-        assert 3 == game.playerDetails.size()
-        assert PONE.id == game.currentPlayer
-        assert 5 == game.remainingMoves
-        assert 2 == game.movesForSpecials
-        game.players.each {
-            Player p ->
-                def expectedSpecials = 2
-                validatePlayerStates(game, p, expectedSpecials)
-        }
-    }
-
-    void testInitializeGameGrid10x10() {
-        TBGame game = new TBGame(
-                features: [GameFeature.Grid10x10, GameFeature.Single, GameFeature.ECMEnabled, GameFeature.EREnabled, GameFeature.SpyEnabled, GameFeature.EMEnabled, GameFeature.CruiseMissileEnabled],
-                players: [PONE, PTWO, PTHREE]
-        )
-
-        assert [:] == game.playerDetails
-        initializer.initializeGame(game)
-        assert Ship.values().toList() == game.startingShips
-        assert 10 == game.gridSize
-        assert 3 == game.playerDetails.size()
-        assert PONE.id == game.currentPlayer
-        assert 1 == game.remainingMoves
-        assert 1 == game.movesForSpecials
-        game.players.each {
-            Player p ->
-                def expectedSpecials = 2
-                validatePlayerStates(game, p, expectedSpecials)
-        }
-    }
-
     void testInitializeGameNoOptionalFeatures() {
         TBGame game = new TBGame(
                 features: [GameFeature.Grid20x20],
-                players: [PTWO, PTHREE, PONE]
+                players: [PTWO, PTHREE, PONE],
+                gridSize: 20,
+                startingShips: Ship.values().toList()
         )
 
         assert game.playerDetails == [:]
         initializer.initializeGame(game)
-        assert Ship.values().toList() == game.startingShips
-        assert 20 == game.gridSize
         assert 3 == game.playerDetails.size()
-        assert PTWO.id == game.currentPlayer
-        assert Ship.values().size() == game.remainingMoves
         game.players.each {
             Player p ->
                 validatePlayerStates(game, p, 0)
