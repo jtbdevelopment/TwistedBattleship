@@ -20,8 +20,7 @@ angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.contro
     })
     //  TODO - move interceptor to game core?
     // Custom Interceptor for replacing outgoing URLs
-    .factory('httpEnvInterceptor', function ($q, $cacheFactory, ENV, $rootScope) {
-        var csrfToken;
+    .factory('jtbIonicApiInterceptor', function ($q, ENV) {
         return {
             'request': function (config) {
                 if (
@@ -34,9 +33,17 @@ angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.contro
                         config.url.indexOf('/signin/authenticate') >= 0
                     ) && config.url.indexOf(ENV.apiEndpoint) < 0) {
                     config.url = ENV.apiEndpoint + config.url;
-                    if (angular.isDefined(csrfToken)) {
-                        config.headers['X-XSRF-TOKEN'] = csrfToken;
-                    }
+                }
+                return config;
+            }
+        };
+    })
+    .factory('jtbCSRFHttpInterceptor', function () {
+        var csrfToken;
+        return {
+            'request': function (config) {
+                if (angular.isDefined(csrfToken)) {
+                    config.headers['X-XSRF-TOKEN'] = csrfToken;
                 }
                 return config;
             },
@@ -47,7 +54,11 @@ angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.contro
                     csrfToken = response.headers('XSRF-TOKEN');
                 }
                 return response;
-            },
+            }
+        };
+    })
+    .factory('jtbUnauthorizedHandler', function ($q, $rootScope) {
+        return {
             'responseError': function (response) {
                 console.log('responseError:' + JSON.stringify(response));
                 if (response.status === 401) {
@@ -59,8 +70,9 @@ angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.contro
     })
     .config(function ($httpProvider) {
         // Pre-process outgoing request URLs
-        $httpProvider.interceptors.push('httpEnvInterceptor');
-
+        $httpProvider.interceptors.push('jtbUnauthorizedHandler');
+        $httpProvider.interceptors.push('jtbCSRFHttpInterceptor');
+        $httpProvider.interceptors.push('jtbIonicApiInterceptor');
     })
     .config(function ($stateProvider, $urlRouterProvider) {
         $stateProvider
@@ -201,7 +213,7 @@ angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.contro
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/game.html',
-                        controller: 'GameCtrl',
+                        controller: 'GameV2Ctrl',
                         resolve: {
                             shipInfo: function (tbsShips) {
                                 return tbsShips.ships();
@@ -215,7 +227,7 @@ angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.contro
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/game.html',
-                        controller: 'GameCtrl',
+                        controller: 'GameV2Ctrl',
                         resolve: {
                             shipInfo: function (tbsShips) {
                                 return tbsShips.ships();
