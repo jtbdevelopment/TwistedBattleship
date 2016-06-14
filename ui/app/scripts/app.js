@@ -18,61 +18,11 @@ angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.contro
             }
         });
     })
-    //  TODO - move interceptor to game core?
-    // Custom Interceptor for replacing outgoing URLs
-    .factory('jtbIonicApiInterceptor', function ($q, ENV) {
-        return {
-            'request': function (config) {
-                if (
-                    (
-                        //  TODO - this better
-                        config.url.indexOf('/api') >= 0 ||
-                        config.url.indexOf('/auth') >= 0 ||
-                        config.url.indexOf('/signout') >= 0 ||
-                        config.url.indexOf('/livefeed') >= 0 ||
-                        config.url.indexOf('/signin/authenticate') >= 0
-                    ) && config.url.indexOf(ENV.apiEndpoint) < 0) {
-                    config.url = ENV.apiEndpoint + config.url;
-                }
-                return config;
-            }
-        };
-    })
-    .factory('jtbCSRFHttpInterceptor', function () {
-        var csrfToken;
-        return {
-            'request': function (config) {
-                if (angular.isDefined(csrfToken)) {
-                    config.headers['X-XSRF-TOKEN'] = csrfToken;
-                }
-                return config;
-            },
-            'response': function (response) {
-                if (angular.isDefined(response.headers) &&
-                    angular.isDefined(response.headers('XSRF-TOKEN')) &&
-                    response.headers('XSRF-TOKEN') !== null) {
-                    csrfToken = response.headers('XSRF-TOKEN');
-                }
-                return response;
-            }
-        };
-    })
-    .factory('jtbUnauthorizedHandler', function ($q, $rootScope) {
-        return {
-            'responseError': function (response) {
-                console.log('responseError:' + JSON.stringify(response));
-                if (response.status === 401) {
-                    $rootScope.$broadcast('InvalidSession');
-                }
-                return $q.reject(response);
-            }
-        };
-    })
     .config(function ($httpProvider) {
         // Pre-process outgoing request URLs
         $httpProvider.interceptors.push('jtbUnauthorizedHandler');
         $httpProvider.interceptors.push('jtbCSRFHttpInterceptor');
-        $httpProvider.interceptors.push('jtbIonicApiInterceptor');
+        $httpProvider.interceptors.push('jtbApiEndpointInterceptor');
     })
     .config(function ($stateProvider, $urlRouterProvider) {
         $stateProvider
