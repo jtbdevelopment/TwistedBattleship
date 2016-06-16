@@ -2,9 +2,6 @@
 
 angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.controllers', 'tbs.directives', 'config', 'coreGamesIonicUi'])
     .constant('Phaser', window.Phaser)
-    .config(['$httpProvider', function ($httpProvider) {
-        $httpProvider.defaults.withCredentials = true;
-    }])
     .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -18,13 +15,7 @@ angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.contro
             }
         });
     })
-    .config(function ($httpProvider) {
-        // Pre-process outgoing request URLs
-        $httpProvider.interceptors.push('jtbUnauthorizedHandler');
-        $httpProvider.interceptors.push('jtbCSRFHttpInterceptor');
-        $httpProvider.interceptors.push('jtbApiEndpointInterceptor');
-    })
-    .config(function ($stateProvider, $urlRouterProvider) {
+    .config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
         $stateProvider
             .state('network', {
                 url: '/network',
@@ -190,4 +181,4 @@ angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.contro
 
         // if none of the above states are matched, use this as the fallback
         $urlRouterProvider.otherwise('/network');
-    });
+    }]);
