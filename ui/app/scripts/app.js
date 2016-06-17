@@ -101,12 +101,7 @@ angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.contro
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/game.html',
-                        controller: 'GameV2Ctrl',
-                        resolve: {
-                            shipInfo: function (tbsShips) {
-                                return tbsShips.ships();
-                            }
-                        }
+                        controller: 'GameV2Ctrl'
                     }
                 }
             })
@@ -154,12 +149,7 @@ angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.contro
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/game.html',
-                        controller: 'GameV2Ctrl',
-                        resolve: {
-                            shipInfo: function (tbsShips) {
-                                return tbsShips.ships();
-                            }
-                        }
+                        controller: 'GameV2Ctrl'
                     }
                 }
             })
@@ -168,12 +158,7 @@ angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.contro
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/game.html',
-                        controller: 'GameV2Ctrl',
-                        resolve: {
-                            shipInfo: function (tbsShips) {
-                                return tbsShips.ships();
-                            }
-                        }
+                        controller: 'GameV2Ctrl'
                     }
                 }
             })
