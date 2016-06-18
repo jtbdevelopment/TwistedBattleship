@@ -21,5 +21,14 @@ class BackwardsCompatibilityInitializer implements GameInitializer<TBGame> {
                 !game.features.contains(GameFeature.CruiseMissileEnabled)) {
             game.features.add(GameFeature.CruiseMissileDisabled)
         }
+
+        if (!game.features.contains(GameFeature.StandardShips) &&
+                !game.features.contains(GameFeature.AllBattleships) &&
+                !game.features.contains(GameFeature.AllSubmarines) &&
+                !game.features.contains(GameFeature.AllDestroyers) &&
+                !game.features.contains(GameFeature.AllCruisers) &&
+                !game.features.contains(GameFeature.AllCarriers)) {
+            game.features.add(GameFeature.StandardShips)
+        }
     }
 }

@@ -38,6 +38,15 @@ class PlayerGatewayServiceTest extends GroovyTestCase {
                                 new GameFeatureInfo.Detail(GameFeature.SharedIntel),
                                 new GameFeatureInfo.Detail(GameFeature.IsolatedIntel),
                         ]),
+                new GameFeatureInfo(GameFeature.StartingShips,
+                        [
+                                new GameFeatureInfo.Detail(GameFeature.StandardShips),
+                                new GameFeatureInfo.Detail(GameFeature.AllCarriers),
+                                new GameFeatureInfo.Detail(GameFeature.AllDestroyers),
+                                new GameFeatureInfo.Detail(GameFeature.AllSubmarines),
+                                new GameFeatureInfo.Detail(GameFeature.AllCruisers),
+                                new GameFeatureInfo.Detail(GameFeature.AllBattleships),
+                        ]),
                 new GameFeatureInfo(GameFeature.ECM,
                         [
                                 new GameFeatureInfo.Detail(GameFeature.ECMEnabled),

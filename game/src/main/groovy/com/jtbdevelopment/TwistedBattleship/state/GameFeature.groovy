@@ -21,23 +21,31 @@ enum GameFeature {
     SharedIntel(1, 'Shared Intel', 'Players can see the results of all actions taken by all players.', FogOfWar),
     IsolatedIntel(2, 'Isolated Views', 'Each player can only see the impact of their own actions and the defensive actions of other players.', FogOfWar),
 
-    ECM(4, GameFeatureGroupType.Defensive, ECMEnabled, 'Electronic Countermeasures', 'ECM devices allow player to scramble opponent views of their ocean.'),
+    StartingShips(4, GameFeatureGroupType.Difficulty, StandardShips, 'Ships', 'What ships are there?'),
+    StandardShips(1, 'Standard Ships', 'Players get 5 ships of varying types and sizes.', StartingShips),
+    AllCarriers(2, 'All Carriers', 'Each player gets 5 aircraft carriers.', StartingShips),
+    AllDestroyers(3, 'All Destroyers', 'Each player gets 5 destroyers.', StartingShips),
+    AllSubmarines(4, 'All Submarines', 'Each player gets 5 submarines.', StartingShips),
+    AllCruisers(5, 'All Cruisers', 'Each player gets 5 cruisers.', StartingShips),
+    AllBattleships(6, 'All Battleships', 'Each player gets 5 battleships.', StartingShips),
+
+    ECM(5, GameFeatureGroupType.Defensive, ECMEnabled, 'Electronic Countermeasures', 'ECM devices allow player to scramble opponent views of their ocean.'),
     ECMEnabled(1, 'Enabled', 'Players can use ECM device to cloak their grid.  Bigger grids hide bigger areas.', ECM),
     ECMDisabled(2, 'Disabled', 'ECM option disabled.', ECM),
 
-    EvasiveManeuvers(5, GameFeatureGroupType.Defensive, EMEnabled, 'Evasive Maneuvers', 'Allows defensive evasive maneuvers of a ship.'),
+    EvasiveManeuvers(6, GameFeatureGroupType.Defensive, EMEnabled, 'Evasive Maneuvers', 'Allows defensive evasive maneuvers of a ship.'),
     EMEnabled(1, 'Enabled', 'The captain will take emegency evasive actions, moving a few spaces away and possibly turning 90 degrees.  This also scrambles opponent records of the area somewhat randomly.', EvasiveManeuvers),
     EMDisabled(2, 'Disabled', 'Evasive maneuvers disabled.', EvasiveManeuvers),
 
-    EmergencyRepairs(6, GameFeatureGroupType.Defensive, EREnabled, 'Emergency Repairs', 'Allows a damaged ship to be repaired.'),
+    EmergencyRepairs(7, GameFeatureGroupType.Defensive, EREnabled, 'Emergency Repairs', 'Allows a damaged ship to be repaired.'),
     EREnabled(1, 'Enabled', 'Ship crew are able to salvage parts to repair a ship to full sea-worthiness.', EmergencyRepairs),
     ERDisabled(2, 'Disabled', 'Emergency repairs disabled.', EmergencyRepairs),
 
-    Spy(7, GameFeatureGroupType.Offensive, SpyEnabled, 'Spying', "Allows player's drones to spy on opponents."),
+    Spy(8, GameFeatureGroupType.Offensive, SpyEnabled, 'Spying', "Allows player's drones to spy on opponents."),
     SpyEnabled(1, 'Enabled', "Players can use spy drones to get a glimpse of an area of an opponent's grid.  Bigger grids show more area.", Spy),
     SpyDisabled(2, 'Disabled', 'Spy drones disabled.', Spy),
 
-    CruiseMissile(8, GameFeatureGroupType.Offensive, CruiseMissileDisabled, 'Cruise Missile', "Single use attack that sinks a ship with a single hit on any location."),
+    CruiseMissile(9, GameFeatureGroupType.Offensive, CruiseMissileDisabled, 'Cruise Missile', "Single use attack that sinks a ship with a single hit on any location."),
     CruiseMissileDisabled(1, 'Disabled', 'Cruise missile disabled.', CruiseMissile),
     CruiseMissileEnabled(2, 'Enabled', "Single use per game, sinks a ship by hitting any single ship location.", CruiseMissile),
 

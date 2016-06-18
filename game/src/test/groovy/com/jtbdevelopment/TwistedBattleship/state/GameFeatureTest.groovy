@@ -10,6 +10,7 @@ class GameFeatureTest extends GroovyTestCase {
                 (GameFeature.GridSize)        : [GameFeature.Grid10x10, GameFeature.Grid15x15, GameFeature.Grid20x20],
                 (GameFeature.ActionsPerTurn)  : [GameFeature.PerShip, GameFeature.Single],
                 (GameFeature.FogOfWar)        : [GameFeature.SharedIntel, GameFeature.IsolatedIntel],
+                (GameFeature.StartingShips)   : [GameFeature.StandardShips, GameFeature.AllCarriers, GameFeature.AllDestroyers, GameFeature.AllSubmarines, GameFeature.AllCruisers, GameFeature.AllBattleships],
                 (GameFeature.ECM)             : [GameFeature.ECMEnabled, GameFeature.ECMDisabled],
                 (GameFeature.Spy)             : [GameFeature.SpyEnabled, GameFeature.SpyDisabled],
                 (GameFeature.CruiseMissile)   : [GameFeature.CruiseMissileDisabled, GameFeature.CruiseMissileEnabled],
