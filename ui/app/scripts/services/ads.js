@@ -48,9 +48,9 @@ angular.module('tbs.services').factory('tbsAds',
             
             document.addEventListener('onAdDismiss', function (e) {
                 try {
-                    console.info('Ad Dismiss:' + JSON.stringify(e));
+                    //console.info('Ad Dismiss:' + JSON.stringify(e));
                 } catch (ex) {
-                    console.info('Ad Dismiss, not serializable');
+                    //console.info('Ad Dismiss, not serializable');
                 }
                 if (e.adType === 'interstitial') {
                     lastInter = new Date();
@@ -60,9 +60,9 @@ angular.module('tbs.services').factory('tbsAds',
 
             document.addEventListener('onAdFailLoad', function (e) {
                 try {
-                    console.info('Ad Load Failed:' + JSON.stringify(e));
+                    //console.info('Ad Load Failed:' + JSON.stringify(e));
                 } catch (ex) {
-                    console.info('Ad Load Failed, not serializable');
+                    //console.info('Ad Load Failed, not serializable');
                 }
                 if (e.adType === 'interstitial') {
                     requestAdMobInterstitialAd();
@@ -72,9 +72,9 @@ angular.module('tbs.services').factory('tbsAds',
             //  they clicked on ad
             document.addEventListener('onAdLeaveApp', function (e) {
                 try {
-                    console.info('Ad Leave App:' + JSON.stringify(e));
+                    //console.info('Ad Leave App:' + JSON.stringify(e));
                 } catch (ex) {
-                    console.info('Ad Leave App, not serializable');
+                    //console.info('Ad Leave App, not serializable');
                 }
                 if (e.adType === 'interstitial') {
                     requestAdMobInterstitialAd();

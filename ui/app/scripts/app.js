@@ -113,7 +113,6 @@ angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.contro
                         controller: 'ActionLogCtrl'
                     }
                 }
-
             })
             .state('app.gameDetails', {
                 url: '/games/gameDetails/:gameID',
@@ -123,7 +122,6 @@ angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.contro
                         controller: 'GameDetailsCtrl'
                     }
                 }
-
             })
             .state('app.playerDetails', {
                 url: '/games/playerDetails',
@@ -133,7 +131,6 @@ angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.contro
                         controller: 'PlayerDetailsCtrl'
                     }
                 }
-
             })
             .state('app.playhelp', {
                 url: '/play-help',
