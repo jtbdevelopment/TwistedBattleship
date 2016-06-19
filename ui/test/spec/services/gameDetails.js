@@ -76,7 +76,7 @@ describe('Service: gameDetails', function () {
 
     it('icons for features', function () {
         expect(service.iconForFeature('SpyEnabled')).to.equal('eye');
-        expect(service.iconForFeature('CruiseMissileDisabled')).to.equal('fireball');
+        expect(service.iconForFeature('CruiseMissileDisabled')).to.equal('disc');
         expect(service.iconForFeature('ECMEnabled')).to.equal('eye-disabled');
         expect(service.iconForFeature('SharedIntel')).to.equal('images');
         expect(service.iconForFeature('IsolatedIntel')).to.equal('image');
@@ -87,6 +87,12 @@ describe('Service: gameDetails', function () {
         expect(service.iconForFeature('Grid10x10')).to.equal('crop');
         expect(service.iconForFeature('Grid15x15')).to.equal('crop');
         expect(service.iconForFeature('Grid20x20')).to.equal('crop');
+        expect(service.iconForFeature('StandardShips')).to.equal('help-buoy');
+        expect(service.iconForFeature('AllCarriers')).to.equal('help-buoy');
+        expect(service.iconForFeature('AllCruisers')).to.equal('help-buoy');
+        expect(service.iconForFeature('AllBattleships')).to.equal('help-buoy');
+        expect(service.iconForFeature('AllDestroyers')).to.equal('help-buoy');
+        expect(service.iconForFeature('AllDestroyers')).to.equal('help-buoy');
     });
 
     describe('testing enabled flags for player not current turn', function () {

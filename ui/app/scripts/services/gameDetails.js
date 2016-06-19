@@ -4,7 +4,7 @@ angular.module('tbs.services').factory('tbsGameDetails',
     ['jtbGamePhaseService', function (jtbGamePhaseService) {
         var iconMap = {
             'SpyEnabled': 'eye',
-            'CruiseMissileDisabled': 'fireball',
+            'CruiseMissileDisabled': 'disc',
             'ECMEnabled': 'eye-disabled',
             'SharedIntel': 'images',
             'IsolatedIntel': 'image',
@@ -14,7 +14,13 @@ angular.module('tbs.services').factory('tbsGameDetails',
             'PerShip': 'chatboxes',
             'Grid10x10': 'crop',
             'Grid15x15': 'crop',
-            'Grid20x20': 'crop'
+            'Grid20x20': 'crop',
+            'StandardShips': 'help-buoy',
+            'AllCarriers': 'help-buoy',
+            'AllBattleships': 'help-buoy',
+            'AllCruisers': 'help-buoy',
+            'AllSubmarines': 'help-buoy',
+            'AllDestroyers': 'help-buoy'
         };
 
         var phaseDescriptions = {};

@@ -4,6 +4,7 @@ import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.games.factory.GameInitializer
+import groovy.transform.CompileStatic
 import org.springframework.stereotype.Component
 
 /**
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component
  * Time: 6:34 PM
  */
 @Component
+@CompileStatic
 class MovesInitializer implements GameInitializer<TBGame> {
     final int order = DEFAULT_ORDER
 
