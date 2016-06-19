@@ -44,7 +44,12 @@ describe('testing app js', function () {
                 stateProvider = $stateProvider;
                 stateSpy = sinon.spy($stateProvider, 'state');
                 otherwiseSpy = sinon.spy(urlRouterProvider, 'otherwise');
-                platform = {ready: sinon.spy()};
+                platform = {
+                    cb: undefined,
+                    ready: function (newCB) {
+                        this.cb = newCB;
+                    }
+                };
                 $provide.value('$ionicPlatform', platform);
             });
 
@@ -89,24 +94,19 @@ describe('testing app js', function () {
             }));
         });
 
-        /*
-         it('should register /app.create', function() {
-         assert(stateSpy.calledWithMatch('app.create', {
-         url: '/create',
-         views: {
-         'menuContent': {
-         templateUrl: 'templates/createWizard.html',
-         controller: 'CreateGameCtrl',
-         resolve: {
-         features: function (jtbGameFeatureService) {
-         return jtbGameFeatureService.features();
-         }
-         }
-         }
-         }
-         }));
-         });
-         */
+        it('should register /app.create', function () {
+            assert(stateSpy.calledWith(sinon.match('app.create'), sinon.match(function (arg2) {
+                expect(arg2.url).to.equal('/create');
+                expect(arg2.views.menuContent.templateUrl).to.equal('templates/createWizard.html');
+                expect(arg2.views.menuContent.controller).to.equal('CreateGameCtrl');
+                expect(arg2.views.menuContent.resolve.features).to.be.defined;
+                var expectedReturn = {x: 1};
+                var stub = {features: sinon.stub()};
+                stub.features.returns(expectedReturn);
+                expect(arg2.views.menuContent.resolve.features(stub)).to.equal(expectedReturn);
+                return true;
+            }, 'app.create params')));
+        });
 
         it('should register /app.games', function () {
             assert(stateSpy.calledWithMatch('app.games', {
@@ -250,6 +250,25 @@ describe('testing app js', function () {
                     }
                 }
             }));
+        });
+
+        it('hides keyboard if cordova keyoard defined', function () {
+            window.cordova = {};
+            window.cordova.plugins = {Keyboard: {hideKeyboardAccessoryBar: sinon.spy()}};
+            platform.cb();
+            expect(window.cordova.plugins.Keyboard.hideKeyboardAccessoryBar.calledWithMatch(true));
+        });
+
+        it('does not hide keyboard if keyboard not defined', function () {
+            window.cordova = {};
+            window.cordova.plugins = {};
+            platform.cb();
+        });
+
+        it('hides statusbar if cordova statusbar defined', function () {
+            window.StatusBar = {hide: sinon.spy()};
+            platform.cb();
+            expect(window.StatusBar.hide.calledWithMatch());
         });
     });
 });
