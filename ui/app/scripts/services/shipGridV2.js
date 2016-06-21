@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('tbs.services').factory('tbsShipGridV2',
-    ['jtbPlayerService', 'tbsCircles', 'tbsCellStates', 'tbsShips', 'Phaser',
-        function (jtbPlayerService, tbsCircles, tbsCellStates, tbsShips, Phaser) {
+    ['jtbPlayerService', 'tbsCircles', 'tbsCellStates', 'tbsShips', 'Phaser', 'tbsPhaserGameFactory',
+        function (jtbPlayerService, tbsCircles, tbsCellStates, tbsShips, Phaser, tbsPhaserGameFactory) {
             var CELL_SIZE = 100;
             var HALF_CELL_SIZE = CELL_SIZE / 2;
             var POSITIVE_TINT = 0x00ff00;
@@ -378,16 +378,16 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                             tbsCircles.circles().then(
                                 function (circleData) {
                                     circleDataFromServers = circleData;
-                                    phaser = new Phaser.Game(
+                                    phaser = tbsPhaserGameFactory.newGame(
                                         gameWidth,
                                         gameHeight,
-                                        Phaser.AUTO,
                                         'phaser',
-                                        {preload: preload, create: create, init: init, update: update});
-                                },
-                                function (error) {
-                                    //  TODO
-                                    console.warn(error);
+                                        {
+                                            preload: preload,
+                                            create: create,
+                                            init: init,
+                                            update: update
+                                        });
                                 }
                             );
                         });

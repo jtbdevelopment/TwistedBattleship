@@ -5,8 +5,7 @@ describe('Controller: playHelp', function () {
     beforeEach(module('tbs.controllers'));
 
     var expectedTheme = 'A THEME!';
-    var manualPlayer = {source: 'MANUAL', gameSpecificPlayerAttributes: {theme: expectedTheme}};
-    var currentPlayer = manualPlayer;
+    var currentPlayer = {source: 'MANUAL', gameSpecificPlayerAttributes: {theme: expectedTheme}};
 
     var mockPlayerService = {
         currentPlayer: function () {
