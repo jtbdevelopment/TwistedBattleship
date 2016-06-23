@@ -235,7 +235,7 @@ describe('Service: gameDetails', function () {
             phaserCBs.update();
         });
 
-        it('place some ships onto blank grid', function () {
+        it('place some ships onto grid', function () {
             var shipStates = [
                 {
                     ship: 'Carrier',
@@ -320,6 +320,31 @@ describe('Service: gameDetails', function () {
             assert(submarineSprite.anchor.setTo.calledWithMatch(0.5, 0.5));
             expect(submarineSprite.x).to.equal(450);
             expect(submarineSprite.y).to.equal(350);
+        });
+
+        it('place some markers onto grid', function () {
+            var markers = [['Unknown'], ['KnownByMiss', 'KnownByHit'], ['KnownByMiss']];
+
+            var unknownSprite = {destroy: sinon.spy()};
+            var knownByMissSprite1 = {destroy: sinon.spy()};
+            var knownByHitSprite = {destroy: sinon.spy()};
+            var knownByMissSprite2 = {destroy: sinon.spy()};
+            PhaserGame.add.sprite.withArgs(0, 0, 'unknown', 0).returns(unknownSprite);
+            PhaserGame.add.sprite.withArgs(0, 100, 'knownbymiss', 0).returns(knownByMissSprite1);
+            PhaserGame.add.sprite.withArgs(100, 100, 'knownbyhit', 0).returns(knownByHitSprite);
+            PhaserGame.add.sprite.withArgs(0, 200, 'knownbymiss', 0).returns(knownByMissSprite2);
+            service.placeCellMarkers(markers);
+
+            markers = [['KnownShip', 'Unknown'], ['KnownByHit'], ['ObscuredHit']];
+            PhaserGame.add.sprite.withArgs(0, 0, 'knownship', 0).returns({});
+            PhaserGame.add.sprite.withArgs(100, 0, 'unknown', 0).returns({});
+            PhaserGame.add.sprite.withArgs(0, 100, 'knownbyhit', 0).returns({});
+            PhaserGame.add.sprite.withArgs(0, 200, 'obscuredhit', 0).returns({});
+            service.placeCellMarkers(markers);
+            assert(unknownSprite.destroy.calledWithMatch());
+            assert(knownByHitSprite.destroy.calledWithMatch());
+            assert(knownByMissSprite2.destroy.calledWithMatch());
+            assert(knownByMissSprite1.destroy.calledWithMatch());
         });
     });
 

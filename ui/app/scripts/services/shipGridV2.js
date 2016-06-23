@@ -155,18 +155,14 @@ angular.module('tbs.services').factory('tbsShipGridV2',
 
             function refreshCellMarkersOnGrid() {
                 clearExistingCellMarkersOnGrid();
-                var row = 0;
-                angular.forEach(cellMarkersToPlace, function (cellMarkerRow) {
+                angular.forEach(cellMarkersToPlace, function (cellMarkerRow, row) {
                     var rowArray = [];
                     cellMarkersOnGrid.push(rowArray);
-                    var col = 0;
-                    angular.forEach(cellMarkerRow, function (cellMarkerCell) {
+                    angular.forEach(cellMarkerRow, function (cellMarkerCell, col) {
                         var type = angular.lowercase(cellMarkerCell);
                         var marker = phaser.add.sprite(col * CELL_SIZE, row * CELL_SIZE, type, 0);
                         rowArray.push(marker);
-                        ++col;
                     });
-                    ++row;
                 });
             }
 
