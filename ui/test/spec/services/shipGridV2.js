@@ -51,6 +51,9 @@ describe('Service: gameDetails', function () {
         },
         ScaleManager: {
             SHOW_ALL: 'show-all'
+        },
+        Physics: {
+            ARCADE: 'arcade!'
         }
     };
     var PhaserGame = {
@@ -61,7 +64,8 @@ describe('Service: gameDetails', function () {
         },
         add: {
             tilemap: sinon.stub(),
-            image: sinon.stub()
+            image: sinon.stub(),
+            sprite: sinon.stub()
         },
         physics: {
             startSystem: sinon.spy(),
@@ -140,9 +144,31 @@ describe('Service: gameDetails', function () {
         service = $injector.get('tbsShipGridV2');
     }));
 
+    function makeShipSprite() {
+        return {
+            destroy: sinon.spy(),
+            body: {
+                collideWorldBounds: false,
+                debug: false,
+                width: 200,
+                height: 195
+            },
+            anchor: {
+                setTo: sinon.spy()
+            },
+            width: 200,
+            height: 195,
+            angle: undefined,
+            x: undefined,
+            y: undefined
+        };
+    }
+
     describe('test initializations with no ships or markers up front', function () {
+        var postCreateCB;
         beforeEach(function () {
-            service.initialize(expectedGame, [], [], undefined);
+            postCreateCB = sinon.spy();
+            service.initialize(expectedGame, [], [], postCreateCB);
             shipsDeferred.resolve(expectedShips);
             rootScope.$apply();
             cellStatesDeferred.resolve(expectedStates);
@@ -189,7 +215,112 @@ describe('Service: gameDetails', function () {
             expect(PhaserGame.scale.scaleMode).to.equal(Phaser.ScaleManager.SHOW_ALL);
         });
 
+        it('create setups tilemap', function () {
+            var tilemap = {
+                createLayer: sinon.spy(),
+                addTilesetImage: sinon.spy()
+            };
+            PhaserGame.add.tilemap.withArgs('grid').returns(tilemap);
+            phaserCBs.create();
+            assert(tilemap.addTilesetImage.calledWithMatch('tile'));
+            assert(tilemap.createLayer.calledWithMatch('base grid'));
+            expect(PhaserGame.scale.pageAlignHorizontally).to.be.false;
+            expect(PhaserGame.scale.pageAlignVertically).to.be.false;
+            expect(PhaserGame.scale.windowConstraints.bottom).to.equal('visual');
+            assert(PhaserGame.physics.startSystem.calledWithMatch(Phaser.Physics.ARCADE));
+            assert(postCreateCB.calledWithMatch());
+        });
 
+        it('update in this condition pretty much does nothing', function () {
+            phaserCBs.update();
+        });
+
+        it('place some ships onto blank grid', function () {
+            var shipStates = [
+                {
+                    ship: 'Carrier',
+                    horizontal: true,
+                    shipGridCells: [{row: 0, column: 0}]
+                },
+                {
+                    ship: 'Destroyer',
+                    horizontal: false,
+                    shipGridCells: [{row: 5, column: 6}]
+                }
+            ];
+            var carrierSprite = makeShipSprite();
+            var destroyerSprite = makeShipSprite();
+            PhaserGame.add.sprite.withArgs(0, 0, 'Carrier', 0).returns(carrierSprite);
+            PhaserGame.add.sprite.withArgs(0, 0, 'Destroyer', 0).returns(destroyerSprite);
+            service.placeShips(shipStates);
+            expect(PhaserGame.physics.arcade.enable.calledWithMatch(carrierSprite));
+            expect(PhaserGame.physics.arcade.enable.calledWithMatch(destroyerSprite));
+            expect(carrierSprite.body.debug).to.be.true;
+            expect(carrierSprite.body.collideWorldBounds).to.be.true;
+            expect(carrierSprite.height).to.equal(193);
+            expect(carrierSprite.width).to.equal(198);
+            expect(carrierSprite.angle).to.equal(0);
+            expect(carrierSprite.body.height).to.equal(195);
+            expect(carrierSprite.body.width).to.equal(200);
+            assert(carrierSprite.anchor.setTo.calledWithMatch(0.5, 0.5));
+            expect(carrierSprite.x).to.equal(250);
+            expect(carrierSprite.y).to.equal(50);
+
+            expect(destroyerSprite.body.debug).to.be.true;
+            expect(destroyerSprite.body.collideWorldBounds).to.be.true;
+            expect(destroyerSprite.height).to.equal(193);
+            expect(destroyerSprite.width).to.equal(198);
+            expect(destroyerSprite.angle).to.equal(90);
+            expect(destroyerSprite.body.height).to.equal(200);
+            expect(destroyerSprite.body.width).to.equal(195);
+            assert(destroyerSprite.anchor.setTo.calledWithMatch(0.5, 0.5));
+            expect(destroyerSprite.x).to.equal(650);
+            expect(destroyerSprite.y).to.equal(600);
+
+            var submarineSprite = makeShipSprite();
+            var newDestroyer = makeShipSprite();
+            shipStates = [
+                {
+                    ship: 'Destroyer',
+                    horizontal: false,
+                    shipGridCells: [{row: 5, column: 6}]
+                },
+                {
+                    ship: 'Submarine',
+                    horizontal: true,
+                    shipGridCells: [{row: 3, column: 3}]
+                }
+            ];
+            PhaserGame.add.sprite.withArgs(0, 0, 'Submarine', 0).returns(submarineSprite);
+            PhaserGame.add.sprite.withArgs(0, 0, 'Destroyer', 0).returns(newDestroyer);
+            service.placeShips(shipStates);
+            expect(destroyerSprite.destroy.calledWithMatch());
+            expect(carrierSprite.destroy.calledWithMatch());
+            expect(PhaserGame.physics.arcade.enable.calledWithMatch(submarineSprite));
+            expect(PhaserGame.physics.arcade.enable.calledWithMatch(newDestroyer));
+
+            expect(newDestroyer.body.debug).to.be.true;
+            expect(newDestroyer.body.collideWorldBounds).to.be.true;
+            expect(newDestroyer.height).to.equal(193);
+            expect(newDestroyer.width).to.equal(198);
+            expect(newDestroyer.angle).to.equal(90);
+            expect(newDestroyer.body.height).to.equal(200);
+            expect(newDestroyer.body.width).to.equal(195);
+            assert(newDestroyer.anchor.setTo.calledWithMatch(0.5, 0.5));
+            expect(newDestroyer.x).to.equal(650);
+            expect(newDestroyer.y).to.equal(600);
+
+            expect(submarineSprite.body.debug).to.be.true;
+            expect(submarineSprite.body.collideWorldBounds).to.be.true;
+            expect(submarineSprite.height).to.equal(193);
+            expect(submarineSprite.width).to.equal(198);
+            expect(submarineSprite.angle).to.equal(0);
+            expect(submarineSprite.body.height).to.equal(195);
+            expect(submarineSprite.body.width).to.equal(200);
+            assert(submarineSprite.anchor.setTo.calledWithMatch(0.5, 0.5));
+            expect(submarineSprite.x).to.equal(450);
+            expect(submarineSprite.y).to.equal(350);
+        });
     });
 
 });
