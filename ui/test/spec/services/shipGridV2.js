@@ -187,7 +187,9 @@ describe('Service: gameDetails', function () {
         it('init sets up scale', function () {
             phaserCBs.init();
             expect(PhaserGame.scale.scaleMode).to.equal(Phaser.ScaleManager.SHOW_ALL);
-        })
+        });
+
+
     });
 
 });

@@ -12,7 +12,7 @@ angular.module('tbs.services').factory('tbsPhaserGameFactory',
                     divName,
                     callbackMap);
             }
-        }
+        };
     }]
 ); 
     

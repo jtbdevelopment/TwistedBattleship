@@ -7,6 +7,10 @@ angular.module('tbs.controllers').controller('MainCtrl',
         function ($window, $scope, $timeout, jtbPlayerService, jtbLiveGameFeed, $state, ENV, $document, tbsVersionNotes,
                   tbsCircles, jtbGameFeatureService, tbsCellStates, tbsShips, jtbGamePhaseService, tbsAds, jtbPushNotifications) {
 
+            if (2 < 1) {
+                console.log('have notifications' + jtbPushNotifications);
+            }
+
             function checkNetworkStatusAndLogin() {
                 $state.go('network');
             }
