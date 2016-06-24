@@ -226,7 +226,8 @@ describe('Service: gameDetails', function () {
             angle: undefined,
             x: undefined,
             y: undefined,
-            tint: undefined
+            tint: undefined,
+            getBounds: sinon.stub()
         };
     }
 
@@ -527,7 +528,7 @@ describe('Service: gameDetails', function () {
                 },
                 {
                     ship: 'Destroyer',
-                    horizontal: false,
+                    horizontal: true,
                     shipGridCells: [
                         {row: 1, column: 1},
                         {row: 1, column: 2}
@@ -535,7 +536,7 @@ describe('Service: gameDetails', function () {
                 },
                 {
                     ship: 'Submarine',
-                    horizontal: false,
+                    horizontal: true,
                     shipGridCells: [
                         {row: 2, column: 1},
                         {row: 2, column: 2},
@@ -544,6 +545,7 @@ describe('Service: gameDetails', function () {
                 }
             ];
             var carrierSprite, destroyerSprite, submarineSprite;
+            var sprites;
             var overlappingChangedCB = sinon.spy();
 
             beforeEach(function () {
@@ -551,6 +553,7 @@ describe('Service: gameDetails', function () {
                 carrierSprite = makeShipSprite();
                 destroyerSprite = makeShipSprite();
                 submarineSprite = makeShipSprite();
+                sprites = [carrierSprite, destroyerSprite, submarineSprite];
                 PhaserGame.add.sprite.withArgs(0, 0, 'Carrier', 0).returns(carrierSprite);
                 PhaserGame.add.sprite.withArgs(0, 0, 'Destroyer', 0).returns(destroyerSprite);
                 PhaserGame.add.sprite.withArgs(0, 0, 'Submarine', 0).returns(submarineSprite);
@@ -559,12 +562,70 @@ describe('Service: gameDetails', function () {
                 phaserCBs.preload();
                 phaserCBs.create();
 
+                expect(angular.isDefined(PhaserGame.input.onTap.onTapCB)).to.be.false;
                 service.enableShipMovement(overlappingChangedCB);
+                expect(angular.isDefined(PhaserGame.input.onTap.onTapCB)).to.be.true;
             });
 
             it('initializes to correct status', function () {
-
+                angular.forEach(sprites, function (sprite) {
+                    expect(sprite.inputEnabled).to.be.true;
+                    assert(sprite.input.enableDrag.calledWithMatch());
+                    assert(sprite.input.disableSnap.calledWithMatch());
+                    expect(angular.isDefined(sprite.events.onDragStart.dragStartCB)).to.be.true;
+                    expect(angular.isDefined(sprite.events.onDragStop.dragStopCB)).to.be.true;
+                });
+                assert(destroyerSprite.input.enableSnap.calledWithMatch(100, 100, false, true, 0, 50));
+                assert(carrierSprite.input.enableSnap.calledWithMatch(100, 100, false, true, 50, 50));
+                assert(submarineSprite.input.enableSnap.calledWithMatch(100, 100, false, true, 50, 50));
             });
+
+            it('calling update in initial state calls cb with no overlap', function () {
+                phaserCBs.update();
+                assert(overlappingChangedCB.calledWithMatch(false));
+            });
+
+            it('test dragging start marks tint', function () {
+                submarineSprite.events.onDragStart.dragStartCB();
+                expect(submarineSprite.tint).to.equal(0xff0000);
+            });
+
+            it('test dragging stop marks tint, recomputes same grid cells', function () {
+                var expectedCells = angular.copy(shipStates[2].shipGridCells);
+                submarineSprite.events.onDragStart.dragStartCB();
+                submarineSprite.getBounds.returns({x: 100, y: 200});
+                submarineSprite.events.onDragStop.dragStopCB();
+                expect(service.currentShipsOnGrid()[2].shipGridCells).to.deep.equal(expectedCells);
+                expect(submarineSprite.tint).to.equal(0xffffff);
+            });
+
+            it('test dragging stop marks tint, recomputes moved horizontal grid cells', function () {
+                submarineSprite.events.onDragStart.dragStartCB();
+                submarineSprite.getBounds.returns({x: 200, y: 300});
+                submarineSprite.events.onDragStop.dragStopCB();
+                expect(service.currentShipsOnGrid()[2].shipGridCells).to.deep.equal(
+                    [
+                        {row: 3, column: 2},
+                        {row: 3, column: 3},
+                        {row: 3, column: 4}
+                    ]);
+                expect(submarineSprite.tint).to.equal(0xffffff);
+            });
+
+            it('test dragging stop marks tint, recomputes moved vertical grid cells', function () {
+                submarineSprite.events.onDragStart.dragStartCB();
+                service.currentShipsOnGrid()[2].horizontal = false;
+                submarineSprite.getBounds.returns({x: 500, y: 300});
+                submarineSprite.events.onDragStop.dragStopCB();
+                expect(service.currentShipsOnGrid()[2].shipGridCells).to.deep.equal(
+                    [
+                        {row: 3, column: 5},
+                        {row: 4, column: 5},
+                        {row: 5, column: 5}
+                    ]);
+                expect(submarineSprite.tint).to.equal(0xffffff);
+            });
+
         });
     });
 
