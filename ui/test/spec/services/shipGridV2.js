@@ -95,7 +95,7 @@ describe('Service: gameDetails', function () {
         input: {
             onDown: {
                 add: function (cb) {
-                    this.onDownCB = cb;
+                    PhaserGame.onDownCB = cb;
                 }
             }
         },
@@ -231,6 +231,14 @@ describe('Service: gameDetails', function () {
         it('stopping game', function () {
             service.stop();
             assert(PhaserGame.destroy.calledWithMatch())
+        });
+
+        it('stopping game 2nd time does nothing', function () {
+            service.stop();
+            assert(PhaserGame.destroy.calledWithMatch());
+            expect(PhaserGame.destroy.callCount).to.equal(1);
+            service.stop();
+            expect(PhaserGame.destroy.callCount).to.equal(1);
         });
 
         it('preload phaser sets up phaser', function () {
@@ -403,7 +411,7 @@ describe('Service: gameDetails', function () {
                 }
             ];
             var carrierSprite, destroyerSprite;
-            var selectionCB = sinon.spy();
+            var selectionCB;
             var centerHighlight;
             var highlights;
 
@@ -420,19 +428,19 @@ describe('Service: gameDetails', function () {
                 angular.forEach(testCircleData, function () {
                     highlights.push(makeSprite());
                 });
-                selectionCB.reset();
+                selectionCB = sinon.spy();
                 carrierSprite = makeShipSprite();
                 destroyerSprite = makeShipSprite();
                 PhaserGame.add.sprite.withArgs(0, 0, 'Carrier', 0).returns(carrierSprite);
                 PhaserGame.add.sprite.withArgs(0, 0, 'Destroyer', 0).returns(destroyerSprite);
 
                 service.placeShips(shipStates);
-                expect(PhaserGame.onDownCB).to.be.undefined;
                 generateStubReturns(0, 0);
                 phaserCBs.preload();
                 phaserCBs.create();
+                expect(angular.isDefined(PhaserGame.onDownCB)).to.be.false;
                 service.enableCellSelecting(selectionCB);
-                expect(PhaserGame.onDownCB).to.be.defined;
+                expect(angular.isDefined(PhaserGame.onDownCB)).to.be.true;
             });
 
             function verifyHighlightPositions(baseX, baseY) {
@@ -447,6 +455,32 @@ describe('Service: gameDetails', function () {
             it('test initializes to 0, 0 and returns carrier', function () {
                 assert(selectionCB.calledWithMatch({row: 0, column: 0}, shipStates[0]));
                 verifyHighlightPositions(0, 0);
+                expect(carrierSprite.tint).to.equal(0x00ff00);
+                expect(destroyerSprite.tint).to.equal(undefined);
+            });
+
+            it('test on select with undefined context does not call any further', function () {
+                selectionCB.reset();
+                PhaserGame.onDownCB();
+                expect(selectionCB.callCount).to.equal(0);
+                verifyHighlightPositions(0, 0);
+            });
+
+            it('test selecting a different cell with no ship highlighted', function () {
+                PhaserGame.onDownCB({worldX: 420, worldY: 480});
+                assert(selectionCB.calledWithMatch({row: 4, column: 4}, undefined));
+                verifyHighlightPositions(4, 4);
+                expect(carrierSprite.tint).to.equal(0xffffff);
+                expect(destroyerSprite.tint).to.equal(undefined);
+            });
+
+
+            it('test selecting a different cell with another ship highlighted', function () {
+                PhaserGame.onDownCB({worldX: 620, worldY: 580});
+                assert(selectionCB.calledWithMatch({row: 5, column: 6}, shipStates[1]));
+                verifyHighlightPositions(6, 5);
+                expect(carrierSprite.tint).to.equal(0xffffff);
+                expect(destroyerSprite.tint).to.equal(0x00ff00);
             });
         });
     });

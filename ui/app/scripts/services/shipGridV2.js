@@ -224,6 +224,7 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                 if (angular.isDefined(selectedShip)) {
                     selectedShip.shipSprite.tint = NO_TINT;
                 }
+                selectedShip = undefined;
                 angular.forEach(shipsOnGrid, function (shipOnGrid) {
                     angular.forEach(shipOnGrid.shipState.shipGridCells, function (shipGridCell) {
                         if (shipGridCell.row === row && shipGridCell.column === column) {
@@ -387,7 +388,7 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                 stop: function () {
                     if (angular.isDefined(phaser)) {
                         phaser.destroy();
-                        phaser = null;
+                        phaser = undefined;
                     }
                 },
 
