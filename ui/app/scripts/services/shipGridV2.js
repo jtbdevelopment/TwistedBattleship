@@ -212,12 +212,11 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                 }
                 centerCircleSprite.x = x;
                 centerCircleSprite.y = y;
-                for (var i = 0; i < circleCombinedRelativeCoordinates.length; ++i) {
-                    var coordinate = circleCombinedRelativeCoordinates[i];
-                    var sprite = circleSprites[i];
-                    sprite.x = x + (coordinate.column * CELL_SIZE);
-                    sprite.y = y + (coordinate.row * CELL_SIZE);
-                }
+                angular.forEach(circleCombinedRelativeCoordinates, function (relativeCoordinate, index) {
+                    var extendedCircleSprite = circleSprites[index];
+                    extendedCircleSprite.x = x + (relativeCoordinate.column * CELL_SIZE);
+                    extendedCircleSprite.y = y + (relativeCoordinate.row * CELL_SIZE);
+                });
             }
 
             function highlightShipIfInSelectedCell(row, column) {
