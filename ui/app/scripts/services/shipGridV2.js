@@ -349,12 +349,6 @@ angular.module('tbs.services').factory('tbsShipGridV2',
             }
 
             return {
-                stop: function () {
-                    if (angular.isDefined(phaser)) {
-                        phaser.destroy();
-                        phaser = null;
-                    }
-                },
                 initialize: function (loadedGame, initialShipStates, initialCellMarkers, postCreateCB) {
                     theme = jtbPlayerService.currentPlayer().gameSpecificPlayerAttributes.theme;
                     gameWidth = loadedGame.gridSize * CELL_SIZE;
@@ -390,6 +384,13 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                     });
                 },
 
+                stop: function () {
+                    if (angular.isDefined(phaser)) {
+                        phaser.destroy();
+                        phaser = null;
+                    }
+                },
+
                 enableShipMovement: function (overlappingChangedCB) {
                     shipsOverlappingChangedCB = overlappingChangedCB;
                     movementEnabled = true;
@@ -408,15 +409,16 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                     phaser.input.onTap.add(rotateShipOnDoubleClick, this);
                 },
 
+                enableCellSelecting: function (selectionCB) {
+                    cellSelectionCB = selectionCB;
+                    phaser.input.onDown.add(selectCellCB);
+                    selectCellCB({worldX: 0, worldY: 0});
+                },
+
                 placeShips: function (newShipStates) {
                     shipStatesToPlace = angular.copy(newShipStates);
                     refreshShipsOnGrid();
                     selectCellCB(lastSelectionContext);
-                },
-
-                placeCellMarkers: function (newCellMarkers) {
-                    cellMarkersToPlace = newCellMarkers;
-                    refreshCellMarkersOnGrid();
                 },
 
                 currentShipsOnGrid: function () {
@@ -427,11 +429,11 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                     return ships;
                 },
 
-                enableCellSelecting: function (selectionCB) {
-                    cellSelectionCB = selectionCB;
-                    phaser.input.onDown.add(selectCellCB);
-                    selectCellCB({worldX: 0, worldY: 0});
+                placeCellMarkers: function (newCellMarkers) {
+                    cellMarkersToPlace = newCellMarkers;
+                    refreshCellMarkersOnGrid();
                 }
+
             };
         }
     ]

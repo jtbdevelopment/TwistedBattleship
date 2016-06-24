@@ -253,6 +253,7 @@ describe('Service: gameDetails', function () {
             PhaserGame.add.sprite.withArgs(0, 0, 'Carrier', 0).returns(carrierSprite);
             PhaserGame.add.sprite.withArgs(0, 0, 'Destroyer', 0).returns(destroyerSprite);
             service.placeShips(shipStates);
+            expect(service.currentShipsOnGrid()).to.deep.equal(shipStates);
             expect(PhaserGame.physics.arcade.enable.calledWithMatch(carrierSprite));
             expect(PhaserGame.physics.arcade.enable.calledWithMatch(destroyerSprite));
             expect(carrierSprite.body.debug).to.be.true;
@@ -294,6 +295,7 @@ describe('Service: gameDetails', function () {
             PhaserGame.add.sprite.withArgs(0, 0, 'Submarine', 0).returns(submarineSprite);
             PhaserGame.add.sprite.withArgs(0, 0, 'Destroyer', 0).returns(newDestroyer);
             service.placeShips(shipStates);
+            expect(service.currentShipsOnGrid()).to.deep.equal(shipStates);
             expect(destroyerSprite.destroy.calledWithMatch());
             expect(carrierSprite.destroy.calledWithMatch());
             expect(PhaserGame.physics.arcade.enable.calledWithMatch(submarineSprite));
