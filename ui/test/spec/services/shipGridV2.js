@@ -27,21 +27,39 @@ describe('Service: gameDetails', function () {
         , 'KnownByRehit', 'KnownByMiss', 'KnownByHit'];
 
     var expectedCircleData = {
-        '10': [{'row': 0, 'column': 0}, {'row': 0, 'column': -1}, {'row': 0, 'column': 1}, {'row': 1, 'column': 0}, {
-            'row': -1
-            , 'column': 0
-        }],
-        '15': [{'row': 0, 'column': -2}, {'row': 0, 'column': 2}, {'row': 2, 'column': 0}, {
-            'row': -2, 'column': 0
-        }, {'row': 1, 'column': 1}, {'row': 1, 'column': -1}, {'row': -1, 'column': -1}, {'row': -1, 'column': 1}],
-        '20': [{
-            'row': 2, 'column': 2
-        }, {'row': 2, 'column': -2}, {'row': -2, 'column': -2}, {'row': -2, 'column': 2}, {
-            'row': 2, 'column': 1
-        }, {'row': 1, 'column': 2}, {'row': 2, 'column': -1}, {'row': -1, 'column': 2}, {'row': -2, 'column': -1}, {
-            'row': -1, 'column': -2
-        }, {'row': -2, 'column': 1}, {'row': 1, 'column': -2}]
+        '10': [
+            {'row': 0, 'column': 0},
+            {'row': 0, 'column': -1},
+            {'row': 0, 'column': 1},
+            {'row': 1, 'column': 0},
+            {'row': -1, 'column': 0}
+        ],
+        '15': [
+            {'row': 0, 'column': -2},
+            {'row': 0, 'column': 2},
+            {'row': 2, 'column': 0},
+            {'row': -2, 'column': 0},
+            {'row': 1, 'column': 1},
+            {'row': 1, 'column': -1},
+            {'row': -1, 'column': -1},
+            {'row': -1, 'column': 1}
+        ],
+        '20': [
+            {'row': 2, 'column': 2},
+            {'row': 2, 'column': -2},
+            {'row': -2, 'column': -2},
+            {'row': -2, 'column': 2},
+            {'row': 2, 'column': 1},
+            {'row': 1, 'column': 2},
+            {'row': 2, 'column': -1},
+            {'row': -1, 'column': 2},
+            {'row': -2, 'column': -1},
+            {'row': -1, 'column': -2},
+            {'row': -2, 'column': 1},
+            {'row': 1, 'column': -2}
+        ]
     };
+    var testCircleData = [];
     var Phaser = {
         Rectangle: {
             intersects: sinon.stub()
@@ -57,6 +75,7 @@ describe('Service: gameDetails', function () {
         }
     };
     var PhaserGame = {
+        onDownCB: undefined,
         destroy: sinon.stub(),
         load: {
             tilemap: sinon.spy(),
@@ -71,6 +90,13 @@ describe('Service: gameDetails', function () {
             startSystem: sinon.spy(),
             arcade: {
                 enable: sinon.spy()
+            }
+        },
+        input: {
+            onDown: {
+                add: function (cb) {
+                    this.onDownCB = cb;
+                }
             }
         },
         scale: {}
@@ -122,8 +148,13 @@ describe('Service: gameDetails', function () {
     var service, rootScope;
     var phaserCBs;
     beforeEach(inject(function ($injector, $rootScope) {
+        testCircleData = angular.copy(expectedCircleData['10']);
+        testCircleData = testCircleData.concat(expectedCircleData['15']);
+        testCircleData = testCircleData.concat(expectedCircleData['20']);
+        testCircleData.splice(0, 1);
         Phaser.Rectangle.intersects.reset();
         PhaserFactory.newGame.reset();
+        PhaserGame.onDownCB = undefined;
         PhaserGame.destroy.reset();
         PhaserGame.add.image.reset();
         PhaserGame.add.tilemap.reset();
@@ -144,6 +175,12 @@ describe('Service: gameDetails', function () {
         service = $injector.get('tbsShipGridV2');
     }));
 
+    function makeSprite() {
+        return {
+            destroy: sinon.spy()
+        };
+    }
+
     function makeShipSprite() {
         return {
             destroy: sinon.spy(),
@@ -160,7 +197,8 @@ describe('Service: gameDetails', function () {
             height: 195,
             angle: undefined,
             x: undefined,
-            y: undefined
+            y: undefined,
+            tint: undefined
         };
     }
 
@@ -266,6 +304,7 @@ describe('Service: gameDetails', function () {
             assert(carrierSprite.anchor.setTo.calledWithMatch(0.5, 0.5));
             expect(carrierSprite.x).to.equal(250);
             expect(carrierSprite.y).to.equal(50);
+            expect(carrierSprite.tint).to.be.undefined;
 
             expect(destroyerSprite.body.debug).to.be.true;
             expect(destroyerSprite.body.collideWorldBounds).to.be.true;
@@ -277,6 +316,7 @@ describe('Service: gameDetails', function () {
             assert(destroyerSprite.anchor.setTo.calledWithMatch(0.5, 0.5));
             expect(destroyerSprite.x).to.equal(650);
             expect(destroyerSprite.y).to.equal(600);
+            expect(destroyerSprite.tint).to.be.undefined;
 
             var submarineSprite = makeShipSprite();
             var newDestroyer = makeShipSprite();
@@ -327,10 +367,10 @@ describe('Service: gameDetails', function () {
         it('place some markers onto grid', function () {
             var markers = [['Unknown'], ['KnownByMiss', 'KnownByHit'], ['KnownByMiss']];
 
-            var unknownSprite = {destroy: sinon.spy()};
-            var knownByMissSprite1 = {destroy: sinon.spy()};
-            var knownByHitSprite = {destroy: sinon.spy()};
-            var knownByMissSprite2 = {destroy: sinon.spy()};
+            var unknownSprite = makeSprite();
+            var knownByMissSprite1 = makeSprite();
+            var knownByHitSprite = makeSprite();
+            var knownByMissSprite2 = makeSprite();
             PhaserGame.add.sprite.withArgs(0, 0, 'unknown', 0).returns(unknownSprite);
             PhaserGame.add.sprite.withArgs(0, 100, 'knownbymiss', 0).returns(knownByMissSprite1);
             PhaserGame.add.sprite.withArgs(100, 100, 'knownbyhit', 0).returns(knownByHitSprite);
@@ -347,6 +387,67 @@ describe('Service: gameDetails', function () {
             assert(knownByHitSprite.destroy.calledWithMatch());
             assert(knownByMissSprite2.destroy.calledWithMatch());
             assert(knownByMissSprite1.destroy.calledWithMatch());
+        });
+
+        describe('testing enable cell selecting', function () {
+            var shipStates = [
+                {
+                    ship: 'Carrier',
+                    horizontal: true,
+                    shipGridCells: [{row: 0, column: 0}]
+                },
+                {
+                    ship: 'Destroyer',
+                    horizontal: false,
+                    shipGridCells: [{row: 5, column: 6}]
+                }
+            ];
+            var carrierSprite, destroyerSprite;
+            var selectionCB = sinon.spy();
+            var centerHighlight;
+            var highlights;
+
+            function generateStubReturns() {
+                PhaserGame.add.sprite.withArgs(0, 0, 'highlight', 0).returns(centerHighlight);
+                angular.forEach(testCircleData, function (circleCell, index) {
+                    PhaserGame.add.sprite.withArgs(index, index, 'extendedhighlight', 0).returns(highlights[index]);
+                });
+            }
+
+            beforeEach(function () {
+                centerHighlight = makeSprite();
+                highlights = [];
+                angular.forEach(testCircleData, function () {
+                    highlights.push(makeSprite());
+                });
+                selectionCB.reset();
+                carrierSprite = makeShipSprite();
+                destroyerSprite = makeShipSprite();
+                PhaserGame.add.sprite.withArgs(0, 0, 'Carrier', 0).returns(carrierSprite);
+                PhaserGame.add.sprite.withArgs(0, 0, 'Destroyer', 0).returns(destroyerSprite);
+
+                service.placeShips(shipStates);
+                expect(PhaserGame.onDownCB).to.be.undefined;
+                generateStubReturns(0, 0);
+                phaserCBs.preload();
+                phaserCBs.create();
+                service.enableCellSelecting(selectionCB);
+                expect(PhaserGame.onDownCB).to.be.defined;
+            });
+
+            function verifyHighlightPositions(baseX, baseY) {
+                expect(centerHighlight.x).to.equal(baseX * 100);
+                expect(centerHighlight.y).to.equal(baseY * 100);
+                angular.forEach(testCircleData, function (circleCell, index) {
+                    expect(highlights[index].x).to.equal((circleCell.column + baseX) * 100);
+                    expect(highlights[index].y).to.equal((circleCell.row + baseY) * 100);
+                });
+            }
+
+            it('test initializes to 0, 0 and returns carrier', function () {
+                assert(selectionCB.calledWithMatch({row: 0, column: 0}, shipStates[0]));
+                verifyHighlightPositions(0, 0);
+            });
         });
     });
 

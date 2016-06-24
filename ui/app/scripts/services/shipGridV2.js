@@ -206,8 +206,8 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                 var x = column * CELL_SIZE;
                 if (angular.isUndefined(centerCircleSprite)) {
                     centerCircleSprite = phaser.add.sprite(x, y, 'highlight', 0);
-                    angular.forEach(circleCombinedRelativeCoordinates, function () {
-                        circleSprites.push(phaser.add.sprite(x, y, 'extendedhighlight', 0));
+                    angular.forEach(circleCombinedRelativeCoordinates, function (cell, index) {
+                        circleSprites.push(phaser.add.sprite(x + index, y + index, 'extendedhighlight', 0));
                     });
                 }
                 centerCircleSprite.x = x;
