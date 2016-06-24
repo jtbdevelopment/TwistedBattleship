@@ -75,7 +75,6 @@ describe('Service: gameDetails', function () {
         }
     };
     var PhaserGame = {
-        onDownCB: undefined,
         destroy: sinon.stub(),
         load: {
             tilemap: sinon.spy(),
@@ -94,8 +93,17 @@ describe('Service: gameDetails', function () {
         },
         input: {
             onDown: {
+                onDownCB: undefined,
                 add: function (cb) {
-                    PhaserGame.onDownCB = cb;
+                    this.onDownCB = cb;
+                }
+            },
+            onTap: {
+                onTapCB: undefined,
+                onTapContext: undefined,
+                add: function (cb, context) {
+                    this.onTapCB = cb;
+                    this.onTapContext = context;
                 }
             }
         },
@@ -154,7 +162,8 @@ describe('Service: gameDetails', function () {
         testCircleData.splice(0, 1);
         Phaser.Rectangle.intersects.reset();
         PhaserFactory.newGame.reset();
-        PhaserGame.onDownCB = undefined;
+        PhaserGame.input.onDown.onDownCB = undefined;
+        PhaserGame.input.onTap.onTapCB = undefined;
         PhaserGame.destroy.reset();
         PhaserGame.add.image.reset();
         PhaserGame.add.tilemap.reset();
@@ -189,6 +198,25 @@ describe('Service: gameDetails', function () {
                 debug: false,
                 width: 200,
                 height: 195
+            },
+            input: {
+                enableDrag: sinon.spy(),
+                disableSnap: sinon.spy(),
+                enableSnap: sinon.spy()
+            },
+            events: {
+                onDragStart: {
+                    dragStartCB: undefined,
+                    add: function (cb) {
+                        this.dragStartCB = cb;
+                    }
+                },
+                onDragStop: {
+                    dragStopCB: undefined,
+                    add: function (cb) {
+                        this.dragStopCB = cb;
+                    }
+                }
             },
             anchor: {
                 setTo: sinon.spy()
@@ -438,9 +466,9 @@ describe('Service: gameDetails', function () {
                 generateStubReturns(0, 0);
                 phaserCBs.preload();
                 phaserCBs.create();
-                expect(angular.isDefined(PhaserGame.onDownCB)).to.be.false;
+                expect(angular.isDefined(PhaserGame.input.onDown.onDownCB)).to.be.false;
                 service.enableCellSelecting(selectionCB);
-                expect(angular.isDefined(PhaserGame.onDownCB)).to.be.true;
+                expect(angular.isDefined(PhaserGame.input.onDown.onDownCB)).to.be.true;
             });
 
             function verifyHighlightPositions(baseX, baseY) {
@@ -461,13 +489,13 @@ describe('Service: gameDetails', function () {
 
             it('test on select with undefined context does not call any further', function () {
                 selectionCB.reset();
-                PhaserGame.onDownCB();
+                PhaserGame.input.onDown.onDownCB();
                 expect(selectionCB.callCount).to.equal(0);
                 verifyHighlightPositions(0, 0);
             });
 
             it('test selecting a different cell with no ship highlighted', function () {
-                PhaserGame.onDownCB({worldX: 420, worldY: 480});
+                PhaserGame.input.onDown.onDownCB({worldX: 420, worldY: 480});
                 assert(selectionCB.calledWithMatch({row: 4, column: 4}, undefined));
                 verifyHighlightPositions(4, 4);
                 expect(carrierSprite.tint).to.equal(0xffffff);
@@ -476,11 +504,66 @@ describe('Service: gameDetails', function () {
 
 
             it('test selecting a different cell with another ship highlighted', function () {
-                PhaserGame.onDownCB({worldX: 620, worldY: 580});
+                PhaserGame.input.onDown.onDownCB({worldX: 620, worldY: 580});
                 assert(selectionCB.calledWithMatch({row: 5, column: 6}, shipStates[1]));
                 verifyHighlightPositions(6, 5);
                 expect(carrierSprite.tint).to.equal(0xffffff);
                 expect(destroyerSprite.tint).to.equal(0x00ff00);
+            });
+        });
+
+        describe('testing ship movement', function () {
+            var shipStates = [
+                {
+                    ship: 'Carrier',
+                    horizontal: true,
+                    shipGridCells: [
+                        {row: 0, column: 1},
+                        {row: 0, column: 2},
+                        {row: 0, column: 3},
+                        {row: 0, column: 4},
+                        {row: 0, column: 5}
+                    ]
+                },
+                {
+                    ship: 'Destroyer',
+                    horizontal: false,
+                    shipGridCells: [
+                        {row: 1, column: 1},
+                        {row: 1, column: 2}
+                    ]
+                },
+                {
+                    ship: 'Submarine',
+                    horizontal: false,
+                    shipGridCells: [
+                        {row: 2, column: 1},
+                        {row: 2, column: 2},
+                        {row: 2, column: 3}
+                    ]
+                }
+            ];
+            var carrierSprite, destroyerSprite, submarineSprite;
+            var overlappingChangedCB = sinon.spy();
+
+            beforeEach(function () {
+                overlappingChangedCB.reset();
+                carrierSprite = makeShipSprite();
+                destroyerSprite = makeShipSprite();
+                submarineSprite = makeShipSprite();
+                PhaserGame.add.sprite.withArgs(0, 0, 'Carrier', 0).returns(carrierSprite);
+                PhaserGame.add.sprite.withArgs(0, 0, 'Destroyer', 0).returns(destroyerSprite);
+                PhaserGame.add.sprite.withArgs(0, 0, 'Submarine', 0).returns(submarineSprite);
+
+                service.placeShips(shipStates);
+                phaserCBs.preload();
+                phaserCBs.create();
+
+                service.enableShipMovement(overlappingChangedCB);
+            });
+
+            it('initializes to correct status', function () {
+
             });
         });
     });
