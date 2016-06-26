@@ -33,9 +33,9 @@ angular.module('tbs.services').factory('tbsShipGridV2',
 
             function update() {
                 if (movementEnabled) {
-                    //  Rotating a ship can leave them off snap grid
+                    //  Rotating a ship can leave the ship incorrectly aligned with snap grid
                     //  Need to force a re-snap - however, need to wait one update cycle before doing it
-                    //  so other computations from drag and rotate are applied
+                    //  so other computations from drag and rotate and boundaries are applied from phaser
                     angular.forEach(recomputeNextLoop, function (shipOnGrid) {
                         shipOnGrid.shipSprite.input.startDrag(phaser.input.activePointer);
                         shipOnGrid.shipSprite.input.stopDrag(phaser.input.activePointer);
@@ -106,7 +106,6 @@ angular.module('tbs.services').factory('tbsShipGridV2',
 
                 movementEnabled = false;
 
-                //  TODO - see if we can have one tilemap file
                 phaser.load.tilemap('grid', 'templates/gamefiles/' + json, null, Phaser.Tilemap.TILED_JSON);
                 phaser.load.image('tile', 'images/' + theme + '/tile.png');
                 phaser.load.image('highlight', 'images/' + theme + '/highlight.png');

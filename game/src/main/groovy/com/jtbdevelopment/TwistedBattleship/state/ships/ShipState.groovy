@@ -22,9 +22,8 @@ class ShipState implements Serializable {
     protected ShipState() {
     }
 
-    //  TODO - why is this sortedSet?
     ShipState(final Ship ship,
-              final SortedSet<GridCoordinate> shipGridCells) {
+              final Set<GridCoordinate> shipGridCells) {
         this.ship = ship
         this.shipGridCells = (shipGridCells as List).sort()
         this.healthRemaining = ship.gridSize

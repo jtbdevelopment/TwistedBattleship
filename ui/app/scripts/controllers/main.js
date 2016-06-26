@@ -36,7 +36,7 @@ angular.module('tbs.controllers').controller('MainCtrl',
 
                 //  TODO - preload ship images?
                 tbsAds.initialize();
-                //  Kick off some precaching of info
+                //  Kick off some preemptive caching of info
                 tbsCircles.circles().then(function () {
                 });
                 jtbGameFeatureService.features().then(function () {

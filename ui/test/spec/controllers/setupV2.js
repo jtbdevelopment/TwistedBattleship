@@ -1,7 +1,5 @@
 'use strict';
 
-//  TODO - avoiding testing a lot of the phaser/grid stuff as plan to revamp it to use more phaser native
-//  and remove so much self work
 describe('Controller: SetupGameV2Ctrl', function () {
     // load the controller's module
     beforeEach(module('tbs.controllers'));
