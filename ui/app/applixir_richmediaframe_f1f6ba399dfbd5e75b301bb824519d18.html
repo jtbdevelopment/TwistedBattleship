@@ -29,9 +29,13 @@
 <script type="text/javascript" src="//developer.appprizes.com/applixir_parent.js"></script>
 
 <script type="text/javascript">
-    loadScript(thisClientScript, function () {
-        //initialization code
-    });
+    try {
+        loadScript(thisClientScript, function () {
+            //initialization code
+        });
+    } catch (e) {
+        console.log(JSON.stringify(e));
+    }
 </script>
 
 </body>

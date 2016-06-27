@@ -12,7 +12,8 @@ class WeightedTarget extends Target {
         ECM,
         Spy,
         Repair,
-        Move
+        Move,
+        CruiseMissile,
     }
     Action action
     int weight

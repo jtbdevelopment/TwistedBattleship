@@ -2,9 +2,9 @@ package com.jtbdevelopment.TwistedBattleship.ai.simple
 
 import com.jtbdevelopment.TwistedBattleship.ai.AI
 import com.jtbdevelopment.TwistedBattleship.ai.WeightedTarget
+import com.jtbdevelopment.TwistedBattleship.ai.common.AIActionHandlers
 import com.jtbdevelopment.TwistedBattleship.ai.common.RandomizedSetup
 import com.jtbdevelopment.TwistedBattleship.rest.Target
-import com.jtbdevelopment.TwistedBattleship.rest.handlers.*
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
@@ -32,19 +32,7 @@ class SimpleAI implements AI {
     SimpleAIPlayerCreator playerCreator
 
     @Autowired
-    RepairShipHandler repairShipHandler
-
-    @Autowired
-    EvasiveManeuverHandler evasiveManeuverHandler
-
-    @Autowired
-    FireAtCoordinateHandler fireAtCoordinateHandler
-
-    @Autowired
-    SpyHandler spyHandler
-
-    @Autowired
-    ECMHandler ecmHandler
+    AIActionHandlers aiActionHandler
 
     @Autowired
     GridCircleUtil gridCircleUtil
@@ -65,25 +53,70 @@ class SimpleAI implements AI {
 
     void playOneMove(final TBGame game, final Player player) {
         TBPlayerState myState = game.playerDetails[(ObjectId) player.id]
-        //  PerShip
-        //  If carrier or battleship has 2 or more dmg points and repair available - play repair
-        //  Single
-        //  If non-destroyer has 2 or more dmg points and repair available - play repair
-        if (!didRepair(game, player, myState)) {
-            //  If anything other than destroyer has a hit on it and evasive available - evasive
-            if (!didEvasive(game, player, myState)) {
-                //  If spy available - use it
-                if (!didSpy(game, player, myState)) {
-                    //  If we can get at least 3 known details eliminated ecm
-                    if (!didECM(game, player, myState)) {
-                        //  Fire
-                        if (!didFire(game, player, myState)) {
-                            throw new RuntimeException("Unable to take any action!")
+        // if we hit something cruise missile it
+        if (!didCruiseMissile(game, player, myState)) {
+            //  PerShip
+            //  If carrier or battleship has 2 or more dmg points and repair available - play repair
+            //  Single
+            //  If non-destroyer has 2 or more dmg points and repair available - play repair
+            if (!didRepair(game, player, myState)) {
+                //  If anything other than destroyer has a hit on it and evasive available - evasive
+                if (!didEvasive(game, player, myState)) {
+                    //  If spy available - use it
+                    if (!didSpy(game, player, myState)) {
+                        //  If we can get at least 3 known details eliminated ecm
+                        if (!didECM(game, player, myState)) {
+                            //  Fire
+                            if (!didFire(game, player, myState)) {
+                                throw new RuntimeException("Unable to take any action!")
+                            }
                         }
                     }
                 }
             }
         }
+    }
+
+    private boolean didCruiseMissile(final TBGame game, final Player player, final TBPlayerState myState) {
+        if (game.movesForSpecials <= game.remainingMoves && myState.cruiseMissilesRemaining > 0) {
+            List<WeightedTarget> targets = myState.opponentGrids.findAll {
+                game.playerDetails[it.key].alive
+            }.collectMany {
+                ObjectId opponent, Grid grid ->
+                    String md5 = game.players.find { it.id == opponent }.md5
+                    List<WeightedTarget> weightedTargets = []
+                    for (int row = 0; row < game.gridSize; ++row) {
+                        for (int col = 0; col < game.gridSize; ++col) {
+                            GridCoordinate coordinate = new GridCoordinate(row, col);
+                            switch (grid.get(coordinate)) {
+                                case GridCellState.KnownByHit:
+                                case GridCellState.KnownShip:
+                                    weightedTargets.add(new WeightedTarget(
+                                            player: md5,
+                                            coordinate: coordinate
+                                    ))
+                                    break;
+                            }
+                        }
+                    }
+                    weightedTargets
+            }.toList()
+
+            if (targets.size() == 0) {
+                return false;
+            }
+
+            WeightedTarget target = targets[random.nextInt(targets.size())]
+
+            aiActionHandler.cruiseMissileHandler.handleAction(
+                    player.id,
+                    game.id,
+                    target)
+
+            return true
+        }
+
+        return false
     }
 
     private boolean didRepair(final TBGame game, final Player player, final TBPlayerState myState) {
@@ -104,7 +137,7 @@ class SimpleAI implements AI {
                 true
             }
             if (damagedShip) {
-                repairShipHandler.handleAction(
+                aiActionHandler.repairShipHandler.handleAction(
                         player.id,
                         game.id,
                         new Target(player: player.md5, coordinate: damagedShip.shipGridCells[0]))
@@ -129,7 +162,7 @@ class SimpleAI implements AI {
                 true
             }
             if (damagedShip) {
-                evasiveManeuverHandler.handleAction(
+                aiActionHandler.evasiveManeuverHandler.handleAction(
                         player.id,
                         game.id,
                         new Target(player: player.md5, coordinate: damagedShip.shipGridCells[0]))
@@ -189,10 +222,10 @@ class SimpleAI implements AI {
 
             WeightedTarget target = bestTargets[random.nextInt(bestTargets.size())]
 
-            spyHandler.handleAction(
+            aiActionHandler.spyHandler.handleAction(
                     player.id,
                     game.id,
-                    new Target(player: target.player, coordinate: target.coordinate))
+                    target)
 
             return true
         }
@@ -255,10 +288,10 @@ class SimpleAI implements AI {
 
             WeightedTarget target = bestTargets[random.nextInt(bestTargets.size())]
 
-            ecmHandler.handleAction(
+            aiActionHandler.ecmHandler.handleAction(
                     player.id,
                     game.id,
-                    new Target(player: target.player, coordinate: target.coordinate))
+                    target)
 
             return true
         }
@@ -313,10 +346,10 @@ class SimpleAI implements AI {
 
         WeightedTarget target = bestTargets[random.nextInt(bestTargets.size())]
 
-        fireAtCoordinateHandler.handleAction(
+        aiActionHandler.fireAtCoordinateHandler.handleAction(
                 player.id,
                 game.id,
-                new Target(player: target.player, coordinate: target.coordinate))
+                target)
 
         return true
     }

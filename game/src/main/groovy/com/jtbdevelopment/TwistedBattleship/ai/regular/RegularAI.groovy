@@ -2,9 +2,8 @@ package com.jtbdevelopment.TwistedBattleship.ai.regular
 
 import com.jtbdevelopment.TwistedBattleship.ai.AI
 import com.jtbdevelopment.TwistedBattleship.ai.WeightedTarget
+import com.jtbdevelopment.TwistedBattleship.ai.common.AIActionHandlers
 import com.jtbdevelopment.TwistedBattleship.ai.common.RandomizedSetup
-import com.jtbdevelopment.TwistedBattleship.rest.Target
-import com.jtbdevelopment.TwistedBattleship.rest.handlers.*
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
@@ -28,19 +27,7 @@ class RegularAI implements AI {
     RegularAIPlayerCreator playerCreator
 
     @Autowired
-    RepairShipHandler repairShipHandler
-
-    @Autowired
-    EvasiveManeuverHandler evasiveManeuverHandler
-
-    @Autowired
-    FireAtCoordinateHandler fireAtCoordinateHandler
-
-    @Autowired
-    SpyHandler spyHandler
-
-    @Autowired
-    ECMHandler ecmHandler
+    AIActionHandlers aiActionHandler
 
     @Autowired
     GridCircleUtil gridCircleUtil
@@ -77,6 +64,7 @@ class RegularAI implements AI {
     private int fireBaseObscured = 15
     private int fireKnownAdjacentShip = 25
     private int fireKnownDoubleAdjacentShip = 25
+    private int cruiseKnownHitOrShip = 200
 
     void playOneMove(final TBGame game, final Player player) {
         //  Pure Points System
@@ -98,6 +86,7 @@ class RegularAI implements AI {
         targets += computeEvasiveMove(game, player, myState)
         targets += computeECM(game, player, myState)
         targets += computeFireTargets(game, player, myState)
+        targets += computeCruiseMissileTargets(game, player, myState)
 
         List<WeightedTarget> bestTargets = targets.sort {
             WeightedTarget t1, WeightedTarget t2 ->
@@ -113,35 +102,40 @@ class RegularAI implements AI {
 
         WeightedTarget target = bestTargets[random.nextInt(bestTargets.size())]
         switch (target.action) {
+            case WeightedTarget.Action.CruiseMissile:
+                aiActionHandler.cruiseMissileHandler.handleAction(
+                        player.id, game.id,
+                        target)
+                break;
             case WeightedTarget.Action.ECM:
-                ecmHandler.handleAction(
+                aiActionHandler.ecmHandler.handleAction(
                         player.id,
                         game.id,
-                        new Target(player: target.player, coordinate: target.coordinate))
+                        target)
                 break;
             case WeightedTarget.Action.Spy:
-                spyHandler.handleAction(
+                aiActionHandler.spyHandler.handleAction(
                         player.id,
                         game.id,
-                        new Target(player: target.player, coordinate: target.coordinate))
+                        target)
                 break;
             case WeightedTarget.Action.Fire:
-                fireAtCoordinateHandler.handleAction(
+                aiActionHandler.fireAtCoordinateHandler.handleAction(
                         player.id,
                         game.id,
-                        new Target(player: target.player, coordinate: target.coordinate))
+                        target)
                 break;
             case WeightedTarget.Action.Repair:
-                repairShipHandler.handleAction(
+                aiActionHandler.repairShipHandler.handleAction(
                         player.id,
                         game.id,
-                        new Target(player: target.player, coordinate: target.coordinate))
+                        target)
                 break;
             case WeightedTarget.Action.Move:
-                evasiveManeuverHandler.handleAction(
+                aiActionHandler.evasiveManeuverHandler.handleAction(
                         player.id,
                         game.id,
-                        new Target(player: target.player, coordinate: target.coordinate))
+                        target)
                 break;
         }
 
@@ -265,6 +259,38 @@ class RegularAI implements AI {
             }
         }
         weightedTargets
+    }
+
+    private List<WeightedTarget> computeCruiseMissileTargets(
+            final TBGame game, final Player player, final TBPlayerState myState) {
+
+        if (myState.cruiseMissilesRemaining == 0 || game.remainingMoves < game.movesForSpecials) {
+            return [];
+        }
+
+        myState.opponentGrids.findAll {
+            game.playerDetails[it.key].alive
+        }.collectMany {
+            ObjectId opponent, Grid grid ->
+                List<WeightedTarget> weightedTargets = []
+                String md5 = game.players.find { it.id == opponent }.md5
+                for (int row = 0; row < game.gridSize; ++row) {
+                    for (int col = 0; col < game.gridSize; ++col) {
+                        switch (grid.get(row, col)) {
+                            case GridCellState.KnownByHit:
+                            case GridCellState.KnownShip:
+                                weightedTargets.add(
+                                        new WeightedTarget(
+                                                player: md5,
+                                                weight: cruiseKnownHitOrShip,
+                                                coordinate: new GridCoordinate(row, col),
+                                                action: WeightedTarget.Action.CruiseMissile))
+                                break
+                        }
+                    }
+                }
+                weightedTargets
+        }.toList()
     }
 
     private List<WeightedTarget> computeFireTargets(
