@@ -1,0 +1,95 @@
+@import "pirate-theme-colors";
+@import "../screens";
+
+.button {
+  background-color: $brown;
+  border-color: $brown;
+  color: white;
+  padding-left: 6px;
+
+  @media (max-width: $screen-xs-max) {
+    font-size: xx-small;
+    padding: 1px;
+    min-height: 1px;
+    min-width: 1px;
+    line-height: 20px;
+  }
+
+}
+
+.button::before {
+  @media (max-width: $screen-xs-max) {
+    font-size: xx-small;
+    padding: 1px;
+    min-height: 1px;
+    min-width: 1px;
+    line-height: 20px;
+  }
+}
+
+.button-submit {
+  background-color: $gold;
+  border-color: $gold;
+}
+
+.button-accept {
+  background-color: $gold;
+  border-color: $gold;
+}
+
+.button-close {
+  background-color: $gold;
+  border-color: $gold;
+}
+
+.button-rotatehelp {
+  background-color: $gold;
+  border-color: $gold;
+}
+
+.button-attack {
+  background-color: red;
+  border-color: red;
+}
+
+.button-defend {
+  background-color: $blue;
+  border-color: $blue;
+  color: black;
+}
+
+.button-switch-view {
+  border-radius: 6px;
+  margin: 0 5px;
+}
+
+.button-quit {
+  background-color: orange;
+  border-color: orange;
+}
+
+.button-reject {
+  background-color: orange;
+  border-color: orange;
+}
+
+.button-rematch {
+  background-color: $blue;
+  color: black;
+}
+
+.button-norematch {
+  background-color: red;
+}
+
+.button[disabled] {
+  background-color: $boatBrown;
+  border-color: $boatBrown;
+}
+
+.button-action-log {
+  background-color: transparent;
+  border-color: transparent;
+  color: black;
+}
+

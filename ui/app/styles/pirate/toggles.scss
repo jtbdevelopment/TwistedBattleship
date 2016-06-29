@@ -1,0 +1,12 @@
+@import "pirate-theme-colors";
+
+.toggle .track {
+  background: $boatBrown;
+  border-color: $boatBrown;
+}
+
+.toggle input:checked + .track {
+  background: $gold;
+  border-color: $gold;
+}
+

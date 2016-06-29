@@ -1,0 +1,125 @@
+@import "pirate-theme-colors";
+@import "input";
+
+.pirate-theme {
+  @import "gameList";
+  @import "create";
+  @import "signin";
+  @import "modal";
+  @import "playerList";
+  @import "setup";
+  @import "game";
+  @import "help";
+  @import "ams";
+  @import "gameDetails";
+  @import "playerDetails";
+  @include defaultInput;
+  @include defaultSelect;
+
+  background-color: $brown;
+  color: $gold;
+
+  .popup {
+    background: $brown;
+    .popup-body {
+      text-align: center;
+    }
+  }
+  .scroll-content {
+    background-color: $brown;
+  }
+
+  .bar {
+    background-color: $brown;
+
+    @media (max-width: $screen-xs-max) {
+      padding: 1px;
+      height: 24px;
+    }
+
+    .button.button-clear {
+      @media (max-width: $screen-xs-max) {
+        font-size: xx-small;
+      }
+    }
+    .button.button-clear .icon:before {
+      @media (max-width: $screen-xs-max) {
+        font-size: xx-small;
+        padding: 1px;
+        min-height: 1px;
+        min-width: 1px;
+        line-height: 18px;
+      }
+    }
+
+    .button.button-icon::before {
+      @media (max-width: $screen-xs-max) {
+        font-size: small;
+        line-height: 18px;
+      }
+    }
+
+    .title {
+      @media (max-width: $screen-xs-max) {
+        font-size: x-small;
+        line-height: 24px;
+      }
+      + .buttons {
+        top: 2px;
+      }
+      color: $gold;
+    }
+
+    .buttons {
+      .left-buttons {
+        .button {
+          @media (max-width: $screen-xs-max) {
+            font-size: x-small;
+          }
+          color: $gold;
+        }
+      }
+      .right-buttons {
+        .button {
+          color: $gold;
+        }
+      }
+    }
+  }
+
+  .has-header {
+    @media (max-width: $screen-xs-max) {
+      top: 24px;
+    }
+
+  }
+
+  @import "items";
+  @import "buttons";
+  @import "toggles";
+
+  .action-sheet {
+    .action-sheet-title {
+      background-color: $blue;
+      color: $black;
+      font-weight: bold;
+    }
+
+    .button {
+      font-weight: bold;
+      font-size: 21px;
+      line-height: 42px;
+      color: $red;
+      background-color: $blue;
+    }
+
+    .action-sheet-cancel {
+      .button {
+        color: $gold;
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+

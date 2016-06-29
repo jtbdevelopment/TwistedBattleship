@@ -1,0 +1,8 @@
+@import "input";
+
+.default-theme {
+  .tbsModal {
+    @include defaultInput;
+  }
+}
+

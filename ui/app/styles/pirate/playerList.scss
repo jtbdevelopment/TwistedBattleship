@@ -1,0 +1,41 @@
+@import "pirate-theme-colors";
+
+.playerList {
+  //  Most of the items on .list are for restoring items under small screen size
+  .list {
+    .item {
+      font-size: 16px;
+      padding: 16px;
+    }
+
+    .item-avatar {
+      padding-left: 72px;
+    }
+
+    .item-icon-right {
+      padding-right: 54px;
+    }
+
+    .button {
+      line-height: 42px;
+      font-size: 16px;
+      padding: 0 12px;
+    }
+  }
+
+  .pending {
+    color: $blue
+  }
+
+  .rejected {
+    color: $boatBrown;
+  }
+
+  .quit {
+    color: white;
+  }
+
+  .accepted {
+    color: $gold
+  }
+}

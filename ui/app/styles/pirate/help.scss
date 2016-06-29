@@ -1,0 +1,46 @@
+@import "pirate-theme-colors";
+@import "../screens";
+
+.createHelp {
+  @media (max-width: $screen-xs-max) {
+    font-size: smaller;
+
+    h4 {
+      font-size: small;
+    }
+  }
+}
+
+.setupHelp {
+  @media (max-width: $screen-xs-max) {
+    font-size: smaller;
+  }
+}
+
+.playHelp {
+  img {
+    height: 40px;
+    width: 40px;
+    vertical-align: middle;
+  }
+
+  @media (max-width: $screen-sm-max) {
+    img {
+      height: 24px;
+      width: 24px;
+    }
+  }
+
+  @media (max-width: $screen-xs-max) {
+    font-size: smaller;
+  }
+
+  .button {
+    background-color: $gold;
+    border-radius: 0;
+  }
+
+  .picked {
+    font-weight: bold;
+  }
+}

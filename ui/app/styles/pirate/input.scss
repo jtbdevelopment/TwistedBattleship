@@ -1,0 +1,33 @@
+@import "../screens";
+@import "pirate-theme-colors";
+
+@mixin defaultInput {
+  input {
+    border-radius: 4px;
+    padding-left: 2px;
+    background-color: white;
+    margin-right: 15px;
+    @media (max-width: $screen-xs-max) {
+      font-size: small;
+    }
+  }
+}
+
+@mixin defaultSelect {
+  select {
+    border-radius: 4px;
+    padding-left: 2px;
+    background-color: $black;
+    @media (max-width: $screen-xs-max) {
+      font-size: small;
+    }
+  }
+}
+
+.input-label {
+  color: black;
+  @media (max-width: $screen-xs-max) {
+    font-size: small;
+  }
+}
+

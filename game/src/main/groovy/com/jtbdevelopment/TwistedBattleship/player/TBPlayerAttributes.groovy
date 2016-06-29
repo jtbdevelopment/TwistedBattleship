@@ -13,6 +13,7 @@ import org.springframework.data.annotation.Transient
 @CompileStatic
 class TBPlayerAttributes extends AbstractPlayerGameTrackingAttributes {
     private static final String DEFAULT_THEME = 'default-theme'
+    private static final String PIRATE_THEME = 'pirate-theme'
     public static final int DEFAULT_FREE_GAMES_PER_DAY = 50;
     public static final int DEFAULT_PREMIUM_PLAYER_GAMES_PER_DAY = 100;
 
@@ -20,7 +21,7 @@ class TBPlayerAttributes extends AbstractPlayerGameTrackingAttributes {
     int maxDailyFreeGames
 
     String theme = DEFAULT_THEME
-    List<String> availableThemes = [DEFAULT_THEME]
+    List<String> availableThemes = [DEFAULT_THEME, PIRATE_THEME]
 
     //  TODO - title, win streak, max points etc
 

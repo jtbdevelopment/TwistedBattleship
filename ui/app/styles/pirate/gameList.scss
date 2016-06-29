@@ -1,0 +1,41 @@
+@import "pirate-theme-colors";
+
+.gameList {
+  .list {
+    .newGame {
+      background-color: $gold;
+      color: black;
+      font-size: large;
+    }
+
+    .item {
+      border-width: 1px;
+      p {
+        font-size: large;
+      }
+    }
+
+    .gameListAvatar {
+      max-width: 36px;
+      max-height: 36px;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+    }
+  }
+
+  .waiting {
+    background-color: $black;
+    .item-content {
+      background-color: $black;
+    }
+  }
+
+  .playable {
+    background-color: $red;
+    .item-content {
+      background-color: $red;
+    }
+  }
+
+}

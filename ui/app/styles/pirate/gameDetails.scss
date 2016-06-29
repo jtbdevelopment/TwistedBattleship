@@ -1,0 +1,17 @@
+@import "pirate-theme-colors";
+
+.gameDetails {
+  .list {
+    .item {
+      .item-note {
+        color: black;
+      }
+      .checkmark {
+        color: $gold;
+      }
+      .close {
+        color: red;
+      }
+    }
+  }
+}

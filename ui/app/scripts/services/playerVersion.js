@@ -1,7 +1,7 @@
 'use strict';
 
-var CURRENT_VERSION = '1.1';
-var CURRENT_NOTES = 'Revamped create game screens and small fixes.';
+var CURRENT_VERSION = '1.2';
+var CURRENT_NOTES = 'Added cruise missile option and ship options.';
 angular.module('tbs.services').factory('tbsVersionNotes',
     ['$http', 'jtbPlayerService', '$ionicPopup',
         function ($http, jtbPlayerService, $ionicPopup) {

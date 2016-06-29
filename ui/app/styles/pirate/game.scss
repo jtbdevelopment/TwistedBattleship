@@ -1,0 +1,124 @@
+@import "pirate-theme-colors";
+@import "../screens";
+
+.game {
+  .list {
+    .item-avatar {
+      img {
+        left: 6px;
+
+        @media (max-width: $screen-sm-max) {
+          height: 24px;
+          width: 24px;
+        }
+
+        @media (max-width: $screen-xs-max) {
+          height: 0;
+          width: 0;
+        }
+      }
+
+      @media (max-width: $screen-sm-max) {
+        min-height: 0;
+        padding: 20px 0 20px 34px;
+      }
+
+      @media (max-width: $screen-xs-max) {
+        min-height: 0;
+        padding: 1px;
+      }
+    }
+
+    .item {
+      border-color: $black;
+      border-left: transparent;
+      border-right: transparent;
+
+      @media (max-width: $screen-xs-max) {
+        font-size: xx-small;
+      }
+
+      p, h3 {
+        @media (max-width: $screen-sm-max) {
+          font-size: smaller;
+        }
+        @media (max-width: $screen-xs-max) {
+          font-size: xx-small;
+        }
+      }
+      .badge {
+        background: $brown;
+        color: black;
+        top: 12px;
+        right: 6px;
+
+        @media (max-width: $screen-xs-max) {
+          font-size: xx-small;
+          top: 6px;
+          padding: 1px 2px;
+          line-height: 8px;
+          right: 1px;
+        }
+      }
+
+      .badge-note {
+        background-color: transparent;
+        top: 15px;
+      }
+
+    }
+    .item-divider {
+      border-color: $boatBrown;
+
+      @media (max-width: $screen-xs-max) {
+        font-size: x-small;
+      }
+    }
+
+    .chosen {
+      background-color: yellow;
+
+    }
+
+  }
+
+  .activePlayer {
+    background-color: $red;
+  }
+
+  .inactivePlayer {
+    background-color: $black;
+  }
+
+  .winner {
+    background-color: $gold;
+  }
+
+  .loser {
+    background-color: red;
+    h3 {
+      color: white;
+    }
+  }
+
+  .lastActionTimestamp {
+    @media (max-width: $screen-sm-max) {
+      font-size: x-small;
+    }
+    @media (max-width: $screen-xs-max) {
+      font-size: xx-small;
+    }
+  }
+
+  .defeated {
+    text-decoration: line-through;
+    color: $boatBrown;
+  }
+
+  .viewToggleRow {
+    padding-top: 0;
+    margin-top: auto;
+    align-items: center;
+  }
+}
+

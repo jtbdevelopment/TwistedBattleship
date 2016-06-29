@@ -1,0 +1,65 @@
+@import "pirate-theme-colors";
+@import "../screens";
+
+.item {
+  background-color: $black;
+  border-color: $boatBrown;
+  color: black;
+  border-radius: 6px;
+  border-width: 0;
+
+  @media (max-width: $screen-xs-max) {
+    padding: 2px;
+  }
+
+  .item-content {
+    background-color: $black;
+
+    @media (max-width: $screen-xs-max) {
+      font-size: xx-small;
+    }
+  }
+  .badge {
+    background: $blue;
+    color: $boatBrown;
+
+    @media (max-width: $screen-xs-max) {
+      font-size: xx-small;
+    }
+  }
+
+  @media (max-width: $screen-xs-max) {
+    font-size: xx-small;
+  }
+
+}
+
+.item-divider {
+  background-color: $boatBrown;
+  border-color: $boatBrown;
+  color: white;
+  .badge {
+    background-color: $brown;
+    color: black;
+
+    @media (max-width: $screen-xs-max) {
+      font-size: xx-small;
+      top: 2.5px;
+      padding: 3px 6px;
+      line-height: 12px;
+    }
+  }
+
+  @media (max-width: $screen-xs-max) {
+    font-size: xx-small;
+    font-weight: lighter;
+    padding: 1px;
+    min-height: 1px;
+  }
+}
+
+.action-item {
+  border: 0;
+  padding: 0;
+}
+

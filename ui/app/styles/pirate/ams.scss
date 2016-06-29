@@ -1,0 +1,81 @@
+@import "../screens";
+@import "pirate-theme-colors";
+
+.ams_container {
+  width: 100%;
+
+  .ams {
+    position: relative;
+    .ams_search {
+      height: auto;
+      max-height: inherit;
+    }
+    .inputFilter {
+      font-size: 16px;
+      color: black;
+      height: auto;
+      @media (max-width: $screen-xs-max) {
+        font-size: small;
+      }
+    }
+
+    > .ams_btn {
+      text-align: right;
+      color: black;
+      font-size: 16px;
+      @media (max-width: $screen-xs-max) {
+        font-size: small;
+      }
+    }
+    .ams_btn {
+      background-image: none;
+      width: 100%;
+      background-color: $black;
+      color: black;
+      @media (max-width: $screen-xs-max) {
+        font-size: small;
+      }
+    }
+
+    .ams_layer {
+      position: relative;
+
+      background-color: $black;
+      width: 100%;
+      font-size: 16px;
+      color: black;
+      @media (max-width: $screen-xs-max) {
+        font-size: small;
+      }
+
+      .ams_items_container {
+
+        .ams_item {
+          font-size: 16px;
+          color: black;
+          @media (max-width: $screen-xs-max) {
+            font-size: small;
+          }
+        }
+        .ams_item:hover, .ams_group:hover {
+          background-color: $blue !important;
+          background-image: none !important;
+          color: black !important;
+        }
+
+        .ams_selected {
+          border-color: black;
+          background-color: $gold;
+          color: black;
+          background-image: none;
+        }
+        .ams_selected:hover {
+
+          background-color: $blue;
+          color: black;
+          background-image: none;
+        }
+      }
+    }
+  }
+}
