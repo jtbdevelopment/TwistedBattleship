@@ -4,13 +4,13 @@
   .list {
     .item {
       .item-note {
-        color: black;
+        color: $gold;
       }
       .checkmark {
         color: $gold;
       }
       .close {
-        color: red;
+        color: $red;
       }
     }
   }

@@ -12,7 +12,10 @@
   }
 
   .item-divider {
-    background-color: $boatBrown;
+    background-color: $brown;
+    color: $gold;
+    font-weight: bold;
+    text-align: center;
   }
 
   .optionOn {
@@ -22,7 +25,7 @@
   }
 
   .optionOff {
-    color: $boatBrown;
+    color: $black;
     font-size: x-large;
     padding-right: 5px;
   }

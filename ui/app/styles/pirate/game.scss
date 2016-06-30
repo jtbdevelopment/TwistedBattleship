@@ -6,6 +6,7 @@
     .item-avatar {
       img {
         left: 6px;
+        background-color: $gold;
 
         @media (max-width: $screen-sm-max) {
           height: 24px;
@@ -39,6 +40,7 @@
       }
 
       p, h3 {
+        color: white;
         @media (max-width: $screen-sm-max) {
           font-size: smaller;
         }
@@ -47,8 +49,8 @@
         }
       }
       .badge {
-        background: $brown;
-        color: black;
+        background: $gold;
+        color: $black;
         top: 12px;
         right: 6px;
 
@@ -68,7 +70,7 @@
 
     }
     .item-divider {
-      border-color: $boatBrown;
+      border-color: $brown;
 
       @media (max-width: $screen-xs-max) {
         font-size: x-small;
@@ -76,7 +78,10 @@
     }
 
     .chosen {
-      background-color: yellow;
+      background-color: $gold;
+      p, h3 {
+        color: $black;
+      }
 
     }
 
@@ -84,19 +89,28 @@
 
   .activePlayer {
     background-color: $red;
+    p, h3 {
+      color: white;
+    }
   }
 
   .inactivePlayer {
     background-color: $black;
+    p, h3 {
+      color: white;
+    }
   }
 
   .winner {
     background-color: $gold;
+    p, h3 {
+      color: black;
+    }
   }
 
   .loser {
-    background-color: red;
-    h3 {
+    background-color: $red;
+    p, h3 {
       color: white;
     }
   }
@@ -112,7 +126,10 @@
 
   .defeated {
     text-decoration: line-through;
-    color: $boatBrown;
+    color: $black;
+    p, h3 {
+      color: white;
+    }
   }
 
   .viewToggleRow {

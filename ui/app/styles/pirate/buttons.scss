@@ -30,32 +30,37 @@
 .button-submit {
   background-color: $gold;
   border-color: $gold;
+  color: $black;
 }
 
 .button-accept {
   background-color: $gold;
   border-color: $gold;
+  color: $black;
 }
 
 .button-close {
   background-color: $gold;
   border-color: $gold;
+  color: $black;
 }
 
 .button-rotatehelp {
-  background-color: $gold;
-  border-color: $gold;
+  background-color: $red;
+  border-color: $red;
+  color: $black;
 }
 
 .button-attack {
-  background-color: red;
-  border-color: red;
+  background-color: $red;
+  border-color: $red;
+  color: white;
 }
 
 .button-defend {
   background-color: $blue;
   border-color: $blue;
-  color: black;
+  color: white;
 }
 
 .button-switch-view {
@@ -64,13 +69,13 @@
 }
 
 .button-quit {
-  background-color: orange;
-  border-color: orange;
+  background-color: $red;
+  border-color: $red;
 }
 
 .button-reject {
-  background-color: orange;
-  border-color: orange;
+  background-color: $red;
+  border-color: $red;
 }
 
 .button-rematch {
@@ -83,8 +88,8 @@
 }
 
 .button[disabled] {
-  background-color: $boatBrown;
-  border-color: $boatBrown;
+  background-color: $brown;
+  border-color: $brown;
 }
 
 .button-action-log {

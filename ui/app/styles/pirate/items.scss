@@ -2,18 +2,21 @@
 @import "../screens";
 
 .item {
-  background-color: $black;
-  border-color: $boatBrown;
-  color: black;
+  background-color: $brown;
+  color: $gold;
   border-radius: 6px;
-  border-width: 0;
+  border: 0 $brown;
+
+  p {
+    color: $black;
+  }
 
   @media (max-width: $screen-xs-max) {
     padding: 2px;
   }
 
   .item-content {
-    background-color: $black;
+    background-color: $brown;
 
     @media (max-width: $screen-xs-max) {
       font-size: xx-small;
@@ -21,7 +24,7 @@
   }
   .badge {
     background: $blue;
-    color: $boatBrown;
+    color: $brown;
 
     @media (max-width: $screen-xs-max) {
       font-size: xx-small;
@@ -35,11 +38,11 @@
 }
 
 .item-divider {
-  background-color: $boatBrown;
-  border-color: $boatBrown;
+  background-color: $brown;
+  border-color: $brown;
   color: white;
   .badge {
-    background-color: $brown;
+    background-color: $gold;
     color: black;
 
     @media (max-width: $screen-xs-max) {

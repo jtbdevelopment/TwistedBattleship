@@ -17,7 +17,8 @@
   select {
     border-radius: 4px;
     padding-left: 2px;
-    background-color: $black;
+    background-color: $brown;
+    color: $gold;
     @media (max-width: $screen-xs-max) {
       font-size: small;
     }
@@ -25,7 +26,7 @@
 }
 
 .input-label {
-  color: black;
+  color: $gold;
   @media (max-width: $screen-xs-max) {
     font-size: small;
   }

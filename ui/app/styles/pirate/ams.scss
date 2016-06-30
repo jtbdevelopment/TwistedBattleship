@@ -21,8 +21,9 @@
 
     > .ams_btn {
       text-align: right;
-      color: black;
+      color: $gold;
       font-size: 16px;
+      border-color: $brown;
       @media (max-width: $screen-xs-max) {
         font-size: small;
       }
@@ -30,8 +31,8 @@
     .ams_btn {
       background-image: none;
       width: 100%;
-      background-color: $black;
-      color: black;
+      background-color: $brown;
+      color: $gold;
       @media (max-width: $screen-xs-max) {
         font-size: small;
       }
@@ -40,10 +41,10 @@
     .ams_layer {
       position: relative;
 
-      background-color: $black;
+      background-color: $brown;
       width: 100%;
       font-size: 16px;
-      color: black;
+      color: $gold;
       @media (max-width: $screen-xs-max) {
         font-size: small;
       }
@@ -52,7 +53,7 @@
 
         .ams_item {
           font-size: 16px;
-          color: black;
+          color: $gold;
           @media (max-width: $screen-xs-max) {
             font-size: small;
           }
@@ -72,7 +73,7 @@
         .ams_selected:hover {
 
           background-color: $blue;
-          color: black;
+          color: $gold;
           background-image: none;
         }
       }
