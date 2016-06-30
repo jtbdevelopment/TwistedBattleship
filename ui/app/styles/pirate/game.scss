@@ -103,8 +103,8 @@
 
   .winner {
     background-color: $gold;
-    p, h3 {
-      color: black;
+    h3 {
+      color: $black !important;
     }
   }
 
