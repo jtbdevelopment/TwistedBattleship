@@ -107,15 +107,16 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                 movementEnabled = false;
 
                 phaser.load.tilemap('grid', 'templates/gamefiles/' + json, null, Phaser.Tilemap.TILED_JSON);
-                phaser.load.image('tile', 'images/' + theme + '/tile.png');
-                phaser.load.image('highlight', 'images/' + theme + '/highlight.png');
-                phaser.load.image('extendedhighlight', 'images/' + theme + '/extendedhighlight.png');
+                var themeImages = 'images/' + theme + '/';
+                phaser.load.image('tile', themeImages + 'tile.png');
+                phaser.load.image('highlight', themeImages + 'highlight.png');
+                phaser.load.image('extendedhighlight', themeImages + 'extendedhighlight.png');
                 angular.forEach(cellStateMap, function (state) {
                     var lower = angular.lowercase(state);
-                    phaser.load.image(lower, 'images/' + theme + '/' + lower + '.png');
+                    phaser.load.image(lower, themeImages + lower + '.png');
                 });
                 angular.forEach(shipNames, function (shipName) {
-                    phaser.load.image(shipName, 'images/' + theme + '/' + angular.lowercase(shipName) + '.png');
+                    phaser.load.image(shipName, themeImages + angular.lowercase(shipName) + '.png');
                 });
             }
 
