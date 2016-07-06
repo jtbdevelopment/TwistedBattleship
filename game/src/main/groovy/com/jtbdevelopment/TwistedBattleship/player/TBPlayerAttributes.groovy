@@ -4,6 +4,7 @@ import com.jtbdevelopment.games.player.tracking.AbstractPlayerGameTrackingAttrib
 import com.jtbdevelopment.games.players.Player
 import com.jtbdevelopment.games.players.PlayerPayLevel
 import groovy.transform.CompileStatic
+import org.springframework.data.annotation.AccessType
 import org.springframework.data.annotation.Transient
 
 /**
@@ -14,6 +15,7 @@ import org.springframework.data.annotation.Transient
 class TBPlayerAttributes extends AbstractPlayerGameTrackingAttributes {
     private static final String DEFAULT_THEME = 'default-theme'
     private static final String PIRATE_THEME = 'pirate-theme'
+    private static final Set<String> FREE_THEMES = [DEFAULT_THEME, PIRATE_THEME] as Set
     public static final int DEFAULT_FREE_GAMES_PER_DAY = 50;
     public static final int DEFAULT_PREMIUM_PLAYER_GAMES_PER_DAY = 100;
 
@@ -21,9 +23,20 @@ class TBPlayerAttributes extends AbstractPlayerGameTrackingAttributes {
     int maxDailyFreeGames
 
     String theme = DEFAULT_THEME
-    List<String> availableThemes = [DEFAULT_THEME, PIRATE_THEME]
 
-    //  TODO - title, win streak, max points etc
+    @AccessType(AccessType.Type.PROPERTY)
+    Set<String> availableThemes = FREE_THEMES
+
+    void setAvailableThemes(final List<String> availableThemes) {
+        this.availableThemes.addAll(availableThemes)
+    }
+
+    @SuppressWarnings("GroovyUnusedDeclaration")
+    void setAvailableThemes(final Set<String> availableThemes) {
+        this.availableThemes.addAll(availableThemes)
+    }
+
+//  TODO - title, win streak, max points etc
 
     @Transient
     @Override
