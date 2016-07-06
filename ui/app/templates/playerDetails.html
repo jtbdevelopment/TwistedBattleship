@@ -13,10 +13,21 @@
                 Maximum Free Games Per Day
                 <span class="item-note">{{player.gameSpecificPlayerAttributes.maxDailyFreeGames}}</span>
             </ion-item>
-            <ion-item class="item">
-                Current Theme
-                <span class="item-note">{{player.gameSpecificPlayerAttributes.theme}}</span>
+            <ion-item class="item item-input item-select item-button-right">
+                <div class="input-label">
+                    Current Theme
+                </div>
+                <select ng-model="data.theme">
+                    <option ng-repeat="themeOption in player.gameSpecificPlayerAttributes.availableThemes"
+                            value="{{themeOption}}">
+                        {{themeOption.replace('-theme', '')}}
+                    </option>
+                </select>
+                <button class="button button-submit" ng-click="changeTheme()">
+                    <i class="icon ion-checkmark"></i>
+                </button>
             </ion-item>
+
         </ion-list>
     </ion-content>
 </ion-view>

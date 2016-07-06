@@ -27,10 +27,6 @@ class TBPlayerAttributes extends AbstractPlayerGameTrackingAttributes {
     @AccessType(AccessType.Type.PROPERTY)
     Set<String> availableThemes = FREE_THEMES
 
-    void setAvailableThemes(final List<String> availableThemes) {
-        this.availableThemes.addAll(availableThemes)
-    }
-
     @SuppressWarnings("GroovyUnusedDeclaration")
     void setAvailableThemes(final Set<String> availableThemes) {
         this.availableThemes.addAll(availableThemes)

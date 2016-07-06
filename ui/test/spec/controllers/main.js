@@ -121,6 +121,18 @@ describe('Controller: MainCtrl', function () {
             expect(scope.player).to.equal(currentPlayer);
         });
 
+        it('ignores player updates if id doesnt match', function () {
+            var updatedPlayer = {id: currentPlayer.id + 'X', gameSpecificPlayerAttributes: {theme: 'initialX'}};
+            rootScope.$broadcast('playerUpdate', updatedPlayer.id, updatedPlayer);
+            expect(scope.player).to.equal(currentPlayer);
+        });
+
+        it('takes in player updates if id matches', function () {
+            var updatedPlayer = {id: currentPlayer.id, gameSpecificPlayerAttributes: {theme: 'new-theme'}};
+            rootScope.$broadcast('playerUpdate', updatedPlayer.id, updatedPlayer);
+            expect(scope.player).to.equal(updatedPlayer);
+            expect(scope.theme).to.equal(updatedPlayer.gameSpecificPlayerAttributes.theme);
+        });
     });
 
     it('initializes on player loaded', function () {
@@ -204,4 +216,5 @@ describe('Controller: MainCtrl', function () {
         timeout.flush();
         assert(livefeed.suspendFeed.calledWithMatch());
     });
+
 });

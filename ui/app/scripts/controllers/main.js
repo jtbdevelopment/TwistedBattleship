@@ -30,6 +30,13 @@ angular.module('tbs.controllers').controller('MainCtrl',
             $scope.mobile = $window.location.href.indexOf('file') === 0;
             $scope.adImport = 'templates/ads/' + ($scope.mobile ? 'mobile' : 'non-mobile') + '.html';
 
+            $scope.$on('playerUpdate', function (event, id, player) {
+                if ($scope.player.id === id) {
+                    $scope.player = player;
+                    $scope.theme = player.gameSpecificPlayerAttributes.theme;
+                }
+            });
+
             $scope.$on('playerLoaded', function () {
                 $scope.player = jtbPlayerService.currentPlayer();
                 $scope.theme = jtbPlayerService.currentPlayer().gameSpecificPlayerAttributes.theme;
