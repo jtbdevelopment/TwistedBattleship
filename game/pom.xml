@@ -75,7 +75,7 @@
         <dependency>
             <groupId>com.jtbdevelopment.core-games</groupId>
             <artifactId>games-dev-utilities</artifactId>
-            <version>${core.games.version}</version>
+            <version>${core.games.devutilities.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

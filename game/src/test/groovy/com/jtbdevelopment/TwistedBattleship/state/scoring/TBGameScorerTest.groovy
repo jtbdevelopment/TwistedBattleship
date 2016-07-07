@@ -8,21 +8,44 @@ import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
 import com.jtbdevelopment.games.dao.AbstractPlayerRepository
 import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
+import com.jtbdevelopment.games.mongo.players.MongoPlayer
+import com.jtbdevelopment.games.mongo.players.MongoSystemPlayer
 import com.jtbdevelopment.games.players.Player
 import com.jtbdevelopment.games.publish.PlayerPublisher
+import org.bson.types.ObjectId
+
+import java.rmi.UnexpectedException
 
 /**
  * Date: 4/27/15
  * Time: 6:25 PM
  */
 class TBGameScorerTest extends MongoGameCoreTestCase {
-    def savedPlayers = [:]
     def publishedPlayers = []
+    def loaded1 = (MongoPlayer) PONE.clone()
+    def loaded2 = (MongoPlayer) PTWO.clone()
+    def saved1 = new MongoPlayer()
+    def saved2 = new MongoPlayer()
     AbstractPlayerRepository mockRepository = [
-            save: {
+            findOne: {
+                ObjectId id ->
+                    switch (id) {
+                        case PONE.id:
+                            return loaded1
+                        case PTWO.id:
+                            return loaded2
+                    }
+                    throw new UnexpectedException("unknown id")
+            },
+            save   : {
                 Player p ->
-                    savedPlayers[p.id] = p
-                    p
+                    if (p.is(loaded1)) {
+                        return saved1
+                    }
+                    if (p.is(loaded2)) {
+                        return saved2
+                    }
+                    throw new UnexpectedException("unknown id")
             }
     ] as AbstractPlayerRepository
     PlayerPublisher mockPublisher = [
@@ -31,8 +54,11 @@ class TBGameScorerTest extends MongoGameCoreTestCase {
                     publishedPlayers.add(p)
             }
     ] as PlayerPublisher
+
+    MongoSystemPlayer systemPlayer = new MongoSystemPlayer()
+
     TBGame game = new TBGame(
-            players: [PONE, PTWO],
+            players: [PONE, PTWO, systemPlayer],  //  3 has no state or attributes for error handling
             playerDetails: [
                     (PONE.id): new TBPlayerState(shipStates: [new ShipState(Ship.Battleship, [] as SortedSet<GridCoordinate>)], scoreFromLiving: 5),
                     (PTWO.id): new TBPlayerState(scoreFromLiving: 2),
@@ -41,9 +67,11 @@ class TBGameScorerTest extends MongoGameCoreTestCase {
 
     TBGameScorer scorer = new TBGameScorer(playerRepository: mockRepository, playerPublisher: mockPublisher)
 
-    void setup() {
-        savedPlayers.clear()
+    @Override
+    protected void setUp() {
         publishedPlayers.clear()
+        loaded1.gameSpecificPlayerAttributes = new TBPlayerAttributes()
+        loaded2.gameSpecificPlayerAttributes = new TBPlayerAttributes()
     }
 
     void testScoresLiving() {
@@ -55,27 +83,24 @@ class TBGameScorerTest extends MongoGameCoreTestCase {
     }
 
     void testAdjustsPlayerWinStreaksAndWinsLosses() {
-        PONE.gameSpecificPlayerAttributes = new TBPlayerAttributes()
-        ((TBPlayerAttributes) PONE.gameSpecificPlayerAttributes).currentWinStreak = 5
-        ((TBPlayerAttributes) PONE.gameSpecificPlayerAttributes).wins = 10
-        ((TBPlayerAttributes) PONE.gameSpecificPlayerAttributes).losses = 10
-        ((TBPlayerAttributes) PONE.gameSpecificPlayerAttributes).highestScore = 11
-        PTWO.gameSpecificPlayerAttributes = new TBPlayerAttributes()
-        ((TBPlayerAttributes) PTWO.gameSpecificPlayerAttributes).currentWinStreak = 5
-        ((TBPlayerAttributes) PTWO.gameSpecificPlayerAttributes).wins = 10
-        ((TBPlayerAttributes) PTWO.gameSpecificPlayerAttributes).losses = 11
-        ((TBPlayerAttributes) PTWO.gameSpecificPlayerAttributes).highestScore = 5
+        ((TBPlayerAttributes) loaded1.gameSpecificPlayerAttributes).currentWinStreak = 5
+        ((TBPlayerAttributes) loaded1.gameSpecificPlayerAttributes).wins = 10
+        ((TBPlayerAttributes) loaded1.gameSpecificPlayerAttributes).losses = 10
+        ((TBPlayerAttributes) loaded1.gameSpecificPlayerAttributes).highestScore = 11
+        ((TBPlayerAttributes) loaded2.gameSpecificPlayerAttributes).currentWinStreak = 5
+        ((TBPlayerAttributes) loaded2.gameSpecificPlayerAttributes).wins = 10
+        ((TBPlayerAttributes) loaded2.gameSpecificPlayerAttributes).losses = 11
+        ((TBPlayerAttributes) loaded2.gameSpecificPlayerAttributes).highestScore = 5
 
         scorer.scoreGame(game)
 
-        assert [(PONE.id): PONE, (PTWO.id): PTWO] == savedPlayers
-        assert [PONE, PTWO] as Set == publishedPlayers as Set
-        TBPlayerAttributes attributes = (TBPlayerAttributes) ((Player) savedPlayers[PONE.id]).gameSpecificPlayerAttributes
+        assert [saved1, saved2] as Set == publishedPlayers as Set
+        TBPlayerAttributes attributes = (TBPlayerAttributes) loaded1.gameSpecificPlayerAttributes
         assert 6 == attributes.currentWinStreak
         assert 11 == attributes.wins
         assert 10 == attributes.losses
         assert 15 == attributes.highestScore
-        attributes = (TBPlayerAttributes) ((Player) savedPlayers[PTWO.id]).gameSpecificPlayerAttributes
+        attributes = (TBPlayerAttributes) loaded2.gameSpecificPlayerAttributes
         assert 0 == attributes.currentWinStreak
         assert 10 == attributes.wins
         assert 12 == attributes.losses

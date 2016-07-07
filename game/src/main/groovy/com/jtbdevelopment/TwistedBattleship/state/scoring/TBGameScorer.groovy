@@ -4,9 +4,11 @@ import com.jtbdevelopment.TwistedBattleship.player.TBPlayerAttributes
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.games.dao.AbstractPlayerRepository
+import com.jtbdevelopment.games.players.SystemPlayer
 import com.jtbdevelopment.games.publish.PlayerPublisher
 import com.jtbdevelopment.games.state.scoring.GameScorer
 import groovy.transform.CompileStatic
+import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
@@ -34,9 +36,12 @@ class TBGameScorer implements GameScorer<TBGame> {
         }.each {
             it.value.scoreFromLiving += SCORE_FOR_VICTORY
         }
-        game.players.each {
-            TBPlayerState state = game.playerDetails[it.id]
-            TBPlayerAttributes attributes = (TBPlayerAttributes) it.gameSpecificPlayerAttributes
+
+        def nonSystemPlayers = game.players.findAll { !(it in SystemPlayer) }
+        def updatedPlayers = nonSystemPlayers.collect {
+            def player = playerRepository.findOne(it.id)
+            TBPlayerAttributes attributes = (TBPlayerAttributes) player.gameSpecificPlayerAttributes
+            TBPlayerState state = game.playerDetails[(ObjectId) player.id]
             if (state.alive) {
                 attributes.wins += 1
                 attributes.currentWinStreak += 1
@@ -46,8 +51,9 @@ class TBGameScorer implements GameScorer<TBGame> {
                 attributes.currentWinStreak = 0
             }
             attributes.highestScore = Math.max(attributes.highestScore, state.totalScore)
+            player
         }
-        game.players.each {
+        updatedPlayers.each {
             playerPublisher.publish(playerRepository.save(it))
         }
 
