@@ -5,14 +5,6 @@
                 Name
                 <span class="item-note">{{player.displayName}}</span>
             </ion-item>
-            <ion-item class="item">
-                Free Games Played or Accepted Today
-                <span class="item-note">{{player.gameSpecificPlayerAttributes.freeGamesUsedToday}}</span>
-            </ion-item>
-            <ion-item class="item">
-                Maximum Free Games Per Day
-                <span class="item-note">{{player.gameSpecificPlayerAttributes.maxDailyFreeGames}}</span>
-            </ion-item>
             <ion-item class="item item-input item-select item-button-right">
                 <div class="input-label">
                     Current Theme
@@ -27,7 +19,36 @@
                     <i class="icon ion-checkmark"></i>
                 </button>
             </ion-item>
-
+            <ion-item class="item item-divider">
+                Available Games:
+            </ion-item>
+            <ion-item class="item">
+                Free Games Played or Accepted Today
+                <span class="item-note">{{player.gameSpecificPlayerAttributes.freeGamesUsedToday}}</span>
+            </ion-item>
+            <ion-item class="item">
+                Maximum Free Games Per Day
+                <span class="item-note">{{player.gameSpecificPlayerAttributes.maxDailyFreeGames}}</span>
+            </ion-item>
+            <ion-item class="item item-divider">
+                Game States
+            </ion-item>
+            <ion-item>
+                Current Hot Streak
+                <span class="item-note">{{player.gameSpecificPlayerAttributes.currentWinStreak}}</span>
+            </ion-item>
+            <ion-item>
+                Wins
+                <span class="item-note">{{player.gameSpecificPlayerAttributes.wins}}</span>
+            </ion-item>
+            <ion-item>
+                Losses
+                <span class="item-note">{{player.gameSpecificPlayerAttributes.losses}}</span>
+            </ion-item>
+            <ion-item>
+                Highest Score
+                <span class="item-note">{{player.gameSpecificPlayerAttributes.highestScore}}</span>
+            </ion-item>
         </ion-list>
     </ion-content>
 </ion-view>
