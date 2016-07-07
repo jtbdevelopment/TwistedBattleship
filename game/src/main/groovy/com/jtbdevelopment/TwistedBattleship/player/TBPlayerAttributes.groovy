@@ -25,14 +25,25 @@ class TBPlayerAttributes extends AbstractPlayerGameTrackingAttributes {
     String theme = DEFAULT_THEME
 
     @AccessType(AccessType.Type.PROPERTY)
-    Set<String> availableThemes = FREE_THEMES
+    Set<String> availableThemes = new HashSet<>(FREE_THEMES)
 
     @SuppressWarnings("GroovyUnusedDeclaration")
     void setAvailableThemes(final Set<String> availableThemes) {
         this.availableThemes.addAll(availableThemes)
     }
 
-//  TODO - title, win streak, max points etc
+    int wins
+    int losses
+    int currentWinStreak
+    int highestScore
+
+    //  TODO
+    /*
+    int shipsSunk
+    int aiPlayersDefeated
+    int playersDefeated
+    */
+    //  TODO - title etc
 
     @Transient
     @Override

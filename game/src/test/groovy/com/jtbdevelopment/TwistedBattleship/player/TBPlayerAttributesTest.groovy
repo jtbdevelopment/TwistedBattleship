@@ -10,7 +10,8 @@ import org.bson.types.ObjectId
  * Time: 6:43 AM
  */
 class TBPlayerAttributesTest extends MongoGameCoreTestCase {
-    void testSetPlayer() {
+
+    void testSetTypePlayer() {
         Player p = makeSimplePlayer(new ObjectId().toString())
         p.payLevel = PlayerPayLevel.FreeToPlay
         assert new TBPlayerAttributes(player: p).maxDailyFreeGames == 50
@@ -18,10 +19,15 @@ class TBPlayerAttributesTest extends MongoGameCoreTestCase {
         assert new TBPlayerAttributes(player: p).maxDailyFreeGames == 100
     }
 
-    void testDefaultThemes() {
+    void testDefaults() {
         TBPlayerAttributes attributes = new TBPlayerAttributes()
         assert 'default-theme' == attributes.theme
         assert ['default-theme', 'pirate-theme'] as Set == attributes.availableThemes
+
+        assert 0 == attributes.wins
+        assert 0 == attributes.losses
+        assert 0 == attributes.currentWinStreak
+        assert 0 == attributes.highestScore
     }
 
     void testAddsFreeThemesIfNotInSetIfSettingThemes() {
