@@ -8,7 +8,6 @@ Consolidated To Do's
 - add nudge player
 - test war with non / roots
 - a.i. players - more
-- many ui tests
 - core lib error handling
 - hazelcast cluster group name?
 - refresh on web page not working if on root (ok via FB Canvas)
