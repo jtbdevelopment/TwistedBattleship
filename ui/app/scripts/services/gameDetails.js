@@ -4,7 +4,7 @@ angular.module('tbs.services').factory('tbsGameDetails',
     ['jtbGamePhaseService', function (jtbGamePhaseService) {
         var iconMap = {
             'SpyEnabled': 'eye',
-            'CruiseMissileDisabled': 'disc',
+            'CruiseMissileEnabled': 'disc',
             'ECMEnabled': 'eye-disabled',
             'SharedIntel': 'images',
             'IsolatedIntel': 'image',

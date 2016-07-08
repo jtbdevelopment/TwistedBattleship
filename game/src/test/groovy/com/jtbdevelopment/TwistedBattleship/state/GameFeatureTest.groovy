@@ -13,7 +13,7 @@ class GameFeatureTest extends GroovyTestCase {
                 (GameFeature.StartingShips)   : [GameFeature.StandardShips, GameFeature.AllCarriers, GameFeature.AllDestroyers, GameFeature.AllSubmarines, GameFeature.AllCruisers, GameFeature.AllBattleships],
                 (GameFeature.ECM)             : [GameFeature.ECMEnabled, GameFeature.ECMDisabled],
                 (GameFeature.Spy)             : [GameFeature.SpyEnabled, GameFeature.SpyDisabled],
-                (GameFeature.CruiseMissile)   : [GameFeature.CruiseMissileDisabled, GameFeature.CruiseMissileEnabled],
+                (GameFeature.CruiseMissile)   : [GameFeature.CruiseMissileEnabled, GameFeature.CruiseMissileDisabled],
                 (GameFeature.EmergencyRepairs): [GameFeature.EREnabled, GameFeature.ERDisabled],
                 (GameFeature.EvasiveManeuvers): [GameFeature.EMEnabled, GameFeature.EMDisabled],
         ]

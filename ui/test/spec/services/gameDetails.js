@@ -76,7 +76,7 @@ describe('Service: gameDetails', function () {
 
     it('icons for features', function () {
         expect(service.iconForFeature('SpyEnabled')).to.equal('eye');
-        expect(service.iconForFeature('CruiseMissileDisabled')).to.equal('disc');
+        expect(service.iconForFeature('CruiseMissileEnabled')).to.equal('disc');
         expect(service.iconForFeature('ECMEnabled')).to.equal('eye-disabled');
         expect(service.iconForFeature('SharedIntel')).to.equal('images');
         expect(service.iconForFeature('IsolatedIntel')).to.equal('image');

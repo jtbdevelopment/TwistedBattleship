@@ -46,8 +46,8 @@ enum GameFeature {
     SpyDisabled(2, 'Disabled', 'Spy drones disabled.', Spy),
 
     CruiseMissile(9, GameFeatureGroupType.Offensive, CruiseMissileDisabled, 'Cruise Missile', "Single use attack that sinks a ship with a single hit on any location."),
-    CruiseMissileDisabled(1, 'Disabled', 'Cruise missile disabled.', CruiseMissile),
-    CruiseMissileEnabled(2, 'Enabled', "Single use per game, sinks a ship by hitting any single ship location.", CruiseMissile),
+    CruiseMissileEnabled(1, 'Enabled', "Single use per game, sinks a ship by hitting any single ship location.", CruiseMissile),
+    CruiseMissileDisabled(2, 'Disabled', 'Cruise missile disabled.', CruiseMissile),
 
     final GameFeatureGroupType groupType
     final GameFeature group

@@ -141,8 +141,8 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
                         ]),
                 new GameFeatureInfo(GameFeature.CruiseMissile,
                         [
-                                new GameFeatureInfo.Detail(GameFeature.CruiseMissileDisabled),
                                 new GameFeatureInfo.Detail(GameFeature.CruiseMissileEnabled),
+                                new GameFeatureInfo.Detail(GameFeature.CruiseMissileDisabled),
                         ]),
         ]
     }
