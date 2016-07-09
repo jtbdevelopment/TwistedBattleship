@@ -199,7 +199,9 @@ describe('Service: shipGridV2', function () {
                 collideWorldBounds: false,
                 debug: false,
                 width: 200,
-                height: 195
+                height: 195,
+                setSize: sinon.spy(),
+                hitTest: sinon.stub(),
             },
             input: {
                 events: undefined,
@@ -211,7 +213,6 @@ describe('Service: shipGridV2', function () {
                     expect(pointer).to.equal(PhaserGame.input.activePointer);
                     this.events.onDragStop.dragStopCB();
                 },
-                pointerOver: sinon.stub(),
                 enableDrag: sinon.spy(),
                 disableSnap: sinon.spy(),
                 enableSnap: sinon.spy()
@@ -361,8 +362,7 @@ describe('Service: shipGridV2', function () {
             expect(destroyerSprite.height).to.equal(193);
             expect(destroyerSprite.width).to.equal(198);
             expect(destroyerSprite.angle).to.equal(90);
-            expect(destroyerSprite.body.height).to.equal(200);
-            expect(destroyerSprite.body.width).to.equal(195);
+            assert(destroyerSprite.body.setSize.calledWithMatch(195, 200, 0, 0));
             assert(destroyerSprite.anchor.setTo.calledWithMatch(0.5, 0.5));
             expect(destroyerSprite.x).to.equal(650);
             expect(destroyerSprite.y).to.equal(600);
@@ -396,8 +396,7 @@ describe('Service: shipGridV2', function () {
             expect(newDestroyer.height).to.equal(193);
             expect(newDestroyer.width).to.equal(198);
             expect(newDestroyer.angle).to.equal(90);
-            expect(newDestroyer.body.height).to.equal(200);
-            expect(newDestroyer.body.width).to.equal(195);
+            assert(newDestroyer.body.setSize.calledWithMatch(195, 200, 0, 0));
             assert(newDestroyer.anchor.setTo.calledWithMatch(0.5, 0.5));
             expect(newDestroyer.x).to.equal(650);
             expect(newDestroyer.y).to.equal(600);
@@ -588,9 +587,9 @@ describe('Service: shipGridV2', function () {
                     expect(angular.isDefined(sprite.events.onDragStart.dragStartCB)).to.be.true;
                     expect(angular.isDefined(sprite.events.onDragStop.dragStopCB)).to.be.true;
                 });
-                assert(destroyerSprite.input.enableSnap.calledWithMatch(100, 100, false, true, 0, 50));
-                assert(carrierSprite.input.enableSnap.calledWithMatch(100, 100, false, true, 50, 50));
-                assert(submarineSprite.input.enableSnap.calledWithMatch(100, 100, false, true, 50, 50));
+                assert(destroyerSprite.input.enableSnap.calledWithMatch(100, 100, true, true, 0, 50));
+                assert(carrierSprite.input.enableSnap.calledWithMatch(100, 100, true, true, 50, 50));
+                assert(submarineSprite.input.enableSnap.calledWithMatch(100, 100, true, true, 50, 50));
             });
 
             it('calling update in initial state calls cb with no overlap', function () {
@@ -644,27 +643,29 @@ describe('Service: shipGridV2', function () {
                 destroyerSprite.input.enableSnap.reset();
                 destroyerSprite.body.height = 100;
                 destroyerSprite.body.width = 200;
-                carrierSprite.input.pointerOver.returns(false);
-                submarineSprite.input.pointerOver.returns(false);
-                destroyerSprite.input.pointerOver.returns(true);
-                PhaserGame.input.onTap.onTapCB(undefined, true);
+                var pointer = {worldX: 32, worldY: 16};
+                carrierSprite.body.hitTest.withArgs(pointer.worldX, pointer.worldY).returns(false);
+                submarineSprite.body.hitTest.withArgs(pointer.worldX, pointer.worldY).returns(false);
+                destroyerSprite.body.hitTest.withArgs(pointer.worldX, pointer.worldY).returns(true);
+                PhaserGame.input.onTap.onTapCB(pointer, true);
                 var destroyer = service.currentShipsOnGrid()[1];
                 expect(destroyer.horizontal).to.be.false;
                 expect(destroyerSprite.angle).to.equal(90);
-                expect(destroyerSprite.body.height).to.equal(200);
-                expect(destroyerSprite.body.width).to.equal(100);
+                assert(destroyerSprite.body.setSize.calledWithMatch(100, 200, 0, 0));
                 assert(destroyerSprite.input.disableSnap.calledWithMatch());
-                assert(destroyerSprite.input.enableSnap.calledWithMatch(100, 100, false, true, 50, 0));
+                assert(destroyerSprite.input.enableSnap.calledWithMatch(100, 100, true, true, 50, 0));
             });
 
             it('test update after double click calls recompute, but does not resnap yet', function () {
                 phaserCBs.update();
 
-                carrierSprite.input.pointerOver.returns(false);
-                submarineSprite.input.pointerOver.returns(false);
-                destroyerSprite.input.pointerOver.returns(true);
+                var pointer = {worldX: 32, worldY: 16};
+                carrierSprite.body.hitTest.withArgs(pointer.worldX, pointer.worldY).returns(false);
+                submarineSprite.body.hitTest.withArgs(pointer.worldX, pointer.worldY).returns(false);
+                destroyerSprite.body.hitTest.withArgs(pointer.worldX, pointer.worldY).returns(true);
+
                 destroyerSprite.input.isDragged = true;
-                PhaserGame.input.onTap.onTapCB(undefined, true);
+                PhaserGame.input.onTap.onTapCB(pointer, true);
 
                 var destroyerBounds = {d: 1, x: 300, y: 300}, subBounds = {s: 1}, carrierBounds = {c: 1};
                 destroyerSprite.getBounds.returns(destroyerBounds);

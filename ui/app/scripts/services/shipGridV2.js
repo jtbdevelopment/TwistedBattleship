@@ -185,10 +185,12 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                 } else {
                     centerY = (firstCell.row * CELL_SIZE) + (shipInfo.gridSize * HALF_CELL_SIZE);
                     centerX = (firstCell.column * CELL_SIZE) + HALF_CELL_SIZE;
-                    var swap = shipSprite.body.width;
-                    //noinspection JSSuspiciousNameCombination
-                    shipSprite.body.width = shipSprite.body.height;
-                    shipSprite.body.height = swap;
+                    shipSprite.body.setSize(
+                        shipSprite.body.height,
+                        shipSprite.body.width,
+                        0,
+                        0
+                    );
                 }
                 shipSprite.x = centerX;
                 shipSprite.y = centerY;
@@ -200,6 +202,14 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                 };
                 shipsOnGrid.push(shipOnGrid);
             }
+
+            /*
+             function render() {
+             angular.forEach(shipsOnGrid, function (shipOnGrid) {
+             phaser.debug.body(shipOnGrid.shipSprite);
+             });
+            }
+             */
 
             function drawCircleCenteredOnCell(row, column) {
                 var y = row * CELL_SIZE;
@@ -280,7 +290,7 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                     offsetX = HALF_CELL_SIZE;
                     offsetY = (shipOnGrid.shipInfo.gridSize % 2 === 0) ? 0 : HALF_CELL_SIZE;
                 }
-                shipOnGrid.shipSprite.input.enableSnap(CELL_SIZE, CELL_SIZE, false, true, offsetX, offsetY);
+                shipOnGrid.shipSprite.input.enableSnap(CELL_SIZE, CELL_SIZE, true, true, offsetX, offsetY);
             }
 
             function recomputeGridCells(shipOnGrid) {
@@ -301,16 +311,18 @@ angular.module('tbs.services').factory('tbsShipGridV2',
             }
 
             //noinspection JSUnusedLocalSymbols
-            function rotateShipOnDoubleClick(context, isDouble) {
+            function rotateShipOnDoubleClick(pointer, isDouble) {
                 if (isDouble) {
                     angular.forEach(shipsOnGrid, function (shipOnGrid) {
-                        if (shipOnGrid.shipSprite.input.pointerOver()) {
+                        if (shipOnGrid.shipSprite.body.hitTest(pointer.worldX, pointer.worldY)) {
                             shipOnGrid.shipState.horizontal = !shipOnGrid.shipState.horizontal;
-                            var swap = shipOnGrid.shipSprite.body.width;
-                            //noinspection JSSuspiciousNameCombination
-                            shipOnGrid.shipSprite.body.width = shipOnGrid.shipSprite.body.height;
-                            shipOnGrid.shipSprite.body.height = swap;
                             shipOnGrid.shipSprite.angle = shipOnGrid.shipState.horizontal ? 0 : 90;
+                            shipOnGrid.shipSprite.body.setSize(
+                                shipOnGrid.shipSprite.body.height,
+                                shipOnGrid.shipSprite.body.width,
+                                0,
+                                0
+                            );
                             enableGridSnapping(shipOnGrid);
                             //  rotate can leave ship off snap lines
                             recomputeSnapping.push(shipOnGrid);
@@ -373,6 +385,7 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                                         gameHeight,
                                         'phaser',
                                         {
+                                            //render: render,
                                             preload: preload,
                                             create: create,
                                             init: init,

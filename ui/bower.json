@@ -10,7 +10,7 @@
     "jtb-core-games-ui": "~1.4.2",
     "jtb-core-games-ionic-ui": "~1.2.3",
     "ngCordova": "v0.1.14-alpha",
-    "phaser": "2.4.7"
+    "phaser": "2.5.0"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.12",
@@ -20,7 +20,6 @@
   "resolutions": {
     "angular": "1.4.12",
     "angular-sanitize": "~1.4.7",
-    "angular-animate": "~1.4.7",
-    "phaser": "2.4.7"
+    "angular-animate": "~1.4.7"
   }
 }
