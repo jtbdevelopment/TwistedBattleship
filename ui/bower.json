@@ -1,12 +1,12 @@
 {
-  "name": "TwistedBattleship",
+  "name": "twistedbattleship",
   "version": "0.0.0",
   "dependencies": {
     "angular-cookies": "~1.4.12",
     "angular-multi-select-alexandernst": "https://github.com/jtbdevelopment/angular-multi-select.git#master",
     "angular-resource": "~1.4.12",
     "angular-route": "~1.4.12",
-    "ionic": "driftyco/ionic-bower#1.1.0",
+    "ionic": "driftyco/ionic-bower#1.2.4",
     "jtb-core-games-ui": "~1.4.2",
     "jtb-core-games-ionic-ui": "~1.2.3",
     "ngCordova": "v0.1.14-alpha",
@@ -15,11 +15,12 @@
   "devDependencies": {
     "angular-mocks": "~1.4.12",
     "angular-scenario": "~1.4.12",
-    "ionic": "driftyco/ionic-bower#1.1.0"
+    "ionic": "driftyco/ionic-bower#1.2.4"
   },
   "resolutions": {
     "angular": "1.4.12",
-    "angular-sanitize": "~1.4.7",
-    "angular-animate": "~1.4.7"
+    "angular-sanitize": "~1.4.8",
+    "angular-animate": "~1.4.8",
+    "ionic": "1.2.4"
   }
 }
