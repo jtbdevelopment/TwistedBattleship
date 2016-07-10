@@ -9,7 +9,7 @@ import groovy.transform.CompileStatic
  */
 @CompileStatic
 class ShipPlacementsNotValidException extends GameInputException {
-    private final static String ERROR = "Ship(s) are placed validly."
+    private final static String ERROR = "Ship(s) are not placed validly."
 
     ShipPlacementsNotValidException() {
         super(ERROR)

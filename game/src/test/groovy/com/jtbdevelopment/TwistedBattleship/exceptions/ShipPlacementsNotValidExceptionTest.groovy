@@ -6,6 +6,6 @@ package com.jtbdevelopment.TwistedBattleship.exceptions
  */
 class ShipPlacementsNotValidExceptionTest extends GroovyTestCase {
     void testErrorMessage() {
-        assert "Ship(s) are placed validly." == new ShipPlacementsNotValidException().message
+        assert "Ship(s) are not placed validly." == new ShipPlacementsNotValidException().message
     }
 }
