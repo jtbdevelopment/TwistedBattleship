@@ -329,12 +329,15 @@ describe('Service: shipGridV2', function () {
                 {
                     ship: 'Carrier',
                     horizontal: true,
-                    shipGridCells: [{row: 0, column: 0}]
+                    shipGridCells: [{row: 0, column: 0}, {row: 0, column: 1}, {row: 0, column: 2}, {
+                        row: 0,
+                        column: 3
+                    }, {row: 0, column: 4}]
                 },
                 {
                     ship: 'Destroyer',
                     horizontal: false,
-                    shipGridCells: [{row: 5, column: 6}]
+                    shipGridCells: [{row: 5, column: 6}, {row: 6, column: 6}]
                 }
             ];
             var carrierSprite = makeShipSprite();
@@ -342,6 +345,8 @@ describe('Service: shipGridV2', function () {
             PhaserGame.add.sprite.withArgs(0, 0, 'Carrier', 0).returns(carrierSprite);
             PhaserGame.add.sprite.withArgs(0, 0, 'Destroyer', 0).returns(destroyerSprite);
             service.placeShips(shipStates);
+            destroyerSprite.getBounds.returns({x: 600, y: 500});
+            carrierSprite.getBounds.returns({x: 0, y: 0});
             expect(service.currentShipsOnGrid()).to.deep.equal(shipStates);
             expect(PhaserGame.physics.arcade.enable.calledWithMatch(carrierSprite));
             expect(PhaserGame.physics.arcade.enable.calledWithMatch(destroyerSprite));
@@ -362,11 +367,12 @@ describe('Service: shipGridV2', function () {
             expect(destroyerSprite.height).to.equal(193);
             expect(destroyerSprite.width).to.equal(198);
             expect(destroyerSprite.angle).to.equal(90);
-            assert(destroyerSprite.body.setSize.calledWithMatch(195, 200, 0, 0));
+            assert(destroyerSprite.body.setSize.calledWithMatch(195, 200, 1.5, -3.5));
             assert(destroyerSprite.anchor.setTo.calledWithMatch(0.5, 0.5));
             expect(destroyerSprite.x).to.equal(650);
             expect(destroyerSprite.y).to.equal(600);
             expect(destroyerSprite.tint).to.be.undefined;
+
 
             var submarineSprite = makeShipSprite();
             var newDestroyer = makeShipSprite();
@@ -374,17 +380,19 @@ describe('Service: shipGridV2', function () {
                 {
                     ship: 'Destroyer',
                     horizontal: false,
-                    shipGridCells: [{row: 5, column: 6}]
+                    shipGridCells: [{row: 5, column: 6}, {row: 6, column: 6}]
                 },
                 {
                     ship: 'Submarine',
                     horizontal: true,
-                    shipGridCells: [{row: 3, column: 3}]
+                    shipGridCells: [{row: 3, column: 3}, {row: 3, column: 4}, {row: 3, column: 5}]
                 }
             ];
             PhaserGame.add.sprite.withArgs(0, 0, 'Submarine', 0).returns(submarineSprite);
             PhaserGame.add.sprite.withArgs(0, 0, 'Destroyer', 0).returns(newDestroyer);
             service.placeShips(shipStates);
+            newDestroyer.getBounds.returns({x: 600, y: 500});
+            submarineSprite.getBounds.returns({x: 300, y: 300});
             expect(service.currentShipsOnGrid()).to.deep.equal(shipStates);
             expect(destroyerSprite.destroy.calledWithMatch());
             expect(carrierSprite.destroy.calledWithMatch());
@@ -396,7 +404,7 @@ describe('Service: shipGridV2', function () {
             expect(newDestroyer.height).to.equal(193);
             expect(newDestroyer.width).to.equal(198);
             expect(newDestroyer.angle).to.equal(90);
-            assert(newDestroyer.body.setSize.calledWithMatch(195, 200, 0, 0));
+            assert(newDestroyer.body.setSize.calledWithMatch(195, 200, 1.5, -3.5));
             assert(newDestroyer.anchor.setTo.calledWithMatch(0.5, 0.5));
             expect(newDestroyer.x).to.equal(650);
             expect(newDestroyer.y).to.equal(600);
@@ -606,6 +614,8 @@ describe('Service: shipGridV2', function () {
                 var expectedCells = angular.copy(shipStates[2].shipGridCells);
                 submarineSprite.events.onDragStart.dragStartCB();
                 submarineSprite.getBounds.returns({x: 100, y: 200});
+                destroyerSprite.getBounds.returns({x: 100, y: 100});
+                carrierSprite.getBounds.returns({x: 0, y: 0});
                 submarineSprite.events.onDragStop.dragStopCB();
                 expect(service.currentShipsOnGrid()[2].shipGridCells).to.deep.equal(expectedCells);
                 expect(submarineSprite.tint).to.equal(0xffffff);
@@ -614,6 +624,8 @@ describe('Service: shipGridV2', function () {
             it('test dragging stop marks tint, recomputes moved horizontal grid cells', function () {
                 submarineSprite.events.onDragStart.dragStartCB();
                 submarineSprite.getBounds.returns({x: 200, y: 300});
+                destroyerSprite.getBounds.returns({x: 100, y: 100});
+                carrierSprite.getBounds.returns({x: 0, y: 0});
                 submarineSprite.events.onDragStop.dragStopCB();
                 expect(service.currentShipsOnGrid()[2].shipGridCells).to.deep.equal(
                     [
@@ -626,8 +638,13 @@ describe('Service: shipGridV2', function () {
 
             it('test dragging stop marks tint, recomputes moved vertical grid cells', function () {
                 submarineSprite.events.onDragStart.dragStartCB();
+                submarineSprite.getBounds.returns({x: 100, y: 200});
+                destroyerSprite.getBounds.returns({x: 100, y: 100});
+                carrierSprite.getBounds.returns({x: 0, y: 0});
                 service.currentShipsOnGrid()[2].horizontal = false;
                 submarineSprite.getBounds.returns({x: 500, y: 300});
+                destroyerSprite.getBounds.returns({x: 100, y: 100});
+                carrierSprite.getBounds.returns({x: 0, y: 0});
                 submarineSprite.events.onDragStop.dragStopCB();
                 expect(service.currentShipsOnGrid()[2].shipGridCells).to.deep.equal(
                     [
@@ -648,10 +665,13 @@ describe('Service: shipGridV2', function () {
                 submarineSprite.body.hitTest.withArgs(pointer.worldX, pointer.worldY).returns(false);
                 destroyerSprite.body.hitTest.withArgs(pointer.worldX, pointer.worldY).returns(true);
                 PhaserGame.input.onTap.onTapCB(pointer, true);
+                submarineSprite.getBounds.returns({x: 0, y: 0});
+                destroyerSprite.getBounds.returns({x: 0, y: 0});
+                carrierSprite.getBounds.returns({x: 0, y: 0});
                 var destroyer = service.currentShipsOnGrid()[1];
                 expect(destroyer.horizontal).to.be.false;
                 expect(destroyerSprite.angle).to.equal(90);
-                assert(destroyerSprite.body.setSize.calledWithMatch(100, 200, 0, 0));
+                assert(destroyerSprite.body.setSize.calledWithMatch(100, 200, 48, -4.5));
                 assert(destroyerSprite.input.disableSnap.calledWithMatch());
                 assert(destroyerSprite.input.enableSnap.calledWithMatch(100, 100, true, true, 50, 0));
             });
@@ -667,7 +687,7 @@ describe('Service: shipGridV2', function () {
                 destroyerSprite.input.isDragged = true;
                 PhaserGame.input.onTap.onTapCB(pointer, true);
 
-                var destroyerBounds = {d: 1, x: 300, y: 300}, subBounds = {s: 1}, carrierBounds = {c: 1};
+                var destroyerBounds = {d: 1, x: 100, y: 100}, subBounds = {s: 1}, carrierBounds = {c: 1};
                 destroyerSprite.getBounds.returns(destroyerBounds);
                 carrierSprite.getBounds.returns(carrierBounds);
                 submarineSprite.getBounds.returns(subBounds);
@@ -691,10 +711,12 @@ describe('Service: shipGridV2', function () {
                 expect(destroyerSprite.input.disableSnap.callCount).to.equal(0);
                 expect(destroyerSprite.input.enableSnap.callCount).to.equal(0);
                 expect(service.currentShipsOnGrid()[1].shipGridCells).to.deep.equal([{row: 1, column: 1}, {
-                    row: 1,
-                    column: 2
+                    row: 2,
+                    column: 1
                 }]);
                 phaserCBs.update();
+                destroyerBounds = {d: 1, x: 300, y: 300};
+                destroyerSprite.getBounds.returns(destroyerBounds);
                 expect(service.currentShipsOnGrid()[1].shipGridCells).to.deep.equal([{row: 3, column: 3}, {
                     row: 4,
                     column: 3

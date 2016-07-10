@@ -188,8 +188,8 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                     shipSprite.body.setSize(
                         shipSprite.body.height,
                         shipSprite.body.width,
-                        0,
-                        0
+                        0.5 * (shipSprite.width - shipSprite.body.height),
+                        0.5 * (shipSprite.height - shipSprite.body.width)
                     );
                 }
                 shipSprite.x = centerX;
@@ -203,13 +203,11 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                 shipsOnGrid.push(shipOnGrid);
             }
 
-            /*
-             function render() {
-             angular.forEach(shipsOnGrid, function (shipOnGrid) {
-             phaser.debug.body(shipOnGrid.shipSprite);
-             });
+            function render() {
+                angular.forEach(shipsOnGrid, function (shipOnGrid) {
+                    phaser.debug.body(shipOnGrid.shipSprite);
+                });
             }
-             */
 
             function drawCircleCenteredOnCell(row, column) {
                 var y = row * CELL_SIZE;
@@ -320,8 +318,8 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                             shipOnGrid.shipSprite.body.setSize(
                                 shipOnGrid.shipSprite.body.height,
                                 shipOnGrid.shipSprite.body.width,
-                                0,
-                                0
+                                0.5 * (shipOnGrid.shipSprite.width - shipOnGrid.shipSprite.body.height),
+                                0.5 * (shipOnGrid.shipSprite.height - shipOnGrid.shipSprite.body.width)
                             );
                             enableGridSnapping(shipOnGrid);
                             //  rotate can leave ship off snap lines
@@ -437,6 +435,7 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                 currentShipsOnGrid: function () {
                     var ships = [];
                     angular.forEach(shipsOnGrid, function (shipOnGrid) {
+                        recomputeGridCells(shipOnGrid);
                         ships.push(shipOnGrid.shipState);
                     });
                     return ships;
