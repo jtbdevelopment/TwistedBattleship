@@ -32,7 +32,7 @@
                     <p>Score: {{game.playersScore[player.md5]}}</p>
                 </div>
                 <div class="item item-divider">Opponents</div>
-                <div ng-repeat="(md5, name) in game.players | orderBy:name"
+                <div ng-repeat="(md5, name) in game.players"
                      class="item item-avatar item-text-wrap {{showing == md5 ? 'chosen' : ''}}"
                      ng-click="changePlayer(md5)"
                      ng-hide="md5 === player.md5">

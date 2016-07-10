@@ -139,23 +139,6 @@ describe('Controller: SetupGameV2Ctrl', function () {
         expect(scope.helpModal).to.equal(modalHelp);
     });
 
-    it('on enter, enables ship movement and registers callback', function () {
-        rootScope.$broadcast('$ionicView.enter');
-        timeout.flush();
-        expect(mockShipService.overlapCB).to.be.defined;
-    });
-
-    it('submit disabled driven by enable ship movement callback', function () {
-        rootScope.$broadcast('$ionicView.enter');
-        timeout.flush();
-        mockShipService.overlapCB(false);
-        timeout.flush();
-        expect(scope.submitDisabled).to.be.false;
-        mockShipService.overlapCB(true);
-        timeout.flush();
-        expect(scope.submitDisabled).to.be.true;
-    });
-
     describe('tests involving help', function () {
         beforeEach(function () {
             modalHelpPromise.resolve(modalHelp);
@@ -178,45 +161,68 @@ describe('Controller: SetupGameV2Ctrl', function () {
         });
     });
 
-    it('navigate to game details', function () {
-        scope.showDetails();
-        assert(stateSpy.go.calledWithMatch('app.gameDetails', {gameID: expectedId}));
-    });
-
-    it('quit game', function () {
-        scope.quit();
-        assert(actionsSpy.quit.calledWithMatch(expectedGame));
-    });
-
-    it('shuts down ship grid on view exit', function () {
-        rootScope.$broadcast('$ionicView.leave');
-        assert(mockShipService.stop.calledWithMatch());
-    });
-
-    it('submit sends in ships from grid', function () {
-        shipsOnGrid.push({ship: 'ship1', shipGridCells: [{}, {field: 'value'}], other: 'value'});
-        shipsOnGrid.push({ship: 'ship2', shipGridCells: [{a: 1}, {b: 'value'}], other: 'v'});
-        shipsOnGrid.push({ship: 'ship3', shipGridCells: [{a: 2}, {b: 3}]});
-        var expectedPayload = [];
-        angular.forEach(shipsOnGrid, function (shipOnGrid) {
-            expectedPayload.push({ship: shipOnGrid.ship, coordinates: shipOnGrid.shipGridCells});
-        });
-        scope.submit();
-        assert(actionsSpy.setup.calledWithMatch(expectedGame, expectedPayload));
-    });
-
-    describe('testing game updates', function () {
-        it('handles game update for different game', function () {
-            rootScope.$broadcast('gameUpdated', {id: expectedId + 'X'}, {id: expectedId + 'X'});
-            expect(actionsSpy.updateCurrentView.callCount).to.equal(0);
+    describe('other tests', function () {
+        beforeEach(function () {
+            modalHelpPromise.resolve(modalHelp);
         });
 
-        it('handles game update for game', function () {
-            var updatedGame = {id: expectedId};
-            rootScope.$broadcast('gameUpdated', expectedGame, updatedGame);
-            expect(actionsSpy.updateCurrentView.callCount).to.equal(1);
-            assert(actionsSpy.updateCurrentView.calledWithMatch(expectedGame, updatedGame));
-            expect(scope.game).to.equal(updatedGame);
+        it('on enter, enables ship movement and registers callback', function () {
+            rootScope.$broadcast('$ionicView.enter');
+            timeout.flush();
+            expect(mockShipService.overlapCB).to.be.defined;
+        });
+
+        it('submit disabled driven by enable ship movement callback', function () {
+            rootScope.$broadcast('$ionicView.enter');
+            timeout.flush();
+            mockShipService.overlapCB(false);
+            timeout.flush();
+            expect(scope.submitDisabled).to.be.false;
+            mockShipService.overlapCB(true);
+            timeout.flush();
+            expect(scope.submitDisabled).to.be.true;
+        });
+
+        it('navigate to game details', function () {
+            scope.showDetails();
+            assert(stateSpy.go.calledWithMatch('app.gameDetails', {gameID: expectedId}));
+        });
+
+        it('quit game', function () {
+            scope.quit();
+            assert(actionsSpy.quit.calledWithMatch(expectedGame));
+        });
+
+        it('shuts down ship grid on view exit', function () {
+            rootScope.$broadcast('$ionicView.leave');
+            assert(mockShipService.stop.calledWithMatch());
+        });
+
+        it('submit sends in ships from grid', function () {
+            shipsOnGrid.push({ship: 'ship1', shipGridCells: [{}, {field: 'value'}], other: 'value'});
+            shipsOnGrid.push({ship: 'ship2', shipGridCells: [{a: 1}, {b: 'value'}], other: 'v'});
+            shipsOnGrid.push({ship: 'ship3', shipGridCells: [{a: 2}, {b: 3}]});
+            var expectedPayload = [];
+            angular.forEach(shipsOnGrid, function (shipOnGrid) {
+                expectedPayload.push({ship: shipOnGrid.ship, coordinates: shipOnGrid.shipGridCells});
+            });
+            scope.submit();
+            assert(actionsSpy.setup.calledWithMatch(expectedGame, expectedPayload));
+        });
+
+        describe('testing game updates', function () {
+            it('handles game update for different game', function () {
+                rootScope.$broadcast('gameUpdated', {id: expectedId + 'X'}, {id: expectedId + 'X'});
+                expect(actionsSpy.updateCurrentView.callCount).to.equal(0);
+            });
+
+            it('handles game update for game', function () {
+                var updatedGame = {id: expectedId};
+                rootScope.$broadcast('gameUpdated', expectedGame, updatedGame);
+                expect(actionsSpy.updateCurrentView.callCount).to.equal(1);
+                assert(actionsSpy.updateCurrentView.calledWithMatch(expectedGame, updatedGame));
+                expect(scope.game).to.equal(updatedGame);
+            });
         });
     });
 });

@@ -33,7 +33,9 @@ angular.module('tbs.controllers').controller('SetupGameV2Ctrl',
             };
 
             $scope.$on('$destroy', function () {
-                $scope.helpModal.remove();
+                if (angular.isDefined($scope.helpModal)) {
+                    $scope.helpModal.remove();
+                }
             });
 
             $scope.quit = function () {

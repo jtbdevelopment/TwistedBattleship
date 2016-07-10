@@ -447,7 +447,10 @@ describe('Controller: CreateGameCtrl', function () {
 
     describe('choosing and unchoosing opponents', function () {
         beforeEach(function () {
+            modalPromiseHelp.resolve(helpModal);
+            modalPromiseInvite.resolve(inviteModal);
             friendsPromise.resolve(friends);
+
             rootScope.$apply();
         });
 
@@ -941,6 +944,8 @@ describe('Controller: CreateGameCtrl', function () {
     describe('submitting game', function () {
         beforeEach(function () {
             friendsPromise.resolve(friends);
+            modalPromiseHelp.resolve(helpModal);
+            modalPromiseInvite.resolve(inviteModal);
             rootScope.$apply();
         });
 
