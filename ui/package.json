@@ -58,16 +58,14 @@
     "test": "grunt test"
   },
   "cordovaPlugins": [
-    "org.apache.cordova.device",
-    "org.apache.cordova.console",
-    "com.ionic.keyboard",
-    "org.apache.cordova.splashscreen",
-    "org.apache.cordova.statusbar",
-    "org.apache.cordova.media",
-    "org.apache.cordova.dialogs",
-    "org.apache.cordova.vibration",
-    "org.apache.cordova.file",
-    "cordova-plugin-crosswalk-webview",
+    "ionic-plugin-keyboard",
+    "cordova-plugin-console",
+    "cordova-plugin-device",
+    "cordova-plugin-splashscreen",
+    "cordova-plugin-media",
+    "cordova-plugin-dialogs",
+    "cordova-plugin-vibration",
+    "cordova-plugin-file",
     "cordova-plugin-whitelist",
     {
       "id": "cordova-plugin-facebook4",
@@ -77,10 +75,6 @@
         "APP_NAME": "TwistedBattleship"
       }
     },
-    {
-      "locator": "phonegap-plugin-push",
-      "id": "phonegap-plugin-push"
-    },
     "cordova-plugin-googleplayservices",
     "cordova-plugin-extension",
     "cordova-plugin-network-information",
@@ -88,20 +82,9 @@
   ],
   "cordovaPlatforms": [
     {
-      "platform": "android",
-      "version": "",
-      "locator": "android"
-    },
-    {
       "platform": "browser",
       "version": "",
       "locator": "browser"
-    },
-    "ios",
-    {
-      "platform": "ios",
-      "version": "",
-      "locator": "ios"
     }
   ]
 }
