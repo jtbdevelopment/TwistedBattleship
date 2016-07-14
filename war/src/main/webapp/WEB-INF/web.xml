@@ -41,10 +41,6 @@
             <param-name>org.atmosphere.interceptor.HeartbeatInterceptor.heartbeatFrequencyInSeconds</param-name>
             <param-value>45</param-value>
         </init-param>
-        <init-param>
-            <param-name>org.atmosphere.websocket.suppressJSR356</param-name>
-            <param-value>true</param-value>
-        </init-param>
         <!-- we have our own  -->
         <init-param>
             <param-name>org.atmosphere.cpr.dropAccessControlAllowOriginHeader</param-name>
