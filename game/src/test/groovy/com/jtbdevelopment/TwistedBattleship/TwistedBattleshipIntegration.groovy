@@ -17,6 +17,7 @@ import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.TwistedBattleship.state.masked.TBMaskedGame
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.core.hazelcast.caching.HazelcastCacheManager
+import com.jtbdevelopment.games.dao.AbstractGameRepository
 import com.jtbdevelopment.games.dev.utilities.integrationtesting.AbstractGameIntegration
 import com.jtbdevelopment.games.mongo.players.MongoManualPlayer
 import com.jtbdevelopment.games.mongo.players.MongoPlayer
@@ -38,7 +39,7 @@ import javax.ws.rs.core.Response
  * Date: 4/26/15
  * Time: 10:36 AM
  */
-class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame> {
+class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMaskedGame> {
 
     static HazelcastCacheManager cacheManager
     static GameRepository gameRepository
@@ -1015,5 +1016,22 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBMaskedGame>
     @Override
     Class<TBMaskedGame> returnedGameClass() {
         return TBMaskedGame.class
+    }
+
+    Class<TBGame> internalGameClass() {
+        return TBGame.class
+    }
+
+    TBGame newGame() {
+        return new TBGame()
+    }
+
+    AbstractGameRepository gameRepository() {
+        return gameRepository
+    }
+
+    @Override
+    void testGetMultiplayerGames() {
+        //  Do nothing - tested in other ways
     }
 }
