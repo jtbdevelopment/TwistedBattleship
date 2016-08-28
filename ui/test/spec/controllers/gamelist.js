@@ -87,13 +87,6 @@ describe('Controller: MobileGameListCtrl', function () {
         expect(scope.games[expectedClassifications[2]].hideGames).to.be.false;
     });
 
-    it('refresh broadcasts to game cache', function () {
-        rootScope.$broadcast = sinon.spy();
-        scope.refreshGames();
-        expect(rootScope.$broadcast.callCount).to.equal(1);
-        assert(rootScope.$broadcast.calledWithMatch('refreshGames', ''));
-    });
-
     it('new game action goes to setup', function () {
         scope.createNew();
         assert(stateSpy.go.calledWithMatch('app.create'));

@@ -217,4 +217,11 @@ describe('Controller: MainCtrl', function () {
         assert(livefeed.suspendFeed.calledWithMatch());
     });
 
+    it('refresh broadcasts to game cache', function () {
+        rootScope.$broadcast = sinon.spy();
+        scope.refreshGames();
+        expect(rootScope.$broadcast.callCount).to.equal(1);
+        assert(rootScope.$broadcast.calledWithMatch('refreshGames', ''));
+    });
+
 });

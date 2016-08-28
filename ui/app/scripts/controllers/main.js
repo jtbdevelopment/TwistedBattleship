@@ -2,9 +2,9 @@
 
 //  Deals with the crud of initializing and various platform messages
 angular.module('tbs.controllers').controller('MainCtrl',
-    ['$window', '$scope', '$timeout', 'jtbPlayerService', 'jtbLiveGameFeed', '$state', 'ENV', '$document', 'tbsVersionNotes',
+    ['$window', '$rootScope', '$scope', '$timeout', 'jtbPlayerService', 'jtbLiveGameFeed', '$state', 'ENV', '$document', 'tbsVersionNotes',
         'tbsCircles', 'jtbGameFeatureService', 'tbsCellStates', 'tbsShips', 'jtbGamePhaseService', 'tbsAds', 'jtbPushNotifications',
-        function ($window, $scope, $timeout, jtbPlayerService, jtbLiveGameFeed, $state, ENV, $document, tbsVersionNotes,
+        function ($window, $rootScope, $scope, $timeout, jtbPlayerService, jtbLiveGameFeed, $state, ENV, $document, tbsVersionNotes,
                   tbsCircles, jtbGameFeatureService, tbsCellStates, tbsShips, jtbGamePhaseService, tbsAds, jtbPushNotifications) {
 
             if (2 < 1) {
@@ -101,6 +101,12 @@ angular.module('tbs.controllers').controller('MainCtrl',
                     checkNetworkStatusAndLogin();
                 }
             });
+
+            $scope.refreshGames = function () {
+                $rootScope.$broadcast('refreshGames', '');
+            };
+
+
         }
     ]
 );

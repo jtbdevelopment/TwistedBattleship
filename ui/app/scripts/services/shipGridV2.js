@@ -204,9 +204,9 @@ angular.module('tbs.services').factory('tbsShipGridV2',
             }
 
             function render() {
-                angular.forEach(shipsOnGrid, function (shipOnGrid) {
-                    phaser.debug.body(shipOnGrid.shipSprite);
-                });
+                //angular.forEach(shipsOnGrid, function (shipOnGrid) {
+                //    phaser.debug.body(shipOnGrid.shipSprite);
+                //});
             }
 
             function drawCircleCenteredOnCell(row, column) {
@@ -383,7 +383,7 @@ angular.module('tbs.services').factory('tbsShipGridV2',
                                         gameHeight,
                                         'phaser',
                                         {
-                                            //render: render,
+                                            render: render,
                                             preload: preload,
                                             create: create,
                                             init: init,

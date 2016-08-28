@@ -25,10 +25,6 @@ angular.module('tbs.controllers').controller('MobileGameListCtrl',
                 $scope.games[phase].hideGames = !$scope.games[phase].hideGames;
             };
 
-            $scope.refreshGames = function () {
-                $rootScope.$broadcast('refreshGames', '');
-            };
-
             function reloadFromCaches() {
                 $scope.md5 = jtbPlayerService.currentPlayer().md5;
                 angular.forEach($scope.games, function (phaseData, phase) {
