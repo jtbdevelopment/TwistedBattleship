@@ -194,7 +194,23 @@
     "cordova-plugin-compat",
     "cordova-plugin-compat",
     "cordova-plugin-dialogs",
-    "cordova-plugin-admobpro"
+    "cordova-plugin-admobpro",
+    "cordova-plugin-splashscreen",
+    "cordova-plugin-device",
+    "cordova-plugin-splashscreen",
+    "cordova-plugin-splashscreen",
+    "ionic-plugin-keyboard",
+    "ionic-plugin-keyboard",
+    "ionic-plugin-keyboard",
+    "cordova-plugin-console",
+    "cordova-plugin-device",
+    "ionic-plugin-keyboard",
+    "cordova-plugin-whitelist",
+    "cordova-plugin-device",
+    "ionic-plugin-keyboard",
+    "ionic-plugin-keyboard",
+    "cordova-plugin-whitelist"
   ],
   "cordovaPlatforms": []
+}]
 }
