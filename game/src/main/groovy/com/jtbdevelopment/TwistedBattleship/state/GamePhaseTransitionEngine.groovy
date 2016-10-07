@@ -47,7 +47,6 @@ class GamePhaseTransitionEngine extends AbstractGamePhaseTransitionEngine<TBGame
             game.playerDetails.each {
                 it.value.actionLog.add(entry)
             }
-            gameScorer.scoreGame(game)
             game.playerDetails.each {
                 ObjectId myId, TBPlayerState myState ->
                     myState.opponentGrids.each {

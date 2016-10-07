@@ -8,7 +8,6 @@ import com.jtbdevelopment.games.publish.GameListener
 import com.jtbdevelopment.games.rest.handlers.ChallengeResponseHandler
 import com.jtbdevelopment.games.rest.handlers.QuitHandler
 import com.jtbdevelopment.games.state.GamePhase
-import com.jtbdevelopment.games.state.MultiPlayerGame
 import com.jtbdevelopment.games.state.PlayerState
 import groovy.transform.CompileStatic
 import org.bson.types.ObjectId
@@ -30,7 +29,7 @@ import java.util.concurrent.TimeUnit
 @SuppressWarnings("GroovyUnusedDeclaration")
 @Component
 @CompileStatic
-class AIGameListener implements GameListener {
+class AIGameListener implements GameListener<TBGame> {
     private static Logger logger = LoggerFactory.getLogger(AIGameListener.class)
 
     @Autowired
@@ -174,9 +173,7 @@ class AIGameListener implements GameListener {
     }
 
     @Override
-    void gameChanged(
-            final MultiPlayerGame multiPlayerGame, final Player initiatingPlayer, final boolean initiatingServer) {
-        TBGame game = (TBGame) multiPlayerGame
+    void gameChanged(final TBGame game, final Player initiatingPlayer, final boolean initiatingServer) {
         if (initiatingServer) {
             if (game.players.find { Player p -> aiPlayers.contains(p) }) {
                 if (hasAIWorkToDo(game)) {

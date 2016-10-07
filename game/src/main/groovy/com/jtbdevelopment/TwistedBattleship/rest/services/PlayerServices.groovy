@@ -3,12 +3,11 @@ package com.jtbdevelopment.TwistedBattleship.rest.services
 import com.jtbdevelopment.TwistedBattleship.ai.AI
 import com.jtbdevelopment.TwistedBattleship.exceptions.NotAValidThemeException
 import com.jtbdevelopment.TwistedBattleship.player.TBPlayerAttributes
-import com.jtbdevelopment.TwistedBattleship.rest.handlers.PlayerGamesFinderHandler
 import com.jtbdevelopment.TwistedBattleship.rest.services.messages.FeaturesAndPlayers
 import com.jtbdevelopment.games.players.Player
 import com.jtbdevelopment.games.players.friendfinder.SourceBasedFriendFinder
+import com.jtbdevelopment.games.rest.AbstractMultiPlayerServices
 import com.jtbdevelopment.games.rest.handlers.NewGameHandler
-import com.jtbdevelopment.games.rest.services.AbstractPlayerServices
 import com.jtbdevelopment.games.state.masking.AbstractMaskedMultiPlayerGame
 import com.jtbdevelopment.games.state.masking.MaskedMultiPlayerGame
 import groovy.transform.CompileStatic
@@ -27,17 +26,16 @@ import javax.ws.rs.core.MediaType
  */
 @Component
 @CompileStatic
-class PlayerServices extends AbstractPlayerServices<ObjectId> {
+class PlayerServices extends AbstractMultiPlayerServices<ObjectId> {
 
     @Autowired
     NewGameHandler newGameHandler
-    @Autowired
-    PlayerGamesFinderHandler playerGamesFinderHandler
 
     @Autowired
     List<AI> aiList
 
     private Map<String, String> aiPlayers
+
     @PostConstruct
     public void setup() {
         aiPlayers = aiList.collectEntries {
@@ -57,13 +55,6 @@ class PlayerServices extends AbstractPlayerServices<ObjectId> {
                 (Serializable) playerID.get(),
                 featuresAndPlayers.players,
                 featuresAndPlayers.features)
-    }
-
-    @GET
-    @Path("games")
-    @Produces(MediaType.APPLICATION_JSON)
-    public List gamesForPlayer() {
-        playerGamesFinderHandler.findGames((ObjectId) playerID.get())
     }
 
     @PUT
