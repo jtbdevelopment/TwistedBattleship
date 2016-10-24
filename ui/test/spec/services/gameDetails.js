@@ -9,6 +9,7 @@ describe('Service: gameDetails', function () {
     var players = ['md1', 'md2', 'md3', 'md4', 'md5'];
 
     var game;
+
     var gameBase = {
         id: 'id',
         players: {'md1': 'P1', 'md2': 'P2', 'md3': 'P3', 'md4': 'P4', 'md5': 'P5'},
@@ -29,7 +30,6 @@ describe('Service: gameDetails', function () {
             md1: 'someprofile',
             md2: 'anotherprofile'
         },
-        featureData: {},
         features: ['Grid10x10', 'ECMEnabled', 'SpyingEnabled', 'EREnabled', 'EMEnabled', 'SharedIntel', 'Single'],
         gridSize: 10,
         playersScore: {'md1': 1, 'md2': 0, 'md3': -1, 'md4': 3, 'md5': 2},
