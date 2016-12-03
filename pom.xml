@@ -15,9 +15,9 @@
     <packaging>pom</packaging>
 
     <properties>
-        <core.common.version>1.6</core.common.version>
-        <core.games.version>1.4-SNAPSHOT</core.games.version>
-        <core.games.devutilities.version>1.4-SNAPSHOT</core.games.devutilities.version>
+        <core.common.version>1.8</core.common.version>
+        <core.games.version>1.4</core.games.version>
+        <core.games.devutilities.version>1.4</core.games.devutilities.version>
         <jersey.version>2.23.1</jersey.version>
         <spring.version>4.3.1.RELEASE</spring.version>
         <junit.version>4.12</junit.version>
@@ -47,13 +47,13 @@
         <url>https://github.com/jtbdevelopment/TwistedBattleship.git</url>
         <tag>HEAD</tag>
     </scm>
-    <distributionManagement>
+    <!--distributionManagement>
         <repository>
             <id>bintray-jtbdevelopment-maven-TwistedBattleship</id>
             <name>jtbdevelopment-maven-TwistedBattleship</name>
             <url>https://api.bintray.com/maven/jtbdevelopment/maven/TwistedBattleship</url>
         </repository>
-    </distributionManagement>
+    </distributionManagement-->
 
     <repositories>
         <repository>
@@ -143,8 +143,24 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.8.1</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.1</version>
+                <version>2.5.3</version>
+
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.scm</groupId>
+                        <artifactId>maven-scm-provider-gitexe</artifactId>
+                        <version>1.9.5</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
