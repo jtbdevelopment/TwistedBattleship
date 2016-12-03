@@ -609,6 +609,7 @@ module.exports = function (grunt) {
     grunt.registerTask('default', [
         'wiredep',
         'newer:jshint',
+        'ngconstant:development',
         'karma:continuous',
         'compress'
     ]);
