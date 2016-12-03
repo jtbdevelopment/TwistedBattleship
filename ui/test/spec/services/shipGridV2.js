@@ -257,10 +257,10 @@ describe('Service: shipGridV2', function () {
             rootScope.$apply();
             circlesDeferred.resolve(expectedCircleData);
             PhaserFactory.newGame.withArgs(2000, 2000, 'phaser', sinon.match(function (arg4) {
-                expect(arg4.create).not.to.be.undefined;
-                expect(arg4.update).not.to.be.undefined;
-                expect(arg4.init).not.to.be.undefined;
-                expect(arg4.preload).not.to.be.undefined;
+                expect(arg4.create).to.be.defined;
+                expect(arg4.update).to.be.defined;
+                expect(arg4.init).to.be.defined;
+                expect(arg4.preload).to.be.defined;
                 phaserCBs = arg4;
                 return true;
             }, 'fail')).returns(PhaserGame);
@@ -268,7 +268,7 @@ describe('Service: shipGridV2', function () {
         });
 
         it('test initialize gets data from servers and initializes a phaser game', function () {
-            expect(phaserCBs).not.to.be.undefined;
+            expect(phaserCBs).to.be.defined;
         });
 
         it('stopping game', function () {
