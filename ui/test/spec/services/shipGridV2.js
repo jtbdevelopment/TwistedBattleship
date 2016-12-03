@@ -201,7 +201,7 @@ describe('Service: shipGridV2', function () {
                 width: 200,
                 height: 195,
                 setSize: sinon.spy(),
-                hitTest: sinon.stub(),
+                hitTest: sinon.stub()
             },
             input: {
                 events: undefined,
@@ -257,10 +257,10 @@ describe('Service: shipGridV2', function () {
             rootScope.$apply();
             circlesDeferred.resolve(expectedCircleData);
             PhaserFactory.newGame.withArgs(2000, 2000, 'phaser', sinon.match(function (arg4) {
-                expect(arg4.create).to.be.defined;
-                expect(arg4.update).to.be.defined;
-                expect(arg4.init).to.be.defined;
-                expect(arg4.preload).to.be.defined;
+                expect(arg4.create).not.to.be.undefined;
+                expect(arg4.update).not.to.be.undefined;
+                expect(arg4.init).not.to.be.undefined;
+                expect(arg4.preload).not.to.be.undefined;
                 phaserCBs = arg4;
                 return true;
             }, 'fail')).returns(PhaserGame);
@@ -268,7 +268,7 @@ describe('Service: shipGridV2', function () {
         });
 
         it('test initialize gets data from servers and initializes a phaser game', function () {
-            expect(phaserCBs).to.be.defined;
+            expect(phaserCBs).not.to.be.undefined;
         });
 
         it('stopping game', function () {
