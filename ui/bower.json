@@ -7,7 +7,7 @@
     "angular-resource": "~1.5.7",
     "angular-route": "~1.5.7",
     "jtb-core-games-ionic-ui": "~2.0.3",
-    "jtb-core-games-ui": "~2.6.0",
+    "jtb-core-games-ui": "~2.6.2",
     "phaser": "2.5.0"
   },
   "devDependencies": {

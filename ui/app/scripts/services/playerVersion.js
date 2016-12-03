@@ -12,12 +12,7 @@ angular.module('tbs.services').factory('tbsVersionNotes',
                             title: 'Welcome to version ' + CURRENT_VERSION + '!',
                             template: CURRENT_NOTES
                         });
-                        $http.post('/api/player/lastVersionNotes/' + CURRENT_VERSION).success(function () {
-                            console.log('successfully updated version');
-                        }).error(function (data, status, headers, config) {
-                            //  TODO
-                            console.error(data + status + headers + config);
-                        });
+                        jtbPlayerService.updateLastVersionNotes(CURRENT_VERSION);
                     }
 
                 }
