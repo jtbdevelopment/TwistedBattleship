@@ -201,7 +201,7 @@ describe('Service: shipGridV2', function () {
                 width: 200,
                 height: 195,
                 setSize: sinon.spy(),
-                hitTest: sinon.stub(),
+                hitTest: sinon.stub()
             },
             input: {
                 events: undefined,

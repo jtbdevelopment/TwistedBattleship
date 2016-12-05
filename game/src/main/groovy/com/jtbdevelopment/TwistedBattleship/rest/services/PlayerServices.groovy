@@ -37,7 +37,7 @@ class PlayerServices extends AbstractMultiPlayerServices<ObjectId> {
     private Map<String, String> aiPlayers
 
     @PostConstruct
-    public void setup() {
+    void setup() {
         aiPlayers = aiList.collectEntries {
             AI ai ->
                 ai.players.collectEntries {

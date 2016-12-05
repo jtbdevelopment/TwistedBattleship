@@ -44,10 +44,10 @@ module.exports = function (grunt) {
                     ENV: {
                         name: 'development',
                         domain: 'localhost',
-                        apiEndpointGrunt: 'http://localhost:9998',
+                        apiEndpointJetty: 'http://localhost:9998',
                         apiEndpointAndroidEmulator: 'http://10.0.2.2:9998',
                         apiEndpointGeny: 'http://192.168.56.1:9998',
-                        apiEndpoint: 'https://localhost:8443'
+                        apiEndpoint: 'http://localhost:8080'
                     }
                 }
             },
@@ -609,6 +609,7 @@ module.exports = function (grunt) {
     grunt.registerTask('default', [
         'wiredep',
         'newer:jshint',
+        'ngconstant:development',
         'karma:continuous',
         'compress'
     ]);

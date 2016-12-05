@@ -833,7 +833,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMas
                 .request(MediaType.APPLICATION_JSON)
                 .post(entity)
         assert response != null
-        assert response.statusInfo.statusCode == 400
+        assert 409 == response.statusInfo.statusCode
 
         entity = Entity.entity(
                 new FeaturesAndPlayers(
@@ -857,7 +857,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMas
                 .request(MediaType.APPLICATION_JSON)
                 .post(entity)
         assert response != null
-        assert response.statusInfo.statusCode == 400
+        assert 409 == response.statusInfo.statusCode
     }
 
     protected TBMaskedGame newGame(WebTarget target, FeaturesAndPlayers featuresAndPlayers) {
