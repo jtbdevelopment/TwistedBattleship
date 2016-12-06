@@ -37,6 +37,16 @@ angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.contro
                 abstract: true,
                 templateUrl: 'templates/menu.html'
             })
+            .state('app.admin', {
+                url: '/admin',
+                views: {
+                    'menuContent': {
+                        templateUrl: 'templates/admin/admin.html',
+                        controller: 'CoreIonicAdminCtrl',
+                        controllerAs: 'admin'
+                    }
+                }
+            })
             .state('app.create', {
                 url: '/create',
                 views: {

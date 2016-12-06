@@ -1,0 +1,17 @@
+@import "default-theme-colors";
+@import "../screens";
+
+.admin {
+
+  .button {
+    background-color: $medium_blue;
+    border-width: 0;
+    color: black;
+  }
+
+  .selected {
+    font-weight: bold;
+    background-color: $darker_green;
+    color: white;
+  }
+}
