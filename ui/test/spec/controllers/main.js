@@ -85,11 +85,12 @@ describe('Controller: MainCtrl', function () {
         expect(scope.mobile).to.be.false;
         expect(scope.adImport).to.equal('templates/ads/non-mobile.html');
         expect(scope.player).to.equal(currentPlayer);
+        expect(scope.showAdmin).to.be.false;
     });
 
     describe('initialize with player and mobile', function () {
         beforeEach(inject(function ($controller) {
-            currentPlayer = {id: 'initial', gameSpecificPlayerAttributes: {theme: 'initial'}};
+            currentPlayer = {id: 'initial', gameSpecificPlayerAttributes: {theme: 'initial'}, adminUser: false};
             window.location.href = 'file://';
             ctrl = $controller('MainCtrl', {
                 $scope: scope,
@@ -119,19 +120,49 @@ describe('Controller: MainCtrl', function () {
             expect(scope.mobile).to.be.true;
             expect(scope.adImport).to.equal('templates/ads/mobile.html');
             expect(scope.player).to.equal(currentPlayer);
+            expect(scope.showAdmin).to.be.false;
         });
 
         it('ignores player updates if id doesnt match', function () {
-            var updatedPlayer = {id: currentPlayer.id + 'X', gameSpecificPlayerAttributes: {theme: 'initialX'}};
+            var updatedPlayer = {
+                id: currentPlayer.id + 'X',
+                adminUser: true,
+                gameSpecificPlayerAttributes: {theme: 'initialX'}
+            };
             rootScope.$broadcast('playerUpdate', updatedPlayer.id, updatedPlayer);
             expect(scope.player).to.equal(currentPlayer);
+            expect(scope.showAdmin).to.be.false;
         });
 
         it('takes in player updates if id matches', function () {
-            var updatedPlayer = {id: currentPlayer.id, gameSpecificPlayerAttributes: {theme: 'new-theme'}};
+            expect(scope.showAdmin).to.be.false;
+            var updatedPlayer = {
+                id: currentPlayer.id,
+                adminUser: true,
+                gameSpecificPlayerAttributes: {theme: 'new-theme'}
+            };
             rootScope.$broadcast('playerUpdate', updatedPlayer.id, updatedPlayer);
             expect(scope.player).to.equal(updatedPlayer);
             expect(scope.theme).to.equal(updatedPlayer.gameSpecificPlayerAttributes.theme);
+            expect(scope.showAdmin).to.be.true;
+        });
+
+        it('player retains admin once has it', function () {
+            expect(scope.showAdmin).to.be.false;
+            var updatedPlayer = {
+                id: currentPlayer.id,
+                adminUser: true,
+                gameSpecificPlayerAttributes: {theme: 'new-theme'}
+            };
+            rootScope.$broadcast('playerUpdate', updatedPlayer.id, updatedPlayer);
+            expect(scope.showAdmin).to.be.true;
+            var updatedPlayer = {
+                id: currentPlayer.id,
+                adminUser: false,
+                gameSpecificPlayerAttributes: {theme: 'new-theme'}
+            };
+            rootScope.$broadcast('playerUpdate', updatedPlayer.id, updatedPlayer);
+            expect(scope.showAdmin).to.be.true;
         });
     });
 
@@ -139,7 +170,7 @@ describe('Controller: MainCtrl', function () {
         var circlePromise = q.defer(), featurePromise = q.defer(),
             cellPromise = q.defer(), shipPromise = q.defer(), phasePromise = q.defer();
 
-        currentPlayer = {id: 'replaced', gameSpecificPlayerAttributes: {theme: 'replacedtheme'}};
+        currentPlayer = {id: 'replaced', adminUser: false, gameSpecificPlayerAttributes: {theme: 'replacedtheme'}};
         features.features.returns(featurePromise.promise);
         circles.circles.returns(circlePromise.promise);
         cells.cellStates.returns(cellPromise.promise);
@@ -157,11 +188,41 @@ describe('Controller: MainCtrl', function () {
         expect(scope.player).to.equal(currentPlayer);
         assert(version.showReleaseNotes.calledWithMatch());
         assert(ads.initialize.calledWithMatch());
+        expect(scope.showAdmin).to.be.false;
+    });
+
+    it('initial load is admin, updated load is not like simulating person', function () {
+        var circlePromise = q.defer(), featurePromise = q.defer(),
+            cellPromise = q.defer(), shipPromise = q.defer(), phasePromise = q.defer();
+
+        features.features.returns(featurePromise.promise);
+        circles.circles.returns(circlePromise.promise);
+        cells.cellStates.returns(cellPromise.promise);
+        ships.ships.returns(shipPromise.promise);
+        phases.phases.returns(phasePromise.promise);
+        currentPlayer = {id: 'replaced', adminUser: true, gameSpecificPlayerAttributes: {theme: 'replacedtheme'}};
+
+        rootScope.$broadcast('playerLoaded');
+        rootScope.$apply();
+        expect(scope.player).to.equal(currentPlayer);
+        expect(scope.showAdmin).to.be.true;
+
+        currentPlayer = {id: 'new', adminUser: false, gameSpecificPlayerAttributes: {theme: 'update'}};
+        expect(scope.player).not.to.equal(currentPlayer);
+        rootScope.$broadcast('playerLoaded');
+        rootScope.$apply();
+        expect(scope.player).to.equal(currentPlayer);
+        expect(scope.showAdmin).to.be.true;
     });
 
     it('show player', function () {
         scope.showPlayer();
         assert(stateSpy.go.calledWithMatch('app.playerDetails'));
+    });
+
+    it('show admin', function () {
+        scope.showAdminScreen();
+        assert(stateSpy.go.calledWithMatch('app.admin'));
     });
 
     it('handles offline', function () {

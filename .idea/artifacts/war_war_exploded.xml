@@ -1,13 +1,13 @@
 <component name="ArtifactManager">
   <artifact type="exploded-war" name="war:war exploded">
-    <output-path>$PROJECT_DIR$/war/target/war-1.2-SNAPSHOT</output-path>
+    <output-path>$PROJECT_DIR$/war/target/war-1.3-SNAPSHOT</output-path>
     <root id="root">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
           <element id="module-output" name="war" />
         </element>
         <element id="directory" name="lib">
-          <element id="archive" name="game-1.2-SNAPSHOT.jar">
+          <element id="archive" name="game-1.3-SNAPSHOT.jar">
             <element id="module-output" name="game" />
           </element>
           <element id="library" level="project" name="Maven: com.jtbdevelopment.core-common:core-spring-web-mongo:1.8" />
@@ -115,7 +115,7 @@
         </element>
       </element>
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/war/target/war-1.2-SNAPSHOT/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/war/target/war-1.3-SNAPSHOT/META-INF/MANIFEST.MF" />
       </element>
       <element id="javaee-facet-resources" facet="war/web/Web" />
     </root>

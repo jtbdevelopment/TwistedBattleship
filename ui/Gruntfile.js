@@ -44,9 +44,8 @@ module.exports = function (grunt) {
                     ENV: {
                         name: 'development',
                         domain: 'localhost',
-                        apiEndpointJetty: 'http://localhost:9998',
-                        apiEndpointAndroidEmulator: 'http://10.0.2.2:9998',
-                        apiEndpointGeny: 'http://192.168.56.1:9998',
+                        apiEndpointAndroidEmulator: 'http://10.0.2.2:8080',
+                        apiEndpointGeny: 'http://192.168.56.1:8080',
                         apiEndpoint: 'http://localhost:8080'
                     }
                 }

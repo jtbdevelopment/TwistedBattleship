@@ -114,7 +114,7 @@
     <orderEntry type="library" name="Maven: com.jtbdevelopment.core-games:games-std-maintenance:1.5" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.jtbdevelopment.core-games:games-mongo:test-jar:tests:1.5" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.jtbdevelopment.core-games:games-web:test-jar:tests:1.5" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: com.jtbdevelopment.core-games:games-dev-utilities:1.5" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.jtbdevelopment.core-games:games-dev-utilities:1.6-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.jtbdevelopment.core-common:core-spring-mongo:test-jar:tests:1.8" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.jetty:jetty-servlet:9.3.10.v20160621" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.jetty:jetty-security:9.3.10.v20160621" level="project" />

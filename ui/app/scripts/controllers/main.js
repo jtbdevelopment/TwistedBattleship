@@ -19,6 +19,10 @@ angular.module('tbs.controllers').controller('MainCtrl',
                 $state.go('app.playerDetails');
             };
 
+            $scope.showAdminScreen = function () {
+                $state.go('app.admin');
+            };
+
             //  Set here to avoid causing circular dependency in app.js
             jtbLiveGameFeed.setEndPoint(ENV.apiEndpoint);
 
@@ -26,6 +30,7 @@ angular.module('tbs.controllers').controller('MainCtrl',
             $scope.theme = angular.isDefined(jtbPlayerService.currentPlayer()) ?
                 jtbPlayerService.currentPlayer().gameSpecificPlayerAttributes.theme : 'default-theme';
             $scope.player = jtbPlayerService.currentPlayer();
+            $scope.showAdmin = angular.isDefined($scope.player) && $scope.player.adminUser;
 
             $scope.mobile = $window.location.href.indexOf('file') === 0;
             $scope.adImport = 'templates/ads/' + ($scope.mobile ? 'mobile' : 'non-mobile') + '.html';
@@ -34,12 +39,14 @@ angular.module('tbs.controllers').controller('MainCtrl',
                 if ($scope.player.id === id) {
                     $scope.player = player;
                     $scope.theme = player.gameSpecificPlayerAttributes.theme;
+                    $scope.showAdmin = $scope.showAdmin || $scope.player.adminUser;  //  Once an admin always an admin for ui
                 }
             });
 
             $scope.$on('playerLoaded', function () {
                 $scope.player = jtbPlayerService.currentPlayer();
                 $scope.theme = jtbPlayerService.currentPlayer().gameSpecificPlayerAttributes.theme;
+                $scope.showAdmin = $scope.showAdmin || $scope.player.adminUser;  //  Once an admin always an admin for ui
 
                 //  TODO - preload ship images?
                 tbsAds.initialize();
