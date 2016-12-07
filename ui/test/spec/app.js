@@ -108,6 +108,19 @@ describe('testing app js', function () {
             }, 'app.create params')));
         });
 
+        it('should register /app.admin', function () {
+            assert(stateSpy.calledWithMatch('app.admin', {
+                url: '/admin',
+                views: {
+                    'menuContent': {
+                        templateUrl: 'templates/admin/admin.html',
+                        controller: 'CoreIonicAdminCtrl',
+                        controllerAs: 'admin'
+                    }
+                }
+            }));
+        });
+
         it('should register /app.games', function () {
             assert(stateSpy.calledWithMatch('app.games', {
                 url: '/games',
