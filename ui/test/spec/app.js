@@ -114,7 +114,7 @@ describe('testing app js', function () {
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/admin/admin.html',
-                        controller: 'CoreIonicAdminCtrl',
+                        controller: 'CoreAdminCtrl',
                         controllerAs: 'admin'
                     }
                 }

@@ -42,7 +42,7 @@ angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.contro
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/admin/admin.html',
-                        controller: 'CoreIonicAdminCtrl',
+                        controller: 'CoreAdminCtrl',
                         controllerAs: 'admin'
                     }
                 }

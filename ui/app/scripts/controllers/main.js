@@ -23,6 +23,17 @@ angular.module('tbs.controllers').controller('MainCtrl',
                 $state.go('app.admin');
             };
 
+            $scope.adminSwitchToStats = function () {
+                $scope.adminShowStats = true;
+                $scope.adminShowSwitch = false;
+            };
+            $scope.adminSwitchToSwitchPlayer = function () {
+                $scope.adminShowStats = false;
+                $scope.adminShowSwitch = true;
+            };
+
+            $scope.adminSwitchToStats();
+
             //  Set here to avoid causing circular dependency in app.js
             jtbLiveGameFeed.setEndPoint(ENV.apiEndpoint);
 

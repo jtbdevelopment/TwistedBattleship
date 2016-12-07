@@ -85,6 +85,22 @@ describe('Controller: MainCtrl', function () {
         expect(scope.adImport).to.equal('templates/ads/non-mobile.html');
         expect(scope.player).to.equal(currentPlayer);
         expect(scope.showAdmin).to.be.false;
+
+        expect(scope.adminShowStats).to.be.true;
+        expect(scope.adminShowSwitch).to.be.false;
+    });
+
+    it('switching admin to switch player', function () {
+        scope.adminSwitchToSwitchPlayer();
+        expect(scope.adminShowStats).to.be.false;
+        expect(scope.adminShowSwitch).to.be.true;
+    });
+
+    it('switching admin to stats', function () {
+        scope.adminSwitchToSwitchPlayer();
+        scope.adminSwitchToStats();
+        expect(scope.adminShowStats).to.be.true;
+        expect(scope.adminShowSwitch).to.be.false;
     });
 
     describe('initialize with player and mobile', function () {
