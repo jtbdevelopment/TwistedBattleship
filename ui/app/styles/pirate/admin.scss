@@ -20,4 +20,25 @@
       padding: 0;
     }
   }
+
+  .admin-user {
+    .button-stop-simulating {
+      background-color: $black;
+      color: white;
+    }
+
+    .button-get-users {
+      background-color: $blue;
+    }
+
+    .button-change-user {
+      background-color: red;
+    }
+    .item {
+      padding: 0;
+      .col {
+        padding: 0;
+      }
+    }
+  }
 }

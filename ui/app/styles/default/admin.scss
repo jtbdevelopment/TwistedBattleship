@@ -21,4 +21,24 @@
       padding: 0;
     }
   }
+
+  .admin-user {
+    .button-stop-simulating {
+      background-color: $boatgray;
+    }
+
+    .button-get-users {
+      background-color: $paler_green;
+    }
+
+    .button-change-user {
+      background-color: red;
+    }
+    .item {
+      padding: 0;
+      .col {
+        padding: 0;
+      }
+    }
+  }
 }

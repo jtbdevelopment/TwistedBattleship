@@ -13,10 +13,8 @@
         <div ng-show="adminShowStats">
             <div ng-include="'templates/admin/admin-stats.html'"></div>
         </div>
-        <div class="row" ng-show="adminShowSwitch">
-            <div class="col-100">
-                <p>Switch</p>
-            </div>
+        <div ng-show="adminShowSwitch">
+            <div ng-include="'templates/admin/admin-switch-player.html'"></div>
         </div>
     </ion-content>
 </ion-view>
