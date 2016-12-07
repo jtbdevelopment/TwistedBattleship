@@ -39,17 +39,15 @@
             </div>
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="col">
-        {{admin.currentPage}}
-    </div>
-</div>
-<div class="row">
-    <div class="col">
-        <div class="item range">
-            <input type="range" name="currentPage" min="1" max="{{admin.numberOfPages}}" ng-model="admin.currentPage">
+    <div class="row">
+        <div class="col-10">
+            {{admin.currentPage}} of {{admin.numberOfPages}}
+        </div>
+        <div class="col-90">
+            <div class="item range range-positive">
+                <input type="range" name="currentPage" min="1" max="{{admin.numberOfPages}}"
+                       ng-model="admin.currentPage" ng-change="admin.changePage()">
+            </div>
         </div>
     </div>
-</div>
 </div>
