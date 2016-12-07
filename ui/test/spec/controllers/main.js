@@ -171,7 +171,7 @@ describe('Controller: MainCtrl', function () {
             };
             rootScope.$broadcast('playerUpdate', updatedPlayer.id, updatedPlayer);
             expect(scope.showAdmin).to.be.true;
-            var updatedPlayer = {
+            updatedPlayer = {
                 id: currentPlayer.id,
                 adminUser: false,
                 gameSpecificPlayerAttributes: {theme: 'new-theme'}
