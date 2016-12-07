@@ -1,7 +1,7 @@
 @import "default-theme-colors";
 @import "../screens";
 
-.admin {
+.admin-screen {
 
   .button {
     background-color: $medium_blue;
@@ -13,5 +13,12 @@
     font-weight: bold;
     background-color: $darker_green;
     color: white;
+  }
+
+  .admin-stats {
+    padding: 20px;
+    .col {
+      padding: 0;
+    }
   }
 }

@@ -1,4 +1,4 @@
-<ion-view class="admin">
+<ion-view class="admin-screen">
     <ion-content class="has-header" ng-cloak>
         <div class="row">
             <div class="col-50">
@@ -10,10 +10,8 @@
                    ng-click="adminSwitchToSwitchPlayer()">Switch Player</a>
             </div>
         </div>
-        <div class="row" ng-show="adminShowStats">
-            <div class="col-100">
-                <p>Stats</p>
-            </div>
+        <div ng-show="adminShowStats">
+            <div ng-include="'templates/admin/admin-stats.html'"></div>
         </div>
         <div class="row" ng-show="adminShowSwitch">
             <div class="col-100">

@@ -1,7 +1,7 @@
 @import "pirate-theme-colors";
 @import "../screens";
 
-.admin {
+.admin-screen {
 
   .button {
     background-color: $brown;
@@ -12,5 +12,12 @@
   .selected {
     font-weight: bold;
     background-color: $gold;
+  }
+
+  .admin-stats {
+    padding: 20px;
+    .col {
+      padding: 0;
+    }
   }
 }
