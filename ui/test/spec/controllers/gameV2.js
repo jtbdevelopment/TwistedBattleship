@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Controller: GameCtrl', function () {
-    // load the controller's module
     beforeEach(module('tbs.controllers'));
 
     var shipInfo = {

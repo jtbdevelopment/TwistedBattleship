@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Controller: playerListAndState', function () {
-    // load the controller's module
     beforeEach(module('tbs.controllers'));
 
     var stateSpy;

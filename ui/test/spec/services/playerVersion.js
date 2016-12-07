@@ -28,7 +28,6 @@ describe('Service: playerVersion', function () {
     }));
 
 
-    // Initialize the controller and a mock scope
     beforeEach(inject(function ($injector) {
         popupCalled = undefined;
         playerService.updateLastVersionNotes = sinon.spy();

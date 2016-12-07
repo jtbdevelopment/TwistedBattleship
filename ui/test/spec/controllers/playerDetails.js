@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Controller: playerDetails', function () {
-    // load the controller's module
     beforeEach(module('tbs.controllers'));
 
     var manualPlayer = {source: 'MANUAL', gameSpecificPlayerAttributes: {theme: 'theTheme'}};

@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Controller: playHelp', function () {
-    // load the controller's module
     beforeEach(module('tbs.controllers'));
 
     var expectedTheme = 'A THEME!';

@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Controller: ActionLogCtrl', function () {
-    // load the controller's module
     beforeEach(module('tbs.controllers'));
 
     var expectedId = 'tada!';

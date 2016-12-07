@@ -18,7 +18,6 @@ window.AdMob = {
 };
 
 describe('Service: ads', function () {
-    // load the controller's module
     beforeEach(module('tbs.services'));
 
     var googleAdSpy = {};

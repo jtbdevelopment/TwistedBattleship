@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Service: shipGridV2', function () {
-    // load the controller's module
     beforeEach(module('tbs.services'));
 
     var expectedTheme = 'mytheme';

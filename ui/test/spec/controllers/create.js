@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Controller: CreateGameCtrl', function () {
-    // load the controller's module
     beforeEach(module('tbs.controllers'));
 
     var ctrl, stateSpy, rootScope, scope, q;

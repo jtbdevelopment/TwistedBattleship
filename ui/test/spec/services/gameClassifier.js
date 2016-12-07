@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Service: gameClassifier', function () {
-    // load the controller's module
     beforeEach(module('tbs.services'));
 
     var playerMD5 = 'anmd5!';

@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Controller: MobileGameListCtrl', function () {
-    // load the controller's module
     beforeEach(module('tbs.controllers'));
 
     var currentPlayer = {source: 'MANUAL', md5: 'my md 5'};

@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Service: gameDetails', function () {
-    // load the controller's module
     beforeEach(module('tbs.services'));
 
 
@@ -59,7 +58,6 @@ describe('Service: gameDetails', function () {
     };
 
     var rootScope;
-    // Initialize the controller and a mock scope
     beforeEach(inject(function ($injector, $rootScope) {
         game = angular.copy(gameBase);
         rootScope = $rootScope;

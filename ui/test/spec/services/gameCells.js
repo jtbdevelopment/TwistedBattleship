@@ -1,14 +1,12 @@
 'use strict';
 
 describe('Service: gameCells', function () {
-    // load the controller's module
     beforeEach(module('tbs.services'));
 
     var service, httpBackend;
     var result = {'10': [{row: 1, column: 0}, {row: -1, column: 0}], '20': [{row: -2, column: -5}]};
     var url = '/api/states';
 
-    // Initialize the controller and a mock scope
     beforeEach(inject(function ($httpBackend, $injector) {
         httpBackend = $httpBackend;
         service = $injector.get('tbsCellStates');

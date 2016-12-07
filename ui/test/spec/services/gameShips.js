@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Service: gameShips', function () {
-    // load the controller's module
     beforeEach(module('tbs.services'));
 
     var service, httpBackend;
@@ -12,7 +11,6 @@ describe('Service: gameShips', function () {
     }];
     var url = '/api/ships';
 
-    // Initialize the controller and a mock scope
     beforeEach(inject(function ($httpBackend, $injector) {
         httpBackend = $httpBackend;
         service = $injector.get('tbsShips');

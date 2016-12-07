@@ -1,7 +1,6 @@
 'use strict';
 
 describe('Service: gameActions', function () {
-    // load the controller's module
     beforeEach(module('tbs.services'));
 
     var service, httpBackend;
@@ -60,7 +59,6 @@ describe('Service: gameActions', function () {
 
 
     var q;
-    // Initialize the controller and a mock scope
     beforeEach(inject(function ($httpBackend, $injector, $q) {
         q = $q;
         mockIonicAlert.alert = function (params) {
