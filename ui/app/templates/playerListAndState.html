@@ -1,33 +1,33 @@
-<ion-view class="playerList" hide-back-button="true">
+<ion-view class="player-list" hide-back-button="true">
     <ion-nav-buttons side="right">
-        <a class="button button-icon button-clear ion-information-circled" ng-click="showDetails()"></a>
+        <a class="button button-icon button-clear ion-information-circled" ng-click="playerList.showDetails()"></a>
     </ion-nav-buttons>
     <ion-content>
         <div class="list">
             <div class="item item-avatar item-icon-right">
-                <img ng-src="{{gameDetails.imageForPlayer(game, player.md5)}}">
-                {{player.displayName}}
-                <span class="{{statusColor(player.md5)}}">
-                    <i class="icon ion-{{statusIcon(player.md5)}}"></i>
+                <img ng-src="{{playerList.gameDetails.imageForPlayer(playerList.game, playerList.player.md5)}}">
+                {{playerList.player.displayName}}
+                <span class="{{playerList.statusColor(playerList.player.md5)}}">
+                    <i class="icon ion-{{playerList.statusIcon(playerList.player.md5)}}"></i>
                 </span>
             </div>
-            <div class="item" ng-show="showActions">
+            <div class="item" ng-show="playerList.showActions">
                 <div class="row">
-                    <a class="button button-accept col" ng-click="accept()"
-                            ng-show="gameDetails.playerChallengeResponseNeeded(game, player.md5)">
+                    <a class="button button-accept col" ng-click="playerList.accept()"
+                       ng-show="playerList.gameDetails.playerChallengeResponseNeeded(playerList.game, playerList.player.md5)">
                         <i class="icon ion-checkmark-circled"></i> Accept
                     </a>
-                    <a class="button button-reject col" ng-click="reject()">
+                    <a class="button button-reject col" ng-click="playerList.reject()">
                         <i class="icon ion-close-circled"></i> Reject
                     </a>
                 </div>
             </div>
             <div class="item item-avatar item-icon-right"
-                 ng-repeat="(md5, name) in game.players" ng-hide="md5 === player.md5">
-                <img ng-src="{{gameDetails.imageForPlayer(game, md5)}}">
+                 ng-repeat="(md5, name) in playerList.game.players" ng-hide="md5 === playerList.player.md5">
+                <img ng-src="{{playerList.gameDetails.imageForPlayer(game, md5)}}">
                 {{name}}
-                <span class="{{statusColor(md5)}}">
-                    <i class="icon ion-{{statusIcon(md5)}}"></i>
+                <span class="{{playerList.statusColor(md5)}}">
+                    <i class="icon ion-{{playerList.statusIcon(md5)}}"></i>
                 </span>
             </div>
         </div>

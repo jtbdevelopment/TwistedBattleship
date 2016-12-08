@@ -3,46 +3,55 @@
 angular.module('tbs.controllers').controller('PlayerListAndStateCtrl',
     ['$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state',
         function ($scope, tbsGameDetails, tbsActions, jtbGameCache, jtbPlayerService, $state) {
+            var controller = this;
 
-            $scope.gameID = $state.params.gameID;
-            $scope.game = jtbGameCache.getGameForID($scope.gameID);
-            $scope.gameDetails = tbsGameDetails;
-            $scope.showActions = $scope.game.gamePhase === 'Challenged';
-            $scope.player = {};
-            $scope.player = jtbPlayerService.currentPlayer();
+            function initialize() {
+                controller.gameID = $state.params.gameID;
+                controller.game = jtbGameCache.getGameForID(controller.gameID);
+                controller.gameDetails = tbsGameDetails;
+                controller.showActions = controller.game.gamePhase === 'Challenged';
+                controller.player = {};
+                controller.player = jtbPlayerService.currentPlayer();
+            }
 
-            $scope.statusColor = function (md5) {
+            initialize();
+
+            controller.statusColor = function (md5) {
                 if (angular.isDefined(md5)) {
-                    return $scope.game.playerStates[md5].toLowerCase();
+                    return controller.game.playerStates[md5].toLowerCase();
                 }
                 return '';
             };
 
-            $scope.statusIcon = function (md5) {
+            controller.statusIcon = function (md5) {
                 if (angular.isDefined(md5)) {
-                    return $scope.game.playerStates[md5] === 'Pending' ? 'help-circled' :
-                        $scope.game.playerStates[md5] === 'Accepted' ? 'checkmark-circled' :
-                            $scope.game.playerStates[md5] === 'Quit' ? 'flag' :
+                    return controller.game.playerStates[md5] === 'Pending' ? 'help-circled' :
+                        controller.game.playerStates[md5] === 'Accepted' ? 'checkmark-circled' :
+                            controller.game.playerStates[md5] === 'Quit' ? 'flag' :
                                 'close-circled';
                 }
                 return '';
             };
 
-            $scope.showDetails = function () {
-                $state.go('app.gameDetails', {gameID: $scope.gameID});
+            controller.showDetails = function () {
+                $state.go('app.gameDetails', {gameID: controller.gameID});
             };
 
-            $scope.accept = function () {
-                tbsActions.accept($scope.game);
+            controller.accept = function () {
+                tbsActions.accept(controller.game);
             };
 
-            $scope.reject = function () {
-                tbsActions.reject($scope.game);
+            controller.reject = function () {
+                tbsActions.reject(controller.game);
             };
+
+            $scope.$on('$ionicView.enter', function () {
+                initialize();
+            });
 
             $scope.$on('gameUpdated', function (event, oldGame, newGame) {
-                if ($scope.gameID === newGame.id) {
-                    $scope.game = newGame;
+                if (controller.gameID === newGame.id) {
+                    controller.game = newGame;
                     tbsActions.updateCurrentView(oldGame, newGame);
                 }
             });

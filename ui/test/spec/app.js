@@ -66,7 +66,8 @@ describe('testing app js', function () {
             assert(stateSpy.calledWithMatch('network', {
                 url: '/network',
                 templateUrl: 'templates/network.html',
-                controller: 'CoreIonicNetworkCtrl'
+                controller: 'CoreIonicNetworkCtrl',
+                controllerAs: 'network'
             }));
         });
 
@@ -74,7 +75,8 @@ describe('testing app js', function () {
             assert(stateSpy.calledWithMatch('signin', {
                 url: '/signin',
                 templateUrl: 'templates/signin.html',
-                controller: 'CoreIonicSignInCtrl'
+                controller: 'CoreIonicSignInCtrl',
+                controllerAs: 'signIn'
             }));
         });
 
@@ -82,7 +84,8 @@ describe('testing app js', function () {
             assert(stateSpy.calledWithMatch('signedin', {
                 url: '/signedin',
                 templateUrl: 'templates/signedin.html',
-                controller: 'CoreIonicSignedInCtrl'
+                controller: 'CoreIonicSignedInCtrl',
+                controllerAs: 'signedIn'
             }));
         });
 
@@ -139,7 +142,8 @@ describe('testing app js', function () {
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/playerListAndState.html',
-                        controller: 'PlayerListAndStateCtrl'
+                        controller: 'PlayerListAndStateCtrl',
+                        controllerAs: 'playerList'
                     }
                 }
             }));
@@ -151,7 +155,8 @@ describe('testing app js', function () {
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/playerListAndState.html',
-                        controller: 'PlayerListAndStateCtrl'
+                        controller: 'PlayerListAndStateCtrl',
+                        controllerAs: 'playerList'
                     }
                 }
             }));
@@ -163,7 +168,8 @@ describe('testing app js', function () {
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/playerListAndState.html',
-                        controller: 'PlayerListAndStateCtrl'
+                        controller: 'PlayerListAndStateCtrl',
+                        controllerAs: 'playerList'
                     }
                 }
             }));

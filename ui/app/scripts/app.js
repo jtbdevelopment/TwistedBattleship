@@ -78,7 +78,8 @@ angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.contro
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/playerListAndState.html',
-                        controller: 'PlayerListAndStateCtrl'
+                        controller: 'PlayerListAndStateCtrl',
+                        controllerAs: 'playerList'
                     }
                 }
             })
@@ -87,7 +88,8 @@ angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.contro
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/playerListAndState.html',
-                        controller: 'PlayerListAndStateCtrl'
+                        controller: 'PlayerListAndStateCtrl',
+                        controllerAs: 'playerList'
                     }
                 }
             })
@@ -96,7 +98,8 @@ angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.contro
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/playerListAndState.html',
-                        controller: 'PlayerListAndStateCtrl'
+                        controller: 'PlayerListAndStateCtrl',
+                        controllerAs: 'playerList'
                     }
                 }
             })
