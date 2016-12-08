@@ -12,12 +12,9 @@ describe('Controller: playHelp', function () {
         }
     };
 
-    var rootScope, scope, ctrl;
-    beforeEach(inject(function ($rootScope, $controller) {
-        rootScope = $rootScope;
-        scope = rootScope.$new();
+    var ctrl;
+    beforeEach(inject(function ($controller) {
         ctrl = $controller('PlayHelpCtrl', {
-            $scope: scope,
             jtbPlayerService: mockPlayerService
         });
     }));
@@ -25,35 +22,35 @@ describe('Controller: playHelp', function () {
     describe('switching tabs', function () {
 
         it('initializes theme and defaults to general help', function () {
-            expect(scope.theme).to.equal(expectedTheme);
-            expect(scope.showGeneral).to.be.true;
-            expect(scope.showAttackDefend).to.be.false;
-            expect(scope.showGrid).to.be.false;
+            expect(ctrl.theme).to.equal(expectedTheme);
+            expect(ctrl.showGeneral).to.be.true;
+            expect(ctrl.showAttackDefend).to.be.false;
+            expect(ctrl.showGrid).to.be.false;
         });
 
         it('switching back to general', function () {
-            scope.switchToAttackDefend();
-            scope.switchToGeneral();
-            expect(scope.theme).to.equal(expectedTheme);
-            expect(scope.showGeneral).to.be.true;
-            expect(scope.showAttackDefend).to.be.false;
-            expect(scope.showGrid).to.be.false;
+            ctrl.switchToAttackDefend();
+            ctrl.switchToGeneral();
+            expect(ctrl.theme).to.equal(expectedTheme);
+            expect(ctrl.showGeneral).to.be.true;
+            expect(ctrl.showAttackDefend).to.be.false;
+            expect(ctrl.showGrid).to.be.false;
         });
 
         it('switching to attack defend', function () {
-            scope.switchToAttackDefend();
-            expect(scope.theme).to.equal(expectedTheme);
-            expect(scope.showGeneral).to.be.false;
-            expect(scope.showAttackDefend).to.be.true;
-            expect(scope.showGrid).to.be.false;
+            ctrl.switchToAttackDefend();
+            expect(ctrl.theme).to.equal(expectedTheme);
+            expect(ctrl.showGeneral).to.be.false;
+            expect(ctrl.showAttackDefend).to.be.true;
+            expect(ctrl.showGrid).to.be.false;
         });
 
         it('switching to grid', function () {
-            scope.switchToGrid();
-            expect(scope.theme).to.equal(expectedTheme);
-            expect(scope.showGeneral).to.be.false;
-            expect(scope.showAttackDefend).to.be.false;
-            expect(scope.showGrid).to.be.true;
+            ctrl.switchToGrid();
+            expect(ctrl.theme).to.equal(expectedTheme);
+            expect(ctrl.showGeneral).to.be.false;
+            expect(ctrl.showAttackDefend).to.be.false;
+            expect(ctrl.showGrid).to.be.true;
         });
 
     });

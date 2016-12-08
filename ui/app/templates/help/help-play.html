@@ -1,17 +1,19 @@
-<ion-view class="playHelp">
+<ion-view class="play-help">
     <ion-content class="has-header" ng-cloak>
         <div class="row">
             <div class="col-33">
-                <a class="button-full button {{showGeneral ? 'picked' : ''}}" ng-click="switchToGeneral()">General</a>
+                <a class="button-full button {{playHelp.showGeneral ? 'picked' : ''}}"
+                   ng-click="playHelp.switchToGeneral()">General</a>
             </div>
             <div class="col-33">
-                <a class="button-full button {{showAttackDefend ? 'picked' : ''}}" ng-click="switchToAttackDefend()">Attack & Defend</a>
+                <a class="button-full button {{playHelp.showAttackDefend ? 'picked' : ''}}"
+                   ng-click="playHelp.switchToAttackDefend()">Attack & Defend</a>
             </div>
             <div class="col-33">
-                <a class="button-full button {{showGrid ? 'picked' : ''}}" ng-click="switchToGrid()">Grid</a>
+                <a class="button-full button {{playHelp.showGrid ? 'picked' : ''}}" ng-click="playHelp.switchToGrid()">Grid</a>
             </div>
         </div>
-        <div class="row" ng-show="showGeneral">
+        <div class="row" ng-show="playHelp.showGeneral">
             <div class="col-100">
                 <p>The screen is broken into four main areas.</p>
 
@@ -29,7 +31,7 @@
                     chosen.</p>
             </div>
         </div>
-        <div class="row" ng-show="showAttackDefend">
+        <div class="row" ng-show="playHelp.showAttackDefend">
             <div class="col-100">
                 <p>Pick your opponent or yourself on the left. The available actions will appear under the
                     opponents. The chosen player will be highlighted.</p>
@@ -53,15 +55,17 @@
                 <p><strong>Grid Highlights</strong></p>
 
                 <p>When you pick a spot on the grid, it will be highlighted like <img
-                        ng-src="images/{{theme}}/highlight.png"/>. Additional cells will be highlighted to show what
+                        ng-src="images/{{playHelp.theme}}/highlight.png"/>. Additional cells will be highlighted to show
+                    what
                     will be shown or hidden if you use Spy or ECM like <img
-                            ng-src="images/{{theme}}/extendedhighlight.png"/>. Also, if you are selecting a cell
+                            ng-src="images/{{playHelp.theme}}/extendedhighlight.png"/>. Also, if you are selecting a
+                    cell
                     with your own ship, it will be highlighted as well to show which ship will take Evasive
                     Maneuvers or make Emergency Repairs.
                 </p>
             </div>
         </div>
-        <div class="row" ng-show="showGrid">
+        <div class="row" ng-show="playHelp.showGrid">
             <div class="col-100">
                 <div class="row">
                     <div class="col-100">
@@ -76,10 +80,11 @@
                 </div>
                 <div class="row">
                     <div class="col-50">
-                        <img ng-src="images/{{theme}}/unknown.png"/>This area is not known.
+                        <img ng-src="images/{{playHelp.theme}}/unknown.png"/>This area is not known.
                     </div>
                     <div class="col-50">
-                        <img ng-src="images/{{theme}}/hiddenhit.png"/>This ship is damaged, but the damage is not
+                        <img ng-src="images/{{playHelp.theme}}/hiddenhit.png"/>This ship is damaged, but the damage is
+                        not
                         known to the current opponent.
                     </div>
                 </div>
@@ -90,42 +95,48 @@
                 </div>
                 <div class="row">
                     <div class="col-50">
-                        <img ng-src="images/{{theme}}/knownship.png"/>This area is known to have an undamaged ship.
+                        <img ng-src="images/{{playHelp.theme}}/knownship.png"/>This area is known to have an undamaged
+                        ship.
                     </div>
                     <div class="col-50">
-                        <img ng-src="images/{{theme}}/knownbyhit.png"/>This area is known to have a ship damaged by
+                        <img ng-src="images/{{playHelp.theme}}/knownbyhit.png"/>This area is known to have a ship
+                        damaged by
                         you.
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-50">
-                        <img ng-src="images/{{theme}}/knownbyrehit.png"/>This area is known to an already damaged
+                        <img ng-src="images/{{playHelp.theme}}/knownbyrehit.png"/>This area is known to an already
+                        damaged
                         ship
                         that you hit as well.
                     </div>
                     <div class="col-50">
-                        <img ng-src="images/{{theme}}/knownbyotherhit.png"/>This area is known to have a ship
+                        <img ng-src="images/{{playHelp.theme}}/knownbyotherhit.png"/>This area is known to have a ship
                         damaged
                         by another player.
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-50">
-                        <img ng-src="images/{{theme}}/knownbymiss.png"/>This area is known to be empty from a shot
+                        <img ng-src="images/{{playHelp.theme}}/knownbymiss.png"/>This area is known to be empty from a
+                        shot
                         taken by yourself.
                     </div>
                     <div class="col-50">
-                        <img ng-src="images/{{theme}}/knownbyothermiss.png"/>This area is known to be empty from a
+                        <img ng-src="images/{{playHelp.theme}}/knownbyothermiss.png"/>This area is known to be empty
+                        from a
                         miss
                         by another player.
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-50">
-                        <img ng-src="images/{{theme}}/knownempty.png"/>This area is known to be empty.
+                        <img ng-src="images/{{playHelp.theme}}/knownempty.png"/>This area is known to be empty.
                     </div>
                     <div class="col-50">
-                        <img ng-src="images/{{theme}}/revealedship.png"/>A ship revealed after the game is over.
+                        <img ng-src="images/{{playHelp.theme}}/revealedship.png"/>A ship revealed after the game is
+                        over.
                     </div>
                 </div>
                 <div class="row">
@@ -135,42 +146,47 @@
                 </div>
                 <div class="row">
                     <div class="col-50">
-                        <img ng-src="images/{{theme}}/obscuredship.png"/>This area was previously known to have an
+                        <img ng-src="images/{{playHelp.theme}}/obscuredship.png"/>This area was previously known to have
+                        an
                         undamaged ship.
                     </div>
                     <div class="col-50">
-                        <img ng-src="images/{{theme}}/obscuredhit.png"/>This area was previously known to have a
+                        <img ng-src="images/{{playHelp.theme}}/obscuredhit.png"/>This area was previously known to have
+                        a
                         ship damaged by
                         you.
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-50">
-                        <img ng-src="images/{{theme}}/obscuredrehit.png"/>This area was previously known to an
+                        <img ng-src="images/{{playHelp.theme}}/obscuredrehit.png"/>This area was previously known to an
                         already damaged ship
                         that you hit as well.
                     </div>
                     <div class="col-50">
-                        <img ng-src="images/{{theme}}/obscuredotherhit.png"/>This area was previously known to have
+                        <img ng-src="images/{{playHelp.theme}}/obscuredotherhit.png"/>This area was previously known to
+                        have
                         a ship damaged
                         by another player.
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-50">
-                        <img ng-src="images/{{theme}}/obscuredmiss.png"/>This area was previously known to be empty
+                        <img ng-src="images/{{playHelp.theme}}/obscuredmiss.png"/>This area was previously known to be
+                        empty
                         from a shot
                         taken by yourself.
                     </div>
                     <div class="col-50">
-                        <img ng-src="images/{{theme}}/obscuredothermiss.png"/>This area was previously known to be
+                        <img ng-src="images/{{playHelp.theme}}/obscuredothermiss.png"/>This area was previously known to
+                        be
                         empty from a miss
                         by another player.
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-50">
-                        <img ng-src="images/{{theme}}/obscuredempty.png"/>This area was previously known to be
+                        <img ng-src="images/{{playHelp.theme}}/obscuredempty.png"/>This area was previously known to be
                         empty.
                     </div>
                 </div>

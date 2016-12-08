@@ -153,7 +153,8 @@ angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.contro
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/help/help-play.html',
-                        controller: 'PlayHelpCtrl'
+                        controller: 'PlayHelpCtrl',
+                        controllerAs: 'playHelp'
                     }
                 }
             })
