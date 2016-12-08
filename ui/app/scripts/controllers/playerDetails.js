@@ -1,31 +1,23 @@
 'use strict';
 
 angular.module('tbs.controllers').controller('PlayerDetailsCtrl',
-    ['$scope', 'jtbPlayerService', '$http', '$ionicPopup', '$rootScope', '$timeout',
-        function ($scope, jtbPlayerService, $http, $ionicPopup, $rootScope, $timeout) {
-            $scope.data = {theme: 'default-theme'};
+    ['$scope', 'jtbPlayerService', '$http', '$rootScope',
+        function ($scope, jtbPlayerService, $http, $rootScope) {
+            var controller = this;
+            controller.data = {theme: 'default-theme'};
 
-            $scope.changeTheme = function () {
-                $http.put(jtbPlayerService.currentPlayerBaseURL() + '/changeTheme/' + $scope.data.theme)
+            controller.changeTheme = function () {
+                $http.put(jtbPlayerService.currentPlayerBaseURL() + '/changeTheme/' + controller.data.theme)
                     .success(function (data) {
                         console.log(JSON.stringify(data));
-                        $timeout(function () {
-                            $rootScope.$broadcast('playerUpdate', data.id, data);
-                        }, this);
-                    })
-                    .error(
-                        function (data, status, headers, config) {
-                            $ionicPopup.alert({
-                                title: 'Error updating theme!',
-                                template: data
-                            });
-                            console.error(data + status + headers + config);
-                        });
+                        $rootScope.$broadcast('playerUpdate', data.id, data);
+                    });
             };
 
             $scope.$on('$ionicView.enter', function () {
-                $scope.player = jtbPlayerService.currentPlayer();
-                $scope.data.theme = $scope.player.gameSpecificPlayerAttributes.theme;
+                controller.player = jtbPlayerService.currentPlayer();
+                console.log(JSON.stringify(controller.player));
+                controller.data.theme = controller.player.gameSpecificPlayerAttributes.theme;
             });
         }
     ]

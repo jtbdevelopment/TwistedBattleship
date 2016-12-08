@@ -1,21 +1,21 @@
-<ion-view class="playerDetails">
+<ion-view class="player-details">
     <ion-content class="has-header" ng-cloak>
         <ion-list>
             <ion-item class="item">
                 Name
-                <span class="item-note">{{player.displayName}}</span>
+                <span class="item-note">{{detail.player.displayName}}</span>
             </ion-item>
             <ion-item class="item item-input item-select item-button-right">
                 <div class="input-label">
                     Current Theme
                 </div>
-                <select ng-model="data.theme">
-                    <option ng-repeat="themeOption in player.gameSpecificPlayerAttributes.availableThemes"
+                <select ng-model="detail.data.theme">
+                    <option ng-repeat="themeOption in detail.player.gameSpecificPlayerAttributes.availableThemes"
                             value="{{themeOption}}">
                         {{themeOption.replace('-theme', '')}}
                     </option>
                 </select>
-                <button class="button button-submit" ng-click="changeTheme()">
+                <button class="button button-submit" ng-click="detail.changeTheme()">
                     <i class="icon ion-checkmark"></i>
                 </button>
             </ion-item>
@@ -24,30 +24,30 @@
             </ion-item>
             <ion-item class="item">
                 Free Games Played or Accepted Today
-                <span class="item-note">{{player.gameSpecificPlayerAttributes.freeGamesUsedToday}}</span>
+                <span class="item-note">{{detail.player.gameSpecificPlayerAttributes.freeGamesUsedToday}}</span>
             </ion-item>
             <ion-item class="item">
                 Maximum Free Games Per Day
-                <span class="item-note">{{player.gameSpecificPlayerAttributes.maxDailyFreeGames}}</span>
+                <span class="item-note">{{detail.player.gameSpecificPlayerAttributes.maxDailyFreeGames}}</span>
             </ion-item>
             <ion-item class="item item-divider">
                 Game States
             </ion-item>
             <ion-item>
                 Current Hot Streak
-                <span class="item-note">{{player.gameSpecificPlayerAttributes.currentWinStreak}}</span>
+                <span class="item-note">{{detail.player.gameSpecificPlayerAttributes.currentWinStreak}}</span>
             </ion-item>
             <ion-item>
                 Wins
-                <span class="item-note">{{player.gameSpecificPlayerAttributes.wins}}</span>
+                <span class="item-note">{{detail.player.gameSpecificPlayerAttributes.wins}}</span>
             </ion-item>
             <ion-item>
                 Losses
-                <span class="item-note">{{player.gameSpecificPlayerAttributes.losses}}</span>
+                <span class="item-note">{{detail.player.gameSpecificPlayerAttributes.losses}}</span>
             </ion-item>
             <ion-item>
                 Highest Score
-                <span class="item-note">{{player.gameSpecificPlayerAttributes.highestScore}}</span>
+                <span class="item-note">{{detail.player.gameSpecificPlayerAttributes.highestScore}}</span>
             </ion-item>
         </ion-list>
     </ion-content>

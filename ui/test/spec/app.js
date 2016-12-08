@@ -231,7 +231,8 @@ describe('testing app js', function () {
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/playerDetails.html',
-                        controller: 'PlayerDetailsCtrl'
+                        controller: 'PlayerDetailsCtrl',
+                        controllerAs: 'detail'
                     }
                 }
             }));
