@@ -206,7 +206,8 @@ describe('testing app js', function () {
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/actionLog.html',
-                        controller: 'ActionLogCtrl'
+                        controller: 'ActionLogCtrl',
+                        controllerAs: 'log'
                     }
                 }
             }));

@@ -4,18 +4,23 @@ var ACTION_LOG_CHUNK_SIZE = 20;
 angular.module('tbs.controllers').controller('ActionLogCtrl',
     ['$scope', '$state', 'tbsGameDetails', 'jtbGameCache',
         function ($scope, $state, tbsGameDetails, jtbGameCache) {
-            $scope.gameID = $state.params.gameID;
-            $scope.game = jtbGameCache.getGameForID($scope.gameID);
-            $scope.gameDetails = tbsGameDetails;
+            var controller = this;
+            controller.gameID = $state.params.gameID;
+            controller.gameDetails = tbsGameDetails;
 
-            $scope.shownEntries = [];
-            $scope.totalEntries = $scope.game.maskedPlayersState.actionLog.length;
+            function initialize() {
+                controller.game = jtbGameCache.getGameForID(controller.gameID);
+                controller.shownEntries = [];
+                controller.totalEntries = controller.game.maskedPlayersState.actionLog.length;
+            }
+
+            initialize();
 
             function loadMore() {
-                if ($scope.game.maskedPlayersState.actionLog.length === $scope.shownEntries.length) {
+                if (controller.game.maskedPlayersState.actionLog.length === controller.shownEntries.length) {
                     return;
                 }
-                var index = $scope.game.maskedPlayersState.actionLog.length - $scope.shownEntries.length - ACTION_LOG_CHUNK_SIZE;
+                var index = controller.game.maskedPlayersState.actionLog.length - controller.shownEntries.length - ACTION_LOG_CHUNK_SIZE;
                 var chunk = ACTION_LOG_CHUNK_SIZE;
                 if (index < 0) {
                     chunk += index;
@@ -24,35 +29,33 @@ angular.module('tbs.controllers').controller('ActionLogCtrl',
                 if (chunk < 0) {
                     return;
                 }
-                var newItems = $scope.game.maskedPlayersState.actionLog.slice(
+                var newItems = controller.game.maskedPlayersState.actionLog.slice(
                     index, index + chunk
                 );
-                $scope.shownEntries = $scope.shownEntries.concat(newItems);
+                controller.shownEntries = controller.shownEntries.concat(newItems);
             }
 
             $scope.$on('$ionicView.enter', function () {
-                $scope.shownEntries = [];
-                $scope.game = jtbGameCache.getGameForID($scope.gameID);
-                $scope.totalEntries = $scope.game.maskedPlayersState.actionLog.length;
+                initialize();
                 loadMore();
             });
 
             $scope.$on('gameUpdated', function (event, oldGame, newGame) {
-                if ($scope.gameID === newGame.id) {
-                    $scope.game = newGame;
-                    if ($scope.game.maskedPlayersState.actionLog.length !== $scope.totalEntries) {
-                        var newEntries = $scope.game.maskedPlayersState.actionLog.length - $scope.totalEntries;
-                        $scope.totalEntries = $scope.game.maskedPlayersState.actionLog.length;
-                        $scope.shownEntries = $scope.shownEntries.concat($scope.game.maskedPlayersState.actionLog.slice(0, newEntries));
+                if (controller.gameID === newGame.id) {
+                    controller.game = newGame;
+                    if (controller.game.maskedPlayersState.actionLog.length !== controller.totalEntries) {
+                        var newEntries = controller.game.maskedPlayersState.actionLog.length - controller.totalEntries;
+                        controller.totalEntries = controller.game.maskedPlayersState.actionLog.length;
+                        controller.shownEntries = controller.shownEntries.concat(controller.game.maskedPlayersState.actionLog.slice(0, newEntries));
                     }
                 }
             });
 
-            $scope.hasMoreEntries = function () {
-                return $scope.shownEntries.length !== $scope.totalEntries;
+            controller.hasMoreEntries = function () {
+                return controller.shownEntries.length !== controller.totalEntries;
             };
 
-            $scope.loadMore = function () {
+            controller.loadMore = function () {
                 loadMore();
                 $scope.$broadcast('scroll.infiniteScrollComplete');
             };

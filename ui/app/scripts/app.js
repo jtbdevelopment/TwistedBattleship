@@ -127,7 +127,8 @@ angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.contro
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/actionLog.html',
-                        controller: 'ActionLogCtrl'
+                        controller: 'ActionLogCtrl',
+                        controllerAs: 'log'
                     }
                 }
             })

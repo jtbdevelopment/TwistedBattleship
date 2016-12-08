@@ -1,13 +1,13 @@
-<ion-view class="actionLog">
+<ion-view class="action-log">
     <ion-content class="has-header" ng-cloak>
         <ion-list>
             <ion-item class="item item-text-wrap"
-                      ng-repeat="action in shownEntries | orderBy:['-timestamp']">
+                      ng-repeat="action in log.shownEntries | orderBy:['-timestamp']">
                 {{action.description}}
-                <p>{{gameDetails.formatActionTime(action.timestamp)}}</p>
+                <p>{{log.gameDetails.formatActionTime(action.timestamp)}}</p>
             </ion-item>
         </ion-list>
-        <ion-infinite-scroll ng-if="hasMoreEntries()" on-infinite="loadMore()" immediate-check="false">
+        <ion-infinite-scroll ng-if="log.hasMoreEntries()" on-infinite="log.loadMore()" immediate-check="false">
         </ion-infinite-scroll>
     </ion-content>
 </ion-view>
