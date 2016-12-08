@@ -137,7 +137,8 @@ angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.contro
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/gameDetails.html',
-                        controller: 'GameDetailsCtrl'
+                        controller: 'GameDetailsCtrl',
+                        controllerAs: 'detail'
                     }
                 }
             })

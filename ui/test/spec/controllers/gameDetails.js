@@ -28,14 +28,14 @@ describe('Controller: GameDetailsCtrl', function () {
             return expectedGameSize;
         }
     };
-    var rootScope, scope, ctrl, stateSpy, q, phasePromise;
+    var $rootScope, $scope, ctrl, stateSpy, $q, phasePromise;
 
-    beforeEach(inject(function ($rootScope, $controller, $q) {
+    beforeEach(inject(function (_$rootScope_, $controller, _$q_) {
         stateSpy = {go: sinon.spy(), params: {gameID: expectedId}};
-        rootScope = $rootScope;
-        q = $q;
-        phasePromise = $q.defer();
-        scope = rootScope.$new();
+        $rootScope = _$rootScope_;
+        $q = _$q_;
+        phasePromise = _$q_.defer();
+        $scope = $rootScope.$new();
 
         var mockGamePhaseService = {
             phases: function () {
@@ -44,9 +44,8 @@ describe('Controller: GameDetailsCtrl', function () {
         };
 
         ctrl = $controller('GameDetailsCtrl', {
-            $scope: scope,
+            $scope: $scope,
             $state: stateSpy,
-            $rootScope: rootScope,
             jtbGameCache: mockGameCache,
             tbsGameDetails: mockGameDetails,
             jtbGamePhaseService: mockGamePhaseService
@@ -54,45 +53,45 @@ describe('Controller: GameDetailsCtrl', function () {
     }));
 
     it('initializes', function () {
-        expect(scope.gameID).to.equal(expectedId);
-        expect(scope.game).to.equal(expectedGame);
-        expect(scope.gameDetails).to.equal(mockGameDetails);
+        expect(ctrl.gameID).to.equal(expectedId);
+        expect(ctrl.game).to.equal(expectedGame);
+        expect(ctrl.gameDetails).to.equal(mockGameDetails);
     });
 
     it('on ionic view enter, sets rest of details, with some features enabled', function () {
         expectedGame.features = ['ECMEnabled', 'SpyEnabled', 'EMEnabled', 'IsolatedIntel', 'Single'];
-        rootScope.$broadcast('$ionicView.enter');
-        expect(scope.game).to.equal(expectedGame);
-        expect(scope.ecmEnabled).to.equal('checkmark');
-        expect(scope.spyingEnabled).to.equal('checkmark');
-        expect(scope.moveEnabled).to.equal('checkmark');
-        expect(scope.cruiseMissileEnabled).to.equal('close');
-        expect(scope.repairsEnabled).to.equal('close');
-        expect(scope.gridSize).to.equal(expectedGameSize);
-        expect(scope.intel).to.equal('Isolated');
-        expect(scope.moves).to.equal('1');
+        $rootScope.$broadcast('$ionicView.enter');
+        expect(ctrl.game).to.equal(expectedGame);
+        expect(ctrl.ecmEnabled).to.equal('checkmark');
+        expect(ctrl.spyingEnabled).to.equal('checkmark');
+        expect(ctrl.moveEnabled).to.equal('checkmark');
+        expect(ctrl.cruiseMissileEnabled).to.equal('close');
+        expect(ctrl.repairsEnabled).to.equal('close');
+        expect(ctrl.gridSize).to.equal(expectedGameSize);
+        expect(ctrl.intel).to.equal('Isolated');
+        expect(ctrl.moves).to.equal('1');
         var serverPhases = {
             a: ['b', 'x'],
-            c: ['d', 'y'],
+            c: ['d', 'y']
         };
         serverPhases[expectedPhase] = ['d', expectedPhaseLabel];
         phasePromise.resolve(
             serverPhases);
-        rootScope.$apply();
-        expect(scope.phase).to.equal(expectedPhaseLabel);
+        $rootScope.$apply();
+        expect(ctrl.phase).to.equal(expectedPhaseLabel);
     });
 
     it('on ionic view enter, sets rest of details, with other features enabled', function () {
         expectedGame.features = ['CruiseMissileEnabled', 'EREnabled'];
-        rootScope.$broadcast('$ionicView.enter');
-        expect(scope.game).to.equal(expectedGame);
-        expect(scope.ecmEnabled).to.equal('close');
-        expect(scope.spyingEnabled).to.equal('close');
-        expect(scope.moveEnabled).to.equal('close');
-        expect(scope.cruiseMissileEnabled).to.equal('checkmark');
-        expect(scope.repairsEnabled).to.equal('checkmark');
-        expect(scope.gridSize).to.equal(expectedGameSize);
-        expect(scope.intel).to.equal('Shared');
-        expect(scope.moves).to.equal('Per Ship');
+        $rootScope.$broadcast('$ionicView.enter');
+        expect(ctrl.game).to.equal(expectedGame);
+        expect(ctrl.ecmEnabled).to.equal('close');
+        expect(ctrl.spyingEnabled).to.equal('close');
+        expect(ctrl.moveEnabled).to.equal('close');
+        expect(ctrl.cruiseMissileEnabled).to.equal('checkmark');
+        expect(ctrl.repairsEnabled).to.equal('checkmark');
+        expect(ctrl.gridSize).to.equal(expectedGameSize);
+        expect(ctrl.intel).to.equal('Shared');
+        expect(ctrl.moves).to.equal('Per Ship');
     });
 });

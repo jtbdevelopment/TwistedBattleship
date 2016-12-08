@@ -1,41 +1,41 @@
-<ion-view class="gameDetails">
+<ion-view class="game-details">
     <ion-content class="has-header" ng-cloak>
         <ion-list>
             <ion-item class="item">
                 State
-                <span class="item-note">{{phase}}</span>
+                <span class="item-note">{{detail.phase}}</span>
             </ion-item>
             <ion-item class="item">
                 Grid Size
-                <span class="item-note">{{gridSize}}</span>
+                <span class="item-note">{{detail.gridSize}}</span>
             </ion-item>
             <ion-item class="item">
                 Moves
-                <span class="item-note">{{moves}}</span>
+                <span class="item-note">{{detail.moves}}</span>
             </ion-item>
             <ion-item class="item">
                 Fog of War
-                <span class="item-note">{{intel}}</span>
+                <span class="item-note">{{detail.intel}}</span>
             </ion-item>
             <ion-item class="item item-icon-right">
                 ECM Enabled:
-                <div class="icon ion-{{ecmEnabled}} {{ecmEnabled}}"></div>
+                <div class="icon ion-{{detail.ecmEnabled}} {{detail.ecmEnabled}}"></div>
             </ion-item>
             <ion-item class="item item-icon-right">
                 Spies Enabled:
-                <div class="icon ion-{{spyingEnabled}} {{spyingEnabled}}"></div>
+                <div class="icon ion-{{detail.spyingEnabled}} {{detail.spyingEnabled}}"></div>
             </ion-item>
             <ion-item class="item item-icon-right">
                 Cruise Missiles Enabled:
-                <div class="icon ion-{{cruiseMissileEnabled}} {{cruiseMissileEnabled}}"></div>
+                <div class="icon ion-{{detail.cruiseMissileEnabled}} {{detail.cruiseMissileEnabled}}"></div>
             </ion-item>
             <ion-item class="item item-icon-right">
                 Repairs Enabled:
-                <div class="icon ion-{{repairsEnabled}} {{repairsEnabled}}"></div>
+                <div class="icon ion-{{detail.repairsEnabled}} {{detail.repairsEnabled}}"></div>
             </ion-item>
             <ion-item class="item item-icon-right">
                 Evasive Action Enabled:
-                <div class="icon ion-{{moveEnabled}} {{moveEnabled}}"></div>
+                <div class="icon ion-{{detail.moveEnabled}} {{detail.moveEnabled}}"></div>
             </ion-item>
         </ion-list>
     </ion-content>
