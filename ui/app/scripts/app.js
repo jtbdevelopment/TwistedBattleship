@@ -20,17 +20,20 @@ angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.contro
             .state('network', {
                 url: '/network',
                 templateUrl: 'templates/network.html',
-                controller: 'CoreIonicNetworkCtrl'
+                controller: 'CoreIonicNetworkCtrl',
+                controllerAs: 'network'
             })
             .state('signin', {
                 url: '/signin',
                 templateUrl: 'templates/signin.html',
-                controller: 'CoreIonicSignInCtrl'
+                controller: 'CoreIonicSignInCtrl',
+                controllerAs: 'signIn'
             })
             .state('signedin', {
                 url: '/signedin',
                 templateUrl: 'templates/signedin.html',
-                controller: 'CoreIonicSignedInCtrl'
+                controller: 'CoreIonicSignedInCtrl',
+                controllerAs: 'signedIn'
             })
             .state('app', {
                 url: '/app',
