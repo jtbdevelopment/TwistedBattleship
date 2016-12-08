@@ -1,18 +1,18 @@
-<ion-view cache-view="false" class="game setupGame" hide-back-button="true">
+<ion-view cache-view="false" class="game setup-game" hide-back-button="true">
     <ion-nav-buttons side="right">
-        <a class="button button-icon button-clear ion-information-circled" ng-click="showDetails()"></a>
-        <a class="button button-icon button-clear ion-help-circled" ng-click="showHelp(0)"></a>
+        <a class="button button-icon button-clear ion-information-circled" ng-click="setup.showDetails()"></a>
+        <a class="button button-icon button-clear ion-help-circled" ng-click="setup.showHelp(0)"></a>
     </ion-nav-buttons>
     <ion-content has-bouncing="false">
         <div class="row">
             <div class="list col-20">
                 <div class="item item-avatar item-text-wrap item-icon-right"
-                     ng-repeat="(md5, name) in game.players">
-                    <img ng-src="{{gameDetails.imageForPlayer(game, md5)}}">
+                     ng-repeat="(md5, name) in setup.game.players">
+                    <img ng-src="{{setup.gameDetails.imageForPlayer(game, md5)}}">
 
                     <h3>{{name}}</h3>
-                <span class="{{gameDetails.playerSetupEntryRequired(game, md5) ? 'pending' : 'accepted'}}">
-                    <i class="icon ion-{{gameDetails.playerSetupEntryRequired(game, md5) ? 'edit' : 'checkmark'}}"></i>
+                    <span class="{{setup.gameDetails.playerSetupEntryRequired(setup.game, md5) ? 'pending' : 'accepted'}}">
+                    <i class="icon ion-{{setup.gameDetails.playerSetupEntryRequired(setup.game, md5) ? 'edit' : 'checkmark'}}"></i>
                 </span>
                 </div>
 
@@ -21,8 +21,8 @@
                 <div class="item action-item">
                     <div class="button-bar">
                         <a class="button button-submit icon-left ion-edit"
-                                ng-disabled="submitDisabled"
-                                ng-click="submit()">
+                           ng-disabled="setup.submitDisabled"
+                           ng-click="setup.submit()">
                             <span>Save</span>
                         </a>
                     </div>
@@ -32,14 +32,14 @@
 
                 <div class="item action-item">
                     <div class="button-bar">
-                        <a class="button button-quit icon-left ion-flag" ng-click="quit()">
+                        <a class="button button-quit icon-left ion-flag" ng-click="setup.quit()">
                             <span>Surrender</span>
                         </a>
                     </div>
                 </div>
 
             </div>
-            <div id="phaser" class="col-80 phaser grid-{{game.gridSize}}">
+            <div id="phaser" class="col-80 phaser grid-{{setup.game.gridSize}}">
 
             </div>
         </div>

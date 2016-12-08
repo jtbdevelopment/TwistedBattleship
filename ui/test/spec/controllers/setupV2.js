@@ -38,22 +38,18 @@ describe('Controller: SetupGameV2Ctrl', function () {
             this.overlapCB = cb;
         }
     };
-    var rootScope, scope, ctrl, stateSpy, q, phasePromise, ionicLoadingSpy, timeout, ionicModal,
+    var $rootScope, scope, ctrl, stateSpy, $q, phasePromise, ionicLoadingSpy, $timeout, ionicModal,
         actionsSpy, expectedGame, ionicSideMenuDelegate;
     var modalHelpPromise, modalHelp;
 
-    beforeEach(inject(function ($rootScope, $controller, $q, $timeout) {
-        rootScope = $rootScope;
-        q = $q;
-        timeout = $timeout;
-        scope = rootScope.$new();
+    beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$timeout_) {
+        $rootScope = _$rootScope_;
+        $q = _$q_;
+        $timeout = _$timeout_;
+        scope = $rootScope.$new();
         modalHelpPromise = $q.defer();
         modalHelp = {show: sinon.spy(), hide: sinon.spy(), remove: sinon.spy()};
         ionicModal = {fromTemplateUrl: sinon.stub()};
-        ionicModal.fromTemplateUrl.withArgs('templates/help/help-setup.html', {
-            scope: scope,
-            animation: 'slide-in-up'
-        }).returns(modalHelpPromise.promise);
         ionicSideMenuDelegate = {canDragContent: sinon.spy()};
         shipsOnGrid = [];
         expectedGame = {
@@ -99,7 +95,7 @@ describe('Controller: SetupGameV2Ctrl', function () {
         expectedGame.maskedPlayersState.opponentGrids[selectedOpponent] = {table: {x: 1, y: 2, s: 'X'}};
         stateSpy = {go: sinon.spy(), params: {gameID: expectedId}};
         ionicLoadingSpy = {show: sinon.spy(), hide: sinon.spy()};
-        phasePromise = $q.defer();
+        phasePromise = _$q_.defer();
         mockShipService.placeShips = sinon.spy();
         mockShipService.placeCellMarkers = sinon.spy();
         mockShipService.stop = sinon.spy();
@@ -110,13 +106,20 @@ describe('Controller: SetupGameV2Ctrl', function () {
             updateCurrentView: sinon.spy()
         };
 
+        ionicModal.fromTemplateUrl.withArgs(
+            sinon.match('templates/help/help-setup.html'),
+            sinon.match(function (val) {
+                return scope == val.scope && val.animation === 'slide-in-up'
+            })
+        ).returns(modalHelpPromise.promise);
+
         ctrl = $controller('SetupGameV2Ctrl', {
             $scope: scope,
             $state: stateSpy,
             tbsActions: actionsSpy,
             tbsGameDetails: mockGameDetails,
             jtbGameCache: mockGameCache,
-            $timeout: timeout,
+            $timeout: $timeout,
             $ionicLoading: ionicLoadingSpy,
             $ionicModal: ionicModal,
             $ionicSideMenuDelegate: ionicSideMenuDelegate,
@@ -125,37 +128,37 @@ describe('Controller: SetupGameV2Ctrl', function () {
     }));
 
     it('initializes', function () {
-        expect(scope.gameID).to.equal(expectedId);
-        expect(scope.game).to.equal(expectedGame);
-        expect(scope.gameDetails).to.equal(mockGameDetails);
+        expect(ctrl.gameID).to.equal(expectedId);
+        expect(ctrl.game).to.equal(expectedGame);
+        expect(ctrl.gameDetails).to.equal(mockGameDetails);
         assert(ionicSideMenuDelegate.canDragContent.calledWithMatch(false));
-        expect(scope.movingShip).to.equal(null);
-        expect(scope.submitDisabled).to.equal(true);
-        expect(scope.movingPointerRelativeToShip).to.deep.equal({x: 0, y: 0});
-        expect(scope.helpModal).to.be.undefined;
+        expect(ctrl.movingShip).to.equal(null);
+        expect(ctrl.submitDisabled).to.equal(true);
+        expect(ctrl.movingPointerRelativeToShip).to.deep.equal({x: 0, y: 0});
+        expect(ctrl.helpModal).to.be.undefined;
         modalHelpPromise.resolve(modalHelp);
-        rootScope.$apply();
-        expect(scope.helpModal).to.equal(modalHelp);
+        $rootScope.$apply();
+        expect(ctrl.helpModal).to.equal(modalHelp);
     });
 
     describe('tests involving help', function () {
         beforeEach(function () {
             modalHelpPromise.resolve(modalHelp);
-            rootScope.$apply();
+            $rootScope.$apply();
         });
 
         it('shows help', function () {
-            scope.showHelp();
+            ctrl.showHelp();
             expect(modalHelp.show.calledWithMatch());
         });
 
         it('close help', function () {
-            scope.closeHelp();
+            ctrl.closeHelp();
             expect(modalHelp.hide.calledWithMatch());
         });
 
         it('removes help on $destroy', function () {
-            rootScope.$broadcast('$destroy');
+            $rootScope.$broadcast('$destroy');
             expect(modalHelp.remove.calledWithMatch());
         });
     });
@@ -166,34 +169,34 @@ describe('Controller: SetupGameV2Ctrl', function () {
         });
 
         it('on enter, enables ship movement and registers callback', function () {
-            rootScope.$broadcast('$ionicView.enter');
-            timeout.flush();
+            $rootScope.$broadcast('$ionicView.enter');
+            $timeout.flush();
             expect(mockShipService.overlapCB).to.be.defined;
         });
 
         it('submit disabled driven by enable ship movement callback', function () {
-            rootScope.$broadcast('$ionicView.enter');
-            timeout.flush();
+            $rootScope.$broadcast('$ionicView.enter');
+            $timeout.flush();
             mockShipService.overlapCB(false);
-            timeout.flush();
-            expect(scope.submitDisabled).to.be.false;
+            $timeout.flush();
+            expect(ctrl.submitDisabled).to.be.false;
             mockShipService.overlapCB(true);
-            timeout.flush();
-            expect(scope.submitDisabled).to.be.true;
+            $timeout.flush();
+            expect(ctrl.submitDisabled).to.be.true;
         });
 
         it('navigate to game details', function () {
-            scope.showDetails();
+            ctrl.showDetails();
             assert(stateSpy.go.calledWithMatch('app.gameDetails', {gameID: expectedId}));
         });
 
         it('quit game', function () {
-            scope.quit();
+            ctrl.quit();
             assert(actionsSpy.quit.calledWithMatch(expectedGame));
         });
 
         it('shuts down ship grid on view exit', function () {
-            rootScope.$broadcast('$ionicView.leave');
+            $rootScope.$broadcast('$ionicView.leave');
             assert(mockShipService.stop.calledWithMatch());
         });
 
@@ -205,22 +208,22 @@ describe('Controller: SetupGameV2Ctrl', function () {
             angular.forEach(shipsOnGrid, function (shipOnGrid) {
                 expectedPayload.push({ship: shipOnGrid.ship, coordinates: shipOnGrid.shipGridCells});
             });
-            scope.submit();
+            ctrl.submit();
             assert(actionsSpy.setup.calledWithMatch(expectedGame, expectedPayload));
         });
 
         describe('testing game updates', function () {
             it('handles game update for different game', function () {
-                rootScope.$broadcast('gameUpdated', {id: expectedId + 'X'}, {id: expectedId + 'X'});
+                $rootScope.$broadcast('gameUpdated', {id: expectedId + 'X'}, {id: expectedId + 'X'});
                 expect(actionsSpy.updateCurrentView.callCount).to.equal(0);
             });
 
             it('handles game update for game', function () {
                 var updatedGame = {id: expectedId};
-                rootScope.$broadcast('gameUpdated', expectedGame, updatedGame);
+                $rootScope.$broadcast('gameUpdated', expectedGame, updatedGame);
                 expect(actionsSpy.updateCurrentView.callCount).to.equal(1);
                 assert(actionsSpy.updateCurrentView.calledWithMatch(expectedGame, updatedGame));
-                expect(scope.game).to.equal(updatedGame);
+                expect(ctrl.game).to.equal(updatedGame);
             });
         });
     });

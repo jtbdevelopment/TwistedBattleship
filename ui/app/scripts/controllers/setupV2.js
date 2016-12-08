@@ -4,51 +4,54 @@
 angular.module('tbs.controllers').controller('SetupGameV2Ctrl',
     ['$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', '$state', '$ionicSideMenuDelegate', 'tbsShipGridV2', '$ionicModal', '$ionicLoading', '$timeout',
         function ($scope, tbsGameDetails, tbsActions, jtbGameCache, $state, $ionicSideMenuDelegate, tbsShipGridV2, $ionicModal, $ionicLoading, $timeout) {
+            var controller = this;
             $ionicSideMenuDelegate.canDragContent(false);
-            $scope.gameID = $state.params.gameID;
-            $scope.game = jtbGameCache.getGameForID($scope.gameID);
-            $scope.gameDetails = tbsGameDetails;
+            controller.gameID = $state.params.gameID;
+            controller.game = jtbGameCache.getGameForID(controller.gameID);
+            controller.gameDetails = tbsGameDetails;
 
-            $scope.movingShip = null;
-            $scope.movingPointerRelativeToShip = {x: 0, y: 0};
-            $scope.submitDisabled = true;
+            controller.movingShip = null;
+            controller.movingPointerRelativeToShip = {x: 0, y: 0};
+            controller.submitDisabled = true;
 
+            //  As of Ionic 1.3 cannot controllerAs modals themselves
+            $scope.setup = controller;
             $ionicModal.fromTemplateUrl('templates/help/help-setup.html', {
                 scope: $scope,
                 animation: 'slide-in-up'
             }).then(function (modal) {
-                $scope.helpModal = modal;
+                controller.helpModal = modal;
             });
 
-            $scope.showDetails = function () {
-                $state.go('app.gameDetails', {gameID: $scope.gameID});
+            controller.showDetails = function () {
+                $state.go('app.gameDetails', {gameID: controller.gameID});
             };
 
-            $scope.showHelp = function () {
-                $scope.helpModal.show();
+            controller.showHelp = function () {
+                controller.helpModal.show();
             };
 
-            $scope.closeHelp = function () {
-                $scope.helpModal.hide();
+            controller.closeHelp = function () {
+                controller.helpModal.hide();
             };
 
             $scope.$on('$destroy', function () {
-                if (angular.isDefined($scope.helpModal)) {
-                    $scope.helpModal.remove();
+                if (angular.isDefined(controller.helpModal)) {
+                    controller.helpModal.remove();
                 }
             });
 
-            $scope.quit = function () {
-                tbsActions.quit($scope.game);
+            controller.quit = function () {
+                tbsActions.quit(controller.game);
             };
 
-            $scope.submit = function () {
+            controller.submit = function () {
                 var info = [];
                 angular.forEach(tbsShipGridV2.currentShipsOnGrid(), function (ship) {
                     info.push({ship: ship.ship, coordinates: ship.shipGridCells});
                 });
 
-                tbsActions.setup($scope.game, info);
+                tbsActions.setup(controller.game, info);
             };
 
             $scope.$on('$ionicView.leave', function () {
@@ -59,11 +62,11 @@ angular.module('tbs.controllers').controller('SetupGameV2Ctrl',
                 $ionicLoading.show({
                     template: 'Loading...'
                 });
-                tbsShipGridV2.initialize($scope.game, $scope.game.maskedPlayersState.shipStates, [], function () {
+                tbsShipGridV2.initialize(controller.game, controller.game.maskedPlayersState.shipStates, [], function () {
                     $timeout(function () {
                         tbsShipGridV2.enableShipMovement(function (hasOverlappingShips) {
                             $timeout(function () {
-                                $scope.submitDisabled = hasOverlappingShips;
+                                controller.submitDisabled = hasOverlappingShips;
                             });
                         });
                         $ionicLoading.hide();
@@ -72,8 +75,8 @@ angular.module('tbs.controllers').controller('SetupGameV2Ctrl',
             });
 
             $scope.$on('gameUpdated', function (event, oldGame, newGame) {
-                if ($scope.gameID === newGame.id) {
-                    $scope.game = newGame;
+                if (controller.gameID === newGame.id) {
+                    controller.game = newGame;
                     tbsActions.updateCurrentView(oldGame, newGame);
                 }
             });

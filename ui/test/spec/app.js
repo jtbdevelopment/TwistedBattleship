@@ -181,7 +181,8 @@ describe('testing app js', function () {
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/setup.html',
-                        controller: 'SetupGameV2Ctrl'
+                        controller: 'SetupGameV2Ctrl',
+                        controllerAs: 'setup'
                     }
                 }
             }));
