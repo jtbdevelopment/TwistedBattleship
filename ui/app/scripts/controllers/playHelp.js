@@ -1,10 +1,9 @@
 'use strict';
 
 angular.module('tbs.controllers').controller('PlayHelpCtrl',
-    ['jtbPlayerService',
-        function (jtbPlayerService) {
+    [
+        function () {
             var controller = this;
-            controller.theme = jtbPlayerService.currentPlayer().gameSpecificPlayerAttributes.theme;
 
             controller.switchToGeneral = function () {
                 controller.showGeneral = true;
