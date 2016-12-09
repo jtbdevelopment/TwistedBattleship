@@ -82,11 +82,11 @@
 
   }
 
-  .activePlayer {
+  .active-player {
     background-color: $medium_green;
   }
 
-  .inactivePlayer {
+  .inactive-player {
     background-color: $medium_blue;
   }
 
@@ -101,7 +101,7 @@
     }
   }
 
-  .lastActionTimestamp {
+  .last-action-timestamp {
     @media (max-width: $screen-sm-max) {
       font-size: x-small;
     }
@@ -115,7 +115,7 @@
     color: $boatgray;
   }
 
-  .viewToggleRow {
+  .view-toggle-row {
     padding-top: 0;
     margin-top: auto;
     align-items: center;

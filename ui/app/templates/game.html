@@ -7,7 +7,7 @@
     <ion-content has-bouncing="false">
         <div class="row">
             <div class="list col-20">
-                <div class="item item-avatar item-text-wrap {{game.game.currentPlayer == game.player.md5 ? 'activePlayer' : 'inactivePlayer'}}"
+                <div class="item item-avatar item-text-wrap {{game.game.currentPlayer == game.player.md5 ? 'active-player' : 'inactive-player'}}"
                      ng-show="game.game.gamePhase === 'Playing'">
                     <img ng-src="{{game.gameDetails.imageForPlayer(game.game, game.game.currentPlayer)}}">
 
@@ -137,7 +137,7 @@
 
             </div>
             <div class="col-80">
-                <div class="row viewToggleRow">
+                <div class="row view-toggle-row">
                     <div class="col-25">
                         <a class="button button-full button-switch-view icon-left {{game.showingSelf ? 'ion-checkmark' : '' }} button-defend"
                            ng-click="game.switchView(true)">They see..
@@ -151,7 +151,7 @@
                     <div class="col-40">
                         <div class="item item-text-wrap item-button-right lastAction">
                             {{game.gameDetails.lastActionLog(game.game)}}
-                            <p class="lastActionTimestamp">
+                            <p class="last-action-timestamp">
                                 {{game.gameDetails.lastActionTime(game.game)}}
                             </p>
                         </div>
