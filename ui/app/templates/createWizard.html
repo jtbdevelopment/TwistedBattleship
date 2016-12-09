@@ -1,28 +1,28 @@
-<ion-view class="createGame" cache-view="false">
+<ion-view class="create-game" cache-view="false">
     <ion-nav-buttons side="right">
-        <a class="button button-icon button-clear ion-help-circled" ng-click="showHelp(0)"></a>
+        <a class="button button-icon button-clear ion-help-circled" ng-click="create.showHelp(0)"></a>
     </ion-nav-buttons>
     <ion-content>
         <ion-slide-box does-continue="true" auto-play="false" show-pager="false">
             <ion-slide>
                 <div class="list create">
                     <div class="item-divider">Difficulty</div>
-                    <div ng-repeat="feature in featureData | propsFilter: { checkBox: 'false' } | propsFilter: { groupType: 'Difficulty'}">
+                    <div ng-repeat="feature in create.featureData | propsFilter: { checkBox: 'false' } | propsFilter: { groupType: 'Difficulty'}">
                         <label class="item item-input item-select">
                             <div class="input-label">
-                                <i class="icon optionOn ion-{{gameDetails.iconForFeature(currentOptions[feature.index])}}"></i>
+                                <i class="icon optionOn ion-{{create.gameDetails.iconForFeature(create.currentOptions[feature.index])}}"></i>
                                 {{feature.feature.label}}
                             </div>
-                            <select ng-model="currentOptions[feature.index]">
+                            <select ng-model="create.currentOptions[feature.index]">
                                 <option ng-repeat="option in feature.options" value="{{option.feature}}">
                                     {{option.label}}
                                 </option>
                             </select>
                         </label>
                     </div>
-                    <div ng-repeat="feature in featureData | propsFilter: { checkBox: 'true' } | propsFilter: { groupType: 'Difficulty'}">
-                        <ion-toggle ng-model="currentOptions[feature.index]">
-                            <i class="icon ion-{{gameDetails.iconForFeature(feature.options[0].feature)}} {{currentOptions[feature.index] ? 'optionOn' : 'optionOff'}}"></i>
+                    <div ng-repeat="feature in create.featureData | propsFilter: { checkBox: 'true' } | propsFilter: { groupType: 'Difficulty'}">
+                        <ion-toggle ng-model="create.currentOptions[feature.index]">
+                            <i class="icon ion-{{create.gameDetails.iconForFeature(feature.options[0].feature)}} {{create.currentOptions[feature.index] ? 'optionOn' : 'optionOff'}}"></i>
                             {{feature.feature.label}}
                         </ion-toggle>
                     </div>
@@ -31,22 +31,22 @@
             <ion-slide>
                 <div class="list create">
                     <div class="item-divider">Defend</div>
-                    <div ng-repeat="feature in featureData | propsFilter: { checkBox: 'false' } | propsFilter: { groupType: 'Defensive'}">
+                    <div ng-repeat="feature in create.featureData | propsFilter: { checkBox: 'false' } | propsFilter: { groupType: 'Defensive'}">
                         <label class="item item-input item-select">
                             <div class="input-label">
-                                <i class="icon optionOn ion-{{gameDetails.iconForFeature(currentOptions[feature.index])}}"></i>
+                                <i class="icon optionOn ion-{{create.gameDetails.iconForFeature(create.currentOptions[feature.index])}}"></i>
                                 {{feature.feature.label}}
                             </div>
-                            <select ng-model="currentOptions[feature.index]">
+                            <select ng-model="create.currentOptions[feature.index]">
                                 <option ng-repeat="option in feature.options" value="{{option.feature}}">
                                     {{option.label}}
                                 </option>
                             </select>
                         </label>
                     </div>
-                    <div ng-repeat="feature in featureData | propsFilter: { checkBox: 'true' } | propsFilter: { groupType: 'Defensive'}">
-                        <ion-toggle ng-model="currentOptions[feature.index]">
-                            <i class="icon ion-{{gameDetails.iconForFeature(feature.options[0].feature)}} {{currentOptions[feature.index] ? 'optionOn' : 'optionOff'}}"></i>
+                    <div ng-repeat="feature in create.featureData | propsFilter: { checkBox: 'true' } | propsFilter: { groupType: 'Defensive'}">
+                        <ion-toggle ng-model="create.currentOptions[feature.index]">
+                            <i class="icon ion-{{create.gameDetails.iconForFeature(feature.options[0].feature)}} {{create.currentOptions[feature.index] ? 'optionOn' : 'optionOff'}}"></i>
                             {{feature.feature.label}}
                         </ion-toggle>
                     </div>
@@ -55,22 +55,22 @@
             <ion-slide>
                 <div class="list create">
                     <div class="item-divider">Attack</div>
-                    <div ng-repeat="feature in featureData | propsFilter: { checkBox: 'false' } | propsFilter: { groupType: 'Offensive'}">
+                    <div ng-repeat="feature in create.featureData | propsFilter: { checkBox: 'false' } | propsFilter: { groupType: 'Offensive'}">
                         <label class="item item-input item-select">
                             <div class="input-label">
-                                <i class="icon optionOn ion-{{gameDetails.iconForFeature(currentOptions[feature.index])}}"></i>
+                                <i class="icon optionOn ion-{{create.gameDetails.iconForFeature(create.currentOptions[feature.index])}}"></i>
                                 {{feature.feature.label}}
                             </div>
-                            <select ng-model="currentOptions[feature.index]">
+                            <select ng-model="create.currentOptions[feature.index]">
                                 <option ng-repeat="option in feature.options" value="{{option.feature}}">
                                     {{option.label}}
                                 </option>
                             </select>
                         </label>
                     </div>
-                    <div ng-repeat="feature in featureData | propsFilter: { checkBox: 'true' } | propsFilter: { groupType: 'Offensive'}">
-                        <ion-toggle ng-model="currentOptions[feature.index]">
-                            <i class="icon ion-{{gameDetails.iconForFeature(feature.options[0].feature)}} {{currentOptions[feature.index] ? 'optionOn' : 'optionOff'}}"></i>
+                    <div ng-repeat="feature in create.featureData | propsFilter: { checkBox: 'true' } | propsFilter: { groupType: 'Offensive'}">
+                        <ion-toggle ng-model="create.currentOptions[feature.index]">
+                            <i class="icon ion-{{create.gameDetails.iconForFeature(feature.options[0].feature)}} {{create.currentOptions[feature.index] ? 'optionOn' : 'optionOff'}}"></i>
                             {{feature.feature.label}}
                         </ion-toggle>
                     </div>
@@ -81,15 +81,15 @@
                     <div class="item item-divider">
                         Choose your opponents (maximum of 5):
                     </div>
-                    <div ng-repeat="inviteCounter in inviteArray" angular-multi-select
+                    <div ng-repeat="inviteCounter in create.inviteArray" angular-multi-select
                          class="ams_container"
                          helper-elements="filter noall nonone noreset"
                          min-search-length="1"
                          selection-mode="single"
                          tick-property="checked"
-                         on-item-click="playersChanged(item)"
-                         input-model="friendInputs[inviteCounter]"
-                         single-output-model="$parent.$parent.$parent.playerChoices[inviteCounter]"
+                         on-item-click="create.playersChanged(item)"
+                         input-model="create.friendInputs[inviteCounter]"
+                         single-output-model="create.playerChoices[inviteCounter]"
                          button-template="angular-multi-select-btn-data.htm"
                          item-label="<[ displayName ]>"
                          search-property="displayName"
@@ -97,8 +97,8 @@
                     </div>
                     <div class="item">
                         <a class="button button-full button-icon icon-left ion-person-add invite-button"
-                           ng-show="invitableFriends.length > 0"
-                           ng-click="showInviteFriends()">Need more opponents? Invite friends!</a>
+                           ng-show="create.invitableFriends.length > 0"
+                           ng-click="create.showInviteFriends()">Need more opponents? Invite friends!</a>
                     </div>
                 </div>
             </ion-slide>
@@ -107,13 +107,14 @@
             <div class="item">
                 <div class="button-bar">
                     <a class="button button-rotatehelp button-icon icon-left ion-arrow-left-b"
-                       ng-click="previous()">Previous</a>
+                       ng-click="create.previous()">Previous</a>
                     <a class="button button-rotatehelp button-icon icon-right ion-arrow-right-b"
-                       ng-click="next()">Next</a>
+                       ng-click="create.next()">Next</a>
                 </div>
             </div>
             <div class="item">
-                <a class="button-full button-submit button" ng-disabled="!(submitEnabled)" ng-click="createGame()">
+                <a class="button-full button-submit button" ng-disabled="!(create.submitEnabled)"
+                   ng-click="create.createGame()">
                     Start Game!
                 </a>
             </div>

@@ -1,17 +1,17 @@
 <div class="modal">
-    <div class="createHelp tbs-modal">
+    <div class="create-help tbs-modal">
         <ion-header-bar>
             <a class="button button-rotatehelp button-icon ion-arrow-left-b"
-                    ng-click="previousHelp()"></a>
-            <h1 class="title">Help on {{featureData[helpIndex].feature.label}}</h1>
+               ng-click="create.previousHelp()"></a>
+            <h1 class="title">Help on {{create.featureData[create.helpIndex].feature.label}}</h1>
             <a class="button button-rotatehelp button-icon ion-arrow-right-b"
-                    ng-click="nextHelp()"></a>
+               ng-click="create.nextHelp()"></a>
         </ion-header-bar>
         <ion-content>
             <div class="row">
-                <div class="col-100"><h4>{{featureData[helpIndex].feature.description}}</h4></div>
+                <div class="col-100"><h4>{{create.featureData[create.helpIndex].feature.description}}</h4></div>
             </div>
-            <div class="row" ng-repeat="option in featureData[helpIndex].options">
+            <div class="row" ng-repeat="option in create.featureData[create.helpIndex].options">
                 <div class="col-20">
                     <strong>{{option.label}}</strong>
                 </div>
@@ -20,7 +20,7 @@
                 </div>
             </div>
 
-            <a class="button button-full button-close" ng-click="closeHelp()">Close</a>
+            <a class="button button-full button-close" ng-click="create.closeHelp()">Close</a>
         </ion-content>
     </div>
 </div>

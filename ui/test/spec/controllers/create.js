@@ -3,12 +3,12 @@
 describe('Controller: CreateGameCtrl', function () {
     beforeEach(module('tbs.controllers'));
 
-    var ctrl, stateSpy, rootScope, scope, q;
+    var ctrl, stateSpy, $rootScope, $scope, $q;
     var currentPlayer = {id: 'myid', source: 'facebook'};
 
-    var httpBackend;
+    var $http;
     var gameCache, facebook, gameDetails, playerService;
-    var ionicModal, ionicLoading, ionicPopup, ionicSlideBox;
+    var $ionicModal, $ionicLoading, $ionicPopup, $ionicSlideBox;
     var features = [
         {
             'feature': {
@@ -175,31 +175,36 @@ describe('Controller: CreateGameCtrl', function () {
             {id: 'i2', name: 'invite2'}
         ]
     };
-    beforeEach(inject(function ($rootScope, $controller, $q, $httpBackend) {
-        httpBackend = $httpBackend;
+    beforeEach(inject(function (_$rootScope_, $controller, _$q_, $httpBackend) {
+        $http = $httpBackend;
         gameDetails = {x: '1'};
         stateSpy = {go: sinon.spy()};
-        rootScope = $rootScope;
-        scope = rootScope.$new();
-        q = $q;
-        modalPromiseHelp = q.defer();
-        modalPromiseInvite = q.defer();
-        alertPromise = q.defer();
-        ionicModal = {fromTemplateUrl: sinon.stub()};
-        ionicModal.fromTemplateUrl.withArgs('templates/help/help-create.html', {
-            scope: scope,
-            animation: 'slide-in-up'
-        }).returns(modalPromiseHelp.promise);
-        ionicModal.fromTemplateUrl.withArgs('templates/friends/invite.html', {
-            scope: scope,
-            animation: 'slide-in-up'
-        }).returns(modalPromiseInvite.promise);
+        $rootScope = _$rootScope_;
+        $scope = $rootScope.$new();
+        $q = _$q_;
+        modalPromiseHelp = $q.defer();
+        modalPromiseInvite = $q.defer();
+        alertPromise = $q.defer();
+        $ionicModal = {fromTemplateUrl: sinon.stub()};
+        $ionicModal.fromTemplateUrl.withArgs(
+            sinon.match('templates/help/help-create.html'),
+            sinon.match(function (val) {
+                return $scope == val.scope && val.animation === 'slide-in-up'
+            })
+        ).returns(modalPromiseHelp.promise);
+        $ionicModal.fromTemplateUrl.withArgs(
+            sinon.match('templates/friends/invite.html'),
+            sinon.match(function (val) {
+                return $scope == val.scope && val.animation === 'slide-in-up'
+            })
+        ).returns(modalPromiseInvite.promise);
+
         helpModal = {hide: sinon.spy(), show: sinon.spy(), remove: sinon.spy()};
         inviteModal = {hide: sinon.spy(), show: sinon.spy(), remove: sinon.spy()};
-        ionicLoading = {show: sinon.spy(), hide: sinon.spy()};
-        ionicPopup = {alert: sinon.spy()};
-        ionicSlideBox = {next: sinon.spy(), previous: sinon.spy()};
-        friendsPromise = q.defer();
+        $ionicLoading = {show: sinon.spy(), hide: sinon.spy()};
+        $ionicPopup = {alert: sinon.spy()};
+        $ionicSlideBox = {next: sinon.spy(), previous: sinon.spy()};
+        friendsPromise = $q.defer();
         facebook = {inviteFriends: sinon.spy()};
         gameCache = {putUpdatedGame: sinon.spy()};
         playerService = {
@@ -216,36 +221,37 @@ describe('Controller: CreateGameCtrl', function () {
 
 
         ctrl = $controller('CreateGameCtrl', {
-            $scope: scope,
+            $scope: $scope,
             $state: stateSpy,
             jtbPlayerService: playerService,
             jtbGameCache: gameCache,
             jtbFacebook: facebook,
             tbsGameDetails: gameDetails,
-            $ionicModal: ionicModal,
-            $ionicLoading: ionicLoading,
-            $ionicPopup: ionicPopup,
-            $ionicSlideBoxDelegate: ionicSlideBox,
+            $ionicModal: $ionicModal,
+            $ionicLoading: $ionicLoading,
+            $ionicPopup: $ionicPopup,
+            $ionicSlideBoxDelegate: $ionicSlideBox,
             features: features
         });
+        expect($scope.create).to.equal(ctrl);
     }));
 
     it('initializes', function () {
-        expect(scope.helpModal).to.be.undefined;
-        expect(scope.inviteModal).to.be.undefined;
-        expect(scope.helpIndex).to.be.undefined;
+        expect(ctrl.helpModal).to.be.undefined;
+        expect(ctrl.inviteModal).to.be.undefined;
+        expect(ctrl.helpIndex).to.be.undefined;
 
-        expect([0, 1, 2, 3, 4]).to.deep.equal(scope.inviteArray);
-        expect([{}, {}, {}, {}, {}]).to.deep.equal(scope.playerChoices);
-        expect([[], [], [], [], []]).to.deep.equal(scope.friendInputs);
-        expect([]).to.deep.equal(scope.friends);
-        expect([]).to.deep.equal(scope.invitableFriends);
+        expect([0, 1, 2, 3, 4]).to.deep.equal(ctrl.inviteArray);
+        expect([{}, {}, {}, {}, {}]).to.deep.equal(ctrl.playerChoices);
+        expect([[], [], [], [], []]).to.deep.equal(ctrl.friendInputs);
+        expect([]).to.deep.equal(ctrl.friends);
+        expect([]).to.deep.equal(ctrl.invitableFriends);
         modalPromiseHelp.resolve(helpModal);
         modalPromiseInvite.resolve(inviteModal);
         friendsPromise.resolve(friends);
-        rootScope.$apply();
+        $rootScope.$apply();
 
-        expect([{}, {}, {}, {}, {}]).to.deep.equal(scope.playerChoices);
+        expect([{}, {}, {}, {}, {}]).to.deep.equal(ctrl.playerChoices);
         expect([
             [
                 {
@@ -332,7 +338,7 @@ describe('Controller: CreateGameCtrl', function () {
                     "checked": false
                 }
             ]
-        ]).to.deep.equal(scope.friendInputs);
+        ]).to.deep.equal(ctrl.friendInputs);
         expect([
             {
                 'md5': 'md1',
@@ -348,7 +354,7 @@ describe('Controller: CreateGameCtrl', function () {
                 'md5': 'md2',
                 'displayName': 'friend2',
                 'checked': false
-            }]).to.deep.equal(scope.friends);
+            }]).to.deep.equal(ctrl.friends);
         expect([
             {
                 'id': 'i1',
@@ -358,87 +364,87 @@ describe('Controller: CreateGameCtrl', function () {
             {
                 'id': 'i2',
                 'name': 'invite2'
-            }]).to.deep.equal(scope.invitableFriends);
+            }]).to.deep.equal(ctrl.invitableFriends);
 
-        expect(scope.gameDetails).to.equal(gameDetails);
-        expect(scope.featureData).to.equal(features);
-        expect(scope.currentOptions).to.deep.equal(defaultOptions);
-        expect(scope.inviteModal).to.equal(inviteModal);
-        expect(scope.helpModal).to.equal(helpModal);
-        expect(scope.helpIndex).to.equal(0);
-        expect(scope.submitEnabled).to.be.false;
+        expect(ctrl.gameDetails).to.equal(gameDetails);
+        expect(ctrl.featureData).to.equal(features);
+        expect(ctrl.currentOptions).to.deep.equal(defaultOptions);
+        expect(ctrl.inviteModal).to.equal(inviteModal);
+        expect(ctrl.helpModal).to.equal(helpModal);
+        expect(ctrl.helpIndex).to.equal(0);
+        expect(ctrl.submitEnabled).to.be.false;
     });
 
     describe('nav buttons on main screen, invite, and help', function () {
         beforeEach(function () {
             modalPromiseHelp.resolve(helpModal);
             modalPromiseInvite.resolve(inviteModal);
-            rootScope.$apply();
+            $rootScope.$apply();
         });
 
         it('next on main screen', function () {
-            scope.next();
-            assert(ionicSlideBox.next.calledWithMatch());
+            ctrl.next();
+            assert($ionicSlideBox.next.calledWithMatch());
         });
         it('previous on main screen', function () {
-            scope.previous();
-            assert(ionicSlideBox.previous.calledWithMatch());
+            ctrl.previous();
+            assert($ionicSlideBox.previous.calledWithMatch());
         });
 
         it('previous help on first help page', function () {
-            scope.helpIndex = 0;
-            scope.previousHelp();
-            expect(scope.helpIndex).to.equal(defaultOptions.length - 1);
+            ctrl.helpIndex = 0;
+            ctrl.previousHelp();
+            expect(ctrl.helpIndex).to.equal(defaultOptions.length - 1);
         });
 
         it('previous help on non first help page', function () {
-            scope.helpIndex = 1;
-            scope.previousHelp();
-            expect(scope.helpIndex).to.equal(0);
+            ctrl.helpIndex = 1;
+            ctrl.previousHelp();
+            expect(ctrl.helpIndex).to.equal(0);
         });
 
         it('previous help on last help page', function () {
-            scope.helpIndex = defaultOptions.length - 1;
-            scope.nextHelp();
-            expect(scope.helpIndex).to.equal(0);
+            ctrl.helpIndex = defaultOptions.length - 1;
+            ctrl.nextHelp();
+            expect(ctrl.helpIndex).to.equal(0);
         });
 
         it('previous help on non last help page', function () {
-            scope.helpIndex = 1;
-            scope.nextHelp();
-            expect(scope.helpIndex).to.equal(2);
+            ctrl.helpIndex = 1;
+            ctrl.nextHelp();
+            expect(ctrl.helpIndex).to.equal(2);
         });
 
         it('show help', function () {
-            scope.helpIndex = 2;
-            scope.showHelp();
+            ctrl.helpIndex = 2;
+            ctrl.showHelp();
             assert(helpModal.show.calledWithMatch());
-            expect(scope.helpIndex).to.equal(0);
+            expect(ctrl.helpIndex).to.equal(0);
         });
 
         it('hide help', function () {
-            scope.closeHelp();
+            ctrl.closeHelp();
             assert(helpModal.hide.calledWithMatch());
         });
 
         it('show invite friends', function () {
-            scope.showInviteFriends();
+            ctrl.showInviteFriends();
             assert(inviteModal.show.calledWithMatch());
         });
 
         it('close invite friends', function () {
-            scope.cancelInviteFriends();
+            ctrl.cancelInviteFriends();
             assert(inviteModal.hide.calledWithMatch());
         });
 
         it('invites friends', function () {
             var friendsToInvite = [{id: '1'}, {id: '2', other: 'ignore'}, {id: '3'}];
-            scope.inviteFriends(friendsToInvite);
+            ctrl.inviteFriends(friendsToInvite);
             assert(facebook.inviteFriends.calledWithMatch(['1', '2', '3'], 'Come play Twisted Naval Battles with me!'));
             assert(inviteModal.hide.calledWithMatch());
         });
         it('on $destroy, destroys modals', function () {
-            rootScope.$broadcast('$destroy');
+            $rootScope.$broadcast('$destroy');
             assert(inviteModal.remove.calledWithMatch());
             assert(helpModal.remove.calledWithMatch());
         });
@@ -450,11 +456,11 @@ describe('Controller: CreateGameCtrl', function () {
             modalPromiseInvite.resolve(inviteModal);
             friendsPromise.resolve(friends);
 
-            rootScope.$apply();
+            $rootScope.$apply();
         });
 
         it('choosing a player removes from other lists and enables submit', function () {
-            expect([{}, {}, {}, {}, {}]).to.deep.equal(scope.playerChoices);
+            expect([{}, {}, {}, {}, {}]).to.deep.equal(ctrl.playerChoices);
             expect([
                 [
                     {
@@ -541,17 +547,17 @@ describe('Controller: CreateGameCtrl', function () {
                         "checked": false
                     }
                 ]
-            ]).to.deep.equal(scope.friendInputs);
+            ]).to.deep.equal(ctrl.friendInputs);
 
-            scope.playerChoices[2] = {
+            ctrl.playerChoices[2] = {
                 "md5": "md3",
                 "displayName": "friend3",
                 "checked": false
             };
-            expect(scope.submitEnabled).to.be.false;
-            scope.playersChanged();
+            expect(ctrl.submitEnabled).to.be.false;
+            ctrl.playersChanged();
 
-            expect(scope.submitEnabled).to.be.true;
+            expect(ctrl.submitEnabled).to.be.true;
 
             expect([
                 [
@@ -619,11 +625,11 @@ describe('Controller: CreateGameCtrl', function () {
                         "checked": false
                     }
                 ]
-            ]).to.deep.equal(scope.friendInputs);
+            ]).to.deep.equal(ctrl.friendInputs);
         });
 
         it('choosing a player and then unchoosing them puts them back on other lists', function () {
-            expect([{}, {}, {}, {}, {}]).to.deep.equal(scope.playerChoices);
+            expect([{}, {}, {}, {}, {}]).to.deep.equal(ctrl.playerChoices);
             expect([
                 [
                     {
@@ -710,23 +716,23 @@ describe('Controller: CreateGameCtrl', function () {
                         "checked": false
                     }
                 ]
-            ]).to.deep.equal(scope.friendInputs);
+            ]).to.deep.equal(ctrl.friendInputs);
 
-            scope.playerChoices[2] = {
+            ctrl.playerChoices[2] = {
                 "md5": "md3",
                 "displayName": "friend3",
                 "checked": false
             };
-            scope.playerChoices[4] = {
+            ctrl.playerChoices[4] = {
                 "md5": "md1",
                 "displayName": "friend1",
                 "checked": false
             };
-            expect(scope.submitEnabled).to.be.false;
+            expect(ctrl.submitEnabled).to.be.false;
 
-            scope.playersChanged();
+            ctrl.playersChanged();
 
-            expect(scope.submitEnabled).to.be.true;
+            expect(ctrl.submitEnabled).to.be.true;
             expect([
                 [
                     {
@@ -773,11 +779,11 @@ describe('Controller: CreateGameCtrl', function () {
                         "checked": false
                     }
                 ]
-            ]).to.deep.equal(scope.friendInputs);
+            ]).to.deep.equal(ctrl.friendInputs);
 
-            scope.playerChoices[4] = {};
-            scope.playersChanged();
-            expect(scope.submitEnabled).to.be.true;
+            ctrl.playerChoices[4] = {};
+            ctrl.playersChanged();
+            expect(ctrl.submitEnabled).to.be.true;
 
             expect([
                 [
@@ -845,11 +851,11 @@ describe('Controller: CreateGameCtrl', function () {
                         "checked": false
                     }
                 ]
-            ]).to.deep.equal(scope.friendInputs);
+            ]).to.deep.equal(ctrl.friendInputs);
 
-            scope.playerChoices[2] = {};
-            scope.playersChanged();
-            expect(scope.submitEnabled).to.be.false;
+            ctrl.playerChoices[2] = {};
+            ctrl.playersChanged();
+            expect(ctrl.submitEnabled).to.be.false;
             expect([
                 [
                     {
@@ -936,7 +942,7 @@ describe('Controller: CreateGameCtrl', function () {
                         "checked": false
                     }
                 ]
-            ]).to.deep.equal(scope.friendInputs);
+            ]).to.deep.equal(ctrl.friendInputs);
         });
     });
 
@@ -945,16 +951,16 @@ describe('Controller: CreateGameCtrl', function () {
             friendsPromise.resolve(friends);
             modalPromiseHelp.resolve(helpModal);
             modalPromiseInvite.resolve(inviteModal);
-            rootScope.$apply();
+            $rootScope.$apply();
         });
 
         it('submit a game with friends and default options', function () {
-            scope.playerChoices[2] = {
+            ctrl.playerChoices[2] = {
                 "md5": "md3",
                 "displayName": "friend3",
                 "checked": false
             };
-            scope.playerChoices[4] = {
+            ctrl.playerChoices[4] = {
                 "md5": "md1",
                 "displayName": "friend1",
                 "checked": false
@@ -966,26 +972,26 @@ describe('Controller: CreateGameCtrl', function () {
                 'features': ['Grid15x15', 'PerShip', 'IsolatedIntel', 'ECMEnabled', 'EMEnabled', 'EREnabled', 'SpyDisabled', 'CruiseMissileEnabled']
             };
             var newGame = {id: 'someid'};
-            scope.currentOptions = ['Grid15x15', 'PerShip', 'IsolatedIntel', true, true, true, false, true];
+            ctrl.currentOptions = ['Grid15x15', 'PerShip', 'IsolatedIntel', true, true, true, false, true];
 
-            httpBackend.expectPOST(playerUrl + '/new', expectedOptions).respond(200, newGame);
-            scope.createGame();
-            assert(ionicLoading.show.calledWithMatch({
+            $http.expectPOST(playerUrl + '/new', expectedOptions).respond(200, newGame);
+            ctrl.createGame();
+            assert($ionicLoading.show.calledWithMatch({
                 template: 'Creating game and issuing challenges..'
             }));
-            httpBackend.flush();
+            $http.flush();
             assert(gameCache.putUpdatedGame.calledWithMatch(newGame));
-            assert(ionicLoading.hide.calledWithMatch());
+            assert($ionicLoading.hide.calledWithMatch());
             assert(stateSpy.go.calledWithMatch('app.games'));
         });
 
         it('submit a game with friends and non-default options', function () {
-            scope.playerChoices[2] = {
+            ctrl.playerChoices[2] = {
                 "md5": "md3",
                 "displayName": "friend3",
                 "checked": false
             };
-            scope.playerChoices[4] = {
+            ctrl.playerChoices[4] = {
                 "md5": "md1",
                 "displayName": "friend1",
                 "checked": false
@@ -997,14 +1003,14 @@ describe('Controller: CreateGameCtrl', function () {
                 'features': ['Grid10x10', 'PerShip', 'SharedIntel', 'ECMEnabled', 'EMEnabled', 'EREnabled', 'SpyEnabled', 'CruiseMissileDisabled']
             };
             var newGame = {id: 'someid'};
-            httpBackend.expectPOST(playerUrl + '/new', expectedOptions).respond(200, newGame);
-            scope.createGame();
-            assert(ionicLoading.show.calledWithMatch({
+            $http.expectPOST(playerUrl + '/new', expectedOptions).respond(200, newGame);
+            ctrl.createGame();
+            assert($ionicLoading.show.calledWithMatch({
                 template: 'Creating game and issuing challenges..'
             }));
-            httpBackend.flush();
+            $http.flush();
             assert(gameCache.putUpdatedGame.calledWithMatch(newGame));
-            assert(ionicLoading.hide.calledWithMatch());
+            assert($ionicLoading.hide.calledWithMatch());
             assert(stateSpy.go.calledWithMatch('app.games'));
         });
     });
