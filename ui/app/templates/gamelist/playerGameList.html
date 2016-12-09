@@ -1,28 +1,29 @@
-<div ng-controller="MobileGameListCtrl">
+<div ng-controller="MobileGameListCtrl as list">
     <!--ion-refresher pulling-text="Pull to refresh" on-refresh="refreshGames()"></ion-refresher-->
-    <ion-list class="gameList">
-        <ion-item menu-close class="newGame" ng-click="createNew()">
+    <ion-list class="game-list">
+        <ion-item menu-close class="new-game" ng-click="list.createNew()">
             <i class="icon ion-plus"></i>
             New Game
         </ion-item>
-        <div ng-repeat="phase in phasesInOrder">
-            <div ng-show="games[phase].games.length > 0">
-                <div class="item item-divider" ng-click="switchHideGames(phase)">
-                    <i class="icon ion-{{games[phase].icon}}"></i>
-                    {{games[phase].label}}
-                    <span class="badge">{{games[phase].games.length}}</span>
+        <div ng-repeat="phase in list.phasesInOrder">
+            <div ng-show="list.games[phase].games.length > 0">
+                <div class="item item-divider" ng-click="list.switchHideGames(phase)">
+                    <i class="icon ion-{{list.games[phase].icon}}"></i>
+                    {{list.games[phase].label}}
+                    <span class="badge">{{list.games[phase].games.length}}</span>
                 </div>
 
-                <div ng-hide="games[phase].hideGames">
+                <div ng-hide="list.games[phase].hideGames">
                     <ion-item menu-close
-                              ng-repeat="game in games[phase].games track by game.id | orderBy:['-lastUpdate', '-created']"
-                              ng-init="detail = gameDetails.shortGameDescription(game, md5)"
+                              ng-repeat="game in list.games[phase].games track by game.id | orderBy:['-lastUpdate', '-created']"
+                              ng-init="detail = list.gameDetails.shortGameDescription(game, list.md5)"
                               href="#/app/games/{{game.gamePhase.toLowerCase()}}/{{game.id}}"
                               class="item {{detail.playerAction ? 'playable' : 'waiting'}} item-text-wrap">
-                        <img ng-repeat="(key, value) in game.players" ng-src="{{gameDetails.imageForPlayer(game, key)}}"
-                             class="gameListAvatar">
+                        <img ng-repeat="(key, value) in game.players"
+                             ng-src="{{list.gameDetails.imageForPlayer(game, key)}}"
+                             class="avatar">
                         <p>
-                            {{gameDetails.descriptionForPhase(game.gamePhase)}}, {{detail.sizeText}},
+                            {{list.gameDetails.descriptionForPhase(game.gamePhase)}}, {{detail.sizeText}},
                             {{detail.actionsText}}
                         </p>
 

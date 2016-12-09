@@ -41,16 +41,15 @@ describe('Controller: MobileGameListCtrl', function () {
         afunction: function () {
         }
     };
-    var rootScope, scope, ctrl, stateSpy;
+    var $rootScope, $scope, ctrl, stateSpy;
 
-    beforeEach(inject(function ($rootScope, $controller) {
+    beforeEach(inject(function (_$rootScope_, $controller) {
         stateSpy = {go: sinon.spy()};
-        rootScope = $rootScope;
-        scope = rootScope.$new();
+        $rootScope = _$rootScope_;
+        $scope = $rootScope.$new();
         ctrl = $controller('MobileGameListCtrl', {
-            $scope: scope,
+            $scope: $scope,
             $state: stateSpy,
-            $rootScope: rootScope,
             jtbGameClassifier: mockClassifier,
             jtbGameCache: mockGameCache,
             jtbPlayerService: mockPlayerService,
@@ -60,45 +59,50 @@ describe('Controller: MobileGameListCtrl', function () {
 
     it('initializes when cache not ready yet', function () {
         angular.forEach(expectedClassifications, function (classification) {
-            expect(scope.games[classification].games).to.deep.equal([]);
-            expect(scope.games[classification].icon).to.equal(expectedIcons[classification]);
-            expect(scope.games[classification].hideGames).to.be.false;
-            expect(scope.games[classification].label).to.equal(classification);
+            expect(ctrl.games[classification].games).to.deep.equal([]);
+            expect(ctrl.games[classification].icon).to.equal(expectedIcons[classification]);
+            expect(ctrl.games[classification].hideGames).to.be.false;
+            expect(ctrl.games[classification].label).to.equal(classification);
         });
-        expect(scope.md5).to.equal('');
-        expect(scope.phasesInOrder).to.deep.equal(expectedClassifications);
-        expect(scope.gameDetails).to.equal(mockGameDetails);
+        expect(ctrl.md5).to.equal('');
+        expect(ctrl.phasesInOrder).to.deep.equal(expectedClassifications);
+        expect(ctrl.gameDetails).to.equal(mockGameDetails);
     });
 
     it('after game caches loaded event', function () {
-        rootScope.$broadcast('gameCachesLoaded');
+        var oldBC = $rootScope.$broadcast;
+        sinon.spy($rootScope, "$broadcast");
+        $rootScope.$broadcast('gameCachesLoaded');
         angular.forEach(expectedClassifications, function (classification) {
-            expect(scope.games[classification].games).to.deep.equal(expectedGames[classification]);
+            expect(ctrl.games[classification].games).to.deep.equal(expectedGames[classification]);
         });
-        expect(scope.md5).to.equal(currentPlayer.md5);
+        expect(ctrl.md5).to.equal(currentPlayer.md5);
+        assert($rootScope.$broadcast.calledWithMatch('scroll.refreshComplete'));
+        $rootScope.$broadcast = oldBC;
     });
 
     it('switch flag for hide games', function () {
-        expect(scope.games[expectedClassifications[2]].hideGames).to.be.false;
-        scope.switchHideGames(expectedClassifications[2]);
-        expect(scope.games[expectedClassifications[2]].hideGames).to.be.true;
-        scope.switchHideGames(expectedClassifications[2]);
-        expect(scope.games[expectedClassifications[2]].hideGames).to.be.false;
+        expect(ctrl.games[expectedClassifications[2]].hideGames).to.be.false;
+        ctrl.switchHideGames(expectedClassifications[2]);
+        expect(ctrl.games[expectedClassifications[2]].hideGames).to.be.true;
+        ctrl.switchHideGames(expectedClassifications[2]);
+        expect(ctrl.games[expectedClassifications[2]].hideGames).to.be.false;
     });
 
     it('new game action goes to setup', function () {
-        scope.createNew();
+        ctrl.createNew();
         assert(stateSpy.go.calledWithMatch('app.create'));
     });
 
     describe('controller loaded after cache loaded', function () {
-        beforeEach(inject(function ($rootScope, $controller) {
+        beforeEach(inject(function (_$rootScope_, $controller) {
             expectedInitialized = true;
-            scope = rootScope.$new();
+            $rootScope = _$rootScope_;
+            $scope = $rootScope.$new();
+
             ctrl = $controller('MobileGameListCtrl', {
-                $scope: scope,
+                $scope: $scope,
                 $state: stateSpy,
-                $rootScope: rootScope,
                 jtbGameClassifier: mockClassifier,
                 jtbGameCache: mockGameCache,
                 jtbPlayerService: mockPlayerService,
@@ -108,14 +112,14 @@ describe('Controller: MobileGameListCtrl', function () {
 
         it('initializes games immediately', function () {
             angular.forEach(expectedClassifications, function (classification) {
-                expect(scope.games[classification].games).to.deep.equal(expectedGames[classification]);
-                expect(scope.games[classification].icon).to.equal(expectedIcons[classification]);
-                expect(scope.games[classification].hideGames).to.be.false;
-                expect(scope.games[classification].label).to.equal(classification);
+                expect(ctrl.games[classification].games).to.deep.equal(expectedGames[classification]);
+                expect(ctrl.games[classification].icon).to.equal(expectedIcons[classification]);
+                expect(ctrl.games[classification].hideGames).to.be.false;
+                expect(ctrl.games[classification].label).to.equal(classification);
             });
-            expect(scope.md5).to.equal(currentPlayer.md5);
-            expect(scope.phasesInOrder).to.deep.equal(expectedClassifications);
-            expect(scope.gameDetails).to.equal(mockGameDetails);
+            expect(ctrl.md5).to.equal(currentPlayer.md5);
+            expect(ctrl.phasesInOrder).to.deep.equal(expectedClassifications);
+            expect(ctrl.gameDetails).to.equal(mockGameDetails);
         });
     });
 

@@ -1,8 +1,8 @@
 @import "default-theme-colors";
 
-.gameList {
+.game-list {
   .list {
-    .newGame {
+    .new-game {
       background-color: $paler_green;
       color: black;
       font-size: large;
@@ -15,7 +15,7 @@
       }
     }
 
-    .gameListAvatar {
+    .avatar {
       max-width: 36px;
       max-height: 36px;
       width: 100%;

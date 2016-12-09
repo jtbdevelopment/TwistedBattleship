@@ -3,31 +3,32 @@
 angular.module('tbs.controllers').controller('MobileGameListCtrl',
     ['$rootScope', '$scope', '$state', 'jtbPlayerService', 'jtbGameCache', 'tbsGameDetails', 'jtbGameClassifier',
         function ($rootScope, $scope, $state, jtbPlayerService, jtbGameCache, tbsGameDetails, jtbGameClassifier) {
-            $scope.games = {};
-            $scope.phasesInOrder = [];
-            $scope.gameDetails = tbsGameDetails;
-            $scope.md5 = '';
+            var controller = this;
+            controller.games = {};
+            controller.phasesInOrder = [];
+            controller.gameDetails = tbsGameDetails;
+            controller.md5 = '';
             var icons = jtbGameClassifier.getIcons();
             angular.forEach(jtbGameClassifier.getClassifications(), function (classification) {
-                $scope.phasesInOrder.push(classification);
-                $scope.games[classification] = {};
-                $scope.games[classification].games = [];
-                $scope.games[classification].icon = icons[classification];
-                $scope.games[classification].hideGames = false;
-                $scope.games[classification].label = classification;
+                controller.phasesInOrder.push(classification);
+                controller.games[classification] = {};
+                controller.games[classification].games = [];
+                controller.games[classification].icon = icons[classification];
+                controller.games[classification].hideGames = false;
+                controller.games[classification].label = classification;
             });
 
-            $scope.createNew = function () {
+            controller.createNew = function () {
                 $state.go('app.create');
             };
 
-            $scope.switchHideGames = function (phase) {
-                $scope.games[phase].hideGames = !$scope.games[phase].hideGames;
+            controller.switchHideGames = function (phase) {
+                controller.games[phase].hideGames = !controller.games[phase].hideGames;
             };
 
             function reloadFromCaches() {
-                $scope.md5 = jtbPlayerService.currentPlayer().md5;
-                angular.forEach($scope.games, function (phaseData, phase) {
+                controller.md5 = jtbPlayerService.currentPlayer().md5;
+                angular.forEach(controller.games, function (phaseData, phase) {
                     phaseData.games = jtbGameCache.getGamesForPhase(phase);
                 });
             }
