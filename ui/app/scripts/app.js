@@ -119,7 +119,8 @@ angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.contro
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/game.html',
-                        controller: 'GameV2Ctrl'
+                        controller: 'GameV2Ctrl',
+                        controllerAs: 'game'
                     }
                 }
             })
@@ -168,7 +169,8 @@ angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.contro
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/game.html',
-                        controller: 'GameV2Ctrl'
+                        controller: 'GameV2Ctrl',
+                        controllerAs: 'game'
                     }
                 }
             })
@@ -177,7 +179,8 @@ angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.contro
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/game.html',
-                        controller: 'GameV2Ctrl'
+                        controller: 'GameV2Ctrl',
+                        controllerAs: 'game'
                     }
                 }
             })

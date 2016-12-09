@@ -3,103 +3,104 @@
 var ALL = 'ALL';
 
 angular.module('tbs.controllers').controller('GameV2Ctrl',
-    ['$rootScope', '$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', 'tbsShipGridV2', '$ionicPopup', '$ionicLoading', '$timeout', 'tbsAds',
-        function ($rootScope, $scope, tbsGameDetails, tbsActions, jtbGameCache, jtbPlayerService, $state, tbsShipGridV2, $ionicPopup, $ionicLoading, $timeout, tbsAds) {
-            $scope.gameID = $state.params.gameID;
-            $scope.game = jtbGameCache.getGameForID($scope.gameID);
-            $scope.playerKeys = Object.keys($scope.game.players);
-            $scope.gameDetails = tbsGameDetails;
-            $scope.player = jtbPlayerService.currentPlayer();
-            $scope.showing = ALL;
-            $scope.showingSelf = false;
+    ['$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', 'tbsShipGridV2', '$ionicPopup', '$ionicLoading', '$timeout', 'tbsAds',
+        function ($scope, tbsGameDetails, tbsActions, jtbGameCache, jtbPlayerService, $state, tbsShipGridV2, $ionicPopup, $ionicLoading, $timeout, tbsAds) {
+            var controller = this;
+            controller.gameID = $state.params.gameID;
+            controller.game = jtbGameCache.getGameForID(controller.gameID);
+            controller.playerKeys = Object.keys(controller.game.players);
+            controller.gameDetails = tbsGameDetails;
+            controller.player = jtbPlayerService.currentPlayer();
+            controller.showing = ALL;
+            controller.showingSelf = false;
 
-            $scope.shipHighlighted = false;
-            $scope.selectedCell = undefined;
+            controller.shipHighlighted = false;
+            controller.selectedCell = undefined;
 
-            $scope.showActionLog = function () {
-                $state.go('app.actionLog', {gameID: $scope.gameID});
+            controller.showActionLog = function () {
+                $state.go('app.actionLog', {gameID: controller.gameID});
             };
 
-            $scope.showHelp = function () {
+            controller.showHelp = function () {
                 $state.go('app.playhelp');
             };
 
-            $scope.showDetails = function () {
-                $state.go('app.gameDetails', {gameID: $scope.gameID});
+            controller.showDetails = function () {
+                $state.go('app.gameDetails', {gameID: controller.gameID});
             };
 
-            $scope.declineRematch = function () {
-                tbsActions.declineRematch($scope.game);
+            controller.declineRematch = function () {
+                tbsActions.declineRematch(controller.game);
             };
 
-            $scope.rematch = function () {
-                tbsActions.rematch($scope.game);
+            controller.rematch = function () {
+                tbsActions.rematch(controller.game);
             };
 
-            $scope.fire = function () {
-                tbsActions.fire($scope.game, $scope.showingSelf ? $scope.player.md5 : $scope.showing, $scope.selectedCell);
+            controller.fire = function () {
+                tbsActions.fire(controller.game, controller.showingSelf ? controller.player.md5 : controller.showing, controller.selectedCell);
             };
 
-            $scope.move = function () {
-                tbsActions.move($scope.game, $scope.showingSelf ? $scope.player.md5 : $scope.showing, $scope.selectedCell);
+            controller.move = function () {
+                tbsActions.move(controller.game, controller.showingSelf ? controller.player.md5 : controller.showing, controller.selectedCell);
             };
 
-            $scope.spy = function () {
-                tbsActions.spy($scope.game, $scope.showingSelf ? $scope.player.md5 : $scope.showing, $scope.selectedCell);
+            controller.spy = function () {
+                tbsActions.spy(controller.game, controller.showingSelf ? controller.player.md5 : controller.showing, controller.selectedCell);
             };
 
-            $scope.missile = function () {
-                tbsActions.missile($scope.game, $scope.showingSelf ? $scope.player.md5 : $scope.showing, $scope.selectedCell);
+            controller.missile = function () {
+                tbsActions.missile(controller.game, controller.showingSelf ? controller.player.md5 : controller.showing, controller.selectedCell);
             };
 
-            $scope.repair = function () {
-                tbsActions.repair($scope.game, $scope.showingSelf ? $scope.player.md5 : $scope.showing, $scope.selectedCell);
+            controller.repair = function () {
+                tbsActions.repair(controller.game, controller.showingSelf ? controller.player.md5 : controller.showing, controller.selectedCell);
             };
 
-            $scope.ecm = function () {
-                tbsActions.ecm($scope.game, $scope.showingSelf ? $scope.player.md5 : $scope.showing, $scope.selectedCell);
+            controller.ecm = function () {
+                tbsActions.ecm(controller.game, controller.showingSelf ? controller.player.md5 : controller.showing, controller.selectedCell);
             };
 
-            $scope.quit = function () {
-                tbsActions.quit($scope.game);
+            controller.quit = function () {
+                tbsActions.quit(controller.game);
             };
 
-            $scope.changePlayer = function (md5) {
-                $scope.shipHighlighted = false;
-                $scope.selectedCell = undefined;
-                $scope.selectedShip = undefined;
+            controller.changePlayer = function (md5) {
+                controller.shipHighlighted = false;
+                controller.selectedCell = undefined;
+                controller.selectedShip = undefined;
                 if (md5 === ALL) {
-                    $scope.showingSelf = true;
-                    tbsShipGridV2.placeShips($scope.game.maskedPlayersState.shipStates);
-                    tbsShipGridV2.placeCellMarkers($scope.game.maskedPlayersState.consolidatedOpponentView.table);
+                    controller.showingSelf = true;
+                    tbsShipGridV2.placeShips(controller.game.maskedPlayersState.shipStates);
+                    tbsShipGridV2.placeCellMarkers(controller.game.maskedPlayersState.consolidatedOpponentView.table);
                 } else {
-                    if ($scope.showingSelf) {
-                        tbsShipGridV2.placeShips($scope.game.maskedPlayersState.shipStates);
-                        tbsShipGridV2.placeCellMarkers($scope.game.maskedPlayersState.opponentViews[md5].table);
+                    if (controller.showingSelf) {
+                        tbsShipGridV2.placeShips(controller.game.maskedPlayersState.shipStates);
+                        tbsShipGridV2.placeCellMarkers(controller.game.maskedPlayersState.opponentViews[md5].table);
                     } else {
                         tbsShipGridV2.placeShips([]);
-                        tbsShipGridV2.placeCellMarkers($scope.game.maskedPlayersState.opponentGrids[md5].table);
+                        tbsShipGridV2.placeCellMarkers(controller.game.maskedPlayersState.opponentGrids[md5].table);
                     }
                 }
-                $scope.showing = md5;
+                controller.showing = md5;
             };
 
-            $scope.switchView = function (showingSelf) {
-                $scope.showingSelf = showingSelf;
-                if (!$scope.showingSelf && $scope.showing === ALL) {
-                    if ($scope.playerKeys[0] === $scope.player.md5) {
-                        $scope.showing = $scope.playerKeys[1];
+            controller.switchView = function (showingSelf) {
+                controller.showingSelf = showingSelf;
+                if (!controller.showingSelf && controller.showing === ALL) {
+                    if (controller.playerKeys[0] === controller.player.md5) {
+                        controller.showing = controller.playerKeys[1];
                     } else {
-                        $scope.showing = $scope.playerKeys[0];
+                        controller.showing = controller.playerKeys[0];
                     }
                 }
-                $scope.changePlayer($scope.showing);
+                controller.changePlayer(controller.showing);
             };
 
             function cellSelectionCB(cell, ship) {
                 $timeout(function () {
-                    $scope.shipHighlighted = angular.isDefined(ship);
-                    $scope.selectedCell = cell;
+                    controller.shipHighlighted = angular.isDefined(ship);
+                    controller.selectedCell = cell;
                 });
             }
 
@@ -111,14 +112,14 @@ angular.module('tbs.controllers').controller('GameV2Ctrl',
                 $ionicLoading.show({
                     template: 'Loading...'
                 });
-                tbsShipGridV2.initialize($scope.game, [], [], function () {
+                tbsShipGridV2.initialize(controller.game, [], [], function () {
                     $timeout(function () {
-                        $scope.switchView(false);
-                        if ($scope.game.gamePhase === 'Playing') {
+                        controller.switchView(false);
+                        if (controller.game.gamePhase === 'Playing') {
                             tbsShipGridV2.enableCellSelecting(cellSelectionCB);
                         } else {
-                            if ($scope.game.gamePhase === 'RoundOver') {
-                                if ($scope.game.winningPlayer === $scope.player.md5) {
+                            if (controller.game.gamePhase === 'RoundOver') {
+                                if (controller.game.winningPlayer === controller.player.md5) {
                                     $ionicPopup.alert({
                                         title: 'Game is over!',
                                         template: 'Congratulations Winner!'
@@ -137,11 +138,11 @@ angular.module('tbs.controllers').controller('GameV2Ctrl',
             });
 
             $scope.$on('gameUpdated', function (event, oldGame, newGame) {
-                if ($scope.gameID === newGame.id) {
-                    $scope.game = newGame;
-                    $scope.changePlayer($scope.showing);
+                if (controller.gameID === newGame.id) {
+                    controller.game = newGame;
+                    controller.changePlayer(controller.showing);
                     if (oldGame.gamePhase === newGame.gamePhase) {
-                        if (oldGame.currentPlayer === $scope.player.md5 && newGame.currentPlayer !== $scope.player.md5) {
+                        if (oldGame.currentPlayer === controller.player.md5 && newGame.currentPlayer !== controller.player.md5) {
                             tbsAds.showInterstitial();
                         }
                     } else {

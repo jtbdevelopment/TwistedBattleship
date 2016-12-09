@@ -65,10 +65,10 @@ describe('Controller: GameCtrl', function () {
             cb();
         }
     };
-    var rootScope, scope, ctrl, stateSpy, q, phasePromise, ionicLoadingSpy, ionicPopupSpy, timeout,
+    var $rootScope, $scope, ctrl, stateSpy, $q, phasePromise, ionicLoadingSpy, ionicPopupSpy, $timeout,
         ads, actionsSpy, expectedGame, expectedComputedShips;
 
-    beforeEach(inject(function ($rootScope, $controller, $q, $timeout) {
+    beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$timeout_) {
         expectedGame = {
             id: expectedId,
             features: [],
@@ -130,11 +130,11 @@ describe('Controller: GameCtrl', function () {
         ionicLoadingSpy = {show: sinon.spy(), hide: sinon.spy()};
         ionicPopupSpy = {alert: sinon.spy()};
         ads = {showInterstitial: sinon.spy()};
-        rootScope = $rootScope;
-        q = $q;
-        timeout = $timeout;
-        phasePromise = $q.defer();
-        scope = rootScope.$new();
+        $rootScope = _$rootScope_;
+        $q = _$q_;
+        $timeout = _$timeout_;
+        phasePromise = _$q_.defer();
+        $scope = $rootScope.$new();
         mockSelectedCell = undefined;
         mockSelectedShip = undefined;
         mockShipService.placeShips = sinon.spy();
@@ -154,131 +154,129 @@ describe('Controller: GameCtrl', function () {
         };
 
         ctrl = $controller('GameV2Ctrl', {
-            $scope: scope,
+            $scope: $scope,
             $state: stateSpy,
             tbsActions: actionsSpy,
-            $rootScope: rootScope,
             jtbGameCache: mockGameCache,
             tbsGameDetails: mockGameDetails,
             $ionicLoading: ionicLoadingSpy,
             $ionicPopup: ionicPopupSpy,
             jtbPlayerService: mockPlayerService,
-            $timeout: timeout,
             tbsAds: ads,
             tbsShipGridV2: mockShipService
         });
     }));
 
     it('initializes', function () {
-        expect(scope.gameID).to.equal(expectedId);
-        expect(scope.game).to.equal(expectedGame);
-        expect(scope.gameDetails).to.equal(mockGameDetails);
-        expect(scope.playerKeys).to.deep.equal(['md3', 'md1', 'md2']);
-        expect(scope.player).to.equal(currentPlayer);
-        expect(scope.showing).to.equal('ALL');
-        expect(scope.showingSelf).to.be.false;
-        expect(scope.shipHighlighted).to.be.false;
-        expect(scope.selectedCell).to.be.undefined;
+        expect(ctrl.gameID).to.equal(expectedId);
+        expect(ctrl.game).to.equal(expectedGame);
+        expect(ctrl.gameDetails).to.equal(mockGameDetails);
+        expect(ctrl.playerKeys).to.deep.equal(['md3', 'md1', 'md2']);
+        expect(ctrl.player).to.equal(currentPlayer);
+        expect(ctrl.showing).to.equal('ALL');
+        expect(ctrl.showingSelf).to.be.false;
+        expect(ctrl.shipHighlighted).to.be.false;
+        expect(ctrl.selectedCell).to.be.undefined;
     });
 
     describe('tests that involve changing display', function () {
         it('switching to ALL from showing opponent', function () {
-            scope.showingSelf = false;
-            scope.showing = 'X';
+            ctrl.showingSelf = false;
+            ctrl.showing = 'X';
 
-            scope.changePlayer('ALL');
+            ctrl.changePlayer('ALL');
             assert(mockShipService.placeShips.calledWithMatch(expectedGame.maskedPlayersState.shipStates));
             assert(mockShipService.placeCellMarkers.calledWithMatch(expectedGame.maskedPlayersState.consolidatedOpponentView.table));
-            expect(scope.showing).to.equal('ALL');
-            expect(scope.showingSelf).to.be.true;
+            expect(ctrl.showing).to.equal('ALL');
+            expect(ctrl.showingSelf).to.be.true;
         });
 
         it('switching from ALL to showing md3, self', function () {
-            scope.showingSelf = true;
-            scope.showing = 'ALL';
+            ctrl.showingSelf = true;
+            ctrl.showing = 'ALL';
 
-            scope.changePlayer('md3');
+            ctrl.changePlayer('md3');
             assert(mockShipService.placeShips.calledWithMatch(expectedGame.maskedPlayersState.shipStates));
             assert(mockShipService.placeCellMarkers.calledWithMatch(expectedGame.maskedPlayersState.opponentViews.md3.table));
-            expect(scope.showing).to.equal('md3');
-            expect(scope.showingSelf).to.be.true;
+            expect(ctrl.showing).to.equal('md3');
+            expect(ctrl.showingSelf).to.be.true;
         });
 
         it('switching from another opponent to showing md3, them', function () {
-            scope.showingSelf = false;
-            scope.showing = 'md2';
+            ctrl.showingSelf = false;
+            ctrl.showing = 'md2';
 
-            scope.changePlayer('md3');
+            ctrl.changePlayer('md3');
             assert(mockShipService.placeShips.calledWithMatch([]));
             assert(mockShipService.placeCellMarkers.calledWithMatch(expectedGame.maskedPlayersState.opponentGrids.md3.table));
-            expect(scope.showing).to.equal('md3');
-            expect(scope.showingSelf).to.be.false;
+            expect(ctrl.showing).to.equal('md3');
+            expect(ctrl.showingSelf).to.be.false;
         });
 
         it('switching from md3/them to md3/self', function () {
-            scope.showingSelf = false;
-            scope.showing = 'md3';
+            ctrl.showingSelf = false;
+            ctrl.showing = 'md3';
 
-            scope.switchView(true);
+            ctrl.switchView(true);
             assert(mockShipService.placeShips.calledWithMatch(expectedGame.maskedPlayersState.shipStates));
             assert(mockShipService.placeCellMarkers.calledWithMatch(expectedGame.maskedPlayersState.opponentViews.md3.table));
-            expect(scope.showing).to.equal('md3');
-            expect(scope.showingSelf).to.be.true;
+            expect(ctrl.showing).to.equal('md3');
+            expect(ctrl.showingSelf).to.be.true;
         });
 
         it('switching from ALL/self to not self, self is not first player', function () {
-            scope.showingSelf = true;
-            scope.showing = 'ALL';
+            ctrl.showingSelf = true;
+            ctrl.showing = 'ALL';
 
-            scope.switchView(false);
+            ctrl.switchView(false);
             assert(mockShipService.placeShips.calledWithMatch([]));
             assert(mockShipService.placeCellMarkers.calledWithMatch(expectedGame.maskedPlayersState.opponentGrids.md3.table));
-            expect(scope.showing).to.equal('md3');
-            expect(scope.showingSelf).to.be.false;
+            expect(ctrl.showing).to.equal('md3');
+            expect(ctrl.showingSelf).to.be.false;
         });
 
         it('switching from ALL/self to not self, self is first player', function () {
-            scope.showingSelf = true;
-            scope.showing = 'ALL';
-            scope.playerKeys = [currentPlayer.md5, 'md3', 'md2', 'md1'];
+            ctrl.showingSelf = true;
+            ctrl.showing = 'ALL';
+            ctrl.playerKeys = [currentPlayer.md5, 'md3', 'md2', 'md1'];
 
-            scope.switchView(false);
+            ctrl.switchView(false);
             assert(mockShipService.placeShips.calledWithMatch([]));
             assert(mockShipService.placeCellMarkers.calledWithMatch(expectedGame.maskedPlayersState.opponentGrids.md3.table));
-            expect(scope.showing).to.equal('md3');
-            expect(scope.showingSelf).to.be.false;
+            expect(ctrl.showing).to.equal('md3');
+            expect(ctrl.showingSelf).to.be.false;
         });
     });
 
     describe('general navigation and simple actions', function () {
         it('shows action log', function () {
-            scope.showActionLog();
+            ctrl.showActionLog();
             assert(stateSpy.go.calledWithMatch('app.actionLog', {gameID: expectedId}));
         });
 
         it('shows game details', function () {
-            scope.showDetails();
+            ctrl.showDetails();
             assert(stateSpy.go.calledWithMatch('app.gameDetails', {gameID: expectedId}));
         });
 
         it('shows help', function () {
-            scope.showHelp();
+            ctrl.showHelp();
             assert(stateSpy.go.calledWithMatch('app.playhelp'));
         });
 
         it('declines rematch', function () {
-            scope.declineRematch();
+            ctrl.declineRematch();
             assert(actionsSpy.declineRematch.calledWithMatch(expectedGame));
         });
 
         it('start rematch', function () {
-            scope.rematch();
+            ctrl.rematch();
             assert(actionsSpy.rematch.calledWithMatch(expectedGame));
         });
 
 
         it('quit game', function () {
-            scope.quit();
+            ctrl.quit();
             assert(actionsSpy.quit.calledWithMatch(expectedGame));
         });
     });
@@ -288,49 +286,49 @@ describe('Controller: GameCtrl', function () {
             beforeEach(function () {
                 mockSelectedCell = {column: 1, row: 2};
                 if (self) {
-                    scope.showing = selectedOpponent;
+                    ctrl.showing = selectedOpponent;
                 }
                 expectedGame.gamePhase = 'Playing';
-                rootScope.$broadcast('$ionicView.enter');
-                timeout.flush();
+                $rootScope.$broadcast('$ionicView.enter');
+                $timeout.flush();
                 expect(mockShipService.cellCB).to.not.be.undefined;
                 mockShipService.cellCB(mockSelectedCell, mockSelectedShip);
-                timeout.flush();
+                $timeout.flush();
             });
 
             it('ecm on self=' + self, function () {
-                scope.showingSelf = self;
-                scope.ecm();
+                ctrl.showingSelf = self;
+                ctrl.ecm();
                 assert(actionsSpy.ecm.calledWith(expectedGame, self ? currentPlayer.md5 : selectedOpponent, mockSelectedCell));
             });
 
             it('repair on self=' + self, function () {
-                scope.showingSelf = self;
-                scope.repair();
+                ctrl.showingSelf = self;
+                ctrl.repair();
                 assert(actionsSpy.repair.calledWith(expectedGame, self ? currentPlayer.md5 : selectedOpponent, mockSelectedCell));
             });
 
             it('spy on self=' + self, function () {
-                scope.showingSelf = self;
-                scope.spy();
+                ctrl.showingSelf = self;
+                ctrl.spy();
                 assert(actionsSpy.spy.calledWith(expectedGame, self ? currentPlayer.md5 : selectedOpponent, mockSelectedCell));
             });
 
             it('missile on self=' + self, function () {
-                scope.showingSelf = self;
-                scope.missile();
+                ctrl.showingSelf = self;
+                ctrl.missile();
                 assert(actionsSpy.missile.calledWith(expectedGame, self ? currentPlayer.md5 : selectedOpponent, mockSelectedCell));
             });
 
             it('fire on self=' + self, function () {
-                scope.showingSelf = self;
-                scope.fire();
+                ctrl.showingSelf = self;
+                ctrl.fire();
                 assert(actionsSpy.fire.calledWith(expectedGame, self ? currentPlayer.md5 : selectedOpponent, mockSelectedCell));
             });
 
             it('move on self=' + self, function () {
-                scope.showingSelf = self;
-                scope.move();
+                ctrl.showingSelf = self;
+                ctrl.move();
                 assert(actionsSpy.move.calledWith(expectedGame, self ? currentPlayer.md5 : selectedOpponent, mockSelectedCell));
             });
         });
@@ -346,10 +344,10 @@ describe('Controller: GameCtrl', function () {
         it('game is round over, player is winner', function () {
             expectedGame.gamePhase = 'RoundOver';
             expectedGame.winningPlayer = currentPlayer.md5;
-            scope.showing = selectedOpponent;
-            scope.showingSelf = false;
-            rootScope.$broadcast('$ionicView.enter');
-            timeout.flush();
+            ctrl.showing = selectedOpponent;
+            ctrl.showingSelf = false;
+            $rootScope.$broadcast('$ionicView.enter');
+            $timeout.flush();
             expect(ionicPopupSpy.alert.callCount).to.equal(1);
             expect(ionicPopupSpy.alert.calledWithMatch({
                 title: 'Game is over!',
@@ -360,10 +358,10 @@ describe('Controller: GameCtrl', function () {
         it('game is round over, player is not winner', function () {
             expectedGame.gamePhase = 'RoundOver';
             expectedGame.winningPlayer = currentPlayer.md5 + 'X';
-            scope.showing = selectedOpponent;
-            scope.showingSelf = false;
-            rootScope.$broadcast('$ionicView.enter');
-            timeout.flush();
+            ctrl.showing = selectedOpponent;
+            ctrl.showingSelf = false;
+            $rootScope.$broadcast('$ionicView.enter');
+            $timeout.flush();
             expect(ionicPopupSpy.alert.callCount).to.equal(1);
             expect(ionicPopupSpy.alert.calledWithMatch({
                 title: 'Game is over!',
@@ -374,33 +372,33 @@ describe('Controller: GameCtrl', function () {
         it('game is neither playing or round over', function () {
             expectedGame.gamePhase = 'Other';
             expectedGame.winningPlayer = currentPlayer.md5 + 'X';
-            scope.showing = selectedOpponent;
-            scope.showingSelf = false;
-            rootScope.$broadcast('$ionicView.enter');
-            timeout.flush();
+            ctrl.showing = selectedOpponent;
+            ctrl.showingSelf = false;
+            $rootScope.$broadcast('$ionicView.enter');
+            $timeout.flush();
         });
 
         it('game is playing, sets highlighting callback', function () {
             expectedGame.gamePhase = 'Playing';
             expectedGame.winningPlayer = currentPlayer.md5 + 'X';
-            scope.showing = selectedOpponent;
-            scope.showingSelf = false;
-            rootScope.$broadcast('$ionicView.enter');
-            timeout.flush();
+            ctrl.showing = selectedOpponent;
+            ctrl.showingSelf = false;
+            $rootScope.$broadcast('$ionicView.enter');
+            $timeout.flush();
             expect(mockShipService.cellCB).to.not.be.undefined;
             //noinspection JSUnusedAssignment
             mockSelectedShip = {hfh: '33', jhf: 33.3};
             mockSelectedCell = {x: '1'};
             mockShipService.cellCB(mockSelectedCell, mockSelectedShip);
-            timeout.flush();
-            expect(scope.shipHighlighted).to.be.true;
-            expect(scope.selectedCell).to.equal(mockSelectedCell);
+            $timeout.flush();
+            expect(ctrl.shipHighlighted).to.be.true;
+            expect(ctrl.selectedCell).to.equal(mockSelectedCell);
             mockSelectedShip = undefined;
             mockSelectedCell = undefined;
             mockShipService.cellCB(mockSelectedCell, mockSelectedShip);
-            timeout.flush();
-            expect(scope.selectedCell).to.be.undefined;
-            expect(scope.shipHighlighted).to.be.false;
+            $timeout.flush();
+            expect(ctrl.selectedCell).to.be.undefined;
+            expect(ctrl.shipHighlighted).to.be.false;
         });
     });
 
@@ -408,7 +406,7 @@ describe('Controller: GameCtrl', function () {
         //  Minimal testing up changePlayer here - test elsewhere
 
         it('handles game update for different game', function () {
-            rootScope.$broadcast('gameUpdated', {id: expectedId + 'X'}, {id: expectedId + 'X'});
+            $rootScope.$broadcast('gameUpdated', {id: expectedId + 'X'}, {id: expectedId + 'X'});
             expect(ads.showInterstitial.callCount).to.equal(0);
             expect(actionsSpy.updateCurrentView.callCount).to.equal(0);
         });
@@ -416,62 +414,62 @@ describe('Controller: GameCtrl', function () {
         it('handles game update for game but not phase change, player was current player, player is current player', function () {
             var updatedGame = {id: expectedId, gamePhase: expectedPhase, currentPlayer: currentPlayer.md5};
             updatedGame.maskedPlayersState = expectedGame.maskedPlayersState;
-            scope.showing = selectedOpponent;
-            scope.showingSelf = false;
-            rootScope.$broadcast('gameUpdated', expectedGame, updatedGame);
+            ctrl.showing = selectedOpponent;
+            ctrl.showingSelf = false;
+            $rootScope.$broadcast('gameUpdated', expectedGame, updatedGame);
             expect(ads.showInterstitial.callCount).to.equal(0);
             expect(actionsSpy.updateCurrentView.callCount).to.equal(0);
             expect(mockShipService.placeShips.calledWithMatch([]));
             expect(mockShipService.placeCellMarkers.calledWithMatch(expectedGame.maskedPlayersState.opponentGrids.md3.table));
-            expect(scope.game).to.equal(updatedGame);
+            expect(ctrl.game).to.equal(updatedGame);
         });
 
         it('handles game update for game but not phase change, player was not current player, player is current player', function () {
             var updatedGame = {id: expectedId, gamePhase: expectedPhase, currentPlayer: currentPlayer.md5};
             updatedGame.maskedPlayersState = expectedGame.maskedPlayersState;
             var oldGame = {id: expectedId, gamePhase: expectedPhase, currentPlayer: 'XYZ'};
-            scope.showing = selectedOpponent;
-            scope.showingSelf = false;
-            rootScope.$broadcast('gameUpdated', oldGame, updatedGame);
+            ctrl.showing = selectedOpponent;
+            ctrl.showingSelf = false;
+            $rootScope.$broadcast('gameUpdated', oldGame, updatedGame);
             expect(ads.showInterstitial.callCount).to.equal(0);
             expect(actionsSpy.updateCurrentView.callCount).to.equal(0);
             expect(mockShipService.placeShips.calledWithMatch([]));
             expect(mockShipService.placeCellMarkers.calledWithMatch(expectedGame.maskedPlayersState.opponentGrids.md3.table));
-            expect(scope.game).to.equal(updatedGame);
+            expect(ctrl.game).to.equal(updatedGame);
         });
 
         it('handles game update for game but not phase change, player was current player, player is not current player', function () {
             var updatedGame = {id: expectedId, gamePhase: expectedPhase, currentPlayer: 'X'};
             updatedGame.maskedPlayersState = expectedGame.maskedPlayersState;
             var oldGame = {id: expectedId, gamePhase: expectedPhase, currentPlayer: currentPlayer.md5};
-            scope.showing = selectedOpponent;
-            scope.showingSelf = false;
-            rootScope.$broadcast('gameUpdated', oldGame, updatedGame);
+            ctrl.showing = selectedOpponent;
+            ctrl.showingSelf = false;
+            $rootScope.$broadcast('gameUpdated', oldGame, updatedGame);
             expect(ads.showInterstitial.callCount).to.equal(1);
             expect(actionsSpy.updateCurrentView.callCount).to.equal(0);
             expect(mockShipService.placeShips.calledWithMatch([]));
             expect(mockShipService.placeCellMarkers.calledWithMatch(expectedGame.maskedPlayersState.opponentGrids.md3.table));
-            expect(scope.game).to.equal(updatedGame);
+            expect(ctrl.game).to.equal(updatedGame);
         });
 
         it('handles game update for game for phase change, player was current player, player is current player', function () {
             var updatedGame = {id: expectedId, gamePhase: expectedPhase + 'X', currentPlayer: currentPlayer.md5};
             updatedGame.maskedPlayersState = expectedGame.maskedPlayersState;
             var oldGame = {id: expectedId, gamePhase: expectedPhase, currentPlayer: currentPlayer.md5};
-            scope.showing = selectedOpponent;
-            scope.showingSelf = false;
-            rootScope.$broadcast('gameUpdated', oldGame, updatedGame);
+            ctrl.showing = selectedOpponent;
+            ctrl.showingSelf = false;
+            $rootScope.$broadcast('gameUpdated', oldGame, updatedGame);
             expect(ads.showInterstitial.callCount).to.equal(0);
             expect(actionsSpy.updateCurrentView.callCount).to.equal(1);
             expect(mockShipService.placeShips.calledWithMatch([]));
             expect(mockShipService.placeCellMarkers.calledWithMatch(expectedGame.maskedPlayersState.opponentGrids.md3.table));
-            expect(scope.game).to.equal(updatedGame);
+            expect(ctrl.game).to.equal(updatedGame);
         });
 
     });
 
     it('shuts down ship grid on view exit', function () {
-        rootScope.$broadcast('$ionicView.leave');
+        $rootScope.$broadcast('$ionicView.leave');
         assert(mockShipService.stop.calledWithMatch());
     });
 });

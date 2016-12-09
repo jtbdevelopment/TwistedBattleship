@@ -195,7 +195,8 @@ describe('testing app js', function () {
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/game.html',
-                        controller: 'GameV2Ctrl'
+                        controller: 'GameV2Ctrl',
+                        controllerAs: 'game'
                     }
                 }
             }));
@@ -258,7 +259,8 @@ describe('testing app js', function () {
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/game.html',
-                        controller: 'GameV2Ctrl'
+                        controller: 'GameV2Ctrl',
+                        controllerAs: 'game'
                     }
                 }
             }));
@@ -270,7 +272,8 @@ describe('testing app js', function () {
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/game.html',
-                        controller: 'GameV2Ctrl'
+                        controller: 'GameV2Ctrl',
+                        controllerAs: 'game'
                     }
                 }
             }));

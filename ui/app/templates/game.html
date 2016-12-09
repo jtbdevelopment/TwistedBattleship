@@ -1,133 +1,134 @@
 <!--  TODO - screen shared with setup -->
 <ion-view cache-view="false" class="game" hide-back-button="true">
     <ion-nav-buttons side="right">
-        <a class="button button-icon button-clear ion-information-circled" ng-click="showDetails()"></a>
-        <a class="button button-icon button-clear ion-help-circled" ng-click="showHelp()"></a>
+        <a class="button button-icon button-clear ion-information-circled" ng-click="game.showDetails()"></a>
+        <a class="button button-icon button-clear ion-help-circled" ng-click="game.showHelp()"></a>
     </ion-nav-buttons>
     <ion-content has-bouncing="false">
         <div class="row">
             <div class="list col-20">
-                <div class="item item-avatar item-text-wrap {{game.currentPlayer == player.md5 ? 'activePlayer' : 'inactivePlayer'}}"
-                     ng-show="game.gamePhase === 'Playing'">
-                    <img ng-src="{{gameDetails.imageForPlayer(game, game.currentPlayer)}}">
+                <div class="item item-avatar item-text-wrap {{game.game.currentPlayer == game.player.md5 ? 'activePlayer' : 'inactivePlayer'}}"
+                     ng-show="game.game.gamePhase === 'Playing'">
+                    <img ng-src="{{game.gameDetails.imageForPlayer(game.game, game.game.currentPlayer)}}">
 
-                    <h3>Turn: {{game.players[game.currentPlayer]}}</h3>
+                    <h3>Turn: {{game.game.players[game.currentPlayer]}}</h3>
 
-                    <p>{{game.remainingMoves}} moves left.</p>
+                    <p>{{game.game.remainingMoves}} moves left.</p>
                 </div>
-                <div class="item item-avatar item-text-wrap {{(game.winningPlayer === player.md5) ? 'winner' : 'loser'}}"
-                     ng-hide="game.gamePhase === 'Playing'">
-                    <img ng-src="{{gameDetails.imageForPlayer(game, game.winningPlayer)}}">
+                <div class="item item-avatar item-text-wrap {{(game.game.winningPlayer === game.player.md5) ? 'winner' : 'loser'}}"
+                     ng-hide="game.game.gamePhase === 'Playing'">
+                    <img ng-src="{{game.gameDetails.imageForPlayer(game.game, game.game.winningPlayer)}}">
 
-                    <h3>Winner: {{game.players[game.winningPlayer]}}</h3>
+                    <h3>Winner: {{game.game.players[game.game.winningPlayer]}}</h3>
                 </div>
                 <div class="item item-divider">You</div>
-                <div class="item item-avatar item-text-wrap {{showing == 'ALL' ? 'chosen' : ''}}"
-                     ng-click="changePlayer('ALL')">
-                    <img ng-src="{{gameDetails.imageForPlayer(game, player.md5)}}">
+                <div class="item item-avatar item-text-wrap {{game.showing == 'ALL' ? 'chosen' : ''}}"
+                     ng-click="game.changePlayer('ALL')">
+                    <img ng-src="{{game.gameDetails.imageForPlayer(game.game, game.player.md5)}}">
 
-                    <h3 class="{{game.playersAlive[player.md5] == true ? 'active' : 'defeated'}}">
-                        {{player.displayName}}</h3>
+                    <h3 class="{{game.game.playersAlive[game.player.md5] == true ? 'active' : 'defeated'}}">
+                        {{game.player.displayName}}</h3>
 
-                    <p>Score: {{game.playersScore[player.md5]}}</p>
+                    <p>Score: {{game.game.playersScore[game.player.md5]}}</p>
                 </div>
                 <div class="item item-divider">Opponents</div>
-                <div ng-repeat="(md5, name) in game.players"
-                     class="item item-avatar item-text-wrap {{showing == md5 ? 'chosen' : ''}}"
-                     ng-click="changePlayer(md5)"
-                     ng-hide="md5 === player.md5">
-                    <img ng-src="{{gameDetails.imageForPlayer(game, md5)}}">
+                <div ng-repeat="(md5, name) in game.game.players"
+                     class="item item-avatar item-text-wrap {{game.showing == md5 ? 'chosen' : ''}}"
+                     ng-click="game.changePlayer(md5)"
+                     ng-hide="md5 === game.player.md5">
+                    <img ng-src="{{game.gameDetails.imageForPlayer(game.game, md5)}}">
 
-                    <h3 class="{{game.playersAlive[md5] == true ? 'active' : 'defeated'}}">{{name}}</h3>
+                    <h3 class="{{game.game.playersAlive[md5] == true ? 'active' : 'defeated'}}">{{name}}</h3>
 
-                    <p>Score: {{game.playersScore[md5]}}</p>
+                    <p>Score: {{game.game.playersScore[md5]}}</p>
                 </div>
-                <div ng-show="gameDetails.playerCanPlay(game, player.md5)">
+                <div ng-show="game.gameDetails.playerCanPlay(game.game, game.player.md5)">
                     <div class="item item-divider">Actions</div>
-                    <div ng-show="showingSelf">
+                    <div ng-show="game.showingSelf">
                         <div class="item action-item">
                             <div class="button-bar">
-                                <a class="button button-defend icon-left ion-{{gameDetails.iconForFeature('ECMEnabled')}}"
-                                   ng-disabled="!gameDetails.ecmPossible(game, player.md5)"
-                                   ng-click="ecm()">
+                                <a class="button button-defend icon-left ion-{{game.gameDetails.iconForFeature('ECMEnabled')}}"
+                                   ng-disabled="!game.gameDetails.ecmPossible(game.game, game.player.md5)"
+                                   ng-click="game.ecm()">
                                     <span>ECM</span>
                                 </a>
-                                <span class="badge">{{game.maskedPlayersState.ecmsRemaining}}</span>
+                                <span class="badge">{{game.game.maskedPlayersState.ecmsRemaining}}</span>
                             </div>
                         </div>
                         <div class="item action-item">
                             <div class="button-bar">
-                                <a class="button button-defend icon-left ion-{{gameDetails.iconForFeature('EMEnabled')}}"
-                                   ng-disabled="!(gameDetails.evasiveMovePossible(game, player.md5) && shipHighlighted)"
-                                   ng-click="move()">
+                                <a class="button button-defend icon-left ion-{{game.gameDetails.iconForFeature('EMEnabled')}}"
+                                   ng-disabled="!(game.gameDetails.evasiveMovePossible(game.game, game.player.md5) && game.shipHighlighted)"
+                                   ng-click="game.move()">
                                     <span>Evade</span>
                                 </a>
-                                <span class="badge">{{game.maskedPlayersState.evasiveManeuversRemaining}}</span>
+                                <span class="badge">{{game.game.maskedPlayersState.evasiveManeuversRemaining}}</span>
                             </div>
                         </div>
                         <div class="item action-item">
                             <div class="button-bar">
-                                <a class="button button-defend icon-left ion-{{gameDetails.iconForFeature('EREnabled')}}"
-                                   ng-disabled="!(gameDetails.repairPossible(game, player.md5) && shipHighlighted)"
-                                   ng-click="repair()">
+                                <a class="button button-defend icon-left ion-{{game.gameDetails.iconForFeature('EREnabled')}}"
+                                   ng-disabled="!(game.gameDetails.repairPossible(game.game, game.player.md5) && game.shipHighlighted)"
+                                   ng-click="game.repair()">
                                     <span>Repair</span>
                                 </a>
-                                <span class="badge">{{game.maskedPlayersState.emergencyRepairsRemaining}}</span>
+                                <span class="badge">{{game.game.maskedPlayersState.emergencyRepairsRemaining}}</span>
                             </div>
                         </div>
                     </div>
-                    <div ng-show="!showingSelf && game.playersAlive[showing] === true">
+                    <div ng-show="!game.showingSelf && game.game.playersAlive[game.showing] === true">
                         <div class="item action-item">
                             <div class="button-bar">
-                                <a class="button button-attack icon-left ion-disc" ng-click="fire()">
+                                <a class="button button-attack icon-left ion-disc" ng-click="game.fire()">
                                     <span>Fire</span>
                                 </a>
-                                <span class="badge">{{game.remainingMoves}}</span>
+                                <span class="badge">{{game.game.remainingMoves}}</span>
                             </div>
                         </div>
                         <div class="item action-item">
                             <div class="button-bar">
-                                <a class="button button-attack icon-left ion-{{gameDetails.iconForFeature('SpyEnabled')}}"
-                                   ng-disabled="!gameDetails.spyPossible(game, player.md5)" ng-click="spy()">
+                                <a class="button button-attack icon-left ion-{{game.gameDetails.iconForFeature('SpyEnabled')}}"
+                                   ng-disabled="!game.gameDetails.spyPossible(game.game, game.player.md5)"
+                                   ng-click="game.spy()">
                                     <span>Spy</span>
                                 </a>
-                                <span class="badge">{{game.maskedPlayersState.spysRemaining}}</span>
+                                <span class="badge">{{game.game.maskedPlayersState.spysRemaining}}</span>
                             </div>
                         </div>
                         <div class="item action-item">
                             <div class="button-bar">
-                                <a class="button button-attack icon-left ion-{{gameDetails.iconForFeature('CruiseMissileDisabled')}}"
-                                   ng-disabled="!gameDetails.cruiseMissilePossible(game, player.md5)"
-                                   ng-click="missile()">
+                                <a class="button button-attack icon-left ion-{{game.gameDetails.iconForFeature('CruiseMissileDisabled')}}"
+                                   ng-disabled="!game.gameDetails.cruiseMissilePossible(game.game, game.player.md5)"
+                                   ng-click="game.missile()">
                                     <span>Cruise Missile</span>
                                 </a>
-                                <span class="badge">{{game.maskedPlayersState.cruiseMissilesRemaining}}</span>
+                                <span class="badge">{{game.game.maskedPlayersState.cruiseMissilesRemaining}}</span>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div ng-show="game.gamePhase === 'Playing'">
+                <div ng-show="game.game.gamePhase === 'Playing'">
                     <div class="item item-divider">Quit</div>
                     <div class="item action-item">
                         <div class="button-bar">
-                            <a class="button button-quit icon-left ion-flag" ng-click="quit()">
+                            <a class="button button-quit icon-left ion-flag" ng-click="game.quit()">
                                 <span>Surrender</span>
                             </a>
                         </div>
                     </div>
                 </div>
-                <div ng-show="game.gamePhase === 'RoundOver'">
+                <div ng-show="game.game.gamePhase === 'RoundOver'">
                     <div class="item item-divider">Rematch?</div>
                     <div class="item action-item">
                         <div class="button-bar ">
-                            <a class="button button-rematch icon-left ion-loop" ng-click="rematch()">
+                            <a class="button button-rematch icon-left ion-loop" ng-click="game.rematch()">
                                 <span>Rematch</span>
                             </a>
                         </div>
                     </div>
                     <div class="item action-item">
                         <div class="button-bar ">
-                            <a class="button button-norematch icon-left ion-loop" ng-click="declineRematch()">
+                            <a class="button button-norematch icon-left ion-loop" ng-click="game.declineRematch()">
                                 <span>End Rematches</span>
                             </a>
                         </div>
@@ -138,31 +139,31 @@
             <div class="col-80">
                 <div class="row viewToggleRow">
                     <div class="col-25">
-                        <a class="button button-full button-switch-view icon-left {{showingSelf ? 'ion-checkmark' : '' }} button-defend"
-                           ng-click="switchView(true)">They see..
+                        <a class="button button-full button-switch-view icon-left {{game.showingSelf ? 'ion-checkmark' : '' }} button-defend"
+                           ng-click="game.switchView(true)">They see..
                         </a>
                     </div>
                     <div class="col-25">
-                        <a class="button button-full button-switch-view icon-left {{showingSelf ? '' : 'ion-checkmark' }} button-attack"
-                           ng-click="switchView(false)" ng-disabled="showing == 'ALL'">You see..
+                        <a class="button button-full button-switch-view icon-left {{game.showingSelf ? '' : 'ion-checkmark' }} button-attack"
+                           ng-click="game.switchView(false)" ng-disabled="game.showing == 'ALL'">You see..
                         </a>
                     </div>
                     <div class="col-40">
                         <div class="item item-text-wrap item-button-right lastAction">
-                            {{gameDetails.lastActionLog(game)}}
+                            {{game.gameDetails.lastActionLog(game.game)}}
                             <p class="lastActionTimestamp">
-                                {{gameDetails.lastActionTime(game)}}
+                                {{game.gameDetails.lastActionTime(game.game)}}
                             </p>
                         </div>
                     </div>
                     <div class="col-10">
-                        <a class="button button-action-log" ng-click="showActionLog()">
+                        <a class="button button-action-log" ng-click="game.showActionLog()">
                             <i class="icon icon-right ion-more"></i>
                         </a>
                     </div>
                 </div>
                 <div class="row">
-                    <div id="phaser" class="phaser grid-{{game.gridSize}}">
+                    <div id="phaser" class="phaser grid-{{game.game.gridSize}}">
 
                     </div>
                 </div>
