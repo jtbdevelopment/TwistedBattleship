@@ -4,6 +4,7 @@ describe('Controller: MainCtrl', function () {
     beforeEach(module('tbs.controllers'));
 
     var ctrl, stateSpy, rootScope, scope, timeout, window, q;
+    var $ionicLoading, $ionicPopup;
 
     var url;
     window = {
@@ -46,6 +47,8 @@ describe('Controller: MainCtrl', function () {
         rootScope = $rootScope;
         scope = rootScope.$new();
         q = $q;
+        $ionicLoading = {show: sinon.spy(), hide: sinon.spy()};
+        $ionicPopup = {alert: sinon.spy()};
         timeout = $timeout;
         features = {features: sinon.stub()};
         phases = {phases: sinon.stub()};
@@ -64,6 +67,8 @@ describe('Controller: MainCtrl', function () {
             $window: window,
             tbsAds: ads,
             ENV: env,
+            $ionicLoading: $ionicLoading,
+            $ionicPopup: $ionicPopup,
             jtbPlayerService: mockPlayerService,
             jtbGameFeatureService: features,
             jtbGamePhaseService: phases,
@@ -107,6 +112,8 @@ describe('Controller: MainCtrl', function () {
         beforeEach(inject(function ($controller) {
             currentPlayer = {id: 'initial', gameSpecificPlayerAttributes: {theme: 'initial'}, adminUser: false};
             window.location.href = 'file://';
+            $ionicLoading = {show: sinon.spy(), hide: sinon.spy()};
+            $ionicPopup = {alert: sinon.spy()};
             ctrl = $controller('MainCtrl', {
                 $scope: scope,
                 $state: stateSpy,
@@ -115,6 +122,8 @@ describe('Controller: MainCtrl', function () {
                 $window: window,
                 tbsAds: ads,
                 ENV: env,
+                $ionicLoading: $ionicLoading,
+                $ionicPopup: $ionicPopup,
                 jtbPlayerService: mockPlayerService,
                 jtbGameFeatureService: features,
                 jtbGamePhaseService: phases,
@@ -258,6 +267,19 @@ describe('Controller: MainCtrl', function () {
             name: 'other'
         };
         rootScope.$broadcast('InvalidSession');
+        assert(stateSpy.go.calledWith('network'));
+    });
+
+    it('handles general error', function () {
+        stateSpy.$current = {
+            name: 'other'
+        };
+        rootScope.$broadcast('GeneralError');
+        assert($ionicLoading.hide.calledWithMatch());
+        $ionicPopup.alert.calledWithMatch({
+            title: 'There was a problem!',
+            template: 'Going to reconnect!'
+        });
         assert(stateSpy.go.calledWith('network'));
     });
 

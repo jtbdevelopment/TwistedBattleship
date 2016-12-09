@@ -2,9 +2,9 @@
 
 //  Deals with the crud of initializing and various platform messages
 angular.module('tbs.controllers').controller('MainCtrl',
-    ['$window', '$rootScope', '$scope', '$timeout', 'jtbPlayerService', 'jtbLiveGameFeed', '$state', 'ENV', '$document', 'tbsVersionNotes',
+    ['$window', '$rootScope', '$ionicPopup', '$ionicLoading', '$scope', '$timeout', 'jtbPlayerService', 'jtbLiveGameFeed', '$state', 'ENV', '$document', 'tbsVersionNotes',
         'tbsCircles', 'jtbGameFeatureService', 'tbsCellStates', 'tbsShips', 'jtbGamePhaseService', 'tbsAds', 'jtbPushNotifications',
-        function ($window, $rootScope, $scope, $timeout, jtbPlayerService, jtbLiveGameFeed, $state, ENV, $document, tbsVersionNotes,
+        function ($window, $rootScope, $ionicPopup, $ionicLoading, $scope, $timeout, jtbPlayerService, jtbLiveGameFeed, $state, ENV, $document, tbsVersionNotes,
                   tbsCircles, jtbGameFeatureService, tbsCellStates, tbsShips, jtbGamePhaseService, tbsAds, jtbPushNotifications) {
 
             if (2 < 1) {
@@ -114,7 +114,17 @@ angular.module('tbs.controllers').controller('MainCtrl',
                 checkNetworkStatusAndLogin();
             });
 
+            $scope.$on('GeneralError', function () {
+                $ionicLoading.hide();
+                $ionicPopup.alert({
+                    title: 'There was a problem!',
+                    template: 'Going to reconnect!'
+                });
+                checkNetworkStatusAndLogin();
+            });
+
             $scope.$on('InvalidSession', function () {
+                $ionicLoading.hide();
                 if ($state.$current.name !== 'signin') {
                     checkNetworkStatusAndLogin();
                 }

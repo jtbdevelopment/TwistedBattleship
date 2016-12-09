@@ -194,14 +194,6 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
                     $ionicLoading.hide();
                     jtbGameCache.putUpdatedGame(data);
                     $state.go('app.games');
-                }).error(function (data, status, headers, config) {
-                    $ionicLoading.hide();
-                    $ionicPopup.alert({
-                        title: 'There was a problem creating the game!',
-                        template: data
-                    });
-
-                    console.error(data + status + headers + config);
                 });
             };
         }
