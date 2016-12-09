@@ -10,7 +10,6 @@ Consolidated To Do's
 - sounds
 - move logback to core?
 - release process for phones
-- controllerAs for
 - more to ionic core gui
 
 - update facebook review images
