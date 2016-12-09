@@ -16,7 +16,7 @@
                 <div ng-hide="list.games[phase].hideGames">
                     <ion-item menu-close
                               ng-repeat="game in list.games[phase].games track by game.id | orderBy:['-lastUpdate', '-created']"
-                              ng-init="detail = list.gameDetails.shortGameDescription(game, list.md5)"
+                              ng-init="detail = list.gameDetails.shortGameDescription(game, main.player.md5)"
                               href="#/app/games/{{game.gamePhase.toLowerCase()}}/{{game.id}}"
                               class="item {{detail.playerAction ? 'playable' : 'waiting'}} item-text-wrap">
                         <img ng-repeat="(key, value) in game.players"

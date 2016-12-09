@@ -130,8 +130,7 @@ describe('testing app js', function () {
                 url: '/games',
                 views: {
                     'menuContent': {
-                        templateUrl: 'templates/mainGameList.html',
-                        controller: 'MobileGameListCtrl'
+                        templateUrl: 'templates/mainGameList.html'
                     }
                 }
             }));

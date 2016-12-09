@@ -49,7 +49,7 @@ angular.module('tbs.controllers').controller('MainCtrl',
             controller.adImport = 'templates/ads/' + (controller.mobile ? 'mobile' : 'non-mobile') + '.html';
 
             $scope.$on('playerUpdate', function (event, id, player) {
-                if (controller.player.id === id) {
+                if (angular.isUndefined(controller.player) || controller.player.id === id) {
                     controller.player = player;
                     controller.theme = player.gameSpecificPlayerAttributes.theme;
                     controller.showAdmin = controller.showAdmin || controller.player.adminUser;  //  Once an admin always an admin for ui

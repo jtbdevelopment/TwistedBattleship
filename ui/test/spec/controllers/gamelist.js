@@ -3,13 +3,6 @@
 describe('Controller: MobileGameListCtrl', function () {
     beforeEach(module('tbs.controllers'));
 
-    var currentPlayer = {source: 'MANUAL', md5: 'my md 5'};
-    var mockPlayerService = {
-        currentPlayer: function () {
-            return currentPlayer;
-        }
-    };
-
     var expectedClassifications = ['Class2', 'Class1', 'Class3', 'Class4'];
     var expectedIcons = {Class1: 'Icon1', Class2: 'IconX', Class3: 'hey', Class4: 'spiral'};
     var expectedGames = {
@@ -38,8 +31,7 @@ describe('Controller: MobileGameListCtrl', function () {
     };
 
     var mockGameDetails = {
-        afunction: function () {
-        }
+        aValue: 'x'
     };
     var $rootScope, $scope, ctrl, stateSpy;
 
@@ -52,7 +44,6 @@ describe('Controller: MobileGameListCtrl', function () {
             $state: stateSpy,
             jtbGameClassifier: mockClassifier,
             jtbGameCache: mockGameCache,
-            jtbPlayerService: mockPlayerService,
             tbsGameDetails: mockGameDetails
         });
     }));
@@ -64,7 +55,6 @@ describe('Controller: MobileGameListCtrl', function () {
             expect(ctrl.games[classification].hideGames).to.be.false;
             expect(ctrl.games[classification].label).to.equal(classification);
         });
-        expect(ctrl.md5).to.equal('');
         expect(ctrl.phasesInOrder).to.deep.equal(expectedClassifications);
         expect(ctrl.gameDetails).to.equal(mockGameDetails);
     });
@@ -76,7 +66,6 @@ describe('Controller: MobileGameListCtrl', function () {
         angular.forEach(expectedClassifications, function (classification) {
             expect(ctrl.games[classification].games).to.deep.equal(expectedGames[classification]);
         });
-        expect(ctrl.md5).to.equal(currentPlayer.md5);
         assert($rootScope.$broadcast.calledWithMatch('scroll.refreshComplete'));
         $rootScope.$broadcast = oldBC;
     });
@@ -105,7 +94,6 @@ describe('Controller: MobileGameListCtrl', function () {
                 $state: stateSpy,
                 jtbGameClassifier: mockClassifier,
                 jtbGameCache: mockGameCache,
-                jtbPlayerService: mockPlayerService,
                 tbsGameDetails: mockGameDetails
             });
         }));
@@ -117,7 +105,6 @@ describe('Controller: MobileGameListCtrl', function () {
                 expect(ctrl.games[classification].hideGames).to.be.false;
                 expect(ctrl.games[classification].label).to.equal(classification);
             });
-            expect(ctrl.md5).to.equal(currentPlayer.md5);
             expect(ctrl.phasesInOrder).to.deep.equal(expectedClassifications);
             expect(ctrl.gameDetails).to.equal(mockGameDetails);
         });

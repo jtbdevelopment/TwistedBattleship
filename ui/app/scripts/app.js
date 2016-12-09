@@ -69,8 +69,7 @@ angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.contro
                 url: '/games',
                 views: {
                     'menuContent': {
-                        templateUrl: 'templates/mainGameList.html',
-                        controller: 'MobileGameListCtrl'
+                        templateUrl: 'templates/mainGameList.html'
                     }
                 }
             })

@@ -1,13 +1,12 @@
 'use strict';
 
 angular.module('tbs.controllers').controller('MobileGameListCtrl',
-    ['$rootScope', '$scope', '$state', 'jtbPlayerService', 'jtbGameCache', 'tbsGameDetails', 'jtbGameClassifier',
-        function ($rootScope, $scope, $state, jtbPlayerService, jtbGameCache, tbsGameDetails, jtbGameClassifier) {
+    ['$rootScope', '$scope', '$state', 'jtbGameCache', 'tbsGameDetails', 'jtbGameClassifier',
+        function ($rootScope, $scope, $state, jtbGameCache, tbsGameDetails, jtbGameClassifier) {
             var controller = this;
             controller.games = {};
             controller.phasesInOrder = [];
             controller.gameDetails = tbsGameDetails;
-            controller.md5 = '';
             var icons = jtbGameClassifier.getIcons();
             angular.forEach(jtbGameClassifier.getClassifications(), function (classification) {
                 controller.phasesInOrder.push(classification);
@@ -27,7 +26,6 @@ angular.module('tbs.controllers').controller('MobileGameListCtrl',
             };
 
             function reloadFromCaches() {
-                controller.md5 = jtbPlayerService.currentPlayer().md5;
                 angular.forEach(controller.games, function (phaseData, phase) {
                     phaseData.games = jtbGameCache.getGamesForPhase(phase);
                 });
