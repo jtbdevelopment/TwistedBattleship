@@ -102,6 +102,7 @@ describe('testing app js', function () {
                 expect(arg2.url).to.equal('/create');
                 expect(arg2.views.menuContent.templateUrl).to.equal('templates/createWizard.html');
                 expect(arg2.views.menuContent.controller).to.equal('CreateGameCtrl');
+                expect(arg2.views.menuContent.controllerAs).to.equal('create');
                 expect(arg2.views.menuContent.resolve.features).to.be.defined;
                 var expectedReturn = {x: 1};
                 var stub = {features: sinon.stub()};

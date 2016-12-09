@@ -56,6 +56,7 @@ angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.contro
                     'menuContent': {
                         templateUrl: 'templates/createWizard.html',
                         controller: 'CreateGameCtrl',
+                        controllerAs: 'create',
                         resolve: {
                             features: function (jtbGameFeatureService) {
                                 return jtbGameFeatureService.features();
