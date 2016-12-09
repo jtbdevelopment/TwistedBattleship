@@ -3,11 +3,11 @@
 describe('Controller: MainCtrl', function () {
     beforeEach(module('tbs.controllers'));
 
-    var ctrl, stateSpy, rootScope, scope, timeout, window, q;
+    var ctrl, $state, $rootScope, $scope, $timeout, $window, $q;
     var $ionicLoading, $ionicPopup;
 
     var url;
-    window = {
+    $window = {
         location: {
             href: ''
         }
@@ -24,7 +24,7 @@ describe('Controller: MainCtrl', function () {
         }
     };
 
-    var mockDoc = {
+    var $document = {
         resumeFunction: undefined,
         pauseFunction: undefined,
         bind: function (event, fn) {
@@ -39,17 +39,17 @@ describe('Controller: MainCtrl', function () {
     //  Stuff that is pre-cache stuff
     var pushNotifications = {x: '334'};
     var features, circles, cells, ships, phases, ads, livefeed, version;
-    beforeEach(inject(function ($rootScope, $controller, $timeout, $q) {
+    beforeEach(inject(function (_$rootScope_, $controller, _$timeout_, _$q_) {
         url = 'http://xtz.com';
-        window.location.href = url;
+        $window.location.href = url;
         currentPlayer = undefined;
-        stateSpy = {go: sinon.spy()};
-        rootScope = $rootScope;
-        scope = rootScope.$new();
-        q = $q;
+        $state = {go: sinon.spy()};
+        $rootScope = _$rootScope_;
+        $scope = $rootScope.$new();
+        $q = _$q_;
         $ionicLoading = {show: sinon.spy(), hide: sinon.spy()};
         $ionicPopup = {alert: sinon.spy()};
-        timeout = $timeout;
+        $timeout = _$timeout_;
         features = {features: sinon.stub()};
         phases = {phases: sinon.stub()};
         ads = {initialize: sinon.spy()};
@@ -60,11 +60,10 @@ describe('Controller: MainCtrl', function () {
         version = {showReleaseNotes: sinon.spy()};
 
         ctrl = $controller('MainCtrl', {
-            $scope: scope,
-            $state: stateSpy,
-            $document: mockDoc,
-            $timeout: timeout,
-            $window: window,
+            $scope: $scope,
+            $state: $state,
+            $document: $document,
+            $window: $window,
             tbsAds: ads,
             ENV: env,
             $ionicLoading: $ionicLoading,
@@ -82,44 +81,43 @@ describe('Controller: MainCtrl', function () {
     }));
 
     it('initializes non-mobile', function () {
-        expect(mockDoc.pauseFunction).to.be.defined;
-        expect(mockDoc.resumeFunction).to.be.defined;
+        expect($document.pauseFunction).to.be.defined;
+        expect($document.resumeFunction).to.be.defined;
         assert(livefeed.setEndPoint.calledWithMatch(env.apiEndpoint));
-        expect(scope.theme).to.equal('default-theme');
-        expect(scope.mobile).to.be.false;
-        expect(scope.adImport).to.equal('templates/ads/non-mobile.html');
-        expect(scope.player).to.equal(currentPlayer);
-        expect(scope.showAdmin).to.be.false;
+        expect(ctrl.theme).to.equal('default-theme');
+        expect(ctrl.mobile).to.be.false;
+        expect(ctrl.adImport).to.equal('templates/ads/non-mobile.html');
+        expect(ctrl.player).to.equal(currentPlayer);
+        expect(ctrl.showAdmin).to.be.false;
 
-        expect(scope.adminShowStats).to.be.true;
-        expect(scope.adminShowSwitch).to.be.false;
+        expect(ctrl.adminShowStats).to.be.true;
+        expect(ctrl.adminShowSwitch).to.be.false;
     });
 
     it('switching admin to switch player', function () {
-        scope.adminSwitchToSwitchPlayer();
-        expect(scope.adminShowStats).to.be.false;
-        expect(scope.adminShowSwitch).to.be.true;
+        ctrl.adminSwitchToSwitchPlayer();
+        expect(ctrl.adminShowStats).to.be.false;
+        expect(ctrl.adminShowSwitch).to.be.true;
     });
 
     it('switching admin to stats', function () {
-        scope.adminSwitchToSwitchPlayer();
-        scope.adminSwitchToStats();
-        expect(scope.adminShowStats).to.be.true;
-        expect(scope.adminShowSwitch).to.be.false;
+        ctrl.adminSwitchToSwitchPlayer();
+        ctrl.adminSwitchToStats();
+        expect(ctrl.adminShowStats).to.be.true;
+        expect(ctrl.adminShowSwitch).to.be.false;
     });
 
     describe('initialize with player and mobile', function () {
         beforeEach(inject(function ($controller) {
             currentPlayer = {id: 'initial', gameSpecificPlayerAttributes: {theme: 'initial'}, adminUser: false};
-            window.location.href = 'file://';
+            $window.location.href = 'file://';
             $ionicLoading = {show: sinon.spy(), hide: sinon.spy()};
             $ionicPopup = {alert: sinon.spy()};
             ctrl = $controller('MainCtrl', {
-                $scope: scope,
-                $state: stateSpy,
-                $document: mockDoc,
-                $timeout: timeout,
-                $window: window,
+                $scope: $scope,
+                $state: $state,
+                $document: $document,
+                $window: $window,
                 tbsAds: ads,
                 ENV: env,
                 $ionicLoading: $ionicLoading,
@@ -137,14 +135,14 @@ describe('Controller: MainCtrl', function () {
         }));
 
         it('initializes', function () {
-            expect(mockDoc.pauseFunction).to.be.defined;
-            expect(mockDoc.resumeFunction).to.be.defined;
+            expect($document.pauseFunction).to.be.defined;
+            expect($document.resumeFunction).to.be.defined;
             assert(livefeed.setEndPoint.calledWithMatch(env.apiEndpoint));
-            expect(scope.theme).to.equal('initial');
-            expect(scope.mobile).to.be.true;
-            expect(scope.adImport).to.equal('templates/ads/mobile.html');
-            expect(scope.player).to.equal(currentPlayer);
-            expect(scope.showAdmin).to.be.false;
+            expect(ctrl.theme).to.equal('initial');
+            expect(ctrl.mobile).to.be.true;
+            expect(ctrl.adImport).to.equal('templates/ads/mobile.html');
+            expect(ctrl.player).to.equal(currentPlayer);
+            expect(ctrl.showAdmin).to.be.false;
         });
 
         it('ignores player updates if id doesnt match', function () {
@@ -153,46 +151,46 @@ describe('Controller: MainCtrl', function () {
                 adminUser: true,
                 gameSpecificPlayerAttributes: {theme: 'initialX'}
             };
-            rootScope.$broadcast('playerUpdate', updatedPlayer.id, updatedPlayer);
-            expect(scope.player).to.equal(currentPlayer);
-            expect(scope.showAdmin).to.be.false;
+            $rootScope.$broadcast('playerUpdate', updatedPlayer.id, updatedPlayer);
+            expect(ctrl.player).to.equal(currentPlayer);
+            expect(ctrl.showAdmin).to.be.false;
         });
 
         it('takes in player updates if id matches', function () {
-            expect(scope.showAdmin).to.be.false;
+            expect(ctrl.showAdmin).to.be.false;
             var updatedPlayer = {
                 id: currentPlayer.id,
                 adminUser: true,
                 gameSpecificPlayerAttributes: {theme: 'new-theme'}
             };
-            rootScope.$broadcast('playerUpdate', updatedPlayer.id, updatedPlayer);
-            expect(scope.player).to.equal(updatedPlayer);
-            expect(scope.theme).to.equal(updatedPlayer.gameSpecificPlayerAttributes.theme);
-            expect(scope.showAdmin).to.be.true;
+            $rootScope.$broadcast('playerUpdate', updatedPlayer.id, updatedPlayer);
+            expect(ctrl.player).to.equal(updatedPlayer);
+            expect(ctrl.theme).to.equal(updatedPlayer.gameSpecificPlayerAttributes.theme);
+            expect(ctrl.showAdmin).to.be.true;
         });
 
         it('player retains admin once has it', function () {
-            expect(scope.showAdmin).to.be.false;
+            expect(ctrl.showAdmin).to.be.false;
             var updatedPlayer = {
                 id: currentPlayer.id,
                 adminUser: true,
                 gameSpecificPlayerAttributes: {theme: 'new-theme'}
             };
-            rootScope.$broadcast('playerUpdate', updatedPlayer.id, updatedPlayer);
-            expect(scope.showAdmin).to.be.true;
+            $rootScope.$broadcast('playerUpdate', updatedPlayer.id, updatedPlayer);
+            expect(ctrl.showAdmin).to.be.true;
             updatedPlayer = {
                 id: currentPlayer.id,
                 adminUser: false,
                 gameSpecificPlayerAttributes: {theme: 'new-theme'}
             };
-            rootScope.$broadcast('playerUpdate', updatedPlayer.id, updatedPlayer);
-            expect(scope.showAdmin).to.be.true;
+            $rootScope.$broadcast('playerUpdate', updatedPlayer.id, updatedPlayer);
+            expect(ctrl.showAdmin).to.be.true;
         });
     });
 
     it('initializes on player loaded', function () {
-        var circlePromise = q.defer(), featurePromise = q.defer(),
-            cellPromise = q.defer(), shipPromise = q.defer(), phasePromise = q.defer();
+        var circlePromise = $q.defer(), featurePromise = $q.defer(),
+            cellPromise = $q.defer(), shipPromise = $q.defer(), phasePromise = $q.defer();
 
         currentPlayer = {id: 'replaced', adminUser: false, gameSpecificPlayerAttributes: {theme: 'replacedtheme'}};
         features.features.returns(featurePromise.promise);
@@ -200,24 +198,24 @@ describe('Controller: MainCtrl', function () {
         cells.cellStates.returns(cellPromise.promise);
         ships.ships.returns(shipPromise.promise);
         phases.phases.returns(phasePromise.promise);
-        rootScope.$broadcast('playerLoaded');
+        $rootScope.$broadcast('playerLoaded');
 
         featurePromise.resolve();
         phasePromise.resolve();
         cellPromise.resolve();
         circlePromise.resolve();
         shipPromise.resolve();
-        rootScope.$apply();
-        expect(scope.theme).to.equal(currentPlayer.gameSpecificPlayerAttributes.theme);
-        expect(scope.player).to.equal(currentPlayer);
+        $rootScope.$apply();
+        expect(ctrl.theme).to.equal(currentPlayer.gameSpecificPlayerAttributes.theme);
+        expect(ctrl.player).to.equal(currentPlayer);
         assert(version.showReleaseNotes.calledWithMatch());
         assert(ads.initialize.calledWithMatch());
-        expect(scope.showAdmin).to.be.false;
+        expect(ctrl.showAdmin).to.be.false;
     });
 
     it('initial load is admin, updated load is not like simulating person', function () {
-        var circlePromise = q.defer(), featurePromise = q.defer(),
-            cellPromise = q.defer(), shipPromise = q.defer(), phasePromise = q.defer();
+        var circlePromise = $q.defer(), featurePromise = $q.defer(),
+            cellPromise = $q.defer(), shipPromise = $q.defer(), phasePromise = $q.defer();
 
         features.features.returns(featurePromise.promise);
         circles.circles.returns(circlePromise.promise);
@@ -226,80 +224,80 @@ describe('Controller: MainCtrl', function () {
         phases.phases.returns(phasePromise.promise);
         currentPlayer = {id: 'replaced', adminUser: true, gameSpecificPlayerAttributes: {theme: 'replacedtheme'}};
 
-        rootScope.$broadcast('playerLoaded');
-        rootScope.$apply();
-        expect(scope.player).to.equal(currentPlayer);
-        expect(scope.showAdmin).to.be.true;
+        $rootScope.$broadcast('playerLoaded');
+        $rootScope.$apply();
+        expect(ctrl.player).to.equal(currentPlayer);
+        expect(ctrl.showAdmin).to.be.true;
 
         currentPlayer = {id: 'new', adminUser: false, gameSpecificPlayerAttributes: {theme: 'update'}};
-        expect(scope.player).not.to.equal(currentPlayer);
-        rootScope.$broadcast('playerLoaded');
-        rootScope.$apply();
-        expect(scope.player).to.equal(currentPlayer);
-        expect(scope.showAdmin).to.be.true;
+        expect(ctrl.player).not.to.equal(currentPlayer);
+        $rootScope.$broadcast('playerLoaded');
+        $rootScope.$apply();
+        expect(ctrl.player).to.equal(currentPlayer);
+        expect(ctrl.showAdmin).to.be.true;
     });
 
     it('show player', function () {
-        scope.showPlayer();
-        assert(stateSpy.go.calledWithMatch('app.playerDetails'));
+        ctrl.showPlayer();
+        assert($state.go.calledWithMatch('app.playerDetails'));
     });
 
     it('show admin', function () {
-        scope.showAdminScreen();
-        assert(stateSpy.go.calledWithMatch('app.admin'));
+        ctrl.showAdminScreen();
+        assert($state.go.calledWithMatch('app.admin'));
     });
 
     it('handles offline', function () {
-        rootScope.$broadcast('$cordovaNetwork:offline');
-        assert(stateSpy.go.calledWith('network'));
+        $rootScope.$broadcast('$cordovaNetwork:offline');
+        assert($state.go.calledWith('network'));
     });
 
     it('handles invalid session when current state is signin', function () {
-        stateSpy.$current = {
+        $state.$current = {
             name: 'signin'
         };
-        rootScope.$broadcast('InvalidSession');
-        assert(!stateSpy.go.calledWith('network'));
+        $rootScope.$broadcast('InvalidSession');
+        assert(!$state.go.calledWith('network'));
     });
 
     it('handles invalid session when current state is not signin', function () {
-        stateSpy.$current = {
+        $state.$current = {
             name: 'other'
         };
-        rootScope.$broadcast('InvalidSession');
-        assert(stateSpy.go.calledWith('network'));
+        $rootScope.$broadcast('InvalidSession');
+        assert($state.go.calledWith('network'));
     });
 
     it('handles general error', function () {
-        stateSpy.$current = {
+        $state.$current = {
             name: 'other'
         };
-        rootScope.$broadcast('GeneralError');
+        $rootScope.$broadcast('GeneralError');
         assert($ionicLoading.hide.calledWithMatch());
         $ionicPopup.alert.calledWithMatch({
             title: 'There was a problem!',
             template: 'Going to reconnect!'
         });
-        assert(stateSpy.go.calledWith('network'));
+        assert($state.go.calledWith('network'));
     });
 
     it('if resume is called after no pauses, goes to network reconnect', function () {
-        mockDoc.resumeFunction();
-        assert(stateSpy.go.calledWith('network'));
+        $document.resumeFunction();
+        assert($state.go.calledWith('network'));
     });
 
-    it('receiving pause sets up timeout that goes to network after timeout', function () {
-        mockDoc.pauseFunction();
-        timeout.flush();
+    it('receiving pause sets up $timeout that goes to network after $timeout', function () {
+        $document.pauseFunction();
+        $timeout.flush();
         assert(livefeed.suspendFeed.calledWithMatch());
     });
 
-    it('receiving pause and then resume cancels timeout', function () {
-        mockDoc.pauseFunction();
-        mockDoc.resumeFunction();
+    it('receiving pause and then resume cancels $timeout', function () {
+        $document.pauseFunction();
+        $document.resumeFunction();
         var exception = false;
         try {
-            timeout.flush();
+            $timeout.flush();
         } catch (ex) {
             exception = true;
         }
@@ -307,19 +305,19 @@ describe('Controller: MainCtrl', function () {
         assert(!livefeed.suspendFeed.calledWithMatch());
     });
 
-    it('receiving multiple pauses requires multiple resumes or timeout fires', function () {
-        mockDoc.pauseFunction();
-        mockDoc.pauseFunction();
-        mockDoc.resumeFunction();
-        timeout.flush();
+    it('receiving multiple pauses requires multiple resumes or $timeout fires', function () {
+        $document.pauseFunction();
+        $document.pauseFunction();
+        $document.resumeFunction();
+        $timeout.flush();
         assert(livefeed.suspendFeed.calledWithMatch());
     });
 
     it('refresh broadcasts to game cache', function () {
-        rootScope.$broadcast = sinon.spy();
-        scope.refreshGames();
-        expect(rootScope.$broadcast.callCount).to.equal(1);
-        assert(rootScope.$broadcast.calledWithMatch('refreshGames', ''));
+        $rootScope.$broadcast = sinon.spy();
+        ctrl.refreshGames();
+        expect($rootScope.$broadcast.callCount).to.equal(1);
+        assert($rootScope.$broadcast.calledWithMatch('refreshGames', ''));
     });
 
 });

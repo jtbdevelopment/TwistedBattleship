@@ -6,8 +6,9 @@
 
             <ion-nav-buttons side="left">
                 <a class="button button-icon button-clear ion-navicon" menu-toggle="left"></a>
-                <a class="button button-icon button-clear ion-person" ng-click="showPlayer()"></a>
-                <a class="button button-icon button-clear ion-eye" ng-show="showAdmin" ng-click="showAdminScreen()"></a>
+                <a class="button button-icon button-clear ion-person" ng-click="main.showPlayer()"></a>
+                <a class="button button-icon button-clear ion-eye" ng-show="main.showAdmin"
+                   ng-click="main.showAdminScreen()"></a>
             </ion-nav-buttons>
             <ion-nav-title>Twisted Naval Battles</ion-nav-title>
         </ion-nav-bar>
@@ -18,9 +19,9 @@
             <h1 class="title">Menu</h1>
         </ion-header-bar>
         <ion-content>
-            <ion-refresher pulling-text="Pull to refresh" on-refresh="refreshGames()"></ion-refresher>
+            <ion-refresher pulling-text="Pull to refresh" on-refresh="main.refreshGames()"></ion-refresher>
 
-            <div ng-hide="mobile" class="mobile-links">
+            <div ng-hide="main.mobile" class="mobile-links">
                 <a href="https://itunes.apple.com/app/id1038538980" target="_blank">
                     <img ng-src="images/appstore.svg" class="ios"/>
                 </a>
@@ -31,7 +32,7 @@
             </div>
 
             <ion-list>
-                <ion-item menu-close href="#/signin" ng-hide="player.source == 'facebook'">
+                <ion-item menu-close href="#/signin" ng-hide="main.player.source == 'facebook'">
                     Login
                 </ion-item>
                 <player-game-list></player-game-list>
@@ -39,4 +40,4 @@
         </ion-content>
     </ion-side-menu>
 </ion-side-menus>
-<div id="adImport" ng-include="adImport"></div>
+<div id="adImport" ng-include="main.adImport"></div>

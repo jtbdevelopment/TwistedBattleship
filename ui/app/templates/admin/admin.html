@@ -2,18 +2,18 @@
     <ion-content class="has-header" ng-cloak>
         <div class="row">
             <div class="col-50">
-                <a class="button-full button {{adminShowStats ? 'selected' : ''}}"
-                   ng-click="adminSwitchToStats()">Stats</a>
+                <a class="button-full button {{main.adminShowStats ? 'selected' : ''}}"
+                   ng-click="main.adminSwitchToStats()">Stats</a>
             </div>
             <div class="col-50">
-                <a class="button-full button {{adminShowSwitch ? 'selected' : ''}}"
-                   ng-click="adminSwitchToSwitchPlayer()">Switch Player</a>
+                <a class="button-full button {{main.adminShowSwitch ? 'selected' : ''}}"
+                   ng-click="main.adminSwitchToSwitchPlayer()">Switch Player</a>
             </div>
         </div>
-        <div ng-show="adminShowStats">
+        <div ng-show="main.adminShowStats">
             <div ng-include="'templates/admin/admin-stats.html'"></div>
         </div>
-        <div ng-show="adminShowSwitch">
+        <div ng-show="main.adminShowSwitch">
             <div ng-include="'templates/admin/admin-switch-player.html'"></div>
         </div>
     </ion-content>

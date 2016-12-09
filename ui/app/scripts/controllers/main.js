@@ -7,6 +7,8 @@ angular.module('tbs.controllers').controller('MainCtrl',
         function ($window, $rootScope, $ionicPopup, $ionicLoading, $scope, $timeout, jtbPlayerService, jtbLiveGameFeed, $state, ENV, $document, tbsVersionNotes,
                   tbsCircles, jtbGameFeatureService, tbsCellStates, tbsShips, jtbGamePhaseService, tbsAds, jtbPushNotifications) {
 
+            var controller = this;
+
             if (2 < 1) {
                 console.log('have notifications' + jtbPushNotifications);
             }
@@ -15,49 +17,49 @@ angular.module('tbs.controllers').controller('MainCtrl',
                 $state.go('network');
             }
 
-            $scope.showPlayer = function () {
+            controller.showPlayer = function () {
                 $state.go('app.playerDetails');
             };
 
-            $scope.showAdminScreen = function () {
+            controller.showAdminScreen = function () {
                 $state.go('app.admin');
             };
 
-            $scope.adminSwitchToStats = function () {
-                $scope.adminShowStats = true;
-                $scope.adminShowSwitch = false;
+            controller.adminSwitchToStats = function () {
+                controller.adminShowStats = true;
+                controller.adminShowSwitch = false;
             };
-            $scope.adminSwitchToSwitchPlayer = function () {
-                $scope.adminShowStats = false;
-                $scope.adminShowSwitch = true;
+            controller.adminSwitchToSwitchPlayer = function () {
+                controller.adminShowStats = false;
+                controller.adminShowSwitch = true;
             };
 
-            $scope.adminSwitchToStats();
+            controller.adminSwitchToStats();
 
             //  Set here to avoid causing circular dependency in app.js
             jtbLiveGameFeed.setEndPoint(ENV.apiEndpoint);
 
             //console.log('Have push' + jtbPushNotifications);
-            $scope.theme = angular.isDefined(jtbPlayerService.currentPlayer()) ?
+            controller.theme = angular.isDefined(jtbPlayerService.currentPlayer()) ?
                 jtbPlayerService.currentPlayer().gameSpecificPlayerAttributes.theme : 'default-theme';
-            $scope.player = jtbPlayerService.currentPlayer();
-            $scope.showAdmin = angular.isDefined($scope.player) && $scope.player.adminUser;
+            controller.player = jtbPlayerService.currentPlayer();
+            controller.showAdmin = angular.isDefined(controller.player) && controller.player.adminUser;
 
-            $scope.mobile = $window.location.href.indexOf('file') === 0;
-            $scope.adImport = 'templates/ads/' + ($scope.mobile ? 'mobile' : 'non-mobile') + '.html';
+            controller.mobile = $window.location.href.indexOf('file') === 0;
+            controller.adImport = 'templates/ads/' + (controller.mobile ? 'mobile' : 'non-mobile') + '.html';
 
             $scope.$on('playerUpdate', function (event, id, player) {
-                if ($scope.player.id === id) {
-                    $scope.player = player;
-                    $scope.theme = player.gameSpecificPlayerAttributes.theme;
-                    $scope.showAdmin = $scope.showAdmin || $scope.player.adminUser;  //  Once an admin always an admin for ui
+                if (controller.player.id === id) {
+                    controller.player = player;
+                    controller.theme = player.gameSpecificPlayerAttributes.theme;
+                    controller.showAdmin = controller.showAdmin || controller.player.adminUser;  //  Once an admin always an admin for ui
                 }
             });
 
             $scope.$on('playerLoaded', function () {
-                $scope.player = jtbPlayerService.currentPlayer();
-                $scope.theme = jtbPlayerService.currentPlayer().gameSpecificPlayerAttributes.theme;
-                $scope.showAdmin = $scope.showAdmin || $scope.player.adminUser;  //  Once an admin always an admin for ui
+                controller.player = jtbPlayerService.currentPlayer();
+                controller.theme = jtbPlayerService.currentPlayer().gameSpecificPlayerAttributes.theme;
+                controller.showAdmin = controller.showAdmin || controller.player.adminUser;  //  Once an admin always an admin for ui
 
                 //  TODO - preload ship images?
                 tbsAds.initialize();
@@ -130,7 +132,7 @@ angular.module('tbs.controllers').controller('MainCtrl',
                 }
             });
 
-            $scope.refreshGames = function () {
+            controller.refreshGames = function () {
                 $rootScope.$broadcast('refreshGames', '');
             };
 
