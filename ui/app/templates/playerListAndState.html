@@ -5,7 +5,7 @@
     <ion-content>
         <div class="list">
             <div class="item item-avatar item-icon-right">
-                <img ng-src="{{playerList.gameDetails.imageForPlayer(playerList.game, playerList.player.md5)}}">
+                <img ng-src="{{main.gameDetails.imageForPlayer(playerList.game, playerList.player.md5)}}">
                 {{playerList.player.displayName}}
                 <span class="{{playerList.statusColor(playerList.player.md5)}}">
                     <i class="icon ion-{{playerList.statusIcon(playerList.player.md5)}}"></i>
@@ -14,7 +14,7 @@
             <div class="item" ng-show="playerList.showActions">
                 <div class="row">
                     <a class="button button-accept col" ng-click="playerList.accept()"
-                       ng-show="playerList.gameDetails.playerChallengeResponseNeeded(playerList.game, playerList.player.md5)">
+                       ng-show="main.gameDetails.playerChallengeResponseNeeded(playerList.game, playerList.player.md5)">
                         <i class="icon ion-checkmark-circled"></i> Accept
                     </a>
                     <a class="button button-reject col" ng-click="playerList.reject()">
@@ -24,7 +24,7 @@
             </div>
             <div class="item item-avatar item-icon-right"
                  ng-repeat="(md5, name) in playerList.game.players" ng-hide="md5 === playerList.player.md5">
-                <img ng-src="{{playerList.gameDetails.imageForPlayer(game, md5)}}">
+                <img ng-src="{{main.gameDetails.imageForPlayer(game, md5)}}">
                 {{name}}
                 <span class="{{playerList.statusColor(md5)}}">
                     <i class="icon ion-{{playerList.statusIcon(md5)}}"></i>

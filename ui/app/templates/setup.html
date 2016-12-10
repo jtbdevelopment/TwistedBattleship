@@ -8,11 +8,11 @@
             <div class="list col-20">
                 <div class="item item-avatar item-text-wrap item-icon-right"
                      ng-repeat="(md5, name) in setup.game.players">
-                    <img ng-src="{{setup.gameDetails.imageForPlayer(game, md5)}}">
+                    <img ng-src="{{main.gameDetails.imageForPlayer(game, md5)}}">
 
                     <h3>{{name}}</h3>
-                    <span class="{{setup.gameDetails.playerSetupEntryRequired(setup.game, md5) ? 'pending' : 'accepted'}}">
-                    <i class="icon ion-{{setup.gameDetails.playerSetupEntryRequired(setup.game, md5) ? 'edit' : 'checkmark'}}"></i>
+                    <span class="{{main.gameDetails.playerSetupEntryRequired(setup.game, md5) ? 'pending' : 'accepted'}}">
+                    <i class="icon ion-{{main.gameDetails.playerSetupEntryRequired(setup.game, md5) ? 'edit' : 'checkmark'}}"></i>
                 </span>
                 </div>
 

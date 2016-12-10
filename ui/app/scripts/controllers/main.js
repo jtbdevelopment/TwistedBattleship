@@ -3,11 +3,12 @@
 //  Deals with the crud of initializing and various platform messages
 angular.module('tbs.controllers').controller('MainCtrl',
     ['$window', '$rootScope', '$ionicPopup', '$ionicLoading', '$scope', '$timeout', 'jtbPlayerService', 'jtbLiveGameFeed', '$state', 'ENV', '$document', 'tbsVersionNotes',
-        'tbsCircles', 'jtbGameFeatureService', 'tbsCellStates', 'tbsShips', 'jtbGamePhaseService', 'tbsAds', 'jtbPushNotifications',
+        'tbsCircles', 'jtbGameFeatureService', 'tbsCellStates', 'tbsShips', 'jtbGamePhaseService', 'tbsAds', 'jtbPushNotifications', 'tbsGameDetails',
         function ($window, $rootScope, $ionicPopup, $ionicLoading, $scope, $timeout, jtbPlayerService, jtbLiveGameFeed, $state, ENV, $document, tbsVersionNotes,
-                  tbsCircles, jtbGameFeatureService, tbsCellStates, tbsShips, jtbGamePhaseService, tbsAds, jtbPushNotifications) {
+                  tbsCircles, jtbGameFeatureService, tbsCellStates, tbsShips, jtbGamePhaseService, tbsAds, jtbPushNotifications, tbsGameDetails) {
 
             var controller = this;
+            controller.gameDetails = tbsGameDetails;
 
             if (2 < 1) {
                 console.log('have notifications' + jtbPushNotifications);

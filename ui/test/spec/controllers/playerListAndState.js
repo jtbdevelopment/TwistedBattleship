@@ -12,10 +12,6 @@ describe('Controller: playerListAndState', function () {
         }
     };
     var mockGameActions;
-    var mockGameDetails = {
-        something: function () {
-        }
-    };
     var gameId = 'AN ID!';
     var expectedGame = {
         id: gameId,
@@ -43,7 +39,6 @@ describe('Controller: playerListAndState', function () {
             $scope: scope,
             jtbPlayerService: mockPlayerService,
             $state: stateSpy,
-            tbsGameDetails: mockGameDetails,
             tbsActions: mockGameActions,
             jtbGameCache: mockGameCache
         });
@@ -52,7 +47,6 @@ describe('Controller: playerListAndState', function () {
     it('initializes as expected', function () {
         expect(ctrl.gameID).to.equal(gameId);
         expect(ctrl.game).to.equal(expectedGame);
-        expect(ctrl.gameDetails).to.equal(mockGameDetails);
         expect(ctrl.player).to.equal(currentPlayer);
         expect(ctrl.showActions).to.be.false;
     });
@@ -68,7 +62,6 @@ describe('Controller: playerListAndState', function () {
 
         expect(ctrl.gameID).to.equal(gameId);
         expect(ctrl.game).to.equal(expectedGame);
-        expect(ctrl.gameDetails).to.equal(mockGameDetails);
         expect(ctrl.player).to.equal(currentPlayer);
         expect(ctrl.showActions).to.be.false;
     });
@@ -132,7 +125,6 @@ describe('Controller: playerListAndState', function () {
                 $scope: scope,
                 jtbPlayerService: mockPlayerService,
                 $state: stateSpy,
-                tbsGameDetails: mockGameDetails,
                 tbsActions: mockGameActions,
                 jtbGameCache: mockGameCache
             });
@@ -141,7 +133,6 @@ describe('Controller: playerListAndState', function () {
         it('initializes as expected', function () {
             expect(ctrl.gameID).to.equal(gameId);
             expect(ctrl.game).to.equal(expectedGame);
-            expect(ctrl.gameDetails).to.equal(mockGameDetails);
             expect(ctrl.player).to.equal(currentPlayer);
             expect(ctrl.showActions).to.be.true;
         });

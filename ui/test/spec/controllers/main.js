@@ -12,6 +12,9 @@ describe('Controller: MainCtrl', function () {
             href: ''
         }
     };
+    var tbsGameDetails = {
+        x: 1
+    };
 
     var env = {
         apiEndpoint: 'some endpoint'
@@ -76,8 +79,10 @@ describe('Controller: MainCtrl', function () {
             tbsShips: ships,
             jtbLiveGameFeed: livefeed,
             tbsVersionNotes: version,
-            jtbPushNotifications: pushNotifications
+            jtbPushNotifications: pushNotifications,
+            tbsGameDetails: tbsGameDetails
         });
+        expect(ctrl.gameDetails).to.equal(tbsGameDetails);
     }));
 
     it('initializes non-mobile', function () {

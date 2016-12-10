@@ -13,11 +13,6 @@ describe('Controller: SetupGameV2Ctrl', function () {
         }
     };
 
-    var mockGameDetails = {
-        x: function () {
-        }
-    };
-
     var shipsOnGrid;
     var mockShipService = {
         overlapCB: undefined,
@@ -117,7 +112,6 @@ describe('Controller: SetupGameV2Ctrl', function () {
             $scope: scope,
             $state: stateSpy,
             tbsActions: actionsSpy,
-            tbsGameDetails: mockGameDetails,
             jtbGameCache: mockGameCache,
             $timeout: $timeout,
             $ionicLoading: ionicLoadingSpy,
@@ -130,7 +124,6 @@ describe('Controller: SetupGameV2Ctrl', function () {
     it('initializes', function () {
         expect(ctrl.gameID).to.equal(expectedId);
         expect(ctrl.game).to.equal(expectedGame);
-        expect(ctrl.gameDetails).to.equal(mockGameDetails);
         assert(ionicSideMenuDelegate.canDragContent.calledWithMatch(false));
         expect(ctrl.movingShip).to.equal(null);
         expect(ctrl.submitDisabled).to.equal(true);

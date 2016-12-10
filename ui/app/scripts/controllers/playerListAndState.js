@@ -1,14 +1,13 @@
 'use strict';
 
 angular.module('tbs.controllers').controller('PlayerListAndStateCtrl',
-    ['$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state',
-        function ($scope, tbsGameDetails, tbsActions, jtbGameCache, jtbPlayerService, $state) {
+    ['$scope', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state',
+        function ($scope, tbsActions, jtbGameCache, jtbPlayerService, $state) {
             var controller = this;
 
             function initialize() {
                 controller.gameID = $state.params.gameID;
                 controller.game = jtbGameCache.getGameForID(controller.gameID);
-                controller.gameDetails = tbsGameDetails;
                 controller.showActions = controller.game.gamePhase === 'Challenged';
                 controller.player = {};
                 controller.player = jtbPlayerService.currentPlayer();

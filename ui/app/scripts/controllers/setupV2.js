@@ -2,13 +2,12 @@
 
 //  TODO - unsaved changes warning
 angular.module('tbs.controllers').controller('SetupGameV2Ctrl',
-    ['$scope', 'tbsGameDetails', 'tbsActions', 'jtbGameCache', '$state', '$ionicSideMenuDelegate', 'tbsShipGridV2', '$ionicModal', '$ionicLoading', '$timeout',
-        function ($scope, tbsGameDetails, tbsActions, jtbGameCache, $state, $ionicSideMenuDelegate, tbsShipGridV2, $ionicModal, $ionicLoading, $timeout) {
+    ['$scope', 'tbsActions', 'jtbGameCache', '$state', '$ionicSideMenuDelegate', 'tbsShipGridV2', '$ionicModal', '$ionicLoading', '$timeout',
+        function ($scope, tbsActions, jtbGameCache, $state, $ionicSideMenuDelegate, tbsShipGridV2, $ionicModal, $ionicLoading, $timeout) {
             var controller = this;
             $ionicSideMenuDelegate.canDragContent(false);
             controller.gameID = $state.params.gameID;
             controller.game = jtbGameCache.getGameForID(controller.gameID);
-            controller.gameDetails = tbsGameDetails;
 
             controller.movingShip = null;
             controller.movingPointerRelativeToShip = {x: 0, y: 0};
