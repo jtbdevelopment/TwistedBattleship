@@ -192,10 +192,18 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
                 $ionicLoading.show({
                     template: 'Creating game and issuing challenges..'
                 });
-                $http.post(jtbPlayerService.currentPlayerBaseURL() + '/new', playersAndFeatures).success(function (data) {
+                $http.post(jtbPlayerService.currentPlayerBaseURL() + '/new', playersAndFeatures).then(function (response) {
                     $ionicLoading.hide();
-                    jtbGameCache.putUpdatedGame(data);
+                    jtbGameCache.putUpdatedGame(response.data);
                     $state.go('app.games');
+                }, function (response) {
+                    $ionicLoading.hide();
+                    $ionicPopup.alert({
+                        title: 'There was a problem creating the game!',
+                        template: response.data
+                    });
+
+                    console.error(response.data + response.status + response.headers + response.config);
                 });
             };
         }

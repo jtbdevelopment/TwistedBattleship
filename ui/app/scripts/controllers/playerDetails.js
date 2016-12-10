@@ -8,9 +8,8 @@ angular.module('tbs.controllers').controller('PlayerDetailsCtrl',
 
             controller.changeTheme = function () {
                 $http.put(jtbPlayerService.currentPlayerBaseURL() + '/changeTheme/' + controller.data.theme)
-                    .success(function (data) {
-                        console.log(JSON.stringify(data));
-                        $rootScope.$broadcast('playerUpdate', data.id, data);
+                    .then(function (response) {
+                        $rootScope.$broadcast('playerUpdate', response.data.id, response.data);
                     });
             };
 

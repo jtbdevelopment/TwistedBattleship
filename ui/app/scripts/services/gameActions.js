@@ -23,33 +23,33 @@ angular.module('tbs.services').factory('tbsActions',
 
             function takeAction(game, action) {
                 showSending();
-                $http.put(gameURL(game) + action).success(function (data) {
+                $http.put(gameURL(game) + action).then(function (response) {
                     $ionicLoading.hide();
-                    updateGame(data);
-                }).error(function (data, status, headers, config) {
+                    updateGame(response.data);
+                }, function (response) {
                     $ionicLoading.hide();
                     $ionicPopup.alert({
                         title: 'Error updating game!',
-                        template: data
+                        template: response.data
                     }).then(function () {
                     });
-                    console.error(data + status + headers + config);
+                    console.error(response.data + response.status + response.headers + response.config);
                 });
             }
 
             function makeMove(game, action, opponent, cell) {
                 showSending();
-                $http.put(gameURL(game) + action, createTarget(opponent, cell)).success(function (data) {
+                $http.put(gameURL(game) + action, createTarget(opponent, cell)).then(function (response) {
                     $ionicLoading.hide();
-                    updateGame(data);
-                }).error(function (data, status, headers, config) {
+                    updateGame(response.data);
+                }, function (response) {
                     $ionicLoading.hide();
                     $ionicPopup.alert({
                         title: 'Error updating game!',
-                        template: data
+                        template: response.data
                     }).then(function () {
                     });
-                    console.error(data + status + headers + config);
+                    console.error(response.data + response.status + response.headers + response.config);
                 });
             }
 
@@ -101,17 +101,17 @@ angular.module('tbs.services').factory('tbsActions',
 
                 setup: function (game, positions) {
                     showSending();
-                    $http.put(gameURL(game) + 'setup', positions).success(function (data) {
+                    $http.put(gameURL(game) + 'setup', positions).then(function (response) {
                         $ionicLoading.hide();
-                        updateGame(data);
-                    }).error(function (data, status, headers, config) {
+                        updateGame(response.data);
+                    }, function (response) {
                         $ionicLoading.hide();
                         $ionicPopup.alert({
                             title: 'Error updating game!',
-                            template: data
+                            template: response.data
                         }).then(function () {
                         });
-                        console.error(data + status + headers + config);
+                        console.error(response.data + response.status + response.headers + response.config);
                     });
                 },
 

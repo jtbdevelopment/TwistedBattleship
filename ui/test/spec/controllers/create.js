@@ -1013,5 +1013,36 @@ describe('Controller: CreateGameCtrl', function () {
             assert($ionicLoading.hide.calledWithMatch());
             assert(stateSpy.go.calledWithMatch('app.games'));
         });
+
+        it('submit a game with friends and default options and fail', function () {
+            ctrl.playerChoices[2] = {
+                "md5": "md3",
+                "displayName": "friend3",
+                "checked": false
+            };
+            ctrl.playerChoices[4] = {
+                "md5": "md1",
+                "displayName": "friend1",
+                "checked": false
+            };
+
+
+            var expectedOptions = {
+                'players': ['md3', 'md1'],
+                'features': ['Grid10x10', 'PerShip', 'SharedIntel', 'ECMEnabled', 'EMEnabled', 'EREnabled', 'SpyEnabled', 'CruiseMissileDisabled']
+            };
+            var error = 'Its a problem';
+            $http.expectPOST(playerUrl + '/new', expectedOptions).respond(400, error);
+            ctrl.createGame();
+            assert($ionicLoading.show.calledWithMatch({
+                template: 'Creating game and issuing challenges..'
+            }));
+            $http.flush();
+            assert($ionicLoading.hide.calledWithMatch());
+            $ionicPopup.alert.calledWithMatch({
+                title: 'There was a problem creating the game!',
+                template: error
+            });
+        });
     });
 });
