@@ -41,11 +41,6 @@ describe('Controller: GameCtrl', function () {
         }
     };
 
-    var mockGameDetails = {
-        x: function () {
-        }
-    };
-
     var mockSelectedCell, mockSelectedShip;
     var mockShipService = {
         cellCB: undefined,
@@ -158,7 +153,6 @@ describe('Controller: GameCtrl', function () {
             $state: stateSpy,
             tbsActions: actionsSpy,
             jtbGameCache: mockGameCache,
-            tbsGameDetails: mockGameDetails,
             $ionicLoading: ionicLoadingSpy,
             $ionicPopup: ionicPopupSpy,
             jtbPlayerService: mockPlayerService,
@@ -170,7 +164,6 @@ describe('Controller: GameCtrl', function () {
     it('initializes', function () {
         expect(ctrl.gameID).to.equal(expectedId);
         expect(ctrl.game).to.equal(expectedGame);
-        expect(ctrl.gameDetails).to.equal(mockGameDetails);
         expect(ctrl.playerKeys).to.deep.equal(['md3', 'md1', 'md2']);
         expect(ctrl.player).to.equal(currentPlayer);
         expect(ctrl.showing).to.equal('ALL');

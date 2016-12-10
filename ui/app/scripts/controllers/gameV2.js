@@ -3,8 +3,10 @@
 var ALL = 'ALL';
 
 angular.module('tbs.controllers').controller('GameV2Ctrl',
-    ['$scope', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', 'tbsShipGridV2', '$ionicPopup', '$ionicLoading', '$timeout', 'tbsAds',
-        function ($scope, tbsActions, jtbGameCache, jtbPlayerService, $state, tbsShipGridV2, $ionicPopup, $ionicLoading, $timeout, tbsAds) {
+    ['$scope', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', 'tbsShipGridV2',
+        '$ionicPopup', '$ionicLoading', '$timeout', 'tbsAds',
+        function ($scope, tbsActions, jtbGameCache, jtbPlayerService, $state, tbsShipGridV2,
+                  $ionicPopup, $ionicLoading, $timeout, tbsAds) {
             var controller = this;
             controller.gameID = $state.params.gameID;
             controller.game = jtbGameCache.getGameForID(controller.gameID);

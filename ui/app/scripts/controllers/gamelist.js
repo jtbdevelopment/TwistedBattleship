@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('tbs.controllers').controller('MobileGameListCtrl',
-    ['$rootScope', '$scope', '$state', 'jtbGameCache', 'jtbGameClassifier',
-        function ($rootScope, $scope, $state, jtbGameCache, jtbGameClassifier) {
+    ['$scope', '$state', 'jtbGameCache', 'jtbGameClassifier',
+        function ($scope, $state, jtbGameCache, jtbGameClassifier) {
             var controller = this;
             controller.games = {};
             controller.phasesInOrder = [];
