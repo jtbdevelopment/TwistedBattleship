@@ -4,7 +4,7 @@
             <ion-item class="item item-text-wrap"
                       ng-repeat="action in log.shownEntries | orderBy:['-timestamp']">
                 {{action.description}}
-                <p>{{log.gameDetails.formatActionTime(action.timestamp)}}</p>
+                <p>{{main.gameDetails.formatActionTime(action.timestamp)}}</p>
             </ion-item>
         </ion-list>
         <ion-infinite-scroll ng-if="log.hasMoreEntries()" on-infinite="log.loadMore()" immediate-check="false">

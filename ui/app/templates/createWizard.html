@@ -10,7 +10,7 @@
                     <div ng-repeat="feature in create.featureData | propsFilter: { checkBox: 'false' } | propsFilter: { groupType: 'Difficulty'}">
                         <label class="item item-input item-select">
                             <div class="input-label">
-                                <i class="icon optionOn ion-{{create.gameDetails.iconForFeature(create.currentOptions[feature.index])}}"></i>
+                                <i class="icon optionOn ion-{{main.gameDetails.iconForFeature(create.currentOptions[feature.index])}}"></i>
                                 {{feature.feature.label}}
                             </div>
                             <select ng-model="create.currentOptions[feature.index]">
@@ -22,7 +22,7 @@
                     </div>
                     <div ng-repeat="feature in create.featureData | propsFilter: { checkBox: 'true' } | propsFilter: { groupType: 'Difficulty'}">
                         <ion-toggle ng-model="create.currentOptions[feature.index]">
-                            <i class="icon ion-{{create.gameDetails.iconForFeature(feature.options[0].feature)}} {{create.currentOptions[feature.index] ? 'optionOn' : 'optionOff'}}"></i>
+                            <i class="icon ion-{{main.gameDetails.iconForFeature(feature.options[0].feature)}} {{create.currentOptions[feature.index] ? 'optionOn' : 'optionOff'}}"></i>
                             {{feature.feature.label}}
                         </ion-toggle>
                     </div>
@@ -34,7 +34,7 @@
                     <div ng-repeat="feature in create.featureData | propsFilter: { checkBox: 'false' } | propsFilter: { groupType: 'Defensive'}">
                         <label class="item item-input item-select">
                             <div class="input-label">
-                                <i class="icon optionOn ion-{{create.gameDetails.iconForFeature(create.currentOptions[feature.index])}}"></i>
+                                <i class="icon optionOn ion-{{main.gameDetails.iconForFeature(create.currentOptions[feature.index])}}"></i>
                                 {{feature.feature.label}}
                             </div>
                             <select ng-model="create.currentOptions[feature.index]">
@@ -46,7 +46,7 @@
                     </div>
                     <div ng-repeat="feature in create.featureData | propsFilter: { checkBox: 'true' } | propsFilter: { groupType: 'Defensive'}">
                         <ion-toggle ng-model="create.currentOptions[feature.index]">
-                            <i class="icon ion-{{create.gameDetails.iconForFeature(feature.options[0].feature)}} {{create.currentOptions[feature.index] ? 'optionOn' : 'optionOff'}}"></i>
+                            <i class="icon ion-{{main.gameDetails.iconForFeature(feature.options[0].feature)}} {{create.currentOptions[feature.index] ? 'optionOn' : 'optionOff'}}"></i>
                             {{feature.feature.label}}
                         </ion-toggle>
                     </div>
@@ -58,7 +58,7 @@
                     <div ng-repeat="feature in create.featureData | propsFilter: { checkBox: 'false' } | propsFilter: { groupType: 'Offensive'}">
                         <label class="item item-input item-select">
                             <div class="input-label">
-                                <i class="icon optionOn ion-{{create.gameDetails.iconForFeature(create.currentOptions[feature.index])}}"></i>
+                                <i class="icon optionOn ion-{{main.gameDetails.iconForFeature(create.currentOptions[feature.index])}}"></i>
                                 {{feature.feature.label}}
                             </div>
                             <select ng-model="create.currentOptions[feature.index]">
@@ -70,7 +70,7 @@
                     </div>
                     <div ng-repeat="feature in create.featureData | propsFilter: { checkBox: 'true' } | propsFilter: { groupType: 'Offensive'}">
                         <ion-toggle ng-model="create.currentOptions[feature.index]">
-                            <i class="icon ion-{{create.gameDetails.iconForFeature(feature.options[0].feature)}} {{create.currentOptions[feature.index] ? 'optionOn' : 'optionOff'}}"></i>
+                            <i class="icon ion-{{main.gameDetails.iconForFeature(feature.options[0].feature)}} {{create.currentOptions[feature.index] ? 'optionOn' : 'optionOff'}}"></i>
                             {{feature.feature.label}}
                         </ion-toggle>
                     </div>

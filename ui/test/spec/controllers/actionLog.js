@@ -19,10 +19,6 @@ describe('Controller: ActionLogCtrl', function () {
         }
     };
 
-    var mockGameDetails = {
-        something: function () {
-        }
-    };
     var $rootScope, scope, ctrl, stateSpy;
 
     beforeEach(inject(function (_$rootScope_, $controller) {
@@ -36,15 +32,13 @@ describe('Controller: ActionLogCtrl', function () {
         ctrl = $controller('ActionLogCtrl', {
             $scope: scope,
             $state: stateSpy,
-            jtbGameCache: mockGameCache,
-            tbsGameDetails: mockGameDetails
+            jtbGameCache: mockGameCache
         });
     }));
 
     it('initializes', function () {
         expect(ctrl.gameID).to.equal(expectedId);
         expect(ctrl.game).to.equal(expectedGame);
-        expect(ctrl.gameDetails).to.equal(mockGameDetails);
         expect(ctrl.shownEntries).to.deep.equal([]);
         expect(ctrl.totalEntries).to.equal(3);
         expect(ctrl.hasMoreEntries()).to.be.true;

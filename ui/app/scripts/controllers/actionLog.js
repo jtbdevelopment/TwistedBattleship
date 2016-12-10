@@ -2,11 +2,10 @@
 
 var ACTION_LOG_CHUNK_SIZE = 20;
 angular.module('tbs.controllers').controller('ActionLogCtrl',
-    ['$scope', '$state', 'tbsGameDetails', 'jtbGameCache',
-        function ($scope, $state, tbsGameDetails, jtbGameCache) {
+    ['$scope', '$state', 'jtbGameCache',
+        function ($scope, $state, jtbGameCache) {
             var controller = this;
             controller.gameID = $state.params.gameID;
-            controller.gameDetails = tbsGameDetails;
 
             function initialize() {
                 controller.game = jtbGameCache.getGameForID(controller.gameID);
