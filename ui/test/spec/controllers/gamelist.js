@@ -30,9 +30,6 @@ describe('Controller: MobileGameListCtrl', function () {
         }
     };
 
-    var mockGameDetails = {
-        aValue: 'x'
-    };
     var $rootScope, $scope, ctrl, stateSpy;
 
     beforeEach(inject(function (_$rootScope_, $controller) {
@@ -43,8 +40,7 @@ describe('Controller: MobileGameListCtrl', function () {
             $scope: $scope,
             $state: stateSpy,
             jtbGameClassifier: mockClassifier,
-            jtbGameCache: mockGameCache,
-            tbsGameDetails: mockGameDetails
+            jtbGameCache: mockGameCache
         });
     }));
 
@@ -56,7 +52,6 @@ describe('Controller: MobileGameListCtrl', function () {
             expect(ctrl.games[classification].label).to.equal(classification);
         });
         expect(ctrl.phasesInOrder).to.deep.equal(expectedClassifications);
-        expect(ctrl.gameDetails).to.equal(mockGameDetails);
     });
 
     it('after game caches loaded event', function () {
@@ -93,8 +88,7 @@ describe('Controller: MobileGameListCtrl', function () {
                 $scope: $scope,
                 $state: stateSpy,
                 jtbGameClassifier: mockClassifier,
-                jtbGameCache: mockGameCache,
-                tbsGameDetails: mockGameDetails
+                jtbGameCache: mockGameCache
             });
         }));
 
@@ -106,7 +100,6 @@ describe('Controller: MobileGameListCtrl', function () {
                 expect(ctrl.games[classification].label).to.equal(classification);
             });
             expect(ctrl.phasesInOrder).to.deep.equal(expectedClassifications);
-            expect(ctrl.gameDetails).to.equal(mockGameDetails);
         });
     });
 

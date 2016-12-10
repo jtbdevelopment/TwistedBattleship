@@ -7,7 +7,7 @@ describe('Controller: CreateGameCtrl', function () {
     var currentPlayer = {id: 'myid', source: 'facebook'};
 
     var $http;
-    var gameCache, facebook, gameDetails, playerService;
+    var gameCache, facebook, playerService;
     var $ionicModal, $ionicLoading, $ionicPopup, $ionicSlideBox;
     var features = [
         {
@@ -177,7 +177,6 @@ describe('Controller: CreateGameCtrl', function () {
     };
     beforeEach(inject(function (_$rootScope_, $controller, _$q_, $httpBackend) {
         $http = $httpBackend;
-        gameDetails = {x: '1'};
         stateSpy = {go: sinon.spy()};
         $rootScope = _$rootScope_;
         $scope = $rootScope.$new();
@@ -226,7 +225,6 @@ describe('Controller: CreateGameCtrl', function () {
             jtbPlayerService: playerService,
             jtbGameCache: gameCache,
             jtbFacebook: facebook,
-            tbsGameDetails: gameDetails,
             $ionicModal: $ionicModal,
             $ionicLoading: $ionicLoading,
             $ionicPopup: $ionicPopup,
@@ -366,7 +364,6 @@ describe('Controller: CreateGameCtrl', function () {
                 'name': 'invite2'
             }]).to.deep.equal(ctrl.invitableFriends);
 
-        expect(ctrl.gameDetails).to.equal(gameDetails);
         expect(ctrl.featureData).to.equal(features);
         expect(ctrl.currentOptions).to.deep.equal(defaultOptions);
         expect(ctrl.inviteModal).to.equal(inviteModal);

@@ -55,7 +55,6 @@ describe('Controller: GameDetailsCtrl', function () {
     it('initializes', function () {
         expect(ctrl.gameID).to.equal(expectedId);
         expect(ctrl.game).to.equal(expectedGame);
-        expect(ctrl.gameDetails).to.equal(mockGameDetails);
     });
 
     it('on ionic view enter, sets rest of details, with some features enabled', function () {

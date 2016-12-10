@@ -1,12 +1,11 @@
 'use strict';
 
 angular.module('tbs.controllers').controller('MobileGameListCtrl',
-    ['$rootScope', '$scope', '$state', 'jtbGameCache', 'tbsGameDetails', 'jtbGameClassifier',
-        function ($rootScope, $scope, $state, jtbGameCache, tbsGameDetails, jtbGameClassifier) {
+    ['$rootScope', '$scope', '$state', 'jtbGameCache', 'jtbGameClassifier',
+        function ($rootScope, $scope, $state, jtbGameCache, jtbGameClassifier) {
             var controller = this;
             controller.games = {};
             controller.phasesInOrder = [];
-            controller.gameDetails = tbsGameDetails;
             var icons = jtbGameClassifier.getIcons();
             angular.forEach(jtbGameClassifier.getClassifications(), function (classification) {
                 controller.phasesInOrder.push(classification);

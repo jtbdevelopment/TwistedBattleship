@@ -8,7 +8,6 @@ angular.module('tbs.controllers').controller('GameDetailsCtrl',
             var controller = this;
             controller.gameID = $state.params.gameID;
             controller.game = jtbGameCache.getGameForID(controller.gameID);
-            controller.gameDetails = tbsGameDetails;
 
             $scope.$on('$ionicView.enter', function () {
                 controller.game = jtbGameCache.getGameForID(controller.gameID);
