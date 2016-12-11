@@ -252,40 +252,6 @@ describe('Controller: MainCtrl', function () {
         assert($state.go.calledWithMatch('app.admin'));
     });
 
-    it('handles offline', function () {
-        $rootScope.$broadcast('$cordovaNetwork:offline');
-        assert($state.go.calledWith('network'));
-    });
-
-    it('handles invalid session when current state is signin', function () {
-        $state.$current = {
-            name: 'signin'
-        };
-        $rootScope.$broadcast('InvalidSession');
-        assert(!$state.go.calledWith('network'));
-    });
-
-    it('handles invalid session when current state is not signin', function () {
-        $state.$current = {
-            name: 'other'
-        };
-        $rootScope.$broadcast('InvalidSession');
-        assert($state.go.calledWith('network'));
-    });
-
-    it('handles general error', function () {
-        $state.$current = {
-            name: 'other'
-        };
-        $rootScope.$broadcast('GeneralError');
-        assert($ionicLoading.hide.calledWithMatch());
-        $ionicPopup.alert.calledWithMatch({
-            title: 'There was a problem!',
-            template: 'Going to reconnect!'
-        });
-        assert($state.go.calledWith('network'));
-    });
-
     it('if resume is called after no pauses, goes to network reconnect', function () {
         $document.resumeFunction();
         assert($state.go.calledWith('network'));

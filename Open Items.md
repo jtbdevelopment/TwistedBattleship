@@ -1,6 +1,9 @@
+
 Consolidated To Do's
 ====================
 
+- Upgrade to ionic2 
+- As part of ionic2 - better multi select available
 - genymotion / virtuabox seems to interfere with multicast
 - better / quieter check on re-open?
 - zoom controls on phaser

@@ -118,27 +118,6 @@ angular.module('tbs.controllers').controller('MainCtrl',
                 }
             });
 
-            $scope.$on('$cordovaNetwork:offline', function () {
-                console.warn('offline');
-                checkNetworkStatusAndLogin();
-            });
-
-            $scope.$on('GeneralError', function () {
-                $ionicLoading.hide();
-                $ionicPopup.alert({
-                    title: 'There was a problem!',
-                    template: 'Going to reconnect!'
-                });
-                checkNetworkStatusAndLogin();
-            });
-
-            $scope.$on('InvalidSession', function () {
-                $ionicLoading.hide();
-                if ($state.$current.name !== 'signin') {
-                    checkNetworkStatusAndLogin();
-                }
-            });
-
             controller.refreshGames = function () {
                 $rootScope.$broadcast('refreshGames', '');
             };
