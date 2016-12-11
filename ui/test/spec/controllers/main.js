@@ -41,7 +41,7 @@ describe('Controller: MainCtrl', function () {
     };
     //  Stuff that is pre-cache stuff
     var pushNotifications = {x: '334'};
-    var features, circles, cells, ships, phases, ads, livefeed, version;
+    var features, circles, cells, ships, phases, ads, livefeed, jtbIonicVersionNotesService;
     beforeEach(inject(function (_$rootScope_, $controller, _$timeout_, _$q_) {
         url = 'http://xtz.com';
         $window.location.href = url;
@@ -60,7 +60,7 @@ describe('Controller: MainCtrl', function () {
         circles = {circles: sinon.stub()};
         ships = {ships: sinon.stub()};
         livefeed = {setEndPoint: sinon.spy(), suspendFeed: sinon.spy()};
-        version = {showReleaseNotes: sinon.spy()};
+        jtbIonicVersionNotesService = {displayVersionNotesIfAppropriate: sinon.spy()};
 
         ctrl = $controller('MainCtrl', {
             $scope: $scope,
@@ -78,7 +78,7 @@ describe('Controller: MainCtrl', function () {
             tbsCircles: circles,
             tbsShips: ships,
             jtbLiveGameFeed: livefeed,
-            tbsVersionNotes: version,
+            jtbIonicVersionNotesService: jtbIonicVersionNotesService,
             jtbPushNotifications: pushNotifications,
             tbsGameDetails: tbsGameDetails
         });
@@ -134,7 +134,7 @@ describe('Controller: MainCtrl', function () {
                 tbsCircles: circles,
                 tbsShips: ships,
                 jtbLiveGameFeed: livefeed,
-                tbsVersionNotes: version,
+                jtbIonicVersionNotesService: jtbIonicVersionNotesService,
                 jtbPushNotifications: pushNotifications
             });
         }));
@@ -213,7 +213,7 @@ describe('Controller: MainCtrl', function () {
         $rootScope.$apply();
         expect(ctrl.theme).to.equal(currentPlayer.gameSpecificPlayerAttributes.theme);
         expect(ctrl.player).to.equal(currentPlayer);
-        assert(version.showReleaseNotes.calledWithMatch());
+        assert(jtbIonicVersionNotesService.displayVersionNotesIfAppropriate.calledWithMatch('1.2', 'Added new game play options - cruise missile attack and new ship options.  Also added a new pirate theme, see your profile in top bar.'));
         assert(ads.initialize.calledWithMatch());
         expect(ctrl.showAdmin).to.be.false;
     });

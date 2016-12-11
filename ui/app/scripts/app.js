@@ -19,19 +19,19 @@ angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.contro
         $stateProvider
             .state('network', {
                 url: '/network',
-                templateUrl: 'templates/network.html',
+                templateUrl: 'templates/core-ionic/sign-in/network.html',
                 controller: 'CoreIonicNetworkCtrl',
                 controllerAs: 'network'
             })
             .state('signin', {
                 url: '/signin',
-                templateUrl: 'templates/signin.html',
+                templateUrl: 'templates/core-ionic/sign-in/sign-in.html',
                 controller: 'CoreIonicSignInCtrl',
                 controllerAs: 'signIn'
             })
             .state('signedin', {
                 url: '/signedin',
-                templateUrl: 'templates/signedin.html',
+                templateUrl: 'templates/core-ionic/sign-in/signed-in.html',
                 controller: 'CoreIonicSignedInCtrl',
                 controllerAs: 'signedIn'
             })
@@ -44,7 +44,7 @@ angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.contro
                 url: '/admin',
                 views: {
                     'menuContent': {
-                        templateUrl: 'templates/admin/admin.html',
+                        templateUrl: 'templates/core-ionic/admin/admin.html',
                         controller: 'CoreAdminCtrl',
                         controllerAs: 'admin'
                     }

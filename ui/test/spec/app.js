@@ -65,7 +65,7 @@ describe('testing app js', function () {
         it('should register /network', function () {
             assert(stateSpy.calledWithMatch('network', {
                 url: '/network',
-                templateUrl: 'templates/network.html',
+                templateUrl: 'templates/core-ionic/sign-in/network.html',
                 controller: 'CoreIonicNetworkCtrl',
                 controllerAs: 'network'
             }));
@@ -74,7 +74,7 @@ describe('testing app js', function () {
         it('should register /signin', function () {
             assert(stateSpy.calledWithMatch('signin', {
                 url: '/signin',
-                templateUrl: 'templates/signin.html',
+                templateUrl: 'templates/core-ionic/sign-in/sign-in.html',
                 controller: 'CoreIonicSignInCtrl',
                 controllerAs: 'signIn'
             }));
@@ -83,7 +83,7 @@ describe('testing app js', function () {
         it('should register /signedin', function () {
             assert(stateSpy.calledWithMatch('signedin', {
                 url: '/signedin',
-                templateUrl: 'templates/signedin.html',
+                templateUrl: 'templates/core-ionic/sign-in/signed-in.html',
                 controller: 'CoreIonicSignedInCtrl',
                 controllerAs: 'signedIn'
             }));
@@ -117,7 +117,7 @@ describe('testing app js', function () {
                 url: '/admin',
                 views: {
                     'menuContent': {
-                        templateUrl: 'templates/admin/admin.html',
+                        templateUrl: 'templates/core-ionic/admin/admin.html',
                         controller: 'CoreAdminCtrl',
                         controllerAs: 'admin'
                     }
