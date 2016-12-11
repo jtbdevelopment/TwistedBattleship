@@ -27,18 +27,6 @@ describe('Controller: MainCtrl', function () {
         }
     };
 
-    var $document = {
-        resumeFunction: undefined,
-        pauseFunction: undefined,
-        bind: function (event, fn) {
-            if (event === 'pause') {
-                this.pauseFunction = fn;
-            }
-            else {
-                this.resumeFunction = fn;
-            }
-        }
-    };
     //  Stuff that is pre-cache stuff
     var pushNotifications = {x: '334'};
     var features, circles, cells, ships, phases, ads, livefeed, jtbIonicVersionNotesService;
@@ -65,7 +53,6 @@ describe('Controller: MainCtrl', function () {
         ctrl = $controller('MainCtrl', {
             $scope: $scope,
             $state: $state,
-            $document: $document,
             $window: $window,
             tbsAds: ads,
             ENV: env,
@@ -86,8 +73,6 @@ describe('Controller: MainCtrl', function () {
     }));
 
     it('initializes non-mobile', function () {
-        expect($document.pauseFunction).to.be.defined;
-        expect($document.resumeFunction).to.be.defined;
         assert(livefeed.setEndPoint.calledWithMatch(env.apiEndpoint));
         expect(ctrl.theme).to.equal('default-theme');
         expect(ctrl.mobile).to.be.false;
@@ -121,7 +106,6 @@ describe('Controller: MainCtrl', function () {
             ctrl = $controller('MainCtrl', {
                 $scope: $scope,
                 $state: $state,
-                $document: $document,
                 $window: $window,
                 tbsAds: ads,
                 ENV: env,
@@ -140,8 +124,6 @@ describe('Controller: MainCtrl', function () {
         }));
 
         it('initializes', function () {
-            expect($document.pauseFunction).to.be.defined;
-            expect($document.resumeFunction).to.be.defined;
             assert(livefeed.setEndPoint.calledWithMatch(env.apiEndpoint));
             expect(ctrl.theme).to.equal('initial');
             expect(ctrl.mobile).to.be.true;
@@ -250,38 +232,6 @@ describe('Controller: MainCtrl', function () {
     it('show admin', function () {
         ctrl.showAdminScreen();
         assert($state.go.calledWithMatch('app.admin'));
-    });
-
-    it('if resume is called after no pauses, goes to network reconnect', function () {
-        $document.resumeFunction();
-        assert($state.go.calledWith('network'));
-    });
-
-    it('receiving pause sets up $timeout that goes to network after $timeout', function () {
-        $document.pauseFunction();
-        $timeout.flush();
-        assert(livefeed.suspendFeed.calledWithMatch());
-    });
-
-    it('receiving pause and then resume cancels $timeout', function () {
-        $document.pauseFunction();
-        $document.resumeFunction();
-        var exception = false;
-        try {
-            $timeout.flush();
-        } catch (ex) {
-            exception = true;
-        }
-        expect(exception).to.be.true;
-        assert(!livefeed.suspendFeed.calledWithMatch());
-    });
-
-    it('receiving multiple pauses requires multiple resumes or $timeout fires', function () {
-        $document.pauseFunction();
-        $document.pauseFunction();
-        $document.resumeFunction();
-        $timeout.flush();
-        assert(livefeed.suspendFeed.calledWithMatch());
     });
 
     it('refresh broadcasts to game cache', function () {

@@ -5,11 +5,11 @@ var CURRENT_VERSION = '1.2';
 var CURRENT_NOTES = 'Added new game play options - cruise missile attack and new ship options.  Also added a new pirate theme, see your profile in top bar.';
 angular.module('tbs.controllers').controller('MainCtrl',
     ['$window', '$rootScope', '$ionicPopup', '$ionicLoading', '$scope', '$timeout', 'jtbPlayerService',
-        'jtbLiveGameFeed', '$state', 'ENV', '$document', 'tbsCircles', 'jtbGameFeatureService',
+        'jtbLiveGameFeed', '$state', 'ENV', 'tbsCircles', 'jtbGameFeatureService',
         'tbsCellStates', 'tbsShips', 'jtbGamePhaseService', 'tbsAds', 'jtbPushNotifications', 'tbsGameDetails',
         'jtbIonicVersionNotesService',
         function ($window, $rootScope, $ionicPopup, $ionicLoading, $scope, $timeout, jtbPlayerService,
-                  jtbLiveGameFeed, $state, ENV, $document, tbsCircles, jtbGameFeatureService,
+                  jtbLiveGameFeed, $state, ENV, tbsCircles, jtbGameFeatureService,
                   tbsCellStates, tbsShips, jtbGamePhaseService, tbsAds, jtbPushNotifications, tbsGameDetails,
                   jtbIonicVersionNotesService) {
 
@@ -18,10 +18,6 @@ angular.module('tbs.controllers').controller('MainCtrl',
 
             if (2 < 1) {
                 console.log('have notifications' + jtbPushNotifications);
-            }
-
-            function checkNetworkStatusAndLogin() {
-                $state.go('network');
             }
 
             controller.showPlayer = function () {
@@ -83,39 +79,6 @@ angular.module('tbs.controllers').controller('MainCtrl',
                 });
 
                 jtbIonicVersionNotesService.displayVersionNotesIfAppropriate(CURRENT_VERSION, CURRENT_NOTES);
-            });
-
-            var pauseResumeStack = 0;
-            var pausePromise;
-            $document.bind('pause', function () {
-                console.warn('pause detected');
-                ++pauseResumeStack;
-                pausePromise = $timeout(function () {
-                    if (pauseResumeStack > 0) {
-                        console.info('pauseResumeStack still in pause - shutting down livefeed');
-                        pauseResumeStack = 0;
-                        pausePromise = undefined;
-                        jtbLiveGameFeed.suspendFeed();
-                    } else {
-                        console.info('ignoring pauseResume, stack back to 0');
-                    }
-                }, 3 * 60 * 1000); //  delay between checks should not match delay between interstitials
-            });
-
-            $document.bind('resume', function () {
-                console.warn('resume detected');
-                if (pauseResumeStack > 0) {
-                    console.info('pauseresume stack reduced');
-                    --pauseResumeStack;
-                    if (pauseResumeStack === 0 && angular.isDefined(pausePromise)) {
-                        console.info('clearing pause promise');
-                        $timeout.cancel(pausePromise);
-                        pausePromise = undefined;
-                    }
-                } else {
-                    console.info('pauseresumestack empty - full reconnect');
-                    checkNetworkStatusAndLogin();
-                }
             });
 
             controller.refreshGames = function () {
