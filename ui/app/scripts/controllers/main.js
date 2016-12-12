@@ -4,14 +4,12 @@
 var CURRENT_VERSION = '1.2';
 var CURRENT_NOTES = 'Added new game play options - cruise missile attack and new ship options.  Also added a new pirate theme, see your profile in top bar.';
 angular.module('tbs.controllers').controller('MainCtrl',
-    ['$window', '$rootScope', '$ionicPopup', '$ionicLoading', '$scope', '$timeout', 'jtbPlayerService',
-        'jtbLiveGameFeed', '$state', 'ENV', 'tbsCircles', 'jtbGameFeatureService',
-        'tbsCellStates', 'tbsShips', 'jtbGamePhaseService', 'tbsAds', 'jtbPushNotifications', 'tbsGameDetails',
-        'jtbIonicVersionNotesService',
-        function ($window, $rootScope, $ionicPopup, $ionicLoading, $scope, $timeout, jtbPlayerService,
-                  jtbLiveGameFeed, $state, ENV, tbsCircles, jtbGameFeatureService,
-                  tbsCellStates, tbsShips, jtbGamePhaseService, tbsAds, jtbPushNotifications, tbsGameDetails,
-                  jtbIonicVersionNotesService) {
+    ['$window', '$rootScope', '$scope', 'jtbPlayerService', 'jtbLiveGameFeed', '$state', 'ENV', 'tbsCircles',
+        'jtbGameFeatureService', 'tbsCellStates', 'tbsShips', 'jtbGamePhaseService', 'tbsAds', 'jtbPushNotifications',
+        'tbsGameDetails', 'jtbIonicVersionNotesService',
+        function ($window, $rootScope, $scope, jtbPlayerService, jtbLiveGameFeed, $state, ENV, tbsCircles,
+                  jtbGameFeatureService, tbsCellStates, tbsShips, jtbGamePhaseService, tbsAds, jtbPushNotifications,
+                  tbsGameDetails, jtbIonicVersionNotesService) {
 
             var controller = this;
             controller.gameDetails = tbsGameDetails;
@@ -84,8 +82,6 @@ angular.module('tbs.controllers').controller('MainCtrl',
             controller.refreshGames = function () {
                 $rootScope.$broadcast('refreshGames', '');
             };
-
-
         }
     ]
 );

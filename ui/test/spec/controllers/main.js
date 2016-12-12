@@ -3,8 +3,7 @@
 describe('Controller: MainCtrl', function () {
     beforeEach(module('tbs.controllers'));
 
-    var ctrl, $state, $rootScope, $scope, $timeout, $window, $q;
-    var $ionicLoading, $ionicPopup;
+    var ctrl, $state, $rootScope, $scope, $window, $q;
 
     var url;
     $window = {
@@ -30,7 +29,7 @@ describe('Controller: MainCtrl', function () {
     //  Stuff that is pre-cache stuff
     var pushNotifications = {x: '334'};
     var features, circles, cells, ships, phases, ads, livefeed, jtbIonicVersionNotesService;
-    beforeEach(inject(function (_$rootScope_, $controller, _$timeout_, _$q_) {
+    beforeEach(inject(function (_$rootScope_, $controller, _$q_) {
         url = 'http://xtz.com';
         $window.location.href = url;
         currentPlayer = undefined;
@@ -38,9 +37,6 @@ describe('Controller: MainCtrl', function () {
         $rootScope = _$rootScope_;
         $scope = $rootScope.$new();
         $q = _$q_;
-        $ionicLoading = {show: sinon.spy(), hide: sinon.spy()};
-        $ionicPopup = {alert: sinon.spy()};
-        $timeout = _$timeout_;
         features = {features: sinon.stub()};
         phases = {phases: sinon.stub()};
         ads = {initialize: sinon.spy()};
@@ -56,8 +52,6 @@ describe('Controller: MainCtrl', function () {
             $window: $window,
             tbsAds: ads,
             ENV: env,
-            $ionicLoading: $ionicLoading,
-            $ionicPopup: $ionicPopup,
             jtbPlayerService: mockPlayerService,
             jtbGameFeatureService: features,
             jtbGamePhaseService: phases,
@@ -101,16 +95,12 @@ describe('Controller: MainCtrl', function () {
         beforeEach(inject(function ($controller) {
             currentPlayer = {id: 'initial', gameSpecificPlayerAttributes: {theme: 'initial'}, adminUser: false};
             $window.location.href = 'file://';
-            $ionicLoading = {show: sinon.spy(), hide: sinon.spy()};
-            $ionicPopup = {alert: sinon.spy()};
             ctrl = $controller('MainCtrl', {
                 $scope: $scope,
                 $state: $state,
                 $window: $window,
                 tbsAds: ads,
                 ENV: env,
-                $ionicLoading: $ionicLoading,
-                $ionicPopup: $ionicPopup,
                 jtbPlayerService: mockPlayerService,
                 jtbGameFeatureService: features,
                 jtbGamePhaseService: phases,
