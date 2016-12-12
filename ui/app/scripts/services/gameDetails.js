@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('tbs.services').factory('tbsGameDetails',
-    ['jtbGamePhaseService', function (jtbGamePhaseService) {
+    ['$rootScope', 'jtbGamePhaseService', function ($rootScope, jtbGamePhaseService) {
         var iconMap = {
             'SpyEnabled': 'eye',
             'CruiseMissileEnabled': 'disc',
@@ -23,10 +23,13 @@ angular.module('tbs.services').factory('tbsGameDetails',
             'AllDestroyers': 'help-buoy'
         };
 
+
         var phaseDescriptions = {};
-        jtbGamePhaseService.phases().then(function (phases) {
-            angular.forEach(phases, function (details, phase) {
-                phaseDescriptions[phase] = details[1];
+        $rootScope.$on('playerLoaded', function () {
+            jtbGamePhaseService.phases().then(function (phases) {
+                angular.forEach(phases, function (details, phase) {
+                    phaseDescriptions[phase] = details[1];
+                });
             });
         });
 

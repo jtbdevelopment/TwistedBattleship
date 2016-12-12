@@ -57,16 +57,18 @@ describe('Service: gameDetails', function () {
         Phase3: ['hh', '']
     };
 
-    var rootScope;
-    beforeEach(inject(function ($injector, $rootScope) {
+    var $rootScope;
+    beforeEach(inject(function ($injector, _$rootScope_) {
         game = angular.copy(gameBase);
-        rootScope = $rootScope;
+        $rootScope = _$rootScope_;
         service = $injector.get('tbsGameDetails');
+        $rootScope.$broadcast('playerLoaded');
+        $rootScope.$apply();
     }));
 
     it('phase descriptions', function () {
         phaseDeferred.resolve(serverPhases);
-        rootScope.$apply();
+        $rootScope.$apply();
         expect(service.descriptionForPhase('Phase1')).to.equal(serverPhases.Phase1[1]);
         expect(service.descriptionForPhase('Phase2')).to.equal(serverPhases.Phase2[1]);
         expect(service.descriptionForPhase('Phase3')).to.equal(serverPhases.Phase3[1]);

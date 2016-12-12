@@ -51,6 +51,9 @@ describe('testing app js', function () {
                     }
                 };
                 $provide.value('$ionicPlatform', platform);
+                window.atmosphere = {};
+                $provide.value('$ionicLoading', {});
+                $provide.value('$ionicPopup', {});
             });
 
             module('tbs');
