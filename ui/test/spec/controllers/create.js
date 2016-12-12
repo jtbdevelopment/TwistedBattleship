@@ -207,7 +207,7 @@ describe('Controller: CreateGameCtrl', function () {
         facebook = {inviteFriends: sinon.spy()};
         gameCache = {putUpdatedGame: sinon.spy()};
         playerService = {
-            currentPlayerFriends: function () {
+            initializeFriendsForController: function () {
                 return friendsPromise.promise;
             },
             currentPlayer: function () {
@@ -243,9 +243,24 @@ describe('Controller: CreateGameCtrl', function () {
         expect([{}, {}, {}, {}, {}]).to.deep.equal(ctrl.playerChoices);
         expect([[], [], [], [], []]).to.deep.equal(ctrl.friendInputs);
         expect([]).to.deep.equal(ctrl.friends);
-        expect([]).to.deep.equal(ctrl.invitableFriends);
+        expect([]).to.deep.equal(ctrl.invitableFBFriends);  // not testing after - responsibility of services
         modalPromiseHelp.resolve(helpModal);
         modalPromiseInvite.resolve(inviteModal);
+
+        ctrl.friends = [
+            {
+                "md5": "md1",
+                "displayName": "friend1"
+            },
+            {
+                "md5": "md3",
+                "displayName": "friend3"
+            },
+            {
+                "md5": "md2",
+                "displayName": "friend2"
+            }
+        ];
         friendsPromise.resolve(friends);
         $rootScope.$apply();
 
@@ -353,16 +368,6 @@ describe('Controller: CreateGameCtrl', function () {
                 'displayName': 'friend2',
                 'checked': false
             }]).to.deep.equal(ctrl.friends);
-        expect([
-            {
-                'id': 'i1',
-                'name': 'invite1',
-                'url': 'http://aPic'
-            },
-            {
-                'id': 'i2',
-                'name': 'invite2'
-            }]).to.deep.equal(ctrl.invitableFriends);
 
         expect(ctrl.featureData).to.equal(features);
         expect(ctrl.currentOptions).to.deep.equal(defaultOptions);
@@ -451,6 +456,20 @@ describe('Controller: CreateGameCtrl', function () {
         beforeEach(function () {
             modalPromiseHelp.resolve(helpModal);
             modalPromiseInvite.resolve(inviteModal);
+            ctrl.friends = [
+                {
+                    "md5": "md1",
+                    "displayName": "friend1"
+                },
+                {
+                    "md5": "md3",
+                    "displayName": "friend3"
+                },
+                {
+                    "md5": "md2",
+                    "displayName": "friend2"
+                }
+            ];
             friendsPromise.resolve(friends);
 
             $rootScope.$apply();

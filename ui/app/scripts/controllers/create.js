@@ -14,7 +14,7 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
             controller.inviteArray = [];
             controller.friendInputs = [];
             controller.friends = [];
-            controller.invitableFriends = [];
+            controller.invitableFBFriends = [];
             for (var i = 0; i < MAX_OPPONENTS; ++i) {
                 controller.inviteArray.push(i);
                 controller.playerChoices.push({});
@@ -38,31 +38,13 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
                 }
             });
 
-            jtbPlayerService.currentPlayerFriends().then(function (friends) {
-                angular.forEach(friends.maskedFriends, function (displayName, hash) {
-                    var friend = {
-                        md5: hash,
-                        displayName: displayName,
-                        checked: false
-                    };
-                    controller.friends.push(friend);
+            jtbPlayerService.initializeFriendsForController(controller).then(function () {
+                angular.forEach(controller.friends, function (friend) {
+                    friend.checked = false;
                 });
                 angular.forEach(controller.inviteArray, function (index) {
                     angular.copy(controller.friends, controller.friendInputs[index]);
                 });
-
-                if (jtbPlayerService.currentPlayer().source === 'facebook') {
-                    angular.forEach(friends.invitableFriends, function (friend) {
-                        var invite = {
-                            id: friend.id,
-                            name: friend.name
-                        };
-                        if (angular.isDefined(friend.picture) && angular.isDefined(friend.picture.url)) {
-                            invite.url = friend.picture.url;
-                        }
-                        controller.invitableFriends.push(invite);
-                    });
-                }
             });
 
             function validMD5(value) {
