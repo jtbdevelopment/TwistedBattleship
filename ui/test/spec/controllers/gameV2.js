@@ -61,9 +61,10 @@ describe('Controller: GameCtrl', function () {
         }
     };
     var $rootScope, $scope, ctrl, stateSpy, $q, phasePromise, ionicLoadingSpy, ionicPopupSpy, $timeout,
-        ads, expectedGame, expectedComputedShips, jtbIonicGameActions;
+        ads, expectedGame, expectedComputedShips, jtbIonicGameActions, $http;
 
-    beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$timeout_) {
+    beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$timeout_, $httpBackend) {
+        $http = $httpBackend;
         expectedGame = {
             id: expectedId,
             features: [],
@@ -138,7 +139,9 @@ describe('Controller: GameCtrl', function () {
         jtbIonicGameActions = {
             quit: sinon.spy(),
             rematch: sinon.spy(),
-            declineRematch: sinon.spy()
+            declineRematch: sinon.spy(),
+            getGameURL: sinon.stub(),
+            wrapActionOnGame: sinon.spy()
         };
 
         ctrl = $controller('GameV2Ctrl', {
@@ -252,8 +255,10 @@ describe('Controller: GameCtrl', function () {
         });
     });
 
-    describe('tests with cell selected', function () {
-        angular.forEach([true, false], function (self) {
+    angular.forEach([true, false], function (self) {
+        describe('tests with cell selected', function () {
+            var httpBase = 'http://123.com/base/';
+            var expectedOpponent;
             beforeEach(function () {
                 mockSelectedCell = {column: 1, row: 2};
                 if (self) {
@@ -265,42 +270,50 @@ describe('Controller: GameCtrl', function () {
                 expect(mockShipService.cellCB).to.not.be.undefined;
                 mockShipService.cellCB(mockSelectedCell, mockSelectedShip);
                 $timeout.flush();
+                jtbIonicGameActions.getGameURL.withArgs(expectedGame).returns(httpBase);
+                ctrl.showingSelf = self;
+                expectedOpponent = self ? currentPlayer.md5 : selectedOpponent;
             });
 
+            afterEach(function () {
+                $http.flush();
+                assert(jtbIonicGameActions.wrapActionOnGame.calledWith(sinon.match(sinon.match.any)));
+            });
+            var setupTest = function (action) {
+                $http.expectPUT(httpBase + action, {
+                    player: expectedOpponent,
+                    coordinate: mockSelectedCell
+                }).respond(200);
+            };
+
             it('ecm on self=' + self, function () {
-                ctrl.showingSelf = self;
+                setupTest('ecm');
                 ctrl.ecm();
-                assert(actionsSpy.ecm.calledWith(expectedGame, self ? currentPlayer.md5 : selectedOpponent, mockSelectedCell));
             });
 
             it('repair on self=' + self, function () {
-                ctrl.showingSelf = self;
+                setupTest('repair');
                 ctrl.repair();
-                assert(actionsSpy.repair.calledWith(expectedGame, self ? currentPlayer.md5 : selectedOpponent, mockSelectedCell));
             });
 
             it('spy on self=' + self, function () {
-                ctrl.showingSelf = self;
+                setupTest('spy');
                 ctrl.spy();
-                assert(actionsSpy.spy.calledWith(expectedGame, self ? currentPlayer.md5 : selectedOpponent, mockSelectedCell));
             });
 
             it('missile on self=' + self, function () {
-                ctrl.showingSelf = self;
+                setupTest('missile');
                 ctrl.missile();
-                assert(actionsSpy.missile.calledWith(expectedGame, self ? currentPlayer.md5 : selectedOpponent, mockSelectedCell));
             });
 
             it('fire on self=' + self, function () {
-                ctrl.showingSelf = self;
+                setupTest('fire');
                 ctrl.fire();
-                assert(actionsSpy.fire.calledWith(expectedGame, self ? currentPlayer.md5 : selectedOpponent, mockSelectedCell));
             });
 
             it('move on self=' + self, function () {
-                ctrl.showingSelf = self;
+                setupTest('move');
                 ctrl.move();
-                assert(actionsSpy.move.calledWith(expectedGame, self ? currentPlayer.md5 : selectedOpponent, mockSelectedCell));
             });
         });
     });
