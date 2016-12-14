@@ -3,20 +3,20 @@
 var MAX_OPPONENTS = 5;
 
 angular.module('tbs.controllers').controller('CreateGameCtrl',
-    ['features', '$scope', 'jtbGameCache', 'jtbPlayerService', 'jtbFacebook', '$http', '$state',
+    ['features', '$scope', 'jtbGameCache', 'jtbPlayerService', '$http', '$state', 'jtbIonicInviteFriends',
         '$ionicModal', '$ionicLoading', '$ionicPopup', '$ionicSlideBoxDelegate',
-        function (features, $scope, jtbGameCache, jtbPlayerService, jtbFacebook, $http, $state,
+        function (features, $scope, jtbGameCache, jtbPlayerService, $http, $state, jtbIonicInviteFriends,
                   $ionicModal, $ionicLoading, $ionicPopup, $ionicSlideBoxDelegate) {
             var controller = this;
             controller.featureData = features;
 
             controller.playerChoices = [];
-            controller.inviteArray = [];
+            controller.opponentCounterArray = [];
             controller.friendInputs = [];
             controller.friends = [];
             controller.invitableFBFriends = [];
             for (var i = 0; i < MAX_OPPONENTS; ++i) {
-                controller.inviteArray.push(i);
+                controller.opponentCounterArray.push(i);
                 controller.playerChoices.push({});
                 controller.friendInputs.push([]);
 
@@ -42,7 +42,7 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
                 angular.forEach(controller.friends, function (friend) {
                     friend.checked = false;
                 });
-                angular.forEach(controller.inviteArray, function (index) {
+                angular.forEach(controller.opponentCounterArray, function (index) {
                     angular.copy(controller.friends, controller.friendInputs[index]);
                 });
             });
@@ -55,7 +55,7 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
                 var chosenPlayers = controller.playerChoices.filter(validMD5);
                 controller.submitEnabled = chosenPlayers.length > 0;
 
-                angular.forEach(controller.inviteArray, function (index) {
+                angular.forEach(controller.opponentCounterArray, function (index) {
                     var otherMD5s = controller.playerChoices.filter(function (value, valueIndex) {
                         return index !== valueIndex && validMD5(value);
                     }).map(function (value) {
@@ -86,12 +86,6 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
             }).then(function (modal) {
                 controller.helpModal = modal;
                 controller.helpIndex = 0;
-            });
-            $ionicModal.fromTemplateUrl('templates/friends/invite.html', {
-                scope: $scope,
-                animation: 'slide-in-up'
-            }).then(function (modal) {
-                controller.inviteModal = modal;
             });
 
             controller.next = function () {
@@ -125,25 +119,11 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
             };
 
             controller.showInviteFriends = function () {
-                controller.inviteModal.show();
-            };
-
-            controller.inviteFriends = function (friendsToInvite) {
-                var ids = [];
-                angular.forEach(friendsToInvite, function (friend) {
-                    ids.push(friend.id);
-                });
-                jtbFacebook.inviteFriends(ids, 'Come play Twisted Naval Battles with me!');
-                controller.inviteModal.hide();
-            };
-
-            controller.cancelInviteFriends = function () {
-                controller.inviteModal.hide();
+                jtbIonicInviteFriends.inviteFriendsToPlay(controller.invitableFBFriends, 'Come play Twisted Naval Battles with me!')
             };
 
             $scope.$on('$destroy', function () {
                 controller.helpModal.remove();
-                controller.inviteModal.remove();
             });
 
             controller.createGame = function () {

@@ -4,9 +4,9 @@ var ALL = 'ALL';
 
 angular.module('tbs.controllers').controller('GameV2Ctrl',
     ['$scope', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', 'tbsShipGridV2',
-        '$ionicPopup', '$ionicLoading', '$timeout', 'tbsAds',
+        '$ionicPopup', '$ionicLoading', '$timeout', 'jtbIonicAds',
         function ($scope, tbsActions, jtbGameCache, jtbPlayerService, $state, tbsShipGridV2,
-                  $ionicPopup, $ionicLoading, $timeout, tbsAds) {
+                  $ionicPopup, $ionicLoading, $timeout, jtbIonicAds) {
             var controller = this;
             controller.gameID = $state.params.gameID;
             controller.game = jtbGameCache.getGameForID(controller.gameID);
@@ -144,7 +144,7 @@ angular.module('tbs.controllers').controller('GameV2Ctrl',
                     controller.changePlayer(controller.showing);
                     if (oldGame.gamePhase === newGame.gamePhase) {
                         if (oldGame.currentPlayer === controller.player.md5 && newGame.currentPlayer !== controller.player.md5) {
-                            tbsAds.showInterstitial();
+                            jtbIonicAds.showInterstitial();
                         }
                     } else {
                         tbsActions.updateCurrentView(oldGame, newGame);

@@ -81,15 +81,15 @@
                     <div class="item item-divider">
                         Choose your opponents (maximum of 5):
                     </div>
-                    <div ng-repeat="inviteCounter in create.inviteArray" angular-multi-select
+                    <div ng-repeat="counter in create.opponentCounterArray" angular-multi-select
                          class="ams_container"
                          helper-elements="filter noall nonone noreset"
                          min-search-length="1"
                          selection-mode="single"
                          tick-property="checked"
                          on-item-click="create.playersChanged(item)"
-                         input-model="create.friendInputs[inviteCounter]"
-                         single-output-model="create.playerChoices[inviteCounter]"
+                         input-model="create.friendInputs[counter]"
+                         single-output-model="create.playerChoices[counter]"
                          button-template="angular-multi-select-btn-data.htm"
                          item-label="<[ displayName ]>"
                          search-property="displayName"
@@ -97,7 +97,7 @@
                     </div>
                     <div class="item">
                         <a class="button button-full button-icon icon-left ion-person-add invite-button"
-                           ng-show="create.invitableFriends.length > 0"
+                           ng-show="create.invitableFBFriends.length > 0"
                            ng-click="create.showInviteFriends()">Need more opponents? Invite friends!</a>
                     </div>
                 </div>

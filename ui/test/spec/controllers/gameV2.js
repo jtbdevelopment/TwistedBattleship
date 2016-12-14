@@ -156,7 +156,7 @@ describe('Controller: GameCtrl', function () {
             $ionicLoading: ionicLoadingSpy,
             $ionicPopup: ionicPopupSpy,
             jtbPlayerService: mockPlayerService,
-            tbsAds: ads,
+            jtbIonicAds: ads,
             tbsShipGridV2: mockShipService
         });
     }));

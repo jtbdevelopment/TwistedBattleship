@@ -1,5 +1,15 @@
 'use strict';
 
+angular.module('tbsBackground', ['tbs'])
+//  Separate module to avoid interfering with tests
+    .run(function ($rootScope, $state) {
+        $rootScope.$on('gameUpdated', function (message, oldGame, newGame) {
+            if (angular.isDefined($state.params.gameID) && $state.params.gameID === oldGame.id && oldGame.gamePhase !== newGame.gamePhase) {
+                $state.go('app.' + newGame.gamePhase.toLowerCase(), {gameID: newGame.id});
+            }
+        });
+    });
+
 angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.controllers', 'tbs.directives', 'config', 'coreGamesIonicUi'])
     .constant('Phaser', window.Phaser)
     .run(function ($ionicPlatform) {

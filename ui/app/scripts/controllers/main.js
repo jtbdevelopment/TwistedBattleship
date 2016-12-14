@@ -5,10 +5,10 @@ var CURRENT_VERSION = '1.2';
 var CURRENT_NOTES = 'Added new game play options - cruise missile attack and new ship options.  Also added a new pirate theme, see your profile in top bar.';
 angular.module('tbs.controllers').controller('MainCtrl',
     ['$window', '$rootScope', '$scope', 'jtbPlayerService', 'jtbLiveGameFeed', '$state', 'ENV', 'tbsCircles',
-        'jtbGameFeatureService', 'tbsCellStates', 'tbsShips', 'jtbGamePhaseService', 'tbsAds', 'jtbPushNotifications',
+        'jtbGameFeatureService', 'tbsCellStates', 'tbsShips', 'jtbGamePhaseService', 'jtbIonicAds', 'jtbPushNotifications',
         'tbsGameDetails', 'jtbIonicVersionNotesService',
         function ($window, $rootScope, $scope, jtbPlayerService, jtbLiveGameFeed, $state, ENV, tbsCircles,
-                  jtbGameFeatureService, tbsCellStates, tbsShips, jtbGamePhaseService, tbsAds, jtbPushNotifications,
+                  jtbGameFeatureService, tbsCellStates, tbsShips, jtbGamePhaseService, jtbIonicAds, jtbPushNotifications,
                   tbsGameDetails, jtbIonicVersionNotesService) {
 
             var controller = this;
@@ -63,7 +63,16 @@ angular.module('tbs.controllers').controller('MainCtrl',
                 controller.showAdmin = controller.showAdmin || controller.player.adminUser;  //  Once an admin always an admin for ui
 
                 //  TODO - preload ship images?
-                tbsAds.initialize();
+                jtbIonicAds.initialize({
+                    ios: {
+                        banner: 'ca-app-pub-8812482609918940/2316719315',
+                        interstitial: 'ca-app-pub-8812482609918940/9839986116'
+                    },
+                    android: {
+                        banner: 'ca-app-pub-8812482609918940/3876007710',
+                        interstitial: 'ca-app-pub-8812482609918940/5352740910'
+                    }
+                });
                 //  Kick off some preemptive caching of info
                 tbsCircles.circles().then(function () {
                 });

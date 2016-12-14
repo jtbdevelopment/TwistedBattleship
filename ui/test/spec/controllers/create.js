@@ -7,8 +7,9 @@ describe('Controller: CreateGameCtrl', function () {
     var currentPlayer = {id: 'myid', source: 'facebook'};
 
     var $http;
-    var gameCache, facebook, playerService;
+    var gameCache, playerService;
     var $ionicModal, $ionicLoading, $ionicPopup, $ionicSlideBox;
+    var jtbIonicInviteFriends;
     var features = [
         {
             'feature': {
@@ -160,8 +161,8 @@ describe('Controller: CreateGameCtrl', function () {
                 'description': 'Single use per game, sinks a ship by hitting any single ship location.'
             }]
         }];
-    var friendsPromise, modalPromiseHelp, modalPromiseInvite, alertPromise;
-    var helpModal, inviteModal;
+    var friendsPromise, modalPromiseHelp, alertPromise;
+    var helpModal;
     var playerUrl = 'http://game.com/u/r/l';
     var defaultOptions = ['Grid10x10', 'PerShip', 'SharedIntel', true, true, true, true, false];
     var friends = {
@@ -182,7 +183,6 @@ describe('Controller: CreateGameCtrl', function () {
         $scope = $rootScope.$new();
         $q = _$q_;
         modalPromiseHelp = $q.defer();
-        modalPromiseInvite = $q.defer();
         alertPromise = $q.defer();
         $ionicModal = {fromTemplateUrl: sinon.stub()};
         $ionicModal.fromTemplateUrl.withArgs(
@@ -191,20 +191,13 @@ describe('Controller: CreateGameCtrl', function () {
                 return $scope == val.scope && val.animation === 'slide-in-up'
             })
         ).returns(modalPromiseHelp.promise);
-        $ionicModal.fromTemplateUrl.withArgs(
-            sinon.match('templates/friends/invite.html'),
-            sinon.match(function (val) {
-                return $scope == val.scope && val.animation === 'slide-in-up'
-            })
-        ).returns(modalPromiseInvite.promise);
 
+        jtbIonicInviteFriends = {inviteFriendsToPlay: sinon.spy()};
         helpModal = {hide: sinon.spy(), show: sinon.spy(), remove: sinon.spy()};
-        inviteModal = {hide: sinon.spy(), show: sinon.spy(), remove: sinon.spy()};
         $ionicLoading = {show: sinon.spy(), hide: sinon.spy()};
         $ionicPopup = {alert: sinon.spy()};
         $ionicSlideBox = {next: sinon.spy(), previous: sinon.spy()};
         friendsPromise = $q.defer();
-        facebook = {inviteFriends: sinon.spy()};
         gameCache = {putUpdatedGame: sinon.spy()};
         playerService = {
             initializeFriendsForController: function () {
@@ -224,11 +217,11 @@ describe('Controller: CreateGameCtrl', function () {
             $state: stateSpy,
             jtbPlayerService: playerService,
             jtbGameCache: gameCache,
-            jtbFacebook: facebook,
             $ionicModal: $ionicModal,
             $ionicLoading: $ionicLoading,
             $ionicPopup: $ionicPopup,
             $ionicSlideBoxDelegate: $ionicSlideBox,
+            jtbIonicInviteFriends: jtbIonicInviteFriends,
             features: features
         });
         expect($scope.create).to.equal(ctrl);
@@ -236,16 +229,14 @@ describe('Controller: CreateGameCtrl', function () {
 
     it('initializes', function () {
         expect(ctrl.helpModal).to.be.undefined;
-        expect(ctrl.inviteModal).to.be.undefined;
         expect(ctrl.helpIndex).to.be.undefined;
 
-        expect([0, 1, 2, 3, 4]).to.deep.equal(ctrl.inviteArray);
+        expect([0, 1, 2, 3, 4]).to.deep.equal(ctrl.opponentCounterArray);
         expect([{}, {}, {}, {}, {}]).to.deep.equal(ctrl.playerChoices);
         expect([[], [], [], [], []]).to.deep.equal(ctrl.friendInputs);
         expect([]).to.deep.equal(ctrl.friends);
         expect([]).to.deep.equal(ctrl.invitableFBFriends);  // not testing after - responsibility of services
         modalPromiseHelp.resolve(helpModal);
-        modalPromiseInvite.resolve(inviteModal);
 
         ctrl.friends = [
             {
@@ -263,7 +254,6 @@ describe('Controller: CreateGameCtrl', function () {
         ];
         friendsPromise.resolve(friends);
         $rootScope.$apply();
-
         expect([{}, {}, {}, {}, {}]).to.deep.equal(ctrl.playerChoices);
         expect([
             [
@@ -371,7 +361,6 @@ describe('Controller: CreateGameCtrl', function () {
 
         expect(ctrl.featureData).to.equal(features);
         expect(ctrl.currentOptions).to.deep.equal(defaultOptions);
-        expect(ctrl.inviteModal).to.equal(inviteModal);
         expect(ctrl.helpModal).to.equal(helpModal);
         expect(ctrl.helpIndex).to.equal(0);
         expect(ctrl.submitEnabled).to.be.false;
@@ -380,7 +369,6 @@ describe('Controller: CreateGameCtrl', function () {
     describe('nav buttons on main screen, invite, and help', function () {
         beforeEach(function () {
             modalPromiseHelp.resolve(helpModal);
-            modalPromiseInvite.resolve(inviteModal);
             $rootScope.$apply();
         });
 
@@ -431,31 +419,14 @@ describe('Controller: CreateGameCtrl', function () {
 
         it('show invite friends', function () {
             ctrl.showInviteFriends();
-            assert(inviteModal.show.calledWithMatch());
+            assert(jtbIonicInviteFriends.inviteFriendsToPlay.calledWithMatch(ctrl.invitableFBFriends, 'Come play Twisted Naval Battles with me!'));
         });
 
-        it('close invite friends', function () {
-            ctrl.cancelInviteFriends();
-            assert(inviteModal.hide.calledWithMatch());
-        });
-
-        it('invites friends', function () {
-            var friendsToInvite = [{id: '1'}, {id: '2', other: 'ignore'}, {id: '3'}];
-            ctrl.inviteFriends(friendsToInvite);
-            assert(facebook.inviteFriends.calledWithMatch(['1', '2', '3'], 'Come play Twisted Naval Battles with me!'));
-            assert(inviteModal.hide.calledWithMatch());
-        });
-        it('on $destroy, destroys modals', function () {
-            $rootScope.$broadcast('$destroy');
-            assert(inviteModal.remove.calledWithMatch());
-            assert(helpModal.remove.calledWithMatch());
-        });
     });
 
     describe('choosing and unchoosing opponents', function () {
         beforeEach(function () {
             modalPromiseHelp.resolve(helpModal);
-            modalPromiseInvite.resolve(inviteModal);
             ctrl.friends = [
                 {
                     "md5": "md1",
@@ -966,7 +937,6 @@ describe('Controller: CreateGameCtrl', function () {
         beforeEach(function () {
             friendsPromise.resolve(friends);
             modalPromiseHelp.resolve(helpModal);
-            modalPromiseInvite.resolve(inviteModal);
             $rootScope.$apply();
         });
 

@@ -50,7 +50,7 @@ describe('Controller: MainCtrl', function () {
             $scope: $scope,
             $state: $state,
             $window: $window,
-            tbsAds: ads,
+            jtbIonicAds: ads,
             ENV: env,
             jtbPlayerService: mockPlayerService,
             jtbGameFeatureService: features,
@@ -99,7 +99,7 @@ describe('Controller: MainCtrl', function () {
                 $scope: $scope,
                 $state: $state,
                 $window: $window,
-                tbsAds: ads,
+                jtbIonicAds: ads,
                 ENV: env,
                 jtbPlayerService: mockPlayerService,
                 jtbGameFeatureService: features,
@@ -186,7 +186,16 @@ describe('Controller: MainCtrl', function () {
         expect(ctrl.theme).to.equal(currentPlayer.gameSpecificPlayerAttributes.theme);
         expect(ctrl.player).to.equal(currentPlayer);
         assert(jtbIonicVersionNotesService.displayVersionNotesIfAppropriate.calledWithMatch('1.2', 'Added new game play options - cruise missile attack and new ship options.  Also added a new pirate theme, see your profile in top bar.'));
-        assert(ads.initialize.calledWithMatch());
+        assert(ads.initialize.calledWithMatch({
+            ios: {
+                banner: 'ca-app-pub-8812482609918940/2316719315',
+                interstitial: 'ca-app-pub-8812482609918940/9839986116'
+            },
+            android: {
+                banner: 'ca-app-pub-8812482609918940/3876007710',
+                interstitial: 'ca-app-pub-8812482609918940/5352740910'
+            }
+        }));
         expect(ctrl.showAdmin).to.be.false;
     });
 
