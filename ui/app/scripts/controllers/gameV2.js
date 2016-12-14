@@ -3,9 +3,9 @@
 var ALL = 'ALL';
 
 angular.module('tbs.controllers').controller('GameV2Ctrl',
-    ['$scope', 'jtbIonicGameActions', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', 'tbsShipGridV2',
+    ['$scope', '$http', 'jtbIonicGameActions', 'jtbGameCache', 'jtbPlayerService', '$state', 'tbsShipGridV2',
         '$ionicPopup', '$ionicLoading', '$timeout', 'jtbIonicAds',
-        function ($scope, jtbIonicGameActions, tbsActions, jtbGameCache, jtbPlayerService, $state, tbsShipGridV2,
+        function ($scope, $http, jtbIonicGameActions, jtbGameCache, jtbPlayerService, $state, tbsShipGridV2,
                   $ionicPopup, $ionicLoading, $timeout, jtbIonicAds) {
             var controller = this;
             controller.gameID = $state.params.gameID;
@@ -31,28 +31,41 @@ angular.module('tbs.controllers').controller('GameV2Ctrl',
                 $state.go('app.gameDetails', {gameID: controller.gameID});
             };
 
+            function createTarget(opponent, cell) {
+                return {player: opponent, coordinate: {row: cell.row, column: cell.column}};
+            }
+
+            function makeMove(action) {
+                jtbIonicGameActions.wrapActionOnGame(
+                    $http.put(jtbIonicGameActions.getGameURL(controller.game) + action,
+                        createTarget(
+                            controller.showingSelf ? controller.player.md5 : controller.showing,
+                            controller.selectedCell))
+                );
+            }
+
             controller.fire = function () {
-                tbsActions.fire(controller.game, controller.showingSelf ? controller.player.md5 : controller.showing, controller.selectedCell);
+                makeMove('fire');
             };
 
             controller.move = function () {
-                tbsActions.move(controller.game, controller.showingSelf ? controller.player.md5 : controller.showing, controller.selectedCell);
+                makeMove('move');
             };
 
             controller.spy = function () {
-                tbsActions.spy(controller.game, controller.showingSelf ? controller.player.md5 : controller.showing, controller.selectedCell);
+                makeMove('spy');
             };
 
             controller.missile = function () {
-                tbsActions.missile(controller.game, controller.showingSelf ? controller.player.md5 : controller.showing, controller.selectedCell);
+                makeMove('missile');
             };
 
             controller.repair = function () {
-                tbsActions.repair(controller.game, controller.showingSelf ? controller.player.md5 : controller.showing, controller.selectedCell);
+                makeMove('repair');
             };
 
             controller.ecm = function () {
-                tbsActions.ecm(controller.game, controller.showingSelf ? controller.player.md5 : controller.showing, controller.selectedCell);
+                makeMove('ecm');
             };
 
             controller.changePlayer = function (md5) {
@@ -135,8 +148,6 @@ angular.module('tbs.controllers').controller('GameV2Ctrl',
                         if (oldGame.currentPlayer === controller.player.md5 && newGame.currentPlayer !== controller.player.md5) {
                             jtbIonicAds.showInterstitial();
                         }
-                    } else {
-                        tbsActions.updateCurrentView(oldGame, newGame);
                     }
                 }
             });

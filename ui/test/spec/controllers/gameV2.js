@@ -61,7 +61,7 @@ describe('Controller: GameCtrl', function () {
         }
     };
     var $rootScope, $scope, ctrl, stateSpy, $q, phasePromise, ionicLoadingSpy, ionicPopupSpy, $timeout,
-        ads, actionsSpy, expectedGame, expectedComputedShips, jtbIonicGameActions;
+        ads, expectedGame, expectedComputedShips, jtbIonicGameActions;
 
     beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$timeout_) {
         expectedGame = {
@@ -140,21 +140,11 @@ describe('Controller: GameCtrl', function () {
             rematch: sinon.spy(),
             declineRematch: sinon.spy()
         };
-        actionsSpy = {
-            repair: sinon.spy(),
-            missile: sinon.spy(),
-            ecm: sinon.spy(),
-            spy: sinon.spy(),
-            fire: sinon.spy(),
-            move: sinon.spy(),
-            updateCurrentView: sinon.spy()
-        };
 
         ctrl = $controller('GameV2Ctrl', {
             $scope: $scope,
             $state: stateSpy,
             jtbIonicGameActions: jtbIonicGameActions,
-            tbsActions: actionsSpy,
             jtbGameCache: mockGameCache,
             $ionicLoading: ionicLoadingSpy,
             $ionicPopup: ionicPopupSpy,
