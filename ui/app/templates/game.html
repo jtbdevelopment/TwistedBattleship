@@ -111,7 +111,7 @@
                     <div class="item item-divider">Quit</div>
                     <div class="item action-item">
                         <div class="button-bar">
-                            <a class="button button-quit icon-left ion-flag" ng-click="game.quit()">
+                            <a class="button button-quit icon-left ion-flag" ng-click="game.actions.quit(game.game)">
                                 <span>Surrender</span>
                             </a>
                         </div>
@@ -121,14 +121,16 @@
                     <div class="item item-divider">Rematch?</div>
                     <div class="item action-item">
                         <div class="button-bar ">
-                            <a class="button button-rematch icon-left ion-loop" ng-click="game.rematch()">
+                            <a class="button button-rematch icon-left ion-loop"
+                               ng-click="game.actions.rematch(game.game)">
                                 <span>Rematch</span>
                             </a>
                         </div>
                     </div>
                     <div class="item action-item">
                         <div class="button-bar ">
-                            <a class="button button-norematch icon-left ion-loop" ng-click="game.declineRematch()">
+                            <a class="button button-norematch icon-left ion-loop"
+                               ng-click="game.actions.declineRematch(game.game)">
                                 <span>End Rematches</span>
                             </a>
                         </div>

@@ -3,9 +3,9 @@
 var ALL = 'ALL';
 
 angular.module('tbs.controllers').controller('GameV2Ctrl',
-    ['$scope', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', 'tbsShipGridV2',
+    ['$scope', 'jtbIonicGameActions', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state', 'tbsShipGridV2',
         '$ionicPopup', '$ionicLoading', '$timeout', 'jtbIonicAds',
-        function ($scope, tbsActions, jtbGameCache, jtbPlayerService, $state, tbsShipGridV2,
+        function ($scope, jtbIonicGameActions, tbsActions, jtbGameCache, jtbPlayerService, $state, tbsShipGridV2,
                   $ionicPopup, $ionicLoading, $timeout, jtbIonicAds) {
             var controller = this;
             controller.gameID = $state.params.gameID;
@@ -14,6 +14,7 @@ angular.module('tbs.controllers').controller('GameV2Ctrl',
             controller.player = jtbPlayerService.currentPlayer();
             controller.showing = ALL;
             controller.showingSelf = false;
+            controller.actions = jtbIonicGameActions;
 
             controller.shipHighlighted = false;
             controller.selectedCell = undefined;
@@ -28,14 +29,6 @@ angular.module('tbs.controllers').controller('GameV2Ctrl',
 
             controller.showDetails = function () {
                 $state.go('app.gameDetails', {gameID: controller.gameID});
-            };
-
-            controller.declineRematch = function () {
-                tbsActions.declineRematch(controller.game);
-            };
-
-            controller.rematch = function () {
-                tbsActions.rematch(controller.game);
             };
 
             controller.fire = function () {
@@ -60,10 +53,6 @@ angular.module('tbs.controllers').controller('GameV2Ctrl',
 
             controller.ecm = function () {
                 tbsActions.ecm(controller.game, controller.showingSelf ? controller.player.md5 : controller.showing, controller.selectedCell);
-            };
-
-            controller.quit = function () {
-                tbsActions.quit(controller.game);
             };
 
             controller.changePlayer = function (md5) {
