@@ -119,7 +119,7 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
             };
 
             controller.showInviteFriends = function () {
-                jtbIonicInviteFriends.inviteFriendsToPlay(controller.invitableFBFriends, 'Come play Twisted Naval Battles with me!')
+                jtbIonicInviteFriends.inviteFriendsToPlay(controller.invitableFBFriends, 'Come play Twisted Naval Battles with me!');
             };
 
             $scope.$on('$destroy', function () {

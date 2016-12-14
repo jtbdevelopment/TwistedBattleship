@@ -1,10 +1,11 @@
 'use strict';
 
 angular.module('tbs.controllers').controller('PlayerListAndStateCtrl',
-    ['$scope', 'tbsActions', 'jtbGameCache', 'jtbPlayerService', '$state',
-        function ($scope, tbsActions, jtbGameCache, jtbPlayerService, $state) {
+    ['$scope', 'jtbIonicGameActions', 'jtbGameCache', 'jtbPlayerService', '$state',
+        function ($scope, jtbIonicGameActions, jtbGameCache, jtbPlayerService, $state) {
             var controller = this;
 
+            controller.actions = jtbIonicGameActions;
             function initialize() {
                 controller.gameID = $state.params.gameID;
                 controller.game = jtbGameCache.getGameForID(controller.gameID);
@@ -36,23 +37,8 @@ angular.module('tbs.controllers').controller('PlayerListAndStateCtrl',
                 $state.go('app.gameDetails', {gameID: controller.gameID});
             };
 
-            controller.accept = function () {
-                tbsActions.accept(controller.game);
-            };
-
-            controller.reject = function () {
-                tbsActions.reject(controller.game);
-            };
-
             $scope.$on('$ionicView.enter', function () {
                 initialize();
-            });
-
-            $scope.$on('gameUpdated', function (event, oldGame, newGame) {
-                if (controller.gameID === newGame.id) {
-                    controller.game = newGame;
-                    tbsActions.updateCurrentView(oldGame, newGame);
-                }
             });
         }
     ]

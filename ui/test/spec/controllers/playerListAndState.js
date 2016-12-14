@@ -30,8 +30,7 @@ describe('Controller: playerListAndState', function () {
         stateSpy = {go: sinon.spy(), params: {gameID: gameId}};
         mockGameActions = {
             reject: sinon.spy(),
-            accept: sinon.spy(),
-            updateCurrentView: sinon.spy()
+            accept: sinon.spy()
         };
         $rootScope = _$rootScope_;
         scope = $rootScope.$new();
@@ -39,7 +38,7 @@ describe('Controller: playerListAndState', function () {
             $scope: scope,
             jtbPlayerService: mockPlayerService,
             $state: stateSpy,
-            tbsActions: mockGameActions,
+            jtbIonicGameActions: mockGameActions,
             jtbGameCache: mockGameCache
         });
     }));
@@ -49,6 +48,7 @@ describe('Controller: playerListAndState', function () {
         expect(ctrl.game).to.equal(expectedGame);
         expect(ctrl.player).to.equal(currentPlayer);
         expect(ctrl.showActions).to.be.false;
+        expect(ctrl.actions).to.equal(mockGameActions);
     });
 
     it('re-initializes as enter', function () {
@@ -64,20 +64,6 @@ describe('Controller: playerListAndState', function () {
         expect(ctrl.game).to.equal(expectedGame);
         expect(ctrl.player).to.equal(currentPlayer);
         expect(ctrl.showActions).to.be.false;
-    });
-
-    it('calls action accept on accept', function () {
-        expect(mockGameActions.accept.callCount).to.equal(0);
-        ctrl.accept();
-        expect(mockGameActions.accept.callCount).to.equal(1);
-        assert(mockGameActions.accept.calledWithMatch(expectedGame));
-    });
-
-    it('calls action reject on reject', function () {
-        expect(mockGameActions.reject.callCount).to.equal(0);
-        ctrl.reject();
-        expect(mockGameActions.reject.callCount).to.equal(1);
-        assert(mockGameActions.reject.calledWithMatch(expectedGame));
     });
 
     it('test status color style', function () {
@@ -102,22 +88,6 @@ describe('Controller: playerListAndState', function () {
         assert(stateSpy.go.calledWithMatch('app.gameDetails', {gameID: gameId}));
     });
 
-    it('ignores update on different game', function () {
-        expect(mockGameActions.updateCurrentView.callCount).to.equal(0);
-        var newGame = {id: gameId + 'X'};
-        $rootScope.$broadcast('gameUpdated', newGame, newGame);
-        expect(mockGameActions.updateCurrentView.callCount).to.equal(0);
-    });
-
-    it('processes update on same game', function () {
-        expect(mockGameActions.updateCurrentView.callCount).to.equal(0);
-        var newGame = {id: gameId};
-        $rootScope.$broadcast('gameUpdated', expectedGame, newGame);
-        expect(mockGameActions.updateCurrentView.callCount).to.equal(1);
-        assert(mockGameActions.updateCurrentView.calledWithMatch(expectedGame, newGame));
-        expect(ctrl.game).to.equal(newGame);
-    });
-
     describe('with a game in challenged state', function () {
         beforeEach(inject(function ($controller) {
             expectedGame.gamePhase = 'Challenged';
@@ -125,7 +95,7 @@ describe('Controller: playerListAndState', function () {
                 $scope: scope,
                 jtbPlayerService: mockPlayerService,
                 $state: stateSpy,
-                tbsActions: mockGameActions,
+                jtbIonicGameActions: mockGameActions,
                 jtbGameCache: mockGameCache
             });
         }));

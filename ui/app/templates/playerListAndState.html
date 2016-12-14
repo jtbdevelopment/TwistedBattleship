@@ -13,11 +13,11 @@
             </div>
             <div class="item" ng-show="playerList.showActions">
                 <div class="row">
-                    <a class="button button-accept col" ng-click="playerList.accept()"
+                    <a class="button button-accept col" ng-click="playerList.actions.accept(playerList.game)"
                        ng-show="main.gameDetails.playerChallengeResponseNeeded(playerList.game, playerList.player.md5)">
                         <i class="icon ion-checkmark-circled"></i> Accept
                     </a>
-                    <a class="button button-reject col" ng-click="playerList.reject()">
+                    <a class="button button-reject col" ng-click="playerList.actions.reject(playerList.game)">
                         <i class="icon ion-close-circled"></i> Reject
                     </a>
                 </div>
