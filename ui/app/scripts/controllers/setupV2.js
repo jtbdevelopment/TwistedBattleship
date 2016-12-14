@@ -2,12 +2,13 @@
 
 //  TODO - unsaved changes warning
 angular.module('tbs.controllers').controller('SetupGameV2Ctrl',
-    ['$scope', 'tbsActions', 'jtbGameCache', '$state', '$ionicSideMenuDelegate', 'tbsShipGridV2',
+    ['$scope', '$http', 'jtbIonicGameActions', 'jtbGameCache', '$state', '$ionicSideMenuDelegate', 'tbsShipGridV2',
         '$ionicModal', '$ionicLoading', '$timeout',
-        function ($scope, tbsActions, jtbGameCache, $state, $ionicSideMenuDelegate, tbsShipGridV2,
+        function ($scope, $http, jtbIonicGameActions, jtbGameCache, $state, $ionicSideMenuDelegate, tbsShipGridV2,
                   $ionicModal, $ionicLoading, $timeout) {
             var controller = this;
             $ionicSideMenuDelegate.canDragContent(false);
+            controller.actions = jtbIonicGameActions;
             controller.gameID = $state.params.gameID;
             controller.game = jtbGameCache.getGameForID(controller.gameID);
 
@@ -42,17 +43,17 @@ angular.module('tbs.controllers').controller('SetupGameV2Ctrl',
                 }
             });
 
-            controller.quit = function () {
-                tbsActions.quit(controller.game);
-            };
-
-            controller.submit = function () {
+            controller.submitSetup = function () {
                 var info = [];
                 angular.forEach(tbsShipGridV2.currentShipsOnGrid(), function (ship) {
                     info.push({ship: ship.ship, coordinates: ship.shipGridCells});
                 });
-
-                tbsActions.setup(controller.game, info);
+                jtbIonicGameActions.wrapActionOnGame(
+                    $http.put(
+                        jtbIonicGameActions.getGameURL(controller.game) + 'setup',
+                        info
+                    )
+                );
             };
 
             $scope.$on('$ionicView.leave', function () {
@@ -73,13 +74,6 @@ angular.module('tbs.controllers').controller('SetupGameV2Ctrl',
                         $ionicLoading.hide();
                     }, this);
                 });
-            });
-
-            $scope.$on('gameUpdated', function (event, oldGame, newGame) {
-                if (controller.gameID === newGame.id) {
-                    controller.game = newGame;
-                    tbsActions.updateCurrentView(oldGame, newGame);
-                }
             });
         }
     ]

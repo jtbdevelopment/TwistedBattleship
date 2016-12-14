@@ -34,11 +34,12 @@ describe('Controller: SetupGameV2Ctrl', function () {
         }
     };
     var $rootScope, scope, ctrl, stateSpy, $q, phasePromise, ionicLoadingSpy, $timeout, ionicModal,
-        actionsSpy, expectedGame, ionicSideMenuDelegate;
-    var modalHelpPromise, modalHelp;
+        actionsSpy, expectedGame, ionicSideMenuDelegate, jtbIonicGameActions;
+    var modalHelpPromise, modalHelp, $http;
 
-    beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$timeout_) {
+    beforeEach(inject(function ($httpBackend, _$rootScope_, $controller, _$q_, _$timeout_) {
         $rootScope = _$rootScope_;
+        $http = $httpBackend;
         $q = _$q_;
         $timeout = _$timeout_;
         scope = $rootScope.$new();
@@ -47,6 +48,7 @@ describe('Controller: SetupGameV2Ctrl', function () {
         ionicModal = {fromTemplateUrl: sinon.stub()};
         ionicSideMenuDelegate = {canDragContent: sinon.spy()};
         shipsOnGrid = [];
+        jtbIonicGameActions = {quit: sinon.spy(), wrapActionOnGame: sinon.stub(), getGameURL: sinon.stub()};
         expectedGame = {
             id: expectedId,
             features: [],
@@ -111,6 +113,7 @@ describe('Controller: SetupGameV2Ctrl', function () {
         ctrl = $controller('SetupGameV2Ctrl', {
             $scope: scope,
             $state: stateSpy,
+            jtbIonicGameActions: jtbIonicGameActions,
             tbsActions: actionsSpy,
             jtbGameCache: mockGameCache,
             $timeout: $timeout,
@@ -132,6 +135,7 @@ describe('Controller: SetupGameV2Ctrl', function () {
         modalHelpPromise.resolve(modalHelp);
         $rootScope.$apply();
         expect(ctrl.helpModal).to.equal(modalHelp);
+        expect(ctrl.actions).to.equal(jtbIonicGameActions);
     });
 
     describe('tests involving help', function () {
@@ -183,11 +187,6 @@ describe('Controller: SetupGameV2Ctrl', function () {
             assert(stateSpy.go.calledWithMatch('app.gameDetails', {gameID: expectedId}));
         });
 
-        it('quit game', function () {
-            ctrl.quit();
-            assert(actionsSpy.quit.calledWithMatch(expectedGame));
-        });
-
         it('shuts down ship grid on view exit', function () {
             $rootScope.$broadcast('$ionicView.leave');
             assert(mockShipService.stop.calledWithMatch());
@@ -201,23 +200,14 @@ describe('Controller: SetupGameV2Ctrl', function () {
             angular.forEach(shipsOnGrid, function (shipOnGrid) {
                 expectedPayload.push({ship: shipOnGrid.ship, coordinates: shipOnGrid.shipGridCells});
             });
-            ctrl.submit();
-            assert(actionsSpy.setup.calledWithMatch(expectedGame, expectedPayload));
-        });
-
-        describe('testing game updates', function () {
-            it('handles game update for different game', function () {
-                $rootScope.$broadcast('gameUpdated', {id: expectedId + 'X'}, {id: expectedId + 'X'});
-                expect(actionsSpy.updateCurrentView.callCount).to.equal(0);
-            });
-
-            it('handles game update for game', function () {
-                var updatedGame = {id: expectedId};
-                $rootScope.$broadcast('gameUpdated', expectedGame, updatedGame);
-                expect(actionsSpy.updateCurrentView.callCount).to.equal(1);
-                assert(actionsSpy.updateCurrentView.calledWithMatch(expectedGame, updatedGame));
-                expect(ctrl.game).to.equal(updatedGame);
-            });
+            var baseUrl = 'http:/www/woo/';
+            var newGame = {id: '1445'};
+            jtbIonicGameActions.getGameURL.withArgs(expectedGame).returns(baseUrl);
+            jtbIonicGameActions.wrapActionOnGame.withArgs(sinon.match(sinon.match.any));
+            $http.expectPUT(baseUrl + 'setup', expectedPayload).respond(newGame);
+            ctrl.submitSetup();
+            $http.flush();// flush verifies call
+            expect(jtbIonicGameActions.wrapActionOnGame.callCount).to.equal(1);
         });
     });
 });

@@ -22,7 +22,7 @@
                     <div class="button-bar">
                         <a class="button button-submit icon-left ion-edit"
                            ng-disabled="setup.submitDisabled"
-                           ng-click="setup.submit()">
+                           ng-click="setup.submitSetup()">
                             <span>Save</span>
                         </a>
                     </div>
@@ -32,7 +32,7 @@
 
                 <div class="item action-item">
                     <div class="button-bar">
-                        <a class="button button-quit icon-left ion-flag" ng-click="setup.quit()">
+                        <a class="button button-quit icon-left ion-flag" ng-click="setup.actions.quit(setup.game)">
                             <span>Surrender</span>
                         </a>
                     </div>
