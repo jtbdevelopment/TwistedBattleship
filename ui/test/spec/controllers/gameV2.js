@@ -376,12 +376,6 @@ describe('Controller: GameCtrl', function () {
     describe('testing game updates', function () {
         //  Minimal testing up changePlayer here - test elsewhere
 
-        it('handles game update for different game', function () {
-            $rootScope.$broadcast('gameUpdated', {id: expectedId + 'X'}, {id: expectedId + 'X'});
-            expect(ads.showInterstitial.callCount).to.equal(0);
-            expect(actionsSpy.updateCurrentView.callCount).to.equal(0);
-        });
-
         it('handles game update for game but not phase change, player was current player, player is current player', function () {
             var updatedGame = {id: expectedId, gamePhase: expectedPhase, currentPlayer: currentPlayer.md5};
             updatedGame.maskedPlayersState = expectedGame.maskedPlayersState;
@@ -389,7 +383,6 @@ describe('Controller: GameCtrl', function () {
             ctrl.showingSelf = false;
             $rootScope.$broadcast('gameUpdated', expectedGame, updatedGame);
             expect(ads.showInterstitial.callCount).to.equal(0);
-            expect(actionsSpy.updateCurrentView.callCount).to.equal(0);
             expect(mockShipService.placeShips.calledWithMatch([]));
             expect(mockShipService.placeCellMarkers.calledWithMatch(expectedGame.maskedPlayersState.opponentGrids.md3.table));
             expect(ctrl.game).to.equal(updatedGame);
@@ -403,7 +396,6 @@ describe('Controller: GameCtrl', function () {
             ctrl.showingSelf = false;
             $rootScope.$broadcast('gameUpdated', oldGame, updatedGame);
             expect(ads.showInterstitial.callCount).to.equal(0);
-            expect(actionsSpy.updateCurrentView.callCount).to.equal(0);
             expect(mockShipService.placeShips.calledWithMatch([]));
             expect(mockShipService.placeCellMarkers.calledWithMatch(expectedGame.maskedPlayersState.opponentGrids.md3.table));
             expect(ctrl.game).to.equal(updatedGame);
@@ -417,7 +409,6 @@ describe('Controller: GameCtrl', function () {
             ctrl.showingSelf = false;
             $rootScope.$broadcast('gameUpdated', oldGame, updatedGame);
             expect(ads.showInterstitial.callCount).to.equal(1);
-            expect(actionsSpy.updateCurrentView.callCount).to.equal(0);
             expect(mockShipService.placeShips.calledWithMatch([]));
             expect(mockShipService.placeCellMarkers.calledWithMatch(expectedGame.maskedPlayersState.opponentGrids.md3.table));
             expect(ctrl.game).to.equal(updatedGame);
@@ -431,7 +422,6 @@ describe('Controller: GameCtrl', function () {
             ctrl.showingSelf = false;
             $rootScope.$broadcast('gameUpdated', oldGame, updatedGame);
             expect(ads.showInterstitial.callCount).to.equal(0);
-            expect(actionsSpy.updateCurrentView.callCount).to.equal(1);
             expect(mockShipService.placeShips.calledWithMatch([]));
             expect(mockShipService.placeCellMarkers.calledWithMatch(expectedGame.maskedPlayersState.opponentGrids.md3.table));
             expect(ctrl.game).to.equal(updatedGame);
