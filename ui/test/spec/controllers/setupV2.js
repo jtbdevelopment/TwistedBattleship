@@ -34,7 +34,7 @@ describe('Controller: SetupGameV2Ctrl', function () {
         }
     };
     var $rootScope, scope, ctrl, stateSpy, $q, phasePromise, ionicLoadingSpy, $timeout, ionicModal,
-        actionsSpy, expectedGame, ionicSideMenuDelegate, jtbIonicGameActions;
+        expectedGame, ionicSideMenuDelegate, jtbIonicGameActions;
     var modalHelpPromise, modalHelp, $http;
 
     beforeEach(inject(function ($httpBackend, _$rootScope_, $controller, _$q_, _$timeout_) {
@@ -96,12 +96,6 @@ describe('Controller: SetupGameV2Ctrl', function () {
         mockShipService.placeShips = sinon.spy();
         mockShipService.placeCellMarkers = sinon.spy();
         mockShipService.stop = sinon.spy();
-        actionsSpy = {
-            quit: sinon.spy(),
-            setup: sinon.spy(),
-            submit: sinon.spy(),
-            updateCurrentView: sinon.spy()
-        };
 
         ionicModal.fromTemplateUrl.withArgs(
             sinon.match('templates/help/help-setup.html'),
@@ -114,7 +108,6 @@ describe('Controller: SetupGameV2Ctrl', function () {
             $scope: scope,
             $state: stateSpy,
             jtbIonicGameActions: jtbIonicGameActions,
-            tbsActions: actionsSpy,
             jtbGameCache: mockGameCache,
             $timeout: $timeout,
             $ionicLoading: ionicLoadingSpy,
