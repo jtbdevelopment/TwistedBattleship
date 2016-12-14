@@ -3,10 +3,10 @@
 var MAX_OPPONENTS = 5;
 
 angular.module('tbs.controllers').controller('CreateGameCtrl',
-    ['features', '$scope', 'jtbGameCache', 'jtbPlayerService', '$http', '$state', 'jtbIonicInviteFriends',
-        '$ionicModal', '$ionicLoading', '$ionicPopup', '$ionicSlideBoxDelegate',
-        function (features, $scope, jtbGameCache, jtbPlayerService, $http, $state, jtbIonicInviteFriends,
-                  $ionicModal, $ionicLoading, $ionicPopup, $ionicSlideBoxDelegate) {
+    ['features', '$scope', 'jtbIonicGameActions', 'jtbGameCache', 'jtbPlayerService', '$http', '$state',
+        'jtbIonicInviteFriends', '$ionicModal', '$ionicSlideBoxDelegate',
+        function (features, $scope, jtbIonicGameActions, jtbGameCache, jtbPlayerService, $http, $state,
+                  jtbIonicInviteFriends, $ionicModal, $ionicSlideBoxDelegate) {
             var controller = this;
             controller.featureData = features;
 
@@ -150,22 +150,7 @@ angular.module('tbs.controllers').controller('CreateGameCtrl',
                     return self.indexOf(value) === index;
                 });
                 var playersAndFeatures = {'players': players, 'features': features};
-                $ionicLoading.show({
-                    template: 'Creating game and issuing challenges..'
-                });
-                $http.post(jtbPlayerService.currentPlayerBaseURL() + '/new', playersAndFeatures).then(function (response) {
-                    $ionicLoading.hide();
-                    jtbGameCache.putUpdatedGame(response.data);
-                    $state.go('app.games');
-                }, function (response) {
-                    $ionicLoading.hide();
-                    $ionicPopup.alert({
-                        title: 'There was a problem creating the game!',
-                        template: response.data
-                    });
-
-                    console.error(response.data + response.status + response.headers + response.config);
-                });
+                jtbIonicGameActions.new(playersAndFeatures);
             };
         }
     ]

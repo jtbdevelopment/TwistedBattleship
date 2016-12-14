@@ -6,10 +6,9 @@ describe('Controller: CreateGameCtrl', function () {
     var ctrl, stateSpy, $rootScope, $scope, $q;
     var currentPlayer = {id: 'myid', source: 'facebook'};
 
-    var $http;
     var gameCache, playerService;
     var $ionicModal, $ionicLoading, $ionicPopup, $ionicSlideBox;
-    var jtbIonicInviteFriends;
+    var jtbIonicInviteFriends, jtbIonicGameActions;
     var features = [
         {
             'feature': {
@@ -176,8 +175,7 @@ describe('Controller: CreateGameCtrl', function () {
             {id: 'i2', name: 'invite2'}
         ]
     };
-    beforeEach(inject(function (_$rootScope_, $controller, _$q_, $httpBackend) {
-        $http = $httpBackend;
+    beforeEach(inject(function (_$rootScope_, $controller, _$q_) {
         stateSpy = {go: sinon.spy()};
         $rootScope = _$rootScope_;
         $scope = $rootScope.$new();
@@ -193,6 +191,7 @@ describe('Controller: CreateGameCtrl', function () {
         ).returns(modalPromiseHelp.promise);
 
         jtbIonicInviteFriends = {inviteFriendsToPlay: sinon.spy()};
+        jtbIonicGameActions = {new: sinon.spy()};
         helpModal = {hide: sinon.spy(), show: sinon.spy(), remove: sinon.spy()};
         $ionicLoading = {show: sinon.spy(), hide: sinon.spy()};
         $ionicPopup = {alert: sinon.spy()};
@@ -215,11 +214,10 @@ describe('Controller: CreateGameCtrl', function () {
         ctrl = $controller('CreateGameCtrl', {
             $scope: $scope,
             $state: stateSpy,
+            jtbIonicGameActions: jtbIonicGameActions,
             jtbPlayerService: playerService,
             jtbGameCache: gameCache,
             $ionicModal: $ionicModal,
-            $ionicLoading: $ionicLoading,
-            $ionicPopup: $ionicPopup,
             $ionicSlideBoxDelegate: $ionicSlideBox,
             jtbIonicInviteFriends: jtbIonicInviteFriends,
             features: features
@@ -957,18 +955,10 @@ describe('Controller: CreateGameCtrl', function () {
                 'players': ['md3', 'md1'],
                 'features': ['Grid15x15', 'PerShip', 'IsolatedIntel', 'ECMEnabled', 'EMEnabled', 'EREnabled', 'SpyDisabled', 'CruiseMissileEnabled']
             };
-            var newGame = {id: 'someid'};
             ctrl.currentOptions = ['Grid15x15', 'PerShip', 'IsolatedIntel', true, true, true, false, true];
 
-            $http.expectPOST(playerUrl + '/new', expectedOptions).respond(200, newGame);
             ctrl.createGame();
-            assert($ionicLoading.show.calledWithMatch({
-                template: 'Creating game and issuing challenges..'
-            }));
-            $http.flush();
-            assert(gameCache.putUpdatedGame.calledWithMatch(newGame));
-            assert($ionicLoading.hide.calledWithMatch());
-            assert(stateSpy.go.calledWithMatch('app.games'));
+            assert(jtbIonicGameActions.new.calledWithMatch(expectedOptions));
         });
 
         it('submit a game with friends and non-default options', function () {
@@ -988,47 +978,8 @@ describe('Controller: CreateGameCtrl', function () {
                 'players': ['md3', 'md1'],
                 'features': ['Grid10x10', 'PerShip', 'SharedIntel', 'ECMEnabled', 'EMEnabled', 'EREnabled', 'SpyEnabled', 'CruiseMissileDisabled']
             };
-            var newGame = {id: 'someid'};
-            $http.expectPOST(playerUrl + '/new', expectedOptions).respond(200, newGame);
             ctrl.createGame();
-            assert($ionicLoading.show.calledWithMatch({
-                template: 'Creating game and issuing challenges..'
-            }));
-            $http.flush();
-            assert(gameCache.putUpdatedGame.calledWithMatch(newGame));
-            assert($ionicLoading.hide.calledWithMatch());
-            assert(stateSpy.go.calledWithMatch('app.games'));
-        });
-
-        it('submit a game with friends and default options and fail', function () {
-            ctrl.playerChoices[2] = {
-                "md5": "md3",
-                "displayName": "friend3",
-                "checked": false
-            };
-            ctrl.playerChoices[4] = {
-                "md5": "md1",
-                "displayName": "friend1",
-                "checked": false
-            };
-
-
-            var expectedOptions = {
-                'players': ['md3', 'md1'],
-                'features': ['Grid10x10', 'PerShip', 'SharedIntel', 'ECMEnabled', 'EMEnabled', 'EREnabled', 'SpyEnabled', 'CruiseMissileDisabled']
-            };
-            var error = 'Its a problem';
-            $http.expectPOST(playerUrl + '/new', expectedOptions).respond(400, error);
-            ctrl.createGame();
-            assert($ionicLoading.show.calledWithMatch({
-                template: 'Creating game and issuing challenges..'
-            }));
-            $http.flush();
-            assert($ionicLoading.hide.calledWithMatch());
-            $ionicPopup.alert.calledWithMatch({
-                title: 'There was a problem creating the game!',
-                template: error
-            });
+            assert(jtbIonicGameActions.new.calledWithMatch(expectedOptions));
         });
     });
 });
