@@ -4,7 +4,9 @@ angular.module('tbsBackground', ['tbs'])
 //  Separate module to avoid interfering with tests
     .run(function ($rootScope, $state) {
         $rootScope.$on('gameUpdated', function (message, oldGame, newGame) {
-            if (angular.isDefined($state.params.gameID) && $state.params.gameID === oldGame.id && oldGame.gamePhase !== newGame.gamePhase) {
+            if (angular.isDefined($state.params.gameID) &&
+                $state.params.gameID === oldGame.id &&
+                oldGame.gamePhase !== newGame.gamePhase) {
                 $state.go('app.' + newGame.gamePhase.toLowerCase(), {gameID: newGame.id});
             }
         });
