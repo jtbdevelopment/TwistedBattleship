@@ -1,8 +1,8 @@
 'use strict';
 
 //  Deals with the crud of initializing and various platform messages
-var CURRENT_VERSION = '1.2';
-var CURRENT_NOTES = 'Added new game play options - cruise missile attack and new ship options.  Also added a new pirate theme, see your profile in top bar.';
+var CURRENT_VERSION = '1.3';
+var CURRENT_NOTES = 'Minor bug fixes.';
 angular.module('tbs.controllers').controller('MainCtrl',
     ['$window', '$rootScope', '$scope', 'jtbPlayerService', 'jtbLiveGameFeed', '$state', 'ENV', 'tbsCircles',
         'jtbGameFeatureService', 'tbsCellStates', 'tbsShips', 'jtbGamePhaseService', 'jtbIonicAds', 'jtbPushNotifications',

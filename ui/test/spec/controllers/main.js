@@ -185,7 +185,7 @@ describe('Controller: MainCtrl', function () {
         $rootScope.$apply();
         expect(ctrl.theme).to.equal(currentPlayer.gameSpecificPlayerAttributes.theme);
         expect(ctrl.player).to.equal(currentPlayer);
-        assert(jtbIonicVersionNotesService.displayVersionNotesIfAppropriate.calledWithMatch('1.2', 'Added new game play options - cruise missile attack and new ship options.  Also added a new pirate theme, see your profile in top bar.'));
+        assert(jtbIonicVersionNotesService.displayVersionNotesIfAppropriate.calledWithMatch('1.3', 'Minor bug fixes.'));
         assert(ads.initialize.calledWithMatch({
             ios: {
                 banner: 'ca-app-pub-8812482609918940/2316719315',
