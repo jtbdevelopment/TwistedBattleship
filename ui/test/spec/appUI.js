@@ -12,7 +12,7 @@ describe('testing app js', function () {
         };
 
         beforeEach(function () {
-            moduleUnderTest = angular.module('tbs');
+            moduleUnderTest = angular.module('tbsUI');
             dependencies = moduleUnderTest.requires;
         });
 
@@ -56,7 +56,7 @@ describe('testing app js', function () {
                 $provide.value('$ionicPopup', {});
             });
 
-            module('tbs');
+            module('tbsUI');
         });
 
         beforeEach(inject());

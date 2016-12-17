@@ -1,6 +1,8 @@
 'use strict';
 
-angular.module('tbsBackground', ['tbs'])
+angular.module('tbs', ['tbsUI', 'tbsBackground']);
+
+angular.module('tbsBackground', ['ionic'])
 //  Separate module to avoid interfering with tests
     .run(function ($rootScope, $state) {
         $rootScope.$on('gameUpdated', function (message, oldGame, newGame) {
@@ -12,7 +14,7 @@ angular.module('tbsBackground', ['tbs'])
         });
     });
 
-angular.module('tbs', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.controllers', 'tbs.directives', 'config', 'coreGamesIonicUi'])
+angular.module('tbsUI', ['ionic', 'ngCordova', 'angular-multi-select', 'tbs.controllers', 'tbs.directives', 'config', 'coreGamesIonicUi'])
     .constant('Phaser', window.Phaser)
     .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {
