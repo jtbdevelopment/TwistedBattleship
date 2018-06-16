@@ -11,7 +11,5 @@ plugins
 *.swo
 *.log
 *.DS_Store
-res
-resources
 
 app/scripts/configuration.js
