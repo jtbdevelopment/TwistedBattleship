@@ -11,6 +11,7 @@ import com.jtbdevelopment.games.factory.GameInitializer
 import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
 import com.jtbdevelopment.games.players.Player
 import org.bson.types.ObjectId
+import org.junit.Test
 
 /**
  * Date: 4/6/15
@@ -19,10 +20,12 @@ import org.bson.types.ObjectId
 class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
     PlayerGameStateInitializer initializer = new PlayerGameStateInitializer()
 
+    @Test
     void testGetOrder() {
         assert GameInitializer.LATE_ORDER == initializer.order
     }
 
+    @Test
     void testInitializeGame() {
         TBGame game = new TBGame(
                 features: [GameFeature.Grid15x15, GameFeature.Single, GameFeature.ECMEnabled, GameFeature.EREnabled, GameFeature.SpyEnabled, GameFeature.EMEnabled, GameFeature.CruiseMissileEnabled],
@@ -53,6 +56,7 @@ class PlayerGameStateInitializerTest extends MongoGameCoreTestCase {
         }
     }
 
+    @Test
     void testInitializeGameNoOptionalFeatures() {
         TBGame game = new TBGame(
                 features: [GameFeature.Grid20x20],

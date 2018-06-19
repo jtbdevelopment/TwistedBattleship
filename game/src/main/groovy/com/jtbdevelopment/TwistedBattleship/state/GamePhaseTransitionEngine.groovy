@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component
 @Component
 class GamePhaseTransitionEngine extends AbstractGamePhaseTransitionEngine<ObjectId, GameFeature, TBGame> {
 
-    GamePhaseTransitionEngine(GameScorer<TBGame> gameScorer) {
+    GamePhaseTransitionEngine(final GameScorer<TBGame> gameScorer) {
         super(gameScorer)
     }
 

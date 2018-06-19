@@ -8,6 +8,7 @@ import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
+import org.junit.Test
 
 /**
  * Date: 5/19/15
@@ -16,10 +17,12 @@ import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 class RepairShipHandlerTest extends AbstractBaseHandlerTest {
     RepairShipHandler handler = new RepairShipHandler()
 
+    @Test
     void testTargetSelf() {
         assert handler.targetSelf()
     }
 
+    @Test
     void testMovesRequired() {
         TBGame game = new TBGame(movesForSpecials: 1)
         assert 1 == handler.movesRequired(game)
@@ -27,6 +30,7 @@ class RepairShipHandlerTest extends AbstractBaseHandlerTest {
         assert 2 == handler.movesRequired(game)
     }
 
+    @Test
     void testValidatesRepairsRemain() {
         game.playerDetails[PONE.id].emergencyRepairsRemaining = 1
         handler.validateMoveSpecific(PONE, game, PONE, new GridCoordinate(3, 0))
@@ -36,6 +40,7 @@ class RepairShipHandlerTest extends AbstractBaseHandlerTest {
         })
     }
 
+    @Test
     void testValidatesShipExistsAtCoordinate() {
         game.playerDetails[PONE.id].emergencyRepairsRemaining = 1
         shouldFail(NoShipAtCoordinateException.class, {
@@ -43,6 +48,7 @@ class RepairShipHandlerTest extends AbstractBaseHandlerTest {
         })
     }
 
+    @Test
     void testRepair() {
         game.playerDetails[PONE.id].emergencyRepairsRemaining = 1
         game.playerDetails[PONE.id].shipStates.find { it.ship == Ship.Carrier }.healthRemaining = 2
@@ -91,6 +97,7 @@ class RepairShipHandlerTest extends AbstractBaseHandlerTest {
         }.shipSegmentHit
     }
 
+    @Test
     void testRepairOnDestroyedShip() {
         game.playerDetails[PONE.id].emergencyRepairsRemaining = 1
         game.playerDetails[PONE.id].shipStates.find { it.ship == Ship.Carrier }.healthRemaining = 0

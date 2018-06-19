@@ -3,6 +3,7 @@ package com.jtbdevelopment.TwistedBattleship.state.grid
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
+import org.junit.Test
 
 /**
  * Date: 9/29/2015
@@ -11,6 +12,7 @@ import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
 class ConsolidateGridViewsTest extends MongoGameCoreTestCase {
     ConsolidateGridViews consolidateGridViews = new ConsolidateGridViews()
 
+    @Test
     public void testConsolidate() {
         TBGame game = new TBGame(
                 gridSize: 10,

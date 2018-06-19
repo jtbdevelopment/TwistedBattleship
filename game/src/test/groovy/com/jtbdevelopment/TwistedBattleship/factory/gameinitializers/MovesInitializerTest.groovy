@@ -4,6 +4,7 @@ import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.games.factory.GameInitializer
 import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
+import org.junit.Test
 
 /**
  * Date: 4/6/15
@@ -12,10 +13,12 @@ import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
 class MovesInitializerTest extends MongoGameCoreTestCase {
     MovesInitializer initializer = new MovesInitializer()
 
+    @Test
     void testGetOrder() {
         assert GameInitializer.DEFAULT_ORDER == initializer.order
     }
 
+    @Test
     void testInitializeGame() {
         TBGame game = new TBGame(
                 features: [GameFeature.Grid15x15, GameFeature.Single, GameFeature.ECMEnabled, GameFeature.EREnabled, GameFeature.SpyEnabled, GameFeature.EMEnabled, GameFeature.CruiseMissileEnabled],
@@ -28,6 +31,7 @@ class MovesInitializerTest extends MongoGameCoreTestCase {
         assert 1 == game.movesForSpecials
     }
 
+    @Test
     void testInitializePerShipGame() {
         TBGame game = new TBGame(
                 features: [GameFeature.Grid15x15, GameFeature.PerShip, GameFeature.ECMEnabled, GameFeature.EREnabled, GameFeature.SpyEnabled, GameFeature.EMEnabled, GameFeature.CruiseMissileEnabled],

@@ -1,6 +1,4 @@
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder
-import ch.qos.logback.core.ConsoleAppender
-import ch.qos.logback.core.status.OnConsoleStatusListener
 
 // always a good idea to add an on console status listener
 statusListener(OnConsoleStatusListener)
@@ -13,5 +11,6 @@ appender("CONSOLE", ConsoleAppender) {
 
 logger("org.springframework.data.mongodb.core.index.MongoPersistentEntityIndexResolver", WARN)
 logger("com.jtbdevelopment.games.push", TRACE)
+logger("org.springframework", TRACE)
 //logger("com.jtbdevelopment.games.websocket.AtmosphereListener", TRACE)
 root(INFO, ["CONSOLE"])

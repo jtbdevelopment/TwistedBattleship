@@ -8,6 +8,7 @@ import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCircleUtil
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import org.bson.types.ObjectId
+import org.junit.Test
 
 /**
  * Date: 5/20/15
@@ -16,10 +17,12 @@ import org.bson.types.ObjectId
 class ECMHandlerTest extends AbstractBaseHandlerTest {
     ECMHandler handler = new ECMHandler()
 
+    @Test
     void testTargetSelf() {
         assert handler.targetSelf()
     }
 
+    @Test
     void testMovesRequired() {
         TBGame game = new TBGame(movesForSpecials: 1)
         assert 1 == handler.movesRequired(game)
@@ -27,6 +30,7 @@ class ECMHandlerTest extends AbstractBaseHandlerTest {
         assert 2 == handler.movesRequired(game)
     }
 
+    @Test
     void testValidatesECMsRemain() {
         game.playerDetails[PONE.id].ecmsRemaining = 1
         handler.validateMoveSpecific(PONE, game, PONE, new GridCoordinate(3, 0))
@@ -38,6 +42,7 @@ class ECMHandlerTest extends AbstractBaseHandlerTest {
 
     //  No need to test isolated vs shared intel on this mov
 
+    @Test
     void testAnECM() {
         handler.gridCircleUtil = new GridCircleUtil()
         game.playerDetails[PTWO.id].opponentGrids[PONE.id].set(1, 0, GridCellState.KnownByHit)

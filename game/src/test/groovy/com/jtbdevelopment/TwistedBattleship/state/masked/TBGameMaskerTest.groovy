@@ -14,6 +14,7 @@ import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
 import com.jtbdevelopment.games.players.Player
 import com.jtbdevelopment.games.state.GamePhase
 import org.bson.types.ObjectId
+import org.junit.Test
 
 import java.time.Instant
 
@@ -26,6 +27,7 @@ import static org.junit.Assert.assertNotNull
 class TBGameMaskerTest extends MongoGameCoreTestCase {
     TBGameMasker masker = new TBGameMasker()
 
+    @Test
     void testMaskingGame() {
         TBGame game = new TBGame(
                 rematchTimestamp: Instant.now(),
@@ -130,8 +132,8 @@ class TBGameMaskerTest extends MongoGameCoreTestCase {
         assert playerState.actionLog[1].description == maskedGame.maskedPlayersState.actionLog[1].description
         assert playerState.actionLog[0].actionType == maskedGame.maskedPlayersState.actionLog[0].actionType
         assert playerState.actionLog[1].actionType == maskedGame.maskedPlayersState.actionLog[1].actionType
-        assert playerState.actionLog[0].timestamp.toInstant().toEpochMilli() == maskedGame.maskedPlayersState.actionLog[0].timestamp
-        assert playerState.actionLog[1].timestamp.toInstant().toEpochMilli() == maskedGame.maskedPlayersState.actionLog[1].timestamp
+        assert playerState.actionLog[0].timestamp.toEpochMilli() == maskedGame.maskedPlayersState.actionLog[0].timestamp
+        assert playerState.actionLog[1].timestamp.toEpochMilli() == maskedGame.maskedPlayersState.actionLog[1].timestamp
 
         assert 2 == maskedGame.maskedPlayersState.opponentViews.size()
         assert 2 == maskedGame.maskedPlayersState.opponentGrids.size()

@@ -7,6 +7,7 @@ import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.TwistedBattleship.state.scoring.TBGameScorer
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
+import org.junit.Test
 
 /**
  * Date: 5/12/15
@@ -15,15 +16,18 @@ import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
     FireAtCoordinateHandler handler = new FireAtCoordinateHandler()
 
+    @Test
     void testTargetSelf() {
         assertFalse handler.targetSelf()
     }
 
+    @Test
     void testAlwaysCostsOne() {
         assert 1 == handler.movesRequired(new TBGame(features: [GameFeature.PerShip]))
         assert 1 == handler.movesRequired(new TBGame(features: [GameFeature.Single]))
     }
 
+    @Test
     void testFireAndMissWithSharedIntel() {
         game.features.add(GameFeature.SharedIntel)
 
@@ -57,6 +61,7 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         assert 0 == game.playerDetails[PTWO.id].scoreFromHits
     }
 
+    @Test
     void testFireAndMissWithIsolatedIntel() {
         game.features.add(GameFeature.IsolatedIntel)
 
@@ -90,6 +95,7 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         assert 0 == game.playerDetails[PTWO.id].scoreFromHits
     }
 
+    @Test
     void testFireAndHitWithSharedIntel() {
         game.features.add(GameFeature.SharedIntel)
 
@@ -168,6 +174,7 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         assert TBGameScorer.SCORE_FOR_HIT == game.playerDetails[PTWO.id].scoreFromHits
     }
 
+    @Test
     void testFireAndReHitWithSharedIntel() {
         game.features.add(GameFeature.SharedIntel)
 
@@ -223,6 +230,7 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         assert 0 == game.playerDetails[PTWO.id].scoreFromHits
     }
 
+    @Test
     void testFireAndReHitWithIsolatedIntel() {
         game.features.add(GameFeature.IsolatedIntel)
 
@@ -278,6 +286,7 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         assert 0 == game.playerDetails[PTWO.id].scoreFromHits
     }
 
+    @Test
     void testFireAndSinkShipWithSharedIntel() {
         game.features.add(GameFeature.SharedIntel)
 
@@ -334,6 +343,7 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         assert TBGameScorer.SCORE_FOR_SINK == game.playerDetails[PTWO.id].scoreFromSinks
     }
 
+    @Test
     void testFireAndSinkShipWithIsolatedIntel() {
         game.features.add(GameFeature.IsolatedIntel)
 
@@ -386,6 +396,7 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         assert TBGameScorer.SCORE_FOR_SINK == game.playerDetails[PTWO.id].scoreFromSinks
     }
 
+    @Test
     void testFireAndSinkShipAndEndPlayerWithSharedIntel() {
         game.features.add(GameFeature.SharedIntel)
 
@@ -461,6 +472,7 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         assert TBGameScorer.SCORE_FOR_SINK == game.playerDetails[PTWO.id].scoreFromSinks
     }
 
+    @Test
     void testFireAndSinkShipAndEndPlayerWithIsolatedIntel() {
         game.features.add(GameFeature.IsolatedIntel)
 

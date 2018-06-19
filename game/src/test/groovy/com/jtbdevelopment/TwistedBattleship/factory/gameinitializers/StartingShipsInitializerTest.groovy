@@ -5,6 +5,7 @@ import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.games.factory.GameInitializer
 import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
+import org.junit.Test
 
 /**
  * Date: 4/6/15
@@ -13,10 +14,12 @@ import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
 class StartingShipsInitializerTest extends MongoGameCoreTestCase {
     StartingShipsInitializer initializer = new StartingShipsInitializer()
 
+    @Test
     void testGetOrder() {
         assert GameInitializer.DEFAULT_ORDER == initializer.order
     }
 
+    @Test
     void testStandardShips() {
         TBGame game = new TBGame(features: [GameFeature.StandardShips]
         )
@@ -25,22 +28,27 @@ class StartingShipsInitializerTest extends MongoGameCoreTestCase {
         assert Ship.values().toList() == game.startingShips
     }
 
+    @Test
     void testAllCarriers() {
         internalTestAllX(GameFeature.AllCarriers, Ship.Carrier)
     }
 
+    @Test
     void testAllCruisers() {
         internalTestAllX(GameFeature.AllCruisers, Ship.Cruiser)
     }
 
+    @Test
     void testAllSubmarines() {
         internalTestAllX(GameFeature.AllSubmarines, Ship.Submarine)
     }
 
+    @Test
     void testAllBattleShips() {
         internalTestAllX(GameFeature.AllBattleships, Ship.Battleship)
     }
 
+    @Test
     void testallDestroyers() {
         internalTestAllX(GameFeature.AllDestroyers, Ship.Destroyer)
     }

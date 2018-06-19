@@ -10,6 +10,7 @@ import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
 import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
 import groovy.transform.TypeChecked
 import org.bson.types.ObjectId
+import org.junit.Test
 
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
@@ -21,6 +22,7 @@ import javax.ws.rs.core.MediaType
 class GameServicesTest extends MongoGameCoreTestCase {
     GameServices services = new GameServices()
 
+    @Test
     void testActionAnnotations() {
         Map<String, List<Object>> stuff = [
                 //  method: [name, params, path, path param values, consumes
@@ -59,6 +61,7 @@ class GameServicesTest extends MongoGameCoreTestCase {
         }
     }
 
+    @Test
     void testSetupShips() {
         List<ShipAndCoordinates> input = [
                 new ShipAndCoordinates(
@@ -106,6 +109,7 @@ class GameServicesTest extends MongoGameCoreTestCase {
         assert maskedGame.is(services.setupShips(input))
     }
 
+    @Test
     void testFire() {
         TBMaskedGame maskedGame = new TBMaskedGame()
         Target target = new Target(player: PONE.md5, coordinate: new GridCoordinate(10, 5))
@@ -124,6 +128,7 @@ class GameServicesTest extends MongoGameCoreTestCase {
         assert maskedGame.is(services.fire(target))
     }
 
+    @Test
     void testMissile() {
         TBMaskedGame maskedGame = new TBMaskedGame()
         Target target = new Target(player: PONE.md5, coordinate: new GridCoordinate(10, 5))
@@ -142,6 +147,7 @@ class GameServicesTest extends MongoGameCoreTestCase {
         assert maskedGame.is(services.cruiseMissile(target))
     }
 
+    @Test
     void testSpy() {
         TBMaskedGame maskedGame = new TBMaskedGame()
         Target target = new Target(player: PONE.md5, coordinate: new GridCoordinate(10, 5))
@@ -160,6 +166,7 @@ class GameServicesTest extends MongoGameCoreTestCase {
         assert maskedGame.is(services.spy(target))
     }
 
+    @Test
     void testRepair() {
         TBMaskedGame maskedGame = new TBMaskedGame()
         Target target = new Target(player: PONE.md5, coordinate: new GridCoordinate(10, 5))
@@ -178,6 +185,7 @@ class GameServicesTest extends MongoGameCoreTestCase {
         assert maskedGame.is(services.repair(target))
     }
 
+    @Test
     void testECM() {
         TBMaskedGame maskedGame = new TBMaskedGame()
         Target target = new Target(player: PONE.md5, coordinate: new GridCoordinate(10, 5))
@@ -196,6 +204,7 @@ class GameServicesTest extends MongoGameCoreTestCase {
         assert maskedGame.is(services.ecm(target))
     }
 
+    @Test
     void testMove() {
         TBMaskedGame maskedGame = new TBMaskedGame()
         Target target = new Target(player: PONE.md5, coordinate: new GridCoordinate(10, 5))

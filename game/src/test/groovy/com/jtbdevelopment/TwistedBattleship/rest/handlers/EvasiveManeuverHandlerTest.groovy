@@ -11,6 +11,7 @@ import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
+import org.junit.Test
 
 /**
  * Date: 5/21/15
@@ -19,10 +20,12 @@ import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
 class EvasiveManeuverHandlerTest extends AbstractBaseHandlerTest {
     EvasiveManeuverHandler handler = new EvasiveManeuverHandler()
 
+    @Test
     void testTargetSelf() {
         assert handler.targetSelf()
     }
 
+    @Test
     void testMovesRequired() {
         TBGame game = new TBGame(movesForSpecials: 1)
         assert 1 == handler.movesRequired(game)
@@ -30,6 +33,7 @@ class EvasiveManeuverHandlerTest extends AbstractBaseHandlerTest {
         assert 2 == handler.movesRequired(game)
     }
 
+    @Test
     void testValidatesRepairsRemain() {
         game.playerDetails[PONE.id].evasiveManeuversRemaining = 1
         handler.validateMoveSpecific(PONE, game, PONE, new GridCoordinate(3, 0))
@@ -39,6 +43,7 @@ class EvasiveManeuverHandlerTest extends AbstractBaseHandlerTest {
         })
     }
 
+    @Test
     void testValidatesShipExistsAtCoordinate() {
         game.playerDetails[PONE.id].emergencyRepairsRemaining = 1
         shouldFail(NoShipAtCoordinateException.class, {
@@ -47,6 +52,7 @@ class EvasiveManeuverHandlerTest extends AbstractBaseHandlerTest {
     }
 
     //  No need to really test isolated vs shared
+    @Test
     void testManeuver() {
         assert 3 == game.playerDetails[PONE.id].evasiveManeuversRemaining
         game.playerDetails[PTWO.id].opponentGrids[PONE.id].set(0, 0, GridCellState.KnownShip)

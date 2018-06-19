@@ -1,0 +1,18 @@
+<configuration>
+
+    <appender class="ch.qos.logback.core.ConsoleAppender" name="STDOUT">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger level="TRACE"
+            name="org.springframework.data.mongodb.core.index.MongoPersistentEntityIndexResolver"/>
+    <logger level="TRACE" name="com.jtbdevelopment.games.push"/>
+    <logger level="TRACE" name="com.jtbdevelopment.games.websocket.AtmosphereListener"/>
+    <logger level="TRACE" name="org.springframework.beans"/>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>

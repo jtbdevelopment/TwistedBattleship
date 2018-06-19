@@ -4,6 +4,7 @@ import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.games.factory.GameInitializer
 import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
+import org.junit.Test
 
 /**
  * Date: 4/6/15
@@ -12,10 +13,12 @@ import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
 class GridSizeInitializerTest extends MongoGameCoreTestCase {
     GridSizeInitializer initializer = new GridSizeInitializer()
 
+    @Test
     void testGetOrder() {
         assert GameInitializer.DEFAULT_ORDER == initializer.order
     }
 
+    @Test
     void testInitializeGameGrid10x10() {
         TBGame game = new TBGame(
                 features: [GameFeature.Grid10x10, GameFeature.Single, GameFeature.ECMEnabled, GameFeature.EREnabled, GameFeature.SpyEnabled, GameFeature.EMEnabled, GameFeature.CruiseMissileEnabled],
@@ -26,6 +29,7 @@ class GridSizeInitializerTest extends MongoGameCoreTestCase {
         assert 10 == game.gridSize
     }
 
+    @Test
     void testInitializeGameGrid15x15() {
         TBGame game = new TBGame(
                 features: [GameFeature.Grid15x15, GameFeature.Single, GameFeature.ECMEnabled, GameFeature.EREnabled, GameFeature.SpyEnabled, GameFeature.EMEnabled, GameFeature.CruiseMissileEnabled],
@@ -37,6 +41,7 @@ class GridSizeInitializerTest extends MongoGameCoreTestCase {
     }
 
 
+    @Test
     void testInitializeGameGrid20x20() {
         TBGame game = new TBGame(
                 features: [GameFeature.Grid20x20, GameFeature.Single, GameFeature.ECMEnabled, GameFeature.EREnabled, GameFeature.SpyEnabled, GameFeature.EMEnabled, GameFeature.CruiseMissileEnabled],

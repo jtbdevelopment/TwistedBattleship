@@ -8,14 +8,18 @@ import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
 import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
 import com.jtbdevelopment.games.state.GamePhase
 import com.jtbdevelopment.games.state.scoring.GameScorer
+import org.junit.Test
+import org.mockito.Mockito
 
 /**
  * Date: 4/22/15
  * Time: 9:12 PM
  */
 class GamePhaseTransitionEngineTest extends MongoGameCoreTestCase {
-    GamePhaseTransitionEngine engine = new GamePhaseTransitionEngine()
+    private GameScorer<TBGame> gameScorer = Mockito.mock(GameScorer.class);
+    private GamePhaseTransitionEngine engine = new GamePhaseTransitionEngine(gameScorer)
 
+    @Test
     void testEvaluateSetupPhaseWithAllPlayersSetup() {
         TBGame game = new TBGame()
         game.gamePhase = GamePhase.RoundOver.Setup
@@ -37,6 +41,7 @@ class GamePhaseTransitionEngineTest extends MongoGameCoreTestCase {
         }
     }
 
+    @Test
     void testEvaluateSetupPhaseWithSomePlayersSetup() {
         TBGame game = new TBGame()
         game.gamePhase = GamePhase.RoundOver.Setup
@@ -50,6 +55,7 @@ class GamePhaseTransitionEngineTest extends MongoGameCoreTestCase {
         game.playerDetails.each { assert 0 == it.value.actionLog.size() }
     }
 
+    @Test
     void testEvaluateSetupPhaseWithNoPlayersSetup() {
         TBGame game = new TBGame()
         game.gamePhase = GamePhase.RoundOver.Setup
@@ -63,6 +69,7 @@ class GamePhaseTransitionEngineTest extends MongoGameCoreTestCase {
         game.playerDetails.each { assert 0 == it.value.actionLog.size() }
     }
 
+    @Test
     void testEvaluatePlayingPhaseOnePlayerAlive() {
         TBGame game = new TBGame()
         boolean scorerCalled = false
@@ -77,14 +84,7 @@ class GamePhaseTransitionEngineTest extends MongoGameCoreTestCase {
         game.playerDetails[PTWO.id].opponentViews[PONE.id] = new Grid(10)
         game.playerDetails[PTWO.id].opponentViews[PONE.id].set(0, 2, GridCellState.KnownByHit)
         game.players = [PONE, PFOUR, PTWO]
-        engine.gameScorer = [
-                scoreGame: {
-                    TBGame g ->
-                        assert game.is(g)
-                        scorerCalled = true
-                        return game
-                }
-        ] as GameScorer
+        Mockito.when(gameScorer.scoreGame(game)).thenReturn(game)
         TBGame result = engine.evaluateGame(game)
         assert result.gamePhase == GamePhase.RoundOver
         assert scorerCalled
@@ -98,8 +98,10 @@ class GamePhaseTransitionEngineTest extends MongoGameCoreTestCase {
         assert GridCellState.HiddenHit == game.playerDetails[PTWO.id].opponentViews[PONE.id].get(0, 1)
         assert GridCellState.KnownByHit == game.playerDetails[PONE.id].opponentGrids[PTWO.id].get(0, 2)
         assert GridCellState.KnownByHit == game.playerDetails[PTWO.id].opponentViews[PONE.id].get(0, 2)
+        Mockito.verify(gameScorer).scoreGame(game)
     }
 
+    @Test
     void testEvaluatePlayingPhaseMultiplePlayerAlive() {
         TBGame game = new TBGame()
         game.gamePhase = GamePhase.RoundOver.Playing

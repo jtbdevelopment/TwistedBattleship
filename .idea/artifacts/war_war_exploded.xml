@@ -23,16 +23,16 @@
           <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.25" />
           <element id="library" level="project" name="Maven: ch.qos.logback:logback-classic:1.2.3" />
           <element id="library" level="project" name="Maven: ch.qos.logback:logback-core:1.2.3" />
-          <element id="library" level="project" name="Maven: com.jtbdevelopment.core-games:games-mongo:1.10" />
+          <element id="library" level="project" name="Maven: com.jtbdevelopment.core-games:games-mongo:1.11-SNAPSHOT" />
           <element id="library" level="project" name="Maven: com.jtbdevelopment.core-common:core-spring-jackson:1.10" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.5" />
-          <element id="library" level="project" name="Maven: com.jtbdevelopment.core-games:games:1.10" />
+          <element id="library" level="project" name="Maven: com.jtbdevelopment.core-games:games:1.11-SNAPSHOT" />
           <element id="library" level="project" name="Maven: commons-codec:commons-codec:1.10" />
           <element id="library" level="project" name="Maven: org.springframework.data:spring-data-mongodb:2.0.5.RELEASE" />
           <element id="library" level="project" name="Maven: org.mongodb:mongo-java-driver:3.5.0" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.9.5" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.9.5" />
-          <element id="library" level="project" name="Maven: com.jtbdevelopment.core-games:games-hazelcast:1.10" />
+          <element id="library" level="project" name="Maven: com.jtbdevelopment.core-games:games-hazelcast:1.11-SNAPSHOT" />
           <element id="library" level="project" name="Maven: com.jtbdevelopment.core-common:core-spring-hazelcast:1.10" />
           <element id="library" level="project" name="Maven: com.hazelcast:hazelcast:3.9.3" />
           <element id="library" level="project" name="Maven: com.hazelcast:hazelcast-aws:2.0.1" />
@@ -46,7 +46,7 @@
           <element id="library" level="project" name="Maven: com.amazonaws:jmespath-java:1.11.311" />
           <element id="library" level="project" name="Maven: com.jtbdevelopment.core-common:core-spring-web-hazelcast:1.10" />
           <element id="library" level="project" name="Maven: org.springframework.session:spring-session-core:2.0.2.RELEASE" />
-          <element id="library" level="project" name="Maven: com.jtbdevelopment.core-games:games-web:1.10" />
+          <element id="library" level="project" name="Maven: com.jtbdevelopment.core-games:games-web:1.11-SNAPSHOT" />
           <element id="library" level="project" name="Maven: org.springframework:spring-aspects:5.0.5.RELEASE" />
           <element id="library" level="project" name="Maven: org.aspectj:aspectjweaver:1.8.13" />
           <element id="library" level="project" name="Maven: org.springframework.security:spring-security-core:4.2.1.RELEASE" />
@@ -66,19 +66,19 @@
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.8.4" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.9.5" />
           <element id="library" level="project" name="Maven: javax.servlet:javax.servlet-api:3.1.0" />
-          <element id="library" level="project" name="Maven: com.jtbdevelopment.core-games:games-web-std-multiplayer:1.10" />
-          <element id="library" level="project" name="Maven: com.jtbdevelopment.core-games:games-events:1.10" />
-          <element id="library" level="project" name="Maven: com.jtbdevelopment.core-games:games-websocket:1.10" />
+          <element id="library" level="project" name="Maven: com.jtbdevelopment.core-games:games-web-std-multiplayer:1.11-SNAPSHOT" />
+          <element id="library" level="project" name="Maven: com.jtbdevelopment.core-games:games-events:1.11-SNAPSHOT" />
+          <element id="library" level="project" name="Maven: com.jtbdevelopment.core-games:games-websocket:1.11-SNAPSHOT" />
           <element id="library" level="project" name="Maven: org.atmosphere:atmosphere-runtime:2.4.24" />
-          <element id="library" level="project" name="Maven: com.jtbdevelopment.core-games:games-std-tracker:1.10" />
+          <element id="library" level="project" name="Maven: com.jtbdevelopment.core-games:games-std-tracker:1.11-SNAPSHOT" />
           <element id="library" level="project" name="Maven: com.jtbdevelopment.core-common:core-spring-quartz:1.10" />
           <element id="library" level="project" name="Maven: org.springframework:spring-context-support:5.0.5.RELEASE" />
           <element id="library" level="project" name="Maven: org.quartz-scheduler:quartz:2.3.0" />
           <element id="library" level="project" name="Maven: com.mchange:c3p0:0.9.5.2" />
           <element id="library" level="project" name="Maven: com.mchange:mchange-commons-java:0.2.11" />
           <element id="library" level="project" name="Maven: com.zaxxer:HikariCP-java6:2.3.13" />
-          <element id="library" level="project" name="Maven: com.jtbdevelopment.core-games:games-push-notifications:1.10" />
-          <element id="library" level="project" name="Maven: com.jtbdevelopment.core-games:games-std-maintenance:1.10" />
+          <element id="library" level="project" name="Maven: com.jtbdevelopment.core-games:games-push-notifications:1.11-SNAPSHOT" />
+          <element id="library" level="project" name="Maven: com.jtbdevelopment.core-games:games-std-maintenance:1.11-SNAPSHOT" />
           <element id="library" level="project" name="Maven: org.glassfish.jersey.ext:jersey-spring3:2.25.1" />
           <element id="library" level="project" name="Maven: org.glassfish.jersey.core:jersey-server:2.25.1" />
           <element id="library" level="project" name="Maven: org.glassfish.jersey.core:jersey-common:2.25.1" />

@@ -12,6 +12,7 @@ import com.jtbdevelopment.TwistedBattleship.state.ships.ShipPlacementValidator
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
 import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
 import com.jtbdevelopment.games.state.GamePhase
+import org.junit.Test
 
 /**
  * Date: 5/5/15
@@ -21,6 +22,7 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
     SetupShipsHandler setupShipsHandler = new SetupShipsHandler()
     TBGame game = new TBGame(features: [GameFeature.Grid15x15], gamePhase: GamePhase.Setup, startingShips: Ship.values())
 
+    @Test
     void testValidPlacementOfShips() {
         TBGame game = new TBGame(
                 players: [PONE, PTWO],
@@ -47,6 +49,7 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
         assertFalse game.playerDetails[PTWO.id].setup
     }
 
+    @Test
     void testCallsPlacementValidatorAndPassesOnException() {
         shouldFail(ShipPlacementsNotValidException.class, {
             setupShipsHandler.shipPlacementValidator = [
@@ -61,6 +64,7 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
         })
     }
 
+    @Test
     void testRejectsNonSetupPhaseGames() {
         GamePhase.values().findAll { it != GamePhase.Setup }.each {
             TBGame game = new TBGame(gamePhase: it)
@@ -70,6 +74,7 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
         }
     }
 
+    @Test
     void testShipIncorrectSegmentsHit() {
         shouldFail(ShipNotInitializedCorrectlyException.class, {
             setupShipsHandler.handleActionInternal(
@@ -119,6 +124,7 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
         })
     }
 
+    @Test
     void testShipMarkedHit() {
         shouldFail(ShipNotInitializedCorrectlyException.class, {
             setupShipsHandler.handleActionInternal(
@@ -168,6 +174,7 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
         })
     }
 
+    @Test
     void testShipIncorrectHealth() {
         shouldFail(ShipNotInitializedCorrectlyException.class, {
             setupShipsHandler.handleActionInternal(
@@ -217,6 +224,7 @@ class SetupShipsHandlerTest extends MongoGameCoreTestCase {
         })
     }
 
+    @Test
     void testShipIncorrectKeyValueMap() {
         shouldFail(ShipNotInitializedCorrectlyException.class, {
             setupShipsHandler.handleActionInternal(

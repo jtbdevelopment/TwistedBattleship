@@ -4,6 +4,7 @@ import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
 import com.jtbdevelopment.games.players.Player
 import com.jtbdevelopment.games.players.PlayerPayLevel
 import org.bson.types.ObjectId
+import org.junit.Test
 
 /**
  * Date: 8/20/15
@@ -11,6 +12,7 @@ import org.bson.types.ObjectId
  */
 class TBPlayerAttributesTest extends MongoGameCoreTestCase {
 
+    @Test
     void testSetTypePlayer() {
         Player p = makeSimplePlayer(new ObjectId().toString())
         p.payLevel = PlayerPayLevel.FreeToPlay
@@ -19,6 +21,7 @@ class TBPlayerAttributesTest extends MongoGameCoreTestCase {
         assert new TBPlayerAttributes(player: p).maxDailyFreeGames == 100
     }
 
+    @Test
     void testDefaults() {
         TBPlayerAttributes attributes = new TBPlayerAttributes()
         assert 'default-theme' == attributes.theme
@@ -30,6 +33,7 @@ class TBPlayerAttributesTest extends MongoGameCoreTestCase {
         assert 0 == attributes.highestScore
     }
 
+    @Test
     void testAddsFreeThemesIfNotInSetIfSettingThemes() {
         TBPlayerAttributes attributes = new TBPlayerAttributes()
         attributes.availableThemes = ['1', '2'] as Set
