@@ -1,14 +1,12 @@
 package com.jtbdevelopment.TwistedBattleship.state
 
-import java.time.ZoneId
-import java.time.ZonedDateTime
+import java.time.Instant
 
 /**
  * Date: 9/24/15
  * Time: 6:59 PM
  */
 class TBActionLogEntry implements Serializable {
-    private static final ZoneId GMT = ZoneId.of("GMT")
     enum TBActionType {
         Begin,
         Fired,
@@ -24,7 +22,7 @@ class TBActionLogEntry implements Serializable {
         Victory
     }
 
-    ZonedDateTime timestamp = ZonedDateTime.now(GMT)
+    Instant timestamp = Instant.now()
     TBActionType actionType
     String description
 }

@@ -15,7 +15,9 @@ import com.jtbdevelopment.games.players.Player
 import com.jtbdevelopment.games.state.GamePhase
 import org.bson.types.ObjectId
 
-import java.time.ZonedDateTime
+import java.time.Instant
+
+import static org.junit.Assert.assertNotNull
 
 /**
  * Date: 4/2/15
@@ -26,7 +28,7 @@ class TBGameMaskerTest extends MongoGameCoreTestCase {
 
     void testMaskingGame() {
         TBGame game = new TBGame(
-                rematchTimestamp: ZonedDateTime.now(),
+                rematchTimestamp: Instant.now(),
                 gamePhase: GamePhase.Playing,
                 features: [GameFeature.Grid10x10],
                 gridSize: 10,

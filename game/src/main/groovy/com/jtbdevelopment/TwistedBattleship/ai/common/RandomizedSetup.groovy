@@ -5,7 +5,7 @@ import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
-import com.jtbdevelopment.games.players.Player
+import com.jtbdevelopment.games.mongo.players.MongoPlayer
 import groovy.transform.CompileStatic
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -22,7 +22,7 @@ class RandomizedSetup {
 
     private Random random = new Random()
 
-    void setup(final TBGame game, final Player player) {
+    void setup(final TBGame game, final MongoPlayer player) {
         Set<GridCoordinate> used = [] as Set
         List<ShipState> shipStates = (List<ShipState>) game.startingShips.collect {
             Ship ship ->

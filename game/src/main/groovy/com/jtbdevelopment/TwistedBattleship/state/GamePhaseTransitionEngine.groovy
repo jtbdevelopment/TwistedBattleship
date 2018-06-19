@@ -4,6 +4,7 @@ import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
 import com.jtbdevelopment.games.state.GamePhase
+import com.jtbdevelopment.games.state.scoring.GameScorer
 import com.jtbdevelopment.games.state.transition.AbstractGamePhaseTransitionEngine
 import org.bson.types.ObjectId
 import org.springframework.stereotype.Component
@@ -13,7 +14,12 @@ import org.springframework.stereotype.Component
  * Time: 9:07 PM
  */
 @Component
-class GamePhaseTransitionEngine extends AbstractGamePhaseTransitionEngine<TBGame> {
+class GamePhaseTransitionEngine extends AbstractGamePhaseTransitionEngine<ObjectId, GameFeature, TBGame> {
+
+    GamePhaseTransitionEngine(GameScorer<TBGame> gameScorer) {
+        super(gameScorer)
+    }
+
     @Override
     protected TBGame evaluateSetupPhase(final TBGame game) {
         if (game.playerDetails.values().find {

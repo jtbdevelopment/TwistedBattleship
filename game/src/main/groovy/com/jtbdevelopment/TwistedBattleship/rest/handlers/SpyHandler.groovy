@@ -9,8 +9,15 @@ import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCircleUtil
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
+import com.jtbdevelopment.TwistedBattleship.state.masked.TBMaskedGame
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
-import com.jtbdevelopment.games.players.Player
+import com.jtbdevelopment.games.dao.AbstractGameRepository
+import com.jtbdevelopment.games.dao.AbstractPlayerRepository
+import com.jtbdevelopment.games.events.GamePublisher
+import com.jtbdevelopment.games.mongo.players.MongoPlayer
+import com.jtbdevelopment.games.state.masking.GameMasker
+import com.jtbdevelopment.games.state.transition.GameTransitionEngine
+import com.jtbdevelopment.games.tracking.GameEligibilityTracker
 import groovy.transform.CompileStatic
 import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Autowired
@@ -26,6 +33,10 @@ class SpyHandler extends AbstractSpecialMoveHandler {
     @Autowired
     GridCircleUtil gridCircleUtil
 
+    SpyHandler(AbstractPlayerRepository<ObjectId, MongoPlayer> playerRepository, AbstractGameRepository<ObjectId, GameFeature, TBGame> gameRepository, GameTransitionEngine<TBGame> transitionEngine, GamePublisher<TBGame, MongoPlayer> gamePublisher, GameEligibilityTracker gameTracker, GameMasker<ObjectId, TBGame, TBMaskedGame> gameMasker) {
+        super(playerRepository, gameRepository, transitionEngine, gamePublisher, gameTracker, gameMasker)
+    }
+
     @Override
     boolean targetSelf() {
         return false
@@ -33,8 +44,8 @@ class SpyHandler extends AbstractSpecialMoveHandler {
 
     @Override
     void validateMoveSpecific(
-            final Player<ObjectId> player,
-            final TBGame game, final Player<ObjectId> targetPlayer, final GridCoordinate coordinate) {
+            final MongoPlayer player,
+            final TBGame game, final MongoPlayer targetPlayer, final GridCoordinate coordinate) {
         if (game.playerDetails[player.id].spysRemaining < 1) {
             throw new NoSpyActionsRemainException()
         }
@@ -42,8 +53,8 @@ class SpyHandler extends AbstractSpecialMoveHandler {
 
     @Override
     TBGame playMove(
-            final Player<ObjectId> player,
-            final TBGame game, final Player<ObjectId> targetedPlayer, final GridCoordinate coordinate) {
+            final MongoPlayer player,
+            final TBGame game, final MongoPlayer targetedPlayer, final GridCoordinate coordinate) {
         Set<GridCoordinate> coordinates = gridCircleUtil.computeCircleCoordinates(game, coordinate)
         Map<GridCoordinate, GridCellState> spyResults = computeSpyCoordinateStates(game, targetedPlayer, coordinates)
         updatePlayerGrids(game, player, targetedPlayer, spyResults, coordinate)
@@ -54,8 +65,8 @@ class SpyHandler extends AbstractSpecialMoveHandler {
     @SuppressWarnings("GrMethodMayBeStatic")
     protected void updatePlayerGrids(
             final TBGame game,
-            final Player<ObjectId> player,
-            final Player<ObjectId> targetedPlayer,
+            final MongoPlayer player,
+            final MongoPlayer targetedPlayer,
             final Map<GridCoordinate, GridCellState> spyResults,
             final GridCoordinate targetCoordinate) {
         game.playerDetails[player.id].actionLog.add(new TBActionLogEntry(
@@ -105,7 +116,7 @@ class SpyHandler extends AbstractSpecialMoveHandler {
 
     @SuppressWarnings("GrMethodMayBeStatic")
     protected Map<GridCoordinate, GridCellState> computeSpyCoordinateStates(
-            final TBGame game, final Player<ObjectId> targetedPlayer, final Set<GridCoordinate> coordinates) {
+            final TBGame game, final MongoPlayer targetedPlayer, final Set<GridCoordinate> coordinates) {
         TBPlayerState targetedState = game.playerDetails[targetedPlayer.id]
         coordinates.collectEntries {
             GridCoordinate targetCoordinate ->

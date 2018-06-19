@@ -9,16 +9,20 @@ import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCircleUtil
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
+import org.junit.Before
+import org.junit.Test
+
+import static org.junit.Assert.assertFalse
 
 /**
  * Date: 5/15/15
  * Time: 6:56 AM
  */
 class SpyHandlerTest extends AbstractBaseHandlerTest {
-    SpyHandler handler = new SpyHandler()
+    private SpyHandler handler = new SpyHandler(null, null, null, null, null, null)
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    void setUp() throws Exception {
         super.setUp()
         handler.gridCircleUtil = new GridCircleUtil()
         game.playerDetails[PTWO.id].opponentGrids[PONE.id].set(1, 0, GridCellState.KnownByHit)
@@ -37,10 +41,12 @@ class SpyHandlerTest extends AbstractBaseHandlerTest {
         }.shipSegmentHit = [false, true, true, false, false]
     }
 
+    @Test
     void testTargetSelf() {
         assertFalse handler.targetSelf()
     }
 
+    @Test
     void testMovesRequired() {
         TBGame game = new TBGame(movesForSpecials: 1)
         assert 1 == handler.movesRequired(game)
@@ -48,6 +54,7 @@ class SpyHandlerTest extends AbstractBaseHandlerTest {
         assert 2 == handler.movesRequired(game)
     }
 
+    @Test(expected = NoSpyActionsRemainException.class)
     void testValidatesNoSpiesRemain() {
         TBGame game = new TBGame(
                 playerDetails: [
@@ -56,11 +63,10 @@ class SpyHandlerTest extends AbstractBaseHandlerTest {
         )
         handler.validateMoveSpecific(PONE, game, PTWO, null)
         game.playerDetails[PONE.id].spysRemaining = 0
-        shouldFail(NoSpyActionsRemainException.class, {
-            handler.validateMoveSpecific(PONE, game, PTWO, null)
-        })
+        handler.validateMoveSpecific(PONE, game, PTWO, null)
     }
 
+    @Test
     void testSpyWithIsolatedIntel() {
         game.features.add(GameFeature.IsolatedIntel)
 
@@ -92,6 +98,7 @@ class SpyHandlerTest extends AbstractBaseHandlerTest {
         assert 0 == game.playerDetails[PFOUR.id].actionLog.size()
     }
 
+    @Test
     void testSpyWithSharedIntel() {
         game.features.add(GameFeature.SharedIntel)
 
@@ -131,8 +138,8 @@ class SpyHandlerTest extends AbstractBaseHandlerTest {
                         }
                 }
         }
-        assert "2 spied on 1 at (2,1)." == game.playerDetails[PTHREE.id].actionLog[-1].description
-        assert "2 spied on 1 at (2,1)." == game.playerDetails[PFOUR.id].actionLog[-1].description
+        assert "200000000000000000000000 spied on 100000000000000000000000 at (2,1)." == game.playerDetails[PTHREE.id].actionLog[-1].description
+        assert "200000000000000000000000 spied on 100000000000000000000000 at (2,1)." == game.playerDetails[PFOUR.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Spied == game.playerDetails[PFOUR.id].actionLog[-1].actionType
         assert TBActionLogEntry.TBActionType.Spied == game.playerDetails[PTHREE.id].actionLog[-1].actionType
     }
@@ -142,9 +149,9 @@ class SpyHandlerTest extends AbstractBaseHandlerTest {
         assert 3 == game.playerDetails[PFOUR.id].spysRemaining
         assert 3 == game.playerDetails[PONE.id].spysRemaining
         assert 2 == game.playerDetails[PTWO.id].spysRemaining
-        assert "2 spied on you at (2,1)." == game.playerDetails[PONE.id].actionLog[-1].description
+        assert "200000000000000000000000 spied on you at (2,1)." == game.playerDetails[PONE.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Spied == game.playerDetails[PONE.id].actionLog[-1].actionType
-        assert "You spied on 1 at (2,1)." == game.playerDetails[PTWO.id].actionLog[-1].description
+        assert "You spied on 100000000000000000000000 at (2,1)." == game.playerDetails[PTWO.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Spied == game.playerDetails[PTWO.id].actionLog[-1].actionType
         assert GridCellState.Unknown == game.playerDetails[PTWO.id].opponentGrids[PONE.id].get(4, 0)
         assert GridCellState.KnownEmpty == game.playerDetails[PTWO.id].opponentGrids[PONE.id].get(4, 1)

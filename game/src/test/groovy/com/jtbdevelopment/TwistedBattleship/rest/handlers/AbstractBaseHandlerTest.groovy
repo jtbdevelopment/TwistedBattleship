@@ -2,6 +2,7 @@ package com.jtbdevelopment.TwistedBattleship.rest.handlers
 
 import com.jtbdevelopment.TwistedBattleship.factory.gameinitializers.*
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
+import com.jtbdevelopment.TwistedBattleship.state.TBActionLogEntry
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
@@ -9,6 +10,8 @@ import com.jtbdevelopment.TwistedBattleship.state.ships.ShipPlacementValidator
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
 import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
 import com.jtbdevelopment.games.state.GamePhase
+import org.bson.types.ObjectId
+import org.junit.Before
 
 /**
  * Date: 5/18/15
@@ -17,9 +20,10 @@ import com.jtbdevelopment.games.state.GamePhase
 abstract class AbstractBaseHandlerTest extends MongoGameCoreTestCase {
     protected TBGame game
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         game = new TBGame(
+                id: new ObjectId(),
                 features: [GameFeature.Grid15x15, GameFeature.ActionsPerTurn, GameFeature.CruiseMissileEnabled, GameFeature.ECMEnabled, GameFeature.EMEnabled, GameFeature.EREnabled, GameFeature.SpyEnabled],
                 gridSize: 15,
                 players: [PONE, PTWO, PTHREE, PFOUR])
@@ -30,7 +34,7 @@ abstract class AbstractBaseHandlerTest extends MongoGameCoreTestCase {
         new MovesInitializer().initializeGame(game)
         new PlayerGameStateInitializer().initializeGame(game)
         game.gamePhase = GamePhase.Setup
-        new SetupShipsHandler(shipPlacementValidator: new ShipPlacementValidator()).handleActionInternal(
+        new SetupShipsHandler(new ShipPlacementValidator(), null, null, null, null, null, null).handleActionInternal(
                 PONE,
                 game,
                 [
@@ -63,5 +67,9 @@ abstract class AbstractBaseHandlerTest extends MongoGameCoreTestCase {
                         ] as SortedSet),
                 ]
         )
+    }
+
+    protected TBActionLogEntry getLastEntry(final List<TBActionLogEntry> entries) {
+        return entries.get(entries.size() - 1);
     }
 }

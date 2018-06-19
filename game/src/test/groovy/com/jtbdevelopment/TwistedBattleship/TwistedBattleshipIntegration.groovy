@@ -46,8 +46,8 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMas
 
     @BeforeClass
     static void setup() {
-        cacheManager = context.getBean(HazelcastCacheManager.class)
-        gameRepository = context.getBean(GameRepository.class)
+        cacheManager = applicationContext.getBean(HazelcastCacheManager.class)
+        gameRepository = applicationContext.getBean(GameRepository.class)
     }
 
     @Test

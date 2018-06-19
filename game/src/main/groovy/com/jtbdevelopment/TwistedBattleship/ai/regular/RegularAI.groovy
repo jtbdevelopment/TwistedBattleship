@@ -9,8 +9,8 @@ import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.TwistedBattleship.state.grid.*
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
+import com.jtbdevelopment.games.mongo.players.MongoPlayer
 import com.jtbdevelopment.games.players.Player
-import groovy.transform.CompileStatic
 import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -20,7 +20,6 @@ import org.springframework.stereotype.Component
  * Time: 6:58 AM
  */
 @SuppressWarnings("GroovyUnusedDeclaration")
-@CompileStatic
 @Component
 class RegularAI implements AI {
     @Autowired
@@ -45,7 +44,7 @@ class RegularAI implements AI {
         return playerCreator.players
     }
 
-    void setup(final TBGame game, final Player player) {
+    void setup(final TBGame game, final MongoPlayer player) {
         randomizedSetup.setup(game, player)
     }
 
@@ -66,7 +65,7 @@ class RegularAI implements AI {
     private int fireKnownDoubleAdjacentShip = 25
     private int cruiseKnownHitOrShip = 200
 
-    void playOneMove(final TBGame game, final Player player) {
+    void playOneMove(final TBGame game, final MongoPlayer player) {
         //  Pure Points System
         //  Spy - 3 points per unknown, 1 point per obscured
         //  ECM - 3 points per known ship if ship alive, 8 per single ove
@@ -180,7 +179,7 @@ class RegularAI implements AI {
         }
     }
 
-    private List<WeightedTarget> computeSpy(final TBGame game, final Player player, final TBPlayerState myState) {
+    private List<WeightedTarget> computeSpy(final TBGame game, final MongoPlayer player, final TBPlayerState myState) {
         if (myState.spysRemaining == 0 || game.remainingMoves < game.movesForSpecials) {
             return [];
         }

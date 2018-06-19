@@ -2,9 +2,11 @@ package com.jtbdevelopment.TwistedBattleship.ai.common
 
 import com.jtbdevelopment.TwistedBattleship.ai.AI
 import com.jtbdevelopment.games.dao.AbstractPlayerRepository
+import com.jtbdevelopment.games.mongo.players.MongoPlayer
 import com.jtbdevelopment.games.players.Player
 import com.jtbdevelopment.games.players.PlayerFactory
 import groovy.transform.CompileStatic
+import org.bson.types.ObjectId
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,9 +22,9 @@ class AbstractAIPlayerCreator {
     List<Player> players
 
     @Autowired
-    AbstractPlayerRepository playerRepository
+    AbstractPlayerRepository<ObjectId, MongoPlayer> playerRepository
     @Autowired
-    PlayerFactory playerFactory
+    PlayerFactory<ObjectId, MongoPlayer> playerFactory
 
     protected void loadOrCreateAIPlayers(final String baseName, final String icon) {
         logger.info('Checking for ' + baseName + ' system players.')

@@ -1,8 +1,10 @@
 package com.jtbdevelopment.TwistedBattleship.ai
 
-import com.jtbdevelopment.TwistedBattleship.dao.GameRepository
+import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
+import com.jtbdevelopment.games.dao.AbstractMultiPlayerGameRepository
+import com.jtbdevelopment.games.mongo.players.MongoPlayer
 import com.jtbdevelopment.games.players.Player
 import com.jtbdevelopment.games.publish.GameListener
 import com.jtbdevelopment.games.rest.handlers.ChallengeResponseHandler
@@ -17,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 import javax.annotation.PostConstruct
-import java.time.ZonedDateTime
+import java.time.Instant
 import java.util.concurrent.LinkedBlockingDeque
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
@@ -28,8 +30,7 @@ import java.util.concurrent.TimeUnit
  */
 @SuppressWarnings("GroovyUnusedDeclaration")
 @Component
-@CompileStatic
-class AIGameListener implements GameListener<TBGame> {
+class AIGameListener implements GameListener<TBGame, MongoPlayer> {
     private static Logger logger = LoggerFactory.getLogger(AIGameListener.class)
 
     @Autowired
@@ -37,15 +38,15 @@ class AIGameListener implements GameListener<TBGame> {
     @Autowired
     QuitHandler quitHandler
     @Autowired
-    GameRepository gameRepository
+    AbstractMultiPlayerGameRepository<ObjectId, GameFeature, TBGame> gameRepository
 
     @Autowired
     List<AI> aiList
 
     private Map<Player, AI> playerAIMap
     private Map<ObjectId, AI> playerIDAIMap
-    private Map<ObjectId, Player> playerIDPlayerMap
-    private List<Player> aiPlayers
+    private Map<ObjectId, MongoPlayer> playerIDPlayerMap
+    private List<MongoPlayer> aiPlayers
     private Set<ObjectId> aiIDs
 
     @PostConstruct
@@ -124,12 +125,12 @@ class AIGameListener implements GameListener<TBGame> {
         void run() {
             try {
                 //  Too fast and UI can't tell difference between updates since only looks at second level
-                game = gameRepository.findOne(game.id)
+                game = gameRepository.findById(game.id).get()
                 while ((
-                        ZonedDateTime.now(((ZonedDateTime) game.lastUpdate).zone).toInstant().toEpochMilli() -
-                                ((ZonedDateTime) game.lastUpdate).toInstant().toEpochMilli()) < 250) {
+                        Instant.now().toEpochMilli() -
+                                ((Instant) game.lastUpdate).toEpochMilli()) < 250) {
                     sleep(250)
-                    game = gameRepository.findOne(game.id)
+                    game = gameRepository.findById(game.id).get()
                 }
                 logger.debug('AI Playing ' + game.id)
                 switch (game.gamePhase) {
@@ -173,7 +174,7 @@ class AIGameListener implements GameListener<TBGame> {
     }
 
     @Override
-    void gameChanged(final TBGame game, final Player initiatingPlayer, final boolean initiatingServer) {
+    void gameChanged(final TBGame game, final MongoPlayer initiatingPlayer, final boolean initiatingServer) {
         if (initiatingServer) {
             if (game.players.find { Player p -> aiPlayers.contains(p) }) {
                 if (hasAIWorkToDo(game)) {

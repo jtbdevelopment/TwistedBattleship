@@ -12,7 +12,7 @@ import org.bson.types.ObjectId
  */
 @CompileStatic
 class TBGameFactoryTest extends MongoGameCoreTestCase {
-    TBGameFactory gameFactory = new TBGameFactory()
+    TBGameFactory gameFactory = new TBGameFactory(null, null)
 
     void testNewGame() {
         assert gameFactory.newGame() instanceof TBGame

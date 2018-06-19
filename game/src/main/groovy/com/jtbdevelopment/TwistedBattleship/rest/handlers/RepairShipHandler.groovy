@@ -10,7 +10,7 @@ import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
-import com.jtbdevelopment.games.players.Player
+import com.jtbdevelopment.games.mongo.players.MongoPlayer
 import groovy.transform.CompileStatic
 import org.bson.types.ObjectId
 import org.springframework.stereotype.Component
@@ -29,8 +29,8 @@ class RepairShipHandler extends AbstractSpecialMoveHandler {
 
     @Override
     void validateMoveSpecific(
-            final Player<ObjectId> player,
-            final TBGame game, final Player<ObjectId> targetPlayer, final GridCoordinate coordinate) {
+            final MongoPlayer player,
+            final TBGame game, final MongoPlayer targetPlayer, final GridCoordinate coordinate) {
         TBPlayerState playerState = game.playerDetails[player.id]
 
         if (playerState.emergencyRepairsRemaining < 1) {
@@ -49,8 +49,8 @@ class RepairShipHandler extends AbstractSpecialMoveHandler {
 
     @Override
     TBGame playMove(
-            final Player<ObjectId> player,
-            final TBGame game, final Player<ObjectId> targetedPlayer, final GridCoordinate coordinate) {
+            final MongoPlayer player,
+            final TBGame game, final MongoPlayer targetedPlayer, final GridCoordinate coordinate) {
         TBPlayerState playerState = game.playerDetails[player.id]
         ShipState state = playerState.coordinateShipMap[coordinate]
 

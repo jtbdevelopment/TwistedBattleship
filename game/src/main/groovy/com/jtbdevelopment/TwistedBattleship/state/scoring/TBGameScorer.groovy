@@ -4,6 +4,7 @@ import com.jtbdevelopment.TwistedBattleship.player.TBPlayerAttributes
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.games.dao.AbstractPlayerRepository
+import com.jtbdevelopment.games.mongo.players.MongoPlayer
 import com.jtbdevelopment.games.players.SystemPlayer
 import com.jtbdevelopment.games.publish.PlayerPublisher
 import com.jtbdevelopment.games.state.scoring.GameScorer
@@ -24,7 +25,7 @@ class TBGameScorer implements GameScorer<TBGame> {
     public static final int SCORE_FOR_VICTORY = 10
 
     @Autowired
-    AbstractPlayerRepository playerRepository
+    AbstractPlayerRepository<ObjectId, MongoPlayer> playerRepository
 
     @Autowired
     PlayerPublisher playerPublisher
@@ -39,7 +40,7 @@ class TBGameScorer implements GameScorer<TBGame> {
 
         def nonSystemPlayers = game.players.findAll { !(it in SystemPlayer) }
         def updatedPlayers = nonSystemPlayers.collect {
-            def player = playerRepository.findOne(it.id)
+            def player = playerRepository.findById(it.id).get()
             TBPlayerAttributes attributes = (TBPlayerAttributes) player.gameSpecificPlayerAttributes
             TBPlayerState state = game.playerDetails[(ObjectId) player.id]
             if (state.alive) {

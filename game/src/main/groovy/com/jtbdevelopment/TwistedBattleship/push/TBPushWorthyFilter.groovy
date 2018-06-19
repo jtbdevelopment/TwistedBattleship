@@ -1,10 +1,10 @@
 package com.jtbdevelopment.TwistedBattleship.push
 
+import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
-import com.jtbdevelopment.games.players.Player
+import com.jtbdevelopment.games.mongo.players.MongoPlayer
 import com.jtbdevelopment.games.push.PushWorthyFilter
 import com.jtbdevelopment.games.state.GamePhase
-import com.jtbdevelopment.games.state.MultiPlayerGame
 import com.jtbdevelopment.games.state.PlayerState
 import org.bson.types.ObjectId
 import org.springframework.stereotype.Component
@@ -14,9 +14,9 @@ import org.springframework.stereotype.Component
  * Time: 6:40 PM
  */
 @Component
-class TBPushWorthyFilter implements PushWorthyFilter {
+class TBPushWorthyFilter implements PushWorthyFilter<ObjectId, GameFeature, TBGame, MongoPlayer> {
     @Override
-    boolean shouldPush(final Player player, final MultiPlayerGame mpGame) {
+    boolean shouldPush(final MongoPlayer player, final TBGame mpGame) {
         TBGame game = (TBGame) mpGame;
         switch (game.gamePhase) {
             case GamePhase.Playing:

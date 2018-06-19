@@ -3,9 +3,14 @@ package com.jtbdevelopment.TwistedBattleship.rest.services
 import com.jtbdevelopment.TwistedBattleship.rest.Target
 import com.jtbdevelopment.TwistedBattleship.rest.handlers.*
 import com.jtbdevelopment.TwistedBattleship.rest.services.messages.ShipAndCoordinates
+import com.jtbdevelopment.TwistedBattleship.state.GameFeature
+import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
+import com.jtbdevelopment.TwistedBattleship.state.masked.TBMaskedGame
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
+import com.jtbdevelopment.games.mongo.players.MongoPlayer
 import com.jtbdevelopment.games.rest.AbstractMultiPlayerGameServices
+import com.jtbdevelopment.games.rest.handlers.*
 import groovy.transform.CompileStatic
 import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,7 +28,7 @@ import javax.ws.rs.core.MediaType
  */
 @Component
 @CompileStatic
-class GameServices extends AbstractMultiPlayerGameServices<ObjectId> {
+class GameServices extends AbstractMultiPlayerGameServices<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> {
     @Autowired
     SetupShipsHandler setupShipsHandler
 
@@ -44,6 +49,15 @@ class GameServices extends AbstractMultiPlayerGameServices<ObjectId> {
 
     @Autowired
     CruiseMissileHandler cruiseMissileHandler
+
+    GameServices(
+            final GameGetterHandler<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> gameGetterHandler,
+            final DeclineRematchOptionHandler<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> declineRematchOptionHandler,
+            final ChallengeResponseHandler<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> responseHandler,
+            final ChallengeToRematchHandler<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> rematchHandler,
+            final QuitHandler<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> quitHandler) {
+        super(gameGetterHandler, declineRematchOptionHandler, responseHandler, rematchHandler, quitHandler)
+    }
 
     @PUT
     @Path("setup")

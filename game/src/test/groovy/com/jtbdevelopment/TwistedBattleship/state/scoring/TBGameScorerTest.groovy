@@ -10,50 +10,23 @@ import com.jtbdevelopment.games.dao.AbstractPlayerRepository
 import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
 import com.jtbdevelopment.games.mongo.players.MongoPlayer
 import com.jtbdevelopment.games.mongo.players.MongoSystemPlayer
-import com.jtbdevelopment.games.players.Player
 import com.jtbdevelopment.games.publish.PlayerPublisher
 import org.bson.types.ObjectId
-
-import java.rmi.UnexpectedException
+import org.junit.Before
+import org.junit.Test
+import org.mockito.Mockito
 
 /**
  * Date: 4/27/15
  * Time: 6:25 PM
  */
 class TBGameScorerTest extends MongoGameCoreTestCase {
-    def publishedPlayers = []
     def loaded1 = (MongoPlayer) PONE.clone()
     def loaded2 = (MongoPlayer) PTWO.clone()
     def saved1 = new MongoPlayer()
     def saved2 = new MongoPlayer()
-    AbstractPlayerRepository mockRepository = [
-            findOne: {
-                ObjectId id ->
-                    switch (id) {
-                        case PONE.id:
-                            return loaded1
-                        case PTWO.id:
-                            return loaded2
-                    }
-                    throw new UnexpectedException("unknown id")
-            },
-            save   : {
-                Player p ->
-                    if (p.is(loaded1)) {
-                        return saved1
-                    }
-                    if (p.is(loaded2)) {
-                        return saved2
-                    }
-                    throw new UnexpectedException("unknown id")
-            }
-    ] as AbstractPlayerRepository
-    PlayerPublisher mockPublisher = [
-            publish: {
-                Player p ->
-                    publishedPlayers.add(p)
-            }
-    ] as PlayerPublisher
+    private AbstractPlayerRepository<ObjectId, MongoPlayer> mockRepository = Mockito.mock(AbstractPlayerRepository.class)
+    private PlayerPublisher mockPublisher = Mockito.mock(PlayerPublisher.class)
 
     MongoSystemPlayer systemPlayer = new MongoSystemPlayer()
 
@@ -67,13 +40,17 @@ class TBGameScorerTest extends MongoGameCoreTestCase {
 
     TBGameScorer scorer = new TBGameScorer(playerRepository: mockRepository, playerPublisher: mockPublisher)
 
-    @Override
-    protected void setUp() {
-        publishedPlayers.clear()
+    @Before
+    void setUp() {
+        Mockito.when(mockRepository.findById(PONE.id)).thenReturn(Optional.of(loaded1))
+        Mockito.when(mockRepository.findById(PTWO.id)).thenReturn(Optional.of(loaded2))
+        Mockito.when(mockRepository.save(PONE)).thenReturn(saved1)
+        Mockito.when(mockRepository.save(PTWO)).thenReturn(saved2)
         loaded1.gameSpecificPlayerAttributes = new TBPlayerAttributes()
         loaded2.gameSpecificPlayerAttributes = new TBPlayerAttributes()
     }
 
+    @Test
     void testScoresLiving() {
         assert game.is(scorer.scoreGame(game))
         assert 15 == game.playerDetails[PONE.id].scoreFromLiving
@@ -81,6 +58,8 @@ class TBGameScorerTest extends MongoGameCoreTestCase {
         assert 15 == game.playerDetails[PONE.id].totalScore
         assert 2 == game.playerDetails[PTWO.id].totalScore
     }
+
+    @Test
 
     void testAdjustsPlayerWinStreaksAndWinsLosses() {
         ((TBPlayerAttributes) loaded1.gameSpecificPlayerAttributes).currentWinStreak = 5
@@ -94,7 +73,8 @@ class TBGameScorerTest extends MongoGameCoreTestCase {
 
         scorer.scoreGame(game)
 
-        assert [saved1, saved2] as Set == publishedPlayers as Set
+        Mockito.verify(mockPublisher).publish(saved2)
+        Mockito.verify(mockPublisher).publish(saved1)
         TBPlayerAttributes attributes = (TBPlayerAttributes) loaded1.gameSpecificPlayerAttributes
         assert 6 == attributes.currentWinStreak
         assert 11 == attributes.wins

@@ -11,6 +11,7 @@ import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
+import com.jtbdevelopment.games.mongo.players.MongoPlayer
 import com.jtbdevelopment.games.players.Player
 import groovy.transform.CompileStatic
 import org.bson.types.ObjectId
@@ -37,8 +38,8 @@ class EvasiveManeuverHandler extends AbstractSpecialMoveHandler {
 
     @Override
     void validateMoveSpecific(
-            final Player<ObjectId> player,
-            final TBGame game, final Player<ObjectId> targetPlayer, final GridCoordinate coordinate) {
+            final MongoPlayer player,
+            final TBGame game, final MongoPlayer targetPlayer, final GridCoordinate coordinate) {
 
         def state = game.playerDetails[player.id]
         if (state.evasiveManeuversRemaining < 1) {
@@ -52,8 +53,8 @@ class EvasiveManeuverHandler extends AbstractSpecialMoveHandler {
 
     @Override
     TBGame playMove(
-            final Player<ObjectId> player,
-            final TBGame game, final Player<ObjectId> targetedPlayer, final GridCoordinate coordinate) {
+            final MongoPlayer player,
+            final TBGame game, final MongoPlayer targetedPlayer, final GridCoordinate coordinate) {
         TBPlayerState playerState = game.playerDetails[player.id]
         ShipState ship = playerState.coordinateShipMap[coordinate]
 

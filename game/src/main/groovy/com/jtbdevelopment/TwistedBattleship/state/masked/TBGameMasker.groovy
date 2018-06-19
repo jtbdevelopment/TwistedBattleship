@@ -6,21 +6,15 @@ import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.TwistedBattleship.state.grid.ConsolidateGridViews
 import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
 import com.jtbdevelopment.games.players.Player
-import com.jtbdevelopment.games.state.MultiPlayerGame
 import com.jtbdevelopment.games.state.masking.AbstractMultiPlayerGameMasker
-import com.jtbdevelopment.games.state.masking.MaskedMultiPlayerGame
-import groovy.transform.CompileStatic
 import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
-
-import java.time.ZonedDateTime
 
 /**
  * Date: 4/2/15
  * Time: 6:44 PM
  */
-@CompileStatic
 @Component
 class TBGameMasker extends AbstractMultiPlayerGameMasker<ObjectId, GameFeature, TBGame, TBMaskedGame> {
     @Autowired
@@ -38,8 +32,8 @@ class TBGameMasker extends AbstractMultiPlayerGameMasker<ObjectId, GameFeature, 
 
     @Override
     protected void copyUnmaskedData(
-            final MultiPlayerGame<ObjectId, ZonedDateTime, GameFeature> mpGame,
-            final MaskedMultiPlayerGame<GameFeature> playerMaskedGame) {
+            final TBGame mpGame,
+            final TBMaskedGame playerMaskedGame) {
         super.copyUnmaskedData(mpGame, playerMaskedGame)
         TBMaskedGame masked = (TBMaskedGame) playerMaskedGame
         TBGame game = (TBGame) mpGame
@@ -51,9 +45,9 @@ class TBGameMasker extends AbstractMultiPlayerGameMasker<ObjectId, GameFeature, 
 
     @Override
     protected void copyMaskedData(
-            final MultiPlayerGame<ObjectId, ZonedDateTime, GameFeature> mpGame,
+            final TBGame mpGame,
             final Player<ObjectId> player,
-            final MaskedMultiPlayerGame<GameFeature> playerMaskedGame,
+            final TBMaskedGame playerMaskedGame,
             final Map<ObjectId, Player<ObjectId>> idMap) {
         super.copyMaskedData(mpGame, player, playerMaskedGame, idMap)
         TBMaskedGame masked = (TBMaskedGame) playerMaskedGame

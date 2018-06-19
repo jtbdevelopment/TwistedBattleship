@@ -11,36 +11,53 @@ import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState
 import com.jtbdevelopment.TwistedBattleship.state.grid.Grid
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
+import com.jtbdevelopment.TwistedBattleship.state.masked.TBMaskedGame
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
+import com.jtbdevelopment.games.dao.AbstractGameRepository
+import com.jtbdevelopment.games.dao.AbstractPlayerRepository
+import com.jtbdevelopment.games.events.GamePublisher
 import com.jtbdevelopment.games.exceptions.input.GameIsNotInPlayModeException
 import com.jtbdevelopment.games.exceptions.input.PlayerOutOfTurnException
+import com.jtbdevelopment.games.mongo.players.MongoPlayer
 import com.jtbdevelopment.games.players.Player
 import com.jtbdevelopment.games.rest.handlers.AbstractGameActionHandler
 import com.jtbdevelopment.games.state.GamePhase
-import groovy.transform.CompileStatic
+import com.jtbdevelopment.games.state.masking.GameMasker
+import com.jtbdevelopment.games.state.transition.GameTransitionEngine
+import com.jtbdevelopment.games.tracking.GameEligibilityTracker
 import org.bson.types.ObjectId
 
 /**
  * Date: 5/7/15
  * Time: 8:21 PM
  */
-@CompileStatic
-abstract class AbstractPlayerMoveHandler extends AbstractGameActionHandler<Target, TBGame> {
+abstract class AbstractPlayerMoveHandler
+        extends AbstractGameActionHandler<Target, ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> {
     abstract boolean targetSelf()
 
     abstract int movesRequired(final TBGame game)
 
     abstract TBGame playMove(
-            final Player<ObjectId> player,
-            final TBGame game, final Player<ObjectId> targetedPlayer, final GridCoordinate coordinate)
+            final MongoPlayer player,
+            final TBGame game, final MongoPlayer targetedPlayer, final GridCoordinate coordinate)
 
     abstract void validateMoveSpecific(
-            final Player<ObjectId> player,
-            final TBGame game, final Player<ObjectId> targetPlayer, final GridCoordinate coordinate);
+            final MongoPlayer player,
+            final TBGame game, final MongoPlayer targetPlayer, final GridCoordinate coordinate);
+
+    AbstractPlayerMoveHandler(
+            final AbstractPlayerRepository<ObjectId, MongoPlayer> playerRepository,
+            final AbstractGameRepository<ObjectId, GameFeature, TBGame> gameRepository,
+            final GameTransitionEngine<TBGame> transitionEngine,
+            final GamePublisher<TBGame, MongoPlayer> gamePublisher,
+            final GameEligibilityTracker gameTracker,
+            final GameMasker<ObjectId, TBGame, TBMaskedGame> gameMasker) {
+        super(playerRepository, gameRepository, transitionEngine, gamePublisher, gameTracker, gameMasker)
+    }
 
     @Override
     protected TBGame handleActionInternal(
-            final Player player, final TBGame game, final Target target) {
+            final MongoPlayer player, final TBGame game, final Target target) {
 
         Player targetPlayer = loadPlayerMD5(target.player)
         validateMove(player, game, targetPlayer, target.coordinate)
@@ -49,7 +66,7 @@ abstract class AbstractPlayerMoveHandler extends AbstractGameActionHandler<Targe
 
     //  TODO - unit test
     @SuppressWarnings("GrMethodMayBeStatic")
-    protected TBGame markHiddenHits(TBGame game, Player player) {
+    protected TBGame markHiddenHits(TBGame game, MongoPlayer player) {
         TBPlayerState state = game.playerDetails[(ObjectId) player.id]
         state.shipStates.each {
             ShipState shipState ->
@@ -99,7 +116,8 @@ abstract class AbstractPlayerMoveHandler extends AbstractGameActionHandler<Targe
     }
 
     private void validateMove(
-            final Player player, final TBGame game, final Player targetPlayer, final GridCoordinate coordinate) {
+            final MongoPlayer player,
+            final TBGame game, final MongoPlayer targetPlayer, final GridCoordinate coordinate) {
         if (game.currentPlayer != player.id) {
             throw new PlayerOutOfTurnException()
         }

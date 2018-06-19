@@ -8,8 +8,9 @@ class TBGameTest extends GroovyTestCase {
     TBGame game = new TBGame()
 
     void testInitialize() {
-        assertNull game.gamePhase
         assert [:] == game.playerDetails
+        assertEquals([], game.startingShips)
+        assertNull(game.currentPlayer)
         assert 0 == game.gridSize
         assertNull game.rematchTimestamp
         assertNull game.previousId

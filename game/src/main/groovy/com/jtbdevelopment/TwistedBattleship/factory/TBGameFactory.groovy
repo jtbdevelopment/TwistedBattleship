@@ -3,6 +3,8 @@ package com.jtbdevelopment.TwistedBattleship.factory
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.games.factory.AbstractMultiPlayerGameFactory
+import com.jtbdevelopment.games.factory.GameInitializer
+import com.jtbdevelopment.games.factory.GameValidator
 import org.bson.types.ObjectId
 import org.springframework.stereotype.Component
 
@@ -11,7 +13,13 @@ import org.springframework.stereotype.Component
  * Time: 2:26 PM
  */
 @Component
-class TBGameFactory extends AbstractMultiPlayerGameFactory<TBGame, GameFeature> {
+class TBGameFactory extends AbstractMultiPlayerGameFactory<ObjectId, GameFeature, TBGame> {
+    TBGameFactory(
+            final List<GameInitializer> gameInitializers,
+            final List<GameValidator> gameValidators) {
+        super(gameInitializers, gameValidators)
+    }
+
     @Override
     protected TBGame newGame() {
         return new TBGame()

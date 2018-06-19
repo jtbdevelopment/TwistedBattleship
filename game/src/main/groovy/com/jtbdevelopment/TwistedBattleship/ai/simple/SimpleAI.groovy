@@ -14,8 +14,8 @@ import com.jtbdevelopment.TwistedBattleship.state.grid.GridCircleUtil
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
+import com.jtbdevelopment.games.mongo.players.MongoPlayer
 import com.jtbdevelopment.games.players.Player
-import groovy.transform.CompileStatic
 import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -25,7 +25,6 @@ import org.springframework.stereotype.Component
  * Time: 6:58 AM
  */
 @SuppressWarnings("GroovyUnusedDeclaration")
-@CompileStatic
 @Component
 class SimpleAI implements AI {
     @Autowired
@@ -47,11 +46,11 @@ class SimpleAI implements AI {
         return playerCreator.players
     }
 
-    void setup(final TBGame game, final Player player) {
+    void setup(final TBGame game, final MongoPlayer player) {
         randomizedSetup.setup(game, player)
     }
 
-    void playOneMove(final TBGame game, final Player player) {
+    void playOneMove(final TBGame game, final MongoPlayer player) {
         TBPlayerState myState = game.playerDetails[(ObjectId) player.id]
         // if we hit something cruise missile it
         if (!didCruiseMissile(game, player, myState)) {
@@ -77,7 +76,7 @@ class SimpleAI implements AI {
         }
     }
 
-    private boolean didCruiseMissile(final TBGame game, final Player player, final TBPlayerState myState) {
+    private boolean didCruiseMissile(final TBGame game, final MongoPlayer player, final TBPlayerState myState) {
         if (game.movesForSpecials <= game.remainingMoves && myState.cruiseMissilesRemaining > 0) {
             List<WeightedTarget> targets = myState.opponentGrids.findAll {
                 game.playerDetails[it.key].alive
@@ -119,7 +118,7 @@ class SimpleAI implements AI {
         return false
     }
 
-    private boolean didRepair(final TBGame game, final Player player, final TBPlayerState myState) {
+    private boolean didRepair(final TBGame game, final MongoPlayer player, final TBPlayerState myState) {
         if (game.movesForSpecials <= game.remainingMoves && myState.emergencyRepairsRemaining > 0) {
             boolean perShip = game.features.contains(GameFeature.PerShip)
             Set<Ship> allowedShips = perShip ?
@@ -148,7 +147,7 @@ class SimpleAI implements AI {
         return false
     }
 
-    private boolean didEvasive(final TBGame game, final Player player, final TBPlayerState myState) {
+    private boolean didEvasive(final TBGame game, final MongoPlayer player, final TBPlayerState myState) {
         if (game.movesForSpecials <= game.remainingMoves && myState.evasiveManeuversRemaining > 0) {
             def damagedShip = myState.shipStates.findAll {
                 ShipState state ->
@@ -173,7 +172,7 @@ class SimpleAI implements AI {
         return false
     }
 
-    private boolean didSpy(final TBGame game, final Player player, TBPlayerState myState) {
+    private boolean didSpy(final TBGame game, final MongoPlayer player, TBPlayerState myState) {
         if (game.movesForSpecials <= game.remainingMoves && myState.spysRemaining > 0) {
             List<WeightedTarget> targets = myState.opponentGrids.findAll {
                 game.playerDetails[it.key].alive
@@ -232,7 +231,7 @@ class SimpleAI implements AI {
         return false
     }
 
-    private boolean didECM(final TBGame game, final Player player, final TBPlayerState myState) {
+    private boolean didECM(final TBGame game, final MongoPlayer player, final TBPlayerState myState) {
         if (game.movesForSpecials <= game.remainingMoves && myState.ecmsRemaining > 0) {
             List<WeightedTarget> targets = myState.opponentViews.findAll {
                 game.playerDetails[it.key].alive
@@ -298,7 +297,7 @@ class SimpleAI implements AI {
         return false
     }
 
-    private boolean didFire(final TBGame game, final Player player, final TBPlayerState myState) {
+    private boolean didFire(final TBGame game, final MongoPlayer player, final TBPlayerState myState) {
         List<WeightedTarget> targets = myState.opponentGrids.findAll {
             game.playerDetails[it.key].alive
         }.collectMany {

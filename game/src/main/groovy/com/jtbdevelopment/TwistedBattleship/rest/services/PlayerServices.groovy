@@ -4,10 +4,18 @@ import com.jtbdevelopment.TwistedBattleship.ai.AI
 import com.jtbdevelopment.TwistedBattleship.exceptions.NotAValidThemeException
 import com.jtbdevelopment.TwistedBattleship.player.TBPlayerAttributes
 import com.jtbdevelopment.TwistedBattleship.rest.services.messages.FeaturesAndPlayers
-import com.jtbdevelopment.games.players.Player
+import com.jtbdevelopment.TwistedBattleship.state.GameFeature
+import com.jtbdevelopment.TwistedBattleship.state.TBGame
+import com.jtbdevelopment.TwistedBattleship.state.masked.TBMaskedGame
+import com.jtbdevelopment.games.dao.AbstractPlayerRepository
+import com.jtbdevelopment.games.dao.StringToIDConverter
+import com.jtbdevelopment.games.mongo.players.MongoPlayer
 import com.jtbdevelopment.games.players.friendfinder.SourceBasedFriendFinder
 import com.jtbdevelopment.games.rest.AbstractMultiPlayerServices
 import com.jtbdevelopment.games.rest.handlers.NewGameHandler
+import com.jtbdevelopment.games.rest.handlers.PlayerGamesFinderHandler
+import com.jtbdevelopment.games.rest.services.AbstractAdminServices
+import com.jtbdevelopment.games.rest.services.AbstractGameServices
 import com.jtbdevelopment.games.state.masking.AbstractMaskedMultiPlayerGame
 import com.jtbdevelopment.games.state.masking.MaskedMultiPlayerGame
 import groovy.transform.CompileStatic
@@ -26,24 +34,35 @@ import javax.ws.rs.core.MediaType
  */
 @Component
 @CompileStatic
-class PlayerServices extends AbstractMultiPlayerServices<ObjectId> {
+class PlayerServices extends AbstractMultiPlayerServices<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> {
 
     @Autowired
-    NewGameHandler newGameHandler
+    private final NewGameHandler newGameHandler
 
-    @Autowired
-    List<AI> aiList
+    private final Map<String, String> aiPlayers
+    private final AbstractPlayerRepository<ObjectId, MongoPlayer> playerRepository
 
-    private Map<String, String> aiPlayers
-
-    @PostConstruct
-    void setup() {
-        aiPlayers = aiList.collectEntries {
+    PlayerServices(
+            final AbstractGameServices<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> gamePlayServices,
+            final AbstractPlayerRepository<ObjectId, MongoPlayer> playerRepository,
+            final AbstractAdminServices<ObjectId, GameFeature, TBGame, MongoPlayer> adminServices,
+            final StringToIDConverter<ObjectId> stringToIDConverter,
+            final PlayerGamesFinderHandler<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> playerGamesFinderHandler,
+            final NewGameHandler<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> newGameHandler,
+            final List<AI> aiList) {
+        super(gamePlayServices, playerRepository, adminServices, stringToIDConverter, playerGamesFinderHandler)
+        this.aiPlayers = aiList.collectEntries {
             AI ai ->
                 ai.players.collectEntries {
                     [(it.md5): it.displayName]
                 }
         }
+        this.playerRepository = playerRepository
+        this.newGameHandler = newGameHandler
+    }
+
+    @PostConstruct
+    void setup() {
     }
 
     @POST
@@ -61,7 +80,7 @@ class PlayerServices extends AbstractMultiPlayerServices<ObjectId> {
     @Path('changeTheme/{newTheme}')
     @Produces(MediaType.APPLICATION_JSON)
     public Object changeTheme(@PathParam('newTheme') String newTheme) {
-        Player player = playerRepository.findOne((ObjectId) playerID.get())
+        MongoPlayer player = playerRepository.findById((ObjectId) playerID.get()).get()
         TBPlayerAttributes playerAttributes = (TBPlayerAttributes) player.gameSpecificPlayerAttributes
         if (StringUtils.isEmpty(newTheme) || !playerAttributes.availableThemes.contains(newTheme)) {
             throw new NotAValidThemeException()
@@ -70,9 +89,10 @@ class PlayerServices extends AbstractMultiPlayerServices<ObjectId> {
         return playerRepository.save(player)
     }
 
+    //  TODO - test
     @Override
-    Map<String, Object> getFriends() {
-        Map<String, Object> friends = super.getFriends()
+    Map<String, Set<? super Object>> getFriendsV2() {
+        Map<String, Set<? super Object>> friends = super.getFriendsV2()
         ((Map<String, String>) friends[SourceBasedFriendFinder.MASKED_FRIENDS_KEY]).putAll(aiPlayers)
         friends
     }

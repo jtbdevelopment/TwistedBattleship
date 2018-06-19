@@ -4,12 +4,14 @@ import com.jtbdevelopment.TwistedBattleship.exceptions.NotAValidThemeException
 import com.jtbdevelopment.TwistedBattleship.player.TBPlayerAttributes
 import com.jtbdevelopment.TwistedBattleship.rest.services.messages.FeaturesAndPlayers
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
+import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.masked.TBMaskedGame
 import com.jtbdevelopment.games.dao.AbstractPlayerRepository
 import com.jtbdevelopment.games.mongo.players.MongoPlayer
 import com.jtbdevelopment.games.rest.handlers.NewGameHandler
 import groovy.transform.TypeChecked
 import org.bson.types.ObjectId
+import org.mockito.Mockito
 
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
@@ -19,7 +21,9 @@ import javax.ws.rs.core.MediaType
  * Time: 7:01 PM
  */
 class PlayerServicesTest extends GroovyTestCase {
-    PlayerServices playerServices = new PlayerServices()
+    private AbstractPlayerRepository<ObjectId, MongoPlayer> playerRepository = Mockito.mock(AbstractPlayerRepository.class)
+    private NewGameHandler<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> newGameHandler = Mockito.mock(NewGameHandler.class)
+    private PlayerServices playerServices = new PlayerServices(null, playerRepository, null, null, null, newGameHandler, Collections.emptyList())
 
     void testCreateNewGame() {
         def APLAYER = new ObjectId()
@@ -28,15 +32,7 @@ class PlayerServicesTest extends GroovyTestCase {
         def players = ["1", "2", "3"]
         FeaturesAndPlayers input = new FeaturesAndPlayers(features: features, players: players)
         TBMaskedGame game = new TBMaskedGame()
-        playerServices.newGameHandler = [
-                handleCreateNewGame: {
-                    ObjectId i, List<String> p, Set<GameFeature> f ->
-                        assert i == APLAYER
-                        assert p == players
-                        assert f == features
-                        game
-                }
-        ] as NewGameHandler
+        Mockito.when(newGameHandler.handleCreateNewGame(APLAYER, players, features)).thenReturn(game)
         assert game.is(playerServices.createNewGame(input))
     }
 
@@ -62,13 +58,7 @@ class PlayerServicesTest extends GroovyTestCase {
         MongoPlayer player = new MongoPlayer()
         playerServices.playerID.set(APLAYER)
 
-        playerServices.playerRepository = [
-                findOne: {
-                    ObjectId id ->
-                        assert APLAYER == id
-                        return player
-                }
-        ] as AbstractPlayerRepository
+        Mockito.when(playerRepository.findById(APLAYER)).thenReturn(Optional.of(player))
 
         shouldFail(NotAValidThemeException.class, {
             playerServices.changeTheme(null)
@@ -81,13 +71,7 @@ class PlayerServicesTest extends GroovyTestCase {
         player.gameSpecificPlayerAttributes = new TBPlayerAttributes(player: player)
         playerServices.playerID.set(APLAYER)
 
-        playerServices.playerRepository = [
-                findOne: {
-                    ObjectId id ->
-                        assert APLAYER == id
-                        return player
-                }
-        ] as AbstractPlayerRepository
+        Mockito.when(playerRepository.findById(APLAYER)).thenReturn(Optional.of(player))
 
         shouldFail(NotAValidThemeException.class, {
             playerServices.changeTheme('somecrazytheme')
@@ -106,21 +90,10 @@ class PlayerServicesTest extends GroovyTestCase {
 
         playerServices.playerID.set(APLAYER)
 
-        playerServices.playerRepository = [
-                findOne: {
-                    ObjectId id ->
-                        assert APLAYER == id
-                        return player
-                },
-                save   : {
-                    MongoPlayer p ->
-                        assert p.is(player)
-                        assert p.gameSpecificPlayerAttributes.theme == goodTheme
-                        updatedPlayer
-                }
-        ] as AbstractPlayerRepository
-
+        Mockito.when(playerRepository.findById(APLAYER)).thenReturn(Optional.of(player))
+        Mockito.when(playerRepository.save(player)).thenReturn(updatedPlayer)
         assert updatedPlayer.is(playerServices.changeTheme(goodTheme))
+        assertEquals(goodTheme, player.gameSpecificPlayerAttributes.theme)
     }
 
     void testChangeThemeAnnotations() {

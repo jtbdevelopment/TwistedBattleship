@@ -1,7 +1,7 @@
 package com.jtbdevelopment.TwistedBattleship.ai
 
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
-import com.jtbdevelopment.games.players.Player
+import com.jtbdevelopment.games.mongo.players.MongoPlayer
 import groovy.transform.CompileStatic
 
 /**
@@ -12,9 +12,9 @@ import groovy.transform.CompileStatic
 interface AI {
     public static int PLAYERS_TO_MAKE = 5
 
-    List<Player> getPlayers()
+    List<MongoPlayer> getPlayers()
 
-    void setup(final TBGame game, final Player player)
+    void setup(final TBGame game, final MongoPlayer player)
 
-    void playOneMove(final TBGame game, final Player player)
+    void playOneMove(final TBGame game, final MongoPlayer player)
 }
