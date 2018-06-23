@@ -83,7 +83,7 @@ class RepairShipHandlerTest extends AbstractBaseHandlerTest {
         assert GridCellState.KnownShip == game.playerDetails[PTHREE.id].opponentGrids[PONE.id].get(3, 0)
         assert GridCellState.KnownShip == game.playerDetails[PONE.id].opponentViews[PTHREE.id].get(3, 0)
         game.playerDetails.each {
-            assert "1 repaired their Aircraft Carrier." == it.value.actionLog[-1].description
+            assert "100000000000000000000000 repaired their Aircraft Carrier." == it.value.actionLog[-1].description
             assert TBActionLogEntry.TBActionType.Repaired == it.value.actionLog[-1].actionType
         }
         assert 0 == game.playerDetails[PONE.id].emergencyRepairsRemaining

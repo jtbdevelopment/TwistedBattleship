@@ -96,7 +96,7 @@ class ECMHandlerTest extends AbstractBaseHandlerTest {
         assert GridCellState.KnownByRehit == game.playerDetails[PONE.id].opponentViews[PTWO.id].get(5, 7)
         assert GridCellState.KnownByOtherHit == game.playerDetails[PONE.id].opponentViews[PTWO.id].get(5, 8)
         assert 2 == game.playerDetails[PONE.id].ecmsRemaining
-        assert game.playerDetails[PONE.id].actionLog[-1].description == "1 deployed an ECM."
+        assert game.playerDetails[PONE.id].actionLog[-1].description == "100000000000000000000000 deployed an ECM."
         assert game.playerDetails[PONE.id].actionLog[-1].actionType == TBActionLogEntry.TBActionType.UsedECM
 
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PONE.id].actionLog[0].actionType
@@ -115,7 +115,7 @@ class ECMHandlerTest extends AbstractBaseHandlerTest {
         game.playerDetails.findAll { it.key != PONE.id }.each {
             ObjectId id, TBPlayerState state ->
 
-                assert state.actionLog[-1].description == "1 deployed an ECM."
+                assert state.actionLog[-1].description == "100000000000000000000000 deployed an ECM."
                 assert state.actionLog[-1].actionType == TBActionLogEntry.TBActionType.UsedECM
                 (0..14).each {
                     int row ->

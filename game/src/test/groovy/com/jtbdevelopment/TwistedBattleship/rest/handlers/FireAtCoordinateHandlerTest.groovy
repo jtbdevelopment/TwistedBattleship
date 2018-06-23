@@ -36,13 +36,13 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
 
         def coordinate = new GridCoordinate(7, 6)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
-        assert "You fired at 1 (7,6) and missed." == game.playerDetails[PTWO.id].actionLog[-1].description
+        assert "You fired at 100000000000000000000000 (7,6) and missed." == game.playerDetails[PTWO.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTWO.id].actionLog[-1].actionType
-        assert "2 fired at (7,6) and missed." == game.playerDetails[PONE.id].actionLog[-1].description
+        assert "200000000000000000000000 fired at (7,6) and missed." == game.playerDetails[PONE.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PONE.id].actionLog[-1].actionType
-        assert "2 fired at 1 (7,6) and missed." == game.playerDetails[PTHREE.id].actionLog[-1].description
+        assert "200000000000000000000000 fired at 100000000000000000000000 (7,6) and missed." == game.playerDetails[PTHREE.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTHREE.id].actionLog[-1].actionType
-        assert "2 fired at 1 (7,6) and missed." == game.playerDetails[PFOUR.id].actionLog[-1].description
+        assert "200000000000000000000000 fired at 100000000000000000000000 (7,6) and missed." == game.playerDetails[PFOUR.id].actionLog[-1].description
         game.playerDetails[PONE.id].shipStates.each {
             assert it.ship.gridSize == it.healthRemaining
             assertNull it.shipSegmentHit.find { it }
@@ -70,13 +70,13 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
 
         def coordinate = new GridCoordinate(7, 6)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
-        assert "You fired at 1 (7,6) and missed." == game.playerDetails[PTWO.id].actionLog[-1].description
+        assert "You fired at 100000000000000000000000 (7,6) and missed." == game.playerDetails[PTWO.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTWO.id].actionLog[-1].actionType
-        assert "2 fired at (7,6) and missed." == game.playerDetails[PONE.id].actionLog[-1].description
+        assert "200000000000000000000000 fired at (7,6) and missed." == game.playerDetails[PONE.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PONE.id].actionLog[-1].actionType
-        assert "2 fired at 1." == game.playerDetails[PTHREE.id].actionLog[-1].description
+        assert "200000000000000000000000 fired at 100000000000000000000000." == game.playerDetails[PTHREE.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTHREE.id].actionLog[-1].actionType
-        assert "2 fired at 1." == game.playerDetails[PFOUR.id].actionLog[-1].description
+        assert "200000000000000000000000 fired at 100000000000000000000000." == game.playerDetails[PFOUR.id].actionLog[-1].description
         game.playerDetails[PONE.id].shipStates.each {
             assert it.ship.gridSize == it.healthRemaining
             assertNull it.shipSegmentHit.find { it }
@@ -104,13 +104,13 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
 
         def coordinate = new GridCoordinate(7, 7)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
-        assert "You fired at 1 (7,7) and hit!" == game.playerDetails[PTWO.id].actionLog[-1].description
+        assert "You fired at 100000000000000000000000 (7,7) and hit!" == game.playerDetails[PTWO.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTWO.id].actionLog[-1].actionType
-        assert "2 fired at (7,7) and hit your Destroyer!" == game.playerDetails[PONE.id].actionLog[-1].description
+        assert "200000000000000000000000 fired at (7,7) and hit your Destroyer!" == game.playerDetails[PONE.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PONE.id].actionLog[-1].actionType
-        assert "2 fired at 1 (7,7) and hit!" == game.playerDetails[PTHREE.id].actionLog[-1].description
+        assert "200000000000000000000000 fired at 100000000000000000000000 (7,7) and hit!" == game.playerDetails[PTHREE.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTHREE.id].actionLog[-1].actionType
-        assert "2 fired at 1 (7,7) and hit!" == game.playerDetails[PFOUR.id].actionLog[-1].description
+        assert "200000000000000000000000 fired at 100000000000000000000000 (7,7) and hit!" == game.playerDetails[PFOUR.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PFOUR.id].actionLog[-1].actionType
         game.playerDetails[PONE.id].shipStates.each {
             if (it.ship == Ship.Destroyer) {
@@ -144,13 +144,13 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
 
         def coordinate = new GridCoordinate(7, 7)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
-        assert "You fired at 1 (7,7) and hit!" == game.playerDetails[PTWO.id].actionLog[-1].description
+        assert "You fired at 100000000000000000000000 (7,7) and hit!" == game.playerDetails[PTWO.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTWO.id].actionLog[-1].actionType
-        assert "2 fired at (7,7) and hit your Destroyer!" == game.playerDetails[PONE.id].actionLog[-1].description
+        assert "200000000000000000000000 fired at (7,7) and hit your Destroyer!" == game.playerDetails[PONE.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PONE.id].actionLog[-1].actionType
-        assert "2 fired at 1." == game.playerDetails[PTHREE.id].actionLog[-1].description
+        assert "200000000000000000000000 fired at 100000000000000000000000." == game.playerDetails[PTHREE.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTHREE.id].actionLog[-1].actionType
-        assert "2 fired at 1." == game.playerDetails[PFOUR.id].actionLog[-1].description
+        assert "200000000000000000000000 fired at 100000000000000000000000." == game.playerDetails[PFOUR.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PFOUR.id].actionLog[-1].actionType
         game.playerDetails[PONE.id].shipStates.each {
             if (it.ship == Ship.Destroyer) {
@@ -188,13 +188,13 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         game.playerDetails[PFOUR.id].opponentGrids[PONE.id].set(coordinate, GridCellState.KnownByHit)
         game.playerDetails[PONE.id].opponentViews[PFOUR.id].set(coordinate, GridCellState.KnownByHit)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
-        assert "You fired at 1 (7,7) and hit an already damaged area!" == game.playerDetails[PTWO.id].actionLog[-1].description
+        assert "You fired at 100000000000000000000000 (7,7) and hit an already damaged area!" == game.playerDetails[PTWO.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTWO.id].actionLog[-1].actionType
-        assert "2 fired at (7,7) and re-hit your Destroyer!" == game.playerDetails[PONE.id].actionLog[-1].description
+        assert "200000000000000000000000 fired at (7,7) and re-hit your Destroyer!" == game.playerDetails[PONE.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PONE.id].actionLog[-1].actionType
-        assert "2 fired at 1 (7,7) and re-hit a damaged area!" == game.playerDetails[PTHREE.id].actionLog[-1].description
+        assert "200000000000000000000000 fired at 100000000000000000000000 (7,7) and re-hit a damaged area!" == game.playerDetails[PTHREE.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTHREE.id].actionLog[-1].actionType
-        assert "2 fired at 1 (7,7) and re-hit a damaged area!" == game.playerDetails[PFOUR.id].actionLog[-1].description
+        assert "200000000000000000000000 fired at 100000000000000000000000 (7,7) and re-hit a damaged area!" == game.playerDetails[PFOUR.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PFOUR.id].actionLog[-1].actionType
         game.playerDetails[PONE.id].shipStates.each {
             if (it.ship == Ship.Destroyer) {
@@ -244,13 +244,13 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         game.playerDetails[PFOUR.id].opponentGrids[PONE.id].set(coordinate, GridCellState.KnownByHit)
         game.playerDetails[PONE.id].opponentViews[PFOUR.id].set(coordinate, GridCellState.KnownByHit)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
-        assert "You fired at 1 (7,7) and hit an already damaged area!" == game.playerDetails[PTWO.id].actionLog[-1].description
+        assert "You fired at 100000000000000000000000 (7,7) and hit an already damaged area!" == game.playerDetails[PTWO.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTWO.id].actionLog[-1].actionType
-        assert "2 fired at (7,7) and re-hit your Destroyer!" == game.playerDetails[PONE.id].actionLog[-1].description
+        assert "200000000000000000000000 fired at (7,7) and re-hit your Destroyer!" == game.playerDetails[PONE.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PONE.id].actionLog[-1].actionType
-        assert "2 fired at 1." == game.playerDetails[PTHREE.id].actionLog[-1].description
+        assert "200000000000000000000000 fired at 100000000000000000000000." == game.playerDetails[PTHREE.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTHREE.id].actionLog[-1].actionType
-        assert "2 fired at 1." == game.playerDetails[PFOUR.id].actionLog[-1].description
+        assert "200000000000000000000000 fired at 100000000000000000000000." == game.playerDetails[PFOUR.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PFOUR.id].actionLog[-1].actionType
         game.playerDetails[PONE.id].shipStates.each {
             if (it.ship == Ship.Destroyer) {
@@ -298,21 +298,21 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         game.playerDetails[PONE.id].shipStates.find { it.ship == Ship.Destroyer }.healthRemaining = 1
         def coordinate = new GridCoordinate(7, 7)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
-        assert "You fired at 1 (7,7) and hit!" == game.playerDetails[PTWO.id].actionLog[-2].description
+        assert "You fired at 100000000000000000000000 (7,7) and hit!" == game.playerDetails[PTWO.id].actionLog[-2].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTWO.id].actionLog[-2].actionType
-        assert "2 fired at (7,7) and hit your Destroyer!" == game.playerDetails[PONE.id].actionLog[-2].description
+        assert "200000000000000000000000 fired at (7,7) and hit your Destroyer!" == game.playerDetails[PONE.id].actionLog[-2].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PONE.id].actionLog[-2].actionType
-        assert "2 fired at 1 (7,7) and hit!" == game.playerDetails[PTHREE.id].actionLog[-2].description
+        assert "200000000000000000000000 fired at 100000000000000000000000 (7,7) and hit!" == game.playerDetails[PTHREE.id].actionLog[-2].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTHREE.id].actionLog[-2].actionType
-        assert "2 fired at 1 (7,7) and hit!" == game.playerDetails[PFOUR.id].actionLog[-2].description
+        assert "200000000000000000000000 fired at 100000000000000000000000 (7,7) and hit!" == game.playerDetails[PFOUR.id].actionLog[-2].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PFOUR.id].actionLog[-2].actionType
-        assert "You sunk a Destroyer for 1!" == game.playerDetails[PTWO.id].actionLog[-1].description
+        assert "You sunk a Destroyer for 100000000000000000000000!" == game.playerDetails[PTWO.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Sunk == game.playerDetails[PTWO.id].actionLog[-1].actionType
-        assert "2 sunk your Destroyer!" == game.playerDetails[PONE.id].actionLog[-1].description
+        assert "200000000000000000000000 sunk your Destroyer!" == game.playerDetails[PONE.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Sunk == game.playerDetails[PONE.id].actionLog[-1].actionType
-        assert "2 sunk a Destroyer for 1!" == game.playerDetails[PTHREE.id].actionLog[-1].description
+        assert "200000000000000000000000 sunk a Destroyer for 100000000000000000000000!" == game.playerDetails[PTHREE.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Sunk == game.playerDetails[PTHREE.id].actionLog[-1].actionType
-        assert "2 sunk a Destroyer for 1!" == game.playerDetails[PFOUR.id].actionLog[-1].description
+        assert "200000000000000000000000 sunk a Destroyer for 100000000000000000000000!" == game.playerDetails[PFOUR.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Sunk == game.playerDetails[PFOUR.id].actionLog[-1].actionType
         game.playerDetails[PONE.id].shipStates.each {
             if (it.ship == Ship.Destroyer) {
@@ -355,17 +355,17 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         game.playerDetails[PONE.id].shipStates.find { it.ship == Ship.Destroyer }.healthRemaining = 1
         def coordinate = new GridCoordinate(7, 7)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
-        assert "You fired at 1 (7,7) and hit!" == game.playerDetails[PTWO.id].actionLog[-2].description
+        assert "You fired at 100000000000000000000000 (7,7) and hit!" == game.playerDetails[PTWO.id].actionLog[-2].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTWO.id].actionLog[-2].actionType
-        assert "2 fired at (7,7) and hit your Destroyer!" == game.playerDetails[PONE.id].actionLog[-2].description
+        assert "200000000000000000000000 fired at (7,7) and hit your Destroyer!" == game.playerDetails[PONE.id].actionLog[-2].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PONE.id].actionLog[-2].actionType
-        assert "2 fired at 1." == game.playerDetails[PTHREE.id].actionLog[-1].description
+        assert "200000000000000000000000 fired at 100000000000000000000000." == game.playerDetails[PTHREE.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTHREE.id].actionLog[-1].actionType
-        assert "2 fired at 1." == game.playerDetails[PFOUR.id].actionLog[-1].description
+        assert "200000000000000000000000 fired at 100000000000000000000000." == game.playerDetails[PFOUR.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PFOUR.id].actionLog[-1].actionType
-        assert "You sunk a Destroyer for 1!" == game.playerDetails[PTWO.id].actionLog[-1].description
+        assert "You sunk a Destroyer for 100000000000000000000000!" == game.playerDetails[PTWO.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Sunk == game.playerDetails[PTWO.id].actionLog[-1].actionType
-        assert "2 sunk your Destroyer!" == game.playerDetails[PONE.id].actionLog[-1].description
+        assert "200000000000000000000000 sunk your Destroyer!" == game.playerDetails[PONE.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Sunk == game.playerDetails[PONE.id].actionLog[-1].actionType
         game.playerDetails[PONE.id].shipStates.each {
             if (it.ship == Ship.Destroyer) {
@@ -419,29 +419,29 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         game.playerDetails[PONE.id].shipStates.find { it.ship == Ship.Destroyer }.healthRemaining = 1
         def coordinate = new GridCoordinate(7, 7)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
-        assert "You fired at 1 (7,7) and hit!" == game.playerDetails[PTWO.id].actionLog[-3].description
+        assert "You fired at 100000000000000000000000 (7,7) and hit!" == game.playerDetails[PTWO.id].actionLog[-3].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTWO.id].actionLog[-3].actionType
-        assert "2 fired at (7,7) and hit your Destroyer!" == game.playerDetails[PONE.id].actionLog[-3].description
+        assert "200000000000000000000000 fired at (7,7) and hit your Destroyer!" == game.playerDetails[PONE.id].actionLog[-3].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PONE.id].actionLog[-3].actionType
-        assert "2 fired at 1 (7,7) and hit!" == game.playerDetails[PTHREE.id].actionLog[-3].description
+        assert "200000000000000000000000 fired at 100000000000000000000000 (7,7) and hit!" == game.playerDetails[PTHREE.id].actionLog[-3].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTHREE.id].actionLog[-3].actionType
-        assert "2 fired at 1 (7,7) and hit!" == game.playerDetails[PFOUR.id].actionLog[-3].description
+        assert "200000000000000000000000 fired at 100000000000000000000000 (7,7) and hit!" == game.playerDetails[PFOUR.id].actionLog[-3].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PFOUR.id].actionLog[-3].actionType
-        assert "You sunk a Destroyer for 1!" == game.playerDetails[PTWO.id].actionLog[-2].description
+        assert "You sunk a Destroyer for 100000000000000000000000!" == game.playerDetails[PTWO.id].actionLog[-2].description
         assert TBActionLogEntry.TBActionType.Sunk == game.playerDetails[PTWO.id].actionLog[-2].actionType
-        assert "2 sunk your Destroyer!" == game.playerDetails[PONE.id].actionLog[-2].description
+        assert "200000000000000000000000 sunk your Destroyer!" == game.playerDetails[PONE.id].actionLog[-2].description
         assert TBActionLogEntry.TBActionType.Sunk == game.playerDetails[PONE.id].actionLog[-2].actionType
-        assert "2 sunk a Destroyer for 1!" == game.playerDetails[PTHREE.id].actionLog[-2].description
+        assert "200000000000000000000000 sunk a Destroyer for 100000000000000000000000!" == game.playerDetails[PTHREE.id].actionLog[-2].description
         assert TBActionLogEntry.TBActionType.Sunk == game.playerDetails[PTHREE.id].actionLog[-2].actionType
-        assert "2 sunk a Destroyer for 1!" == game.playerDetails[PFOUR.id].actionLog[-2].description
+        assert "200000000000000000000000 sunk a Destroyer for 100000000000000000000000!" == game.playerDetails[PFOUR.id].actionLog[-2].description
         assert TBActionLogEntry.TBActionType.Sunk == game.playerDetails[PFOUR.id].actionLog[-2].actionType
-        assert "1 has been defeated!" == game.playerDetails[PTWO.id].actionLog[-1].description
+        assert "100000000000000000000000 has been defeated!" == game.playerDetails[PTWO.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Defeated == game.playerDetails[PTWO.id].actionLog[-1].actionType
-        assert "1 has been defeated!" == game.playerDetails[PONE.id].actionLog[-1].description
+        assert "100000000000000000000000 has been defeated!" == game.playerDetails[PONE.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Defeated == game.playerDetails[PONE.id].actionLog[-1].actionType
-        assert "1 has been defeated!" == game.playerDetails[PTHREE.id].actionLog[-1].description
+        assert "100000000000000000000000 has been defeated!" == game.playerDetails[PTHREE.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Defeated == game.playerDetails[PTHREE.id].actionLog[-1].actionType
-        assert "1 has been defeated!" == game.playerDetails[PFOUR.id].actionLog[-1].description
+        assert "100000000000000000000000 has been defeated!" == game.playerDetails[PFOUR.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Defeated == game.playerDetails[PFOUR.id].actionLog[-1].actionType
         game.playerDetails[PONE.id].shipStates.each {
             if (it.ship == Ship.Destroyer) {
@@ -495,25 +495,25 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         game.playerDetails[PONE.id].shipStates.find { it.ship == Ship.Destroyer }.healthRemaining = 1
         def coordinate = new GridCoordinate(7, 7)
         assert game.is(handler.playMove(PTWO, game, PONE, coordinate))
-        assert "You fired at 1 (7,7) and hit!" == game.playerDetails[PTWO.id].actionLog[-3].description
+        assert "You fired at 100000000000000000000000 (7,7) and hit!" == game.playerDetails[PTWO.id].actionLog[-3].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTWO.id].actionLog[-3].actionType
-        assert "2 fired at (7,7) and hit your Destroyer!" == game.playerDetails[PONE.id].actionLog[-3].description
+        assert "200000000000000000000000 fired at (7,7) and hit your Destroyer!" == game.playerDetails[PONE.id].actionLog[-3].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PONE.id].actionLog[-3].actionType
-        assert "2 fired at 1." == game.playerDetails[PTHREE.id].actionLog[-2].description
+        assert "200000000000000000000000 fired at 100000000000000000000000." == game.playerDetails[PTHREE.id].actionLog[-2].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PTHREE.id].actionLog[-2].actionType
-        assert "2 fired at 1." == game.playerDetails[PFOUR.id].actionLog[-2].description
+        assert "200000000000000000000000 fired at 100000000000000000000000." == game.playerDetails[PFOUR.id].actionLog[-2].description
         assert TBActionLogEntry.TBActionType.Fired == game.playerDetails[PFOUR.id].actionLog[-2].actionType
-        assert "You sunk a Destroyer for 1!" == game.playerDetails[PTWO.id].actionLog[-2].description
+        assert "You sunk a Destroyer for 100000000000000000000000!" == game.playerDetails[PTWO.id].actionLog[-2].description
         assert TBActionLogEntry.TBActionType.Sunk == game.playerDetails[PTWO.id].actionLog[-2].actionType
-        assert "2 sunk your Destroyer!" == game.playerDetails[PONE.id].actionLog[-2].description
+        assert "200000000000000000000000 sunk your Destroyer!" == game.playerDetails[PONE.id].actionLog[-2].description
         assert TBActionLogEntry.TBActionType.Sunk == game.playerDetails[PONE.id].actionLog[-2].actionType
-        assert "1 has been defeated!" == game.playerDetails[PTWO.id].actionLog[-1].description
+        assert "100000000000000000000000 has been defeated!" == game.playerDetails[PTWO.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Defeated == game.playerDetails[PTWO.id].actionLog[-1].actionType
-        assert "1 has been defeated!" == game.playerDetails[PONE.id].actionLog[-1].description
+        assert "100000000000000000000000 has been defeated!" == game.playerDetails[PONE.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Defeated == game.playerDetails[PONE.id].actionLog[-1].actionType
-        assert "1 has been defeated!" == game.playerDetails[PTHREE.id].actionLog[-1].description
+        assert "100000000000000000000000 has been defeated!" == game.playerDetails[PTHREE.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Defeated == game.playerDetails[PTHREE.id].actionLog[-1].actionType
-        assert "1 has been defeated!" == game.playerDetails[PFOUR.id].actionLog[-1].description
+        assert "100000000000000000000000 has been defeated!" == game.playerDetails[PFOUR.id].actionLog[-1].description
         assert TBActionLogEntry.TBActionType.Defeated == game.playerDetails[PFOUR.id].actionLog[-1].actionType
         game.playerDetails[PONE.id].shipStates.each {
             if (it.ship == Ship.Destroyer) {

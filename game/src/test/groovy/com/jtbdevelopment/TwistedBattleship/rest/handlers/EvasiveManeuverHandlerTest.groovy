@@ -125,7 +125,7 @@ class EvasiveManeuverHandlerTest extends AbstractBaseHandlerTest {
         assert GridCellState.ObscuredHit == game.playerDetails[PONE.id].opponentViews[PTHREE.id].get(2, 0)
 
         game.playerDetails.each {
-            assert "1 performed evasive maneuvers." == it.value.actionLog[-1].description
+            assert "100000000000000000000000 performed evasive maneuvers." == it.value.actionLog[-1].description
             assert TBActionLogEntry.TBActionType.PerformedManeuvers == it.value.actionLog[-1].actionType
         }
         assert 2 == game.playerDetails[PONE.id].evasiveManeuversRemaining
