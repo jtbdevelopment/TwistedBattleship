@@ -15,7 +15,7 @@ import org.junit.Test
  * Time: 6:38 PM
  */
 class ECMHandlerTest extends AbstractBaseHandlerTest {
-    ECMHandler handler = new ECMHandler()
+    ECMHandler handler = new ECMHandler(null, null, null, null, null, null)
 
     @Test
     void testTargetSelf() {
@@ -30,14 +30,12 @@ class ECMHandlerTest extends AbstractBaseHandlerTest {
         assert 2 == handler.movesRequired(game)
     }
 
-    @Test
+    @Test(expected = NoECMActionsRemainException.class)
     void testValidatesECMsRemain() {
         game.playerDetails[PONE.id].ecmsRemaining = 1
         handler.validateMoveSpecific(PONE, game, PONE, new GridCoordinate(3, 0))
         game.playerDetails[PONE.id].ecmsRemaining = 0
-        shouldFail(NoECMActionsRemainException.class, {
-            handler.validateMoveSpecific(PONE, game, PONE, new GridCoordinate(3, 0))
-        })
+        handler.validateMoveSpecific(PONE, game, PONE, new GridCoordinate(3, 0))
     }
 
     //  No need to test isolated vs shared intel on this mov

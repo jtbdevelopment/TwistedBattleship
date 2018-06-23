@@ -9,12 +9,15 @@ import com.jtbdevelopment.TwistedBattleship.state.scoring.TBGameScorer
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import org.junit.Test
 
+import static org.junit.Assert.assertFalse
+import static org.junit.Assert.assertNull
+
 /**
  * Date: 5/12/15
  * Time: 11:50 AM
  */
 class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
-    FireAtCoordinateHandler handler = new FireAtCoordinateHandler()
+    FireAtCoordinateHandler handler = new FireAtCoordinateHandler(null, null, null, null, null, null)
 
     @Test
     void testTargetSelf() {
@@ -135,6 +138,7 @@ class FireAtCoordinateHandlerTest extends AbstractBaseHandlerTest {
         assert TBGameScorer.SCORE_FOR_HIT == game.playerDetails[PTWO.id].scoreFromHits
     }
 
+    @Test
     void testFireAndHitWithIsolatedIntel() {
         game.features.add(GameFeature.IsolatedIntel)
 

@@ -18,7 +18,7 @@ import org.junit.Test
  * Time: 6:41 AM
  */
 class EvasiveManeuverHandlerTest extends AbstractBaseHandlerTest {
-    EvasiveManeuverHandler handler = new EvasiveManeuverHandler()
+    EvasiveManeuverHandler handler = new EvasiveManeuverHandler(null, null, null, null, null, null)
 
     @Test
     void testTargetSelf() {
@@ -33,22 +33,18 @@ class EvasiveManeuverHandlerTest extends AbstractBaseHandlerTest {
         assert 2 == handler.movesRequired(game)
     }
 
-    @Test
+    @Test(expected = NoEmergencyManeuverActionsRemainException.class)
     void testValidatesRepairsRemain() {
         game.playerDetails[PONE.id].evasiveManeuversRemaining = 1
         handler.validateMoveSpecific(PONE, game, PONE, new GridCoordinate(3, 0))
         game.playerDetails[PONE.id].evasiveManeuversRemaining = 0
-        shouldFail(NoEmergencyManeuverActionsRemainException.class, {
-            handler.validateMoveSpecific(PONE, game, PONE, new GridCoordinate(3, 0))
-        })
+        handler.validateMoveSpecific(PONE, game, PONE, new GridCoordinate(3, 0))
     }
 
-    @Test
+    @Test(expected = NoShipAtCoordinateException.class)
     void testValidatesShipExistsAtCoordinate() {
         game.playerDetails[PONE.id].emergencyRepairsRemaining = 1
-        shouldFail(NoShipAtCoordinateException.class, {
-            handler.validateMoveSpecific(PONE, game, PONE, new GridCoordinate(3, 1))
-        })
+        handler.validateMoveSpecific(PONE, game, PONE, new GridCoordinate(3, 1))
     }
 
     //  No need to really test isolated vs shared

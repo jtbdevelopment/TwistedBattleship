@@ -8,6 +8,7 @@ import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
 import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
 import com.jtbdevelopment.games.state.GamePhase
 import com.jtbdevelopment.games.state.scoring.GameScorer
+import org.bson.types.ObjectId
 import org.junit.Test
 import org.mockito.Mockito
 
@@ -72,12 +73,13 @@ class GamePhaseTransitionEngineTest extends MongoGameCoreTestCase {
     @Test
     void testEvaluatePlayingPhaseOnePlayerAlive() {
         TBGame game = new TBGame()
+        game.setId(new ObjectId())
         boolean scorerCalled = false
         game.gamePhase = GamePhase.RoundOver.Playing
         game.playerDetails = [
-                (PONE.id): new TBPlayerState(shipStates: [new ShipState(Ship.Battleship, 0, [], [])]),
+                (PONE.id) : new TBPlayerState(shipStates: [new ShipState(Ship.Battleship, 0, [], [])]),
                 (PFOUR.id): new TBPlayerState(shipStates: []),
-                (PTWO.id): new TBPlayerState(shipStates: [new ShipState(Ship.Submarine, 1, [new GridCoordinate(0, 0), new GridCoordinate(0, 1), new GridCoordinate(0, 2)], [false, true, true])])
+                (PTWO.id) : new TBPlayerState(shipStates: [new ShipState(Ship.Submarine, 1, [new GridCoordinate(0, 0), new GridCoordinate(0, 1), new GridCoordinate(0, 2)], [false, true, true])])
         ]
         game.playerDetails[PONE.id].opponentGrids[PTWO.id] = new Grid(10)
         game.playerDetails[PONE.id].opponentGrids[PTWO.id].set(0, 2, GridCellState.KnownByHit)
@@ -87,9 +89,8 @@ class GamePhaseTransitionEngineTest extends MongoGameCoreTestCase {
         Mockito.when(gameScorer.scoreGame(game)).thenReturn(game)
         TBGame result = engine.evaluateGame(game)
         assert result.gamePhase == GamePhase.RoundOver
-        assert scorerCalled
         game.playerDetails.each {
-            assert "2 defeated all challengers!" == it.value.actionLog[-1].description
+            assert "200000000000000000000000 defeated all challengers!" == it.value.actionLog[-1].description
             assert TBActionLogEntry.TBActionType.Victory == it.value.actionLog[-1].actionType
         }
         assert GridCellState.RevealedShip == game.playerDetails[PONE.id].opponentGrids[PTWO.id].get(0, 0)

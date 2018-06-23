@@ -11,7 +11,6 @@ import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
 import com.jtbdevelopment.games.mongo.players.MongoPlayer
 import com.jtbdevelopment.games.rest.AbstractMultiPlayerGameServices
 import com.jtbdevelopment.games.rest.handlers.*
-import groovy.transform.CompileStatic
 import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -27,7 +26,6 @@ import javax.ws.rs.core.MediaType
  * Time: 9:42 PM
  */
 @Component
-@CompileStatic
 class GameServices extends AbstractMultiPlayerGameServices<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> {
     @Autowired
     SetupShipsHandler setupShipsHandler

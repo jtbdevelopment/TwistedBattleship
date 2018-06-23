@@ -11,16 +11,25 @@ import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
 import groovy.transform.TypeChecked
 import org.bson.types.ObjectId
 import org.junit.Test
+import org.mockito.Mockito
+import org.mockito.invocation.InvocationOnMock
+import org.mockito.stubbing.Answer
 
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
+
+import static org.junit.Assert.assertNotNull
+import static org.mockito.Matchers.eq
+import static org.mockito.Matchers.isA
 
 /**
  * Date: 5/5/15
  * Time: 6:38 PM
  */
 class GameServicesTest extends MongoGameCoreTestCase {
-    GameServices services = new GameServices()
+    private SetupShipsHandler setupShipsHandler = Mockito.mock(SetupShipsHandler.class)
+    private ECMHandler ecmHandler = Mockito.mock(ECMHandler.class)
+    private GameServices services = new GameServices(null, null, null, null, null)
 
     @Test
     void testActionAnnotations() {
@@ -85,27 +94,28 @@ class GameServicesTest extends MongoGameCoreTestCase {
         ObjectId gameId = new ObjectId()
         services.playerID.set(PONE.id)
         services.gameID.set(gameId)
-        services.setupShipsHandler = [
-                handleAction: {
-                    Serializable p, Serializable g, List<ShipState> ss ->
-                        assert PONE.id.is(p)
-                        assert gameId.is(g)
-                        assert 2 == ss.size()
-                        def cruiser = ss.find { it.ship == Ship.Cruiser }
-                        assertNotNull cruiser
-                        def destroyer = ss.find { it.ship == Ship.Destroyer }
-                        assertNotNull destroyer
-                        assert cruiser.healthRemaining == 3
-                        assert cruiser.ship == Ship.Cruiser
-                        assert cruiser.shipSegmentHit == [false, false, false]
-                        assert cruiser.shipGridCells.toList() == [new GridCoordinate(0, 9), new GridCoordinate(0, 10), new GridCoordinate(0, 11)]
-                        assert destroyer.healthRemaining == 2
-                        assert destroyer.ship == Ship.Destroyer
-                        assert destroyer.shipSegmentHit == [false, false]
-                        assert destroyer.shipGridCells.toList() == [new GridCoordinate(1, 9), new GridCoordinate(1, 10)]
-                        return maskedGame
-                }
-        ] as SetupShipsHandler
+        services.setupShipsHandler = setupShipsHandler
+
+        Mockito.when(setupShipsHandler.handleAction(eq(PONE.id), eq(gameId), isA(List.class))).then(new Answer<TBMaskedGame>() {
+            @Override
+            TBMaskedGame answer(InvocationOnMock invocation) throws Throwable {
+                List<ShipState> ss = (List<ShipState>) invocation.arguments[2];
+                assert 2 == ss.size()
+                def cruiser = ss.find { it.ship == Ship.Cruiser }
+                assertNotNull cruiser
+                def destroyer = ss.find { it.ship == Ship.Destroyer }
+                assertNotNull destroyer
+                assert cruiser.healthRemaining == 3
+                assert cruiser.ship == Ship.Cruiser
+                assert cruiser.shipSegmentHit == [false, false, false]
+                assert cruiser.shipGridCells.toList() == [new GridCoordinate(0, 9), new GridCoordinate(0, 10), new GridCoordinate(0, 11)]
+                assert destroyer.healthRemaining == 2
+                assert destroyer.ship == Ship.Destroyer
+                assert destroyer.shipSegmentHit == [false, false]
+                assert destroyer.shipGridCells.toList() == [new GridCoordinate(1, 9), new GridCoordinate(1, 10)]
+                return maskedGame
+            }
+        })
         assert maskedGame.is(services.setupShips(input))
     }
 
@@ -192,15 +202,8 @@ class GameServicesTest extends MongoGameCoreTestCase {
         ObjectId gameId = new ObjectId()
         services.playerID.set(PONE.id)
         services.gameID.set(gameId)
-        services.ecmHandler = [
-                handleAction: {
-                    Serializable p, Serializable g, Target t ->
-                        assert PONE.id.is(p)
-                        assert gameId.is(g)
-                        assert target.is(t)
-                        maskedGame
-                }
-        ] as ECMHandler
+        services.ecmHandler = ecmHandler;
+        Mockito.when(ecmHandler.handleAction(PONE.id, gameId, target)).thenReturn(maskedGame)
         assert maskedGame.is(services.ecm(target))
     }
 

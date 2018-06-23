@@ -15,7 +15,7 @@ import org.junit.Test
  * Time: 6:39 AM
  */
 class RepairShipHandlerTest extends AbstractBaseHandlerTest {
-    RepairShipHandler handler = new RepairShipHandler()
+    RepairShipHandler handler = new RepairShipHandler(null, null, null, null, null, null)
 
     @Test
     void testTargetSelf() {
@@ -30,22 +30,18 @@ class RepairShipHandlerTest extends AbstractBaseHandlerTest {
         assert 2 == handler.movesRequired(game)
     }
 
-    @Test
+    @Test(expected = NoRepairActionsRemainException.class)
     void testValidatesRepairsRemain() {
         game.playerDetails[PONE.id].emergencyRepairsRemaining = 1
         handler.validateMoveSpecific(PONE, game, PONE, new GridCoordinate(3, 0))
         game.playerDetails[PONE.id].emergencyRepairsRemaining = 0
-        shouldFail(NoRepairActionsRemainException.class, {
-            handler.validateMoveSpecific(PONE, game, PONE, new GridCoordinate(3, 0))
-        })
+        handler.validateMoveSpecific(PONE, game, PONE, new GridCoordinate(3, 0))
     }
 
-    @Test
+    @Test(expected = NoShipAtCoordinateException.class)
     void testValidatesShipExistsAtCoordinate() {
         game.playerDetails[PONE.id].emergencyRepairsRemaining = 1
-        shouldFail(NoShipAtCoordinateException.class, {
-            handler.validateMoveSpecific(PONE, game, PONE, new GridCoordinate(3, 1))
-        })
+        handler.validateMoveSpecific(PONE, game, PONE, new GridCoordinate(3, 1))
     }
 
     @Test
@@ -97,7 +93,7 @@ class RepairShipHandlerTest extends AbstractBaseHandlerTest {
         }.shipSegmentHit
     }
 
-    @Test
+    @Test(expected = CannotRepairADestroyedShipException.class)
     void testRepairOnDestroyedShip() {
         game.playerDetails[PONE.id].emergencyRepairsRemaining = 1
         game.playerDetails[PONE.id].shipStates.find { it.ship == Ship.Carrier }.healthRemaining = 0
@@ -115,9 +111,7 @@ class RepairShipHandlerTest extends AbstractBaseHandlerTest {
         game.playerDetails[PTHREE.id].opponentGrids[PONE.id].set(3, 0, GridCellState.KnownByHit)
         game.playerDetails[PONE.id].opponentViews[PTHREE.id].set(3, 0, GridCellState.KnownByHit)
 
-        shouldFail(CannotRepairADestroyedShipException.class, {
-            handler.validateMoveSpecific(PONE, game, PONE, new GridCoordinate(4, 0))
+        handler.validateMoveSpecific(PONE, game, PONE, new GridCoordinate(4, 0))
 
-        });
     }
 }

@@ -4,6 +4,8 @@ import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
 import org.junit.Test
 
+import static org.junit.Assert.assertFalse
+
 /**
  * Date: 6/5/15
  * Time: 10:11 PM
