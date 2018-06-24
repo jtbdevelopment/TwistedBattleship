@@ -347,7 +347,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMas
         setup(P2G, P2POSITIONS)
 
         //  Force turn to P2
-        TBGame dbGame = gameRepository.findOne(new ObjectId(game.idAsString))
+        TBGame dbGame = gameRepository.findById(new ObjectId(game.id)).get()
         dbGame.currentPlayer = TEST_PLAYER2.id
         gameRepository.save(dbGame)
         cacheManager.cacheNames.each {
@@ -391,7 +391,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMas
         setup(P2G, P2POSITIONS)
 
         //  Force turn to P2
-        TBGame dbGame = gameRepository.findOne(new ObjectId(game.idAsString))
+        TBGame dbGame = gameRepository.findById(new ObjectId(game.id)).get()
         dbGame.currentPlayer = TEST_PLAYER2.id
         gameRepository.save(dbGame)
         cacheManager.cacheNames.each {
@@ -439,7 +439,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMas
         setup(P2G, P2POSITIONS)
 
         //  Force turn to P2
-        TBGame dbGame = gameRepository.findOne(new ObjectId(game.idAsString))
+        TBGame dbGame = gameRepository.findById(new ObjectId(game.id)).get()
         dbGame.currentPlayer = TEST_PLAYER2.id
         gameRepository.save(dbGame)
         cacheManager.cacheNames.each {
@@ -492,7 +492,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMas
         setup(P2G, P2POSITIONS)
 
         //  Force turn to P2
-        TBGame dbGame = gameRepository.findOne(new ObjectId(game.idAsString))
+        TBGame dbGame = gameRepository.findById(new ObjectId(game.id)).get()
         dbGame.currentPlayer = TEST_PLAYER2.id
         gameRepository.save(dbGame)
         cacheManager.cacheNames.each {
@@ -503,7 +503,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMas
         game = fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 0))
 
         //  Force turn to P1
-        dbGame = gameRepository.findOne(new ObjectId(game.idAsString))
+        dbGame = gameRepository.findById(new ObjectId(game.id)).get()
         dbGame.currentPlayer = TEST_PLAYER1.id
         dbGame.remainingMoves = 5
         gameRepository.save(dbGame)
@@ -553,7 +553,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMas
         setup(P2G, P2POSITIONS)
 
         //  Force turn to P2
-        TBGame dbGame = gameRepository.findOne(new ObjectId(game.idAsString))
+        TBGame dbGame = gameRepository.findById(new ObjectId(game.id)).get()
         dbGame.currentPlayer = TEST_PLAYER2.id
         gameRepository.save(dbGame)
         cacheManager.cacheNames.each {
@@ -564,7 +564,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMas
         game = fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 0))
 
         //  Force turn to P1
-        dbGame = gameRepository.findOne(new ObjectId(game.idAsString))
+        dbGame = gameRepository.findById(new ObjectId(game.id)).get()
         dbGame.currentPlayer = TEST_PLAYER1.id
         dbGame.remainingMoves = 5
         gameRepository.save(dbGame)
@@ -610,7 +610,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMas
         setup(P2G, P2POSITIONS)
 
         //  Force turn to P2
-        TBGame dbGame = gameRepository.findOne(new ObjectId(game.idAsString))
+        TBGame dbGame = gameRepository.findById(new ObjectId(game.id)).get()
         dbGame.currentPlayer = TEST_PLAYER2.id
         gameRepository.save(dbGame)
         cacheManager.cacheNames.each {
@@ -621,7 +621,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMas
         game = fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 0))
 
         //  Force turn to P1
-        dbGame = gameRepository.findOne(new ObjectId(game.idAsString))
+        dbGame = gameRepository.findById(new ObjectId(game.id)).get()
         dbGame.currentPlayer = TEST_PLAYER1.id
         dbGame.remainingMoves = 5
         gameRepository.save(dbGame)
@@ -703,7 +703,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMas
         setup(P2G, P2POSITIONS)
 
         //  Force turn and order
-        TBGame dbGame = gameRepository.findOne(new ObjectId(game.idAsString))
+        TBGame dbGame = gameRepository.findById(new ObjectId(game.id)).get()
         dbGame.currentPlayer = TEST_PLAYER1.id
         dbGame.players = [TEST_PLAYER1, TEST_PLAYER2, TEST_PLAYER3]
         gameRepository.save(dbGame)

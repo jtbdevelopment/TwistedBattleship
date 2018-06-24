@@ -46,6 +46,7 @@ class TBPlayerAttributes extends AbstractPlayerGameTrackingAttributes {
     //  TODO - title etc
 
     @Transient
+    @java.beans.Transient
     @Override
     void setPlayer(final Player player) {
         super.setPlayer(player)
