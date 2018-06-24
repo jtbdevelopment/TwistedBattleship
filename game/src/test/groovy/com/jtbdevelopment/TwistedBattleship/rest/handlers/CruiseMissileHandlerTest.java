@@ -65,11 +65,11 @@ public class CruiseMissileHandlerTest extends AbstractBaseHandlerTest {
     public void testMovesRequired() {
         TBGame game = new TBGame();
         game.setMovesForSpecials(1);
-        assert 1 == handler.movesRequired(game);
+        assertEquals(1, handler.movesRequired(game));
 
         game = new TBGame();
         game.setMovesForSpecials(2);
-        assert 2 == handler.movesRequired(game);
+        assertEquals(2, handler.movesRequired(game));
     }
 
     @Test(expected = NoCruiseMissileActionsRemaining.class)

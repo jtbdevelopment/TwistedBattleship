@@ -25,6 +25,8 @@ import javax.ws.rs.core.MediaType;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import static org.junit.Assert.*;
+
 /**
  * Date: 5/5/15
  * Time: 6:38 PM
@@ -57,14 +59,14 @@ public class GameServicesTest extends MongoGameCoreTestCase {
             } catch (NoSuchMethodException e) {
                 throw new RuntimeException(e);
             }
-            Assert.assertEquals(4, DefaultGroovyMethods.size(m.getAnnotations()));
+            assertEquals(4, DefaultGroovyMethods.size(m.getAnnotations()));
             assert m.isAnnotationPresent(PUT.class);
             assert m.isAnnotationPresent(Produces.class);
-            Assert.assertArrayEquals(new ArrayList<>(Arrays.asList(MediaType.APPLICATION_JSON)).toArray(), m.getAnnotation(Produces.class).value());
+            assertArrayEquals(Collections.singletonList(MediaType.APPLICATION_JSON).toArray(), m.getAnnotation(Produces.class).value());
             assert m.isAnnotationPresent(Path.class);
             assert m.getAnnotation(Path.class).value().equals(details.get(0));
             assert m.isAnnotationPresent(Consumes.class);
-            Assert.assertArrayEquals(new ArrayList<>(Arrays.asList(MediaType.APPLICATION_JSON)).toArray(), m.getAnnotation(Consumes.class).value());
+            assertArrayEquals(Collections.singletonList(MediaType.APPLICATION_JSON).toArray(), m.getAnnotation(Consumes.class).value());
         });
     }
 
@@ -90,19 +92,20 @@ public class GameServicesTest extends MongoGameCoreTestCase {
             @Override
             public TBMaskedGame answer(InvocationOnMock invocation) {
                 List<ShipState> ss = (List<ShipState>) invocation.getArguments()[2];
-                assert 2 == ss.size();
+                assertEquals(2, ss.size());
                 ShipState cruiser = ss.stream().filter(s -> Ship.Cruiser.equals(s.getShip())).findFirst().get();
                 Assert.assertNotNull(cruiser);
                 ShipState destroyer = ss.stream().filter(s -> Ship.Destroyer.equals(s.getShip())).findFirst().get();
                 Assert.assertNotNull(destroyer);
-                assert cruiser.getHealthRemaining() == 3;
-                assert cruiser.getShip().equals(Ship.Cruiser);
-                assert DefaultGroovyMethods.equals(cruiser.getShipSegmentHit(), new ArrayList<>(Arrays.asList(false, false, false)));
-                assert DefaultGroovyMethods.equals(DefaultGroovyMethods.toList(cruiser.getShipGridCells()), new ArrayList<>(Arrays.asList(new GridCoordinate(0, 9), new GridCoordinate(0, 10), new GridCoordinate(0, 11))));
-                assert destroyer.getHealthRemaining() == 2;
-                assert destroyer.getShip().equals(Ship.Destroyer);
-                assert DefaultGroovyMethods.equals(destroyer.getShipSegmentHit(), new ArrayList<>(Arrays.asList(false, false)));
-                assert DefaultGroovyMethods.equals(DefaultGroovyMethods.toList(destroyer.getShipGridCells()), new ArrayList<>(Arrays.asList(new GridCoordinate(1, 9), new GridCoordinate(1, 10))));
+                assertEquals(3, cruiser.getHealthRemaining());
+                assertEquals(Ship.Cruiser, cruiser.getShip());
+                assertEquals(Arrays.asList(false, false, false), cruiser.getShipSegmentHit());
+                assertEquals(Arrays.asList(new GridCoordinate(0, 9), new GridCoordinate(0, 10), new GridCoordinate(0, 11)), cruiser.getShipGridCells());
+
+                assertEquals(2, destroyer.getHealthRemaining());
+                assertEquals(Ship.Destroyer, destroyer.getShip());
+                assertEquals(Arrays.asList(false, false), destroyer.getShipSegmentHit());
+                assertEquals(Arrays.asList(new GridCoordinate(1, 9), new GridCoordinate(1, 10)), destroyer.getShipGridCells());
                 return maskedGame;
             }
 
@@ -121,7 +124,7 @@ public class GameServicesTest extends MongoGameCoreTestCase {
         services.getGameID().set(gameId);
         services.fireAtCoordinateHandler = fireAtCoordinateHandler;
         Mockito.when(fireAtCoordinateHandler.handleAction(PONE.getId(), gameId, target)).thenReturn(maskedGame);
-        assert DefaultGroovyMethods.is(maskedGame, services.fire(target));
+        assertSame(maskedGame, services.fire(target));
     }
 
     @Test
@@ -135,7 +138,7 @@ public class GameServicesTest extends MongoGameCoreTestCase {
         services.getGameID().set(gameId);
         services.cruiseMissileHandler = cruiseMissileHandler;
         Mockito.when(cruiseMissileHandler.handleAction(PONE.getId(), gameId, target)).thenReturn(maskedGame);
-        assert DefaultGroovyMethods.is(maskedGame, services.cruiseMissile(target));
+        assertSame(maskedGame, services.cruiseMissile(target));
     }
 
     @Test
@@ -149,7 +152,7 @@ public class GameServicesTest extends MongoGameCoreTestCase {
         services.getGameID().set(gameId);
         services.spyHandler = spyHandler;
         Mockito.when(spyHandler.handleAction(PONE.getId(), gameId, target)).thenReturn(maskedGame);
-        assert DefaultGroovyMethods.is(maskedGame, services.spy(target));
+        assertSame(maskedGame, services.spy(target));
     }
 
     @Test
@@ -163,7 +166,7 @@ public class GameServicesTest extends MongoGameCoreTestCase {
         services.getGameID().set(gameId);
         services.repairShipHandler = repairShipHandler;
         Mockito.when(repairShipHandler.handleAction(PONE.getId(), gameId, target)).thenReturn(maskedGame);
-        assert DefaultGroovyMethods.is(maskedGame, services.repair(target));
+        assertSame(maskedGame, services.repair(target));
     }
 
     @Test
@@ -178,7 +181,7 @@ public class GameServicesTest extends MongoGameCoreTestCase {
         services.getGameID().set(gameId);
         services.ecmHandler = ecmHandler;
         Mockito.when(ecmHandler.handleAction(PONE.getId(), gameId, target)).thenReturn(maskedGame);
-        assert DefaultGroovyMethods.is(maskedGame, services.ecm(target));
+        assertSame(maskedGame, services.ecm(target));
     }
 
     @Test
@@ -192,6 +195,6 @@ public class GameServicesTest extends MongoGameCoreTestCase {
         services.getGameID().set(gameId);
         services.evasiveManeuverHandler = evasiveManeuverHandler;
         Mockito.when(evasiveManeuverHandler.handleAction(Matchers.eq(PONE.getId()), Matchers.eq(gameId), Matchers.eq(target))).thenReturn(maskedGame);
-        assert DefaultGroovyMethods.is(maskedGame, services.move(target));
+        assertSame(maskedGame, services.move(target));
     }
 }
