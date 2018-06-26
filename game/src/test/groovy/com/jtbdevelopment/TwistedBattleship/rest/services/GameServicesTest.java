@@ -9,7 +9,6 @@ import com.jtbdevelopment.TwistedBattleship.state.ships.Ship;
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState;
 import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase;
 import org.bson.types.ObjectId;
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Matchers;
@@ -55,11 +54,11 @@ public class GameServicesTest extends MongoGameCoreTestCase {
         map.forEach((method, details) -> {
             Method m;
             try {
-                m = GameServices.class.getMethod(method, DefaultGroovyMethods.asType(details.get(1), Class[].class));
+                m = GameServices.class.getMethod(method, ((List<Class>) details.get(1)).toArray(new Class[0]));
             } catch (NoSuchMethodException e) {
                 throw new RuntimeException(e);
             }
-            assertEquals(4, DefaultGroovyMethods.size(m.getAnnotations()));
+            assertEquals(4, m.getAnnotations().length);
             assert m.isAnnotationPresent(PUT.class);
             assert m.isAnnotationPresent(Produces.class);
             assertArrayEquals(Collections.singletonList(MediaType.APPLICATION_JSON).toArray(), m.getAnnotation(Produces.class).value());
@@ -110,7 +109,7 @@ public class GameServicesTest extends MongoGameCoreTestCase {
             }
 
         });
-        assert DefaultGroovyMethods.is(maskedGame, services.setupShips(input));
+        assertSame(maskedGame, services.setupShips(input));
     }
 
     @Test
