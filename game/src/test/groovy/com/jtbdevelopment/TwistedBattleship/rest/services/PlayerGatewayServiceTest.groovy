@@ -6,7 +6,6 @@ import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCircleUtil
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
-import groovy.transform.TypeChecked
 
 import javax.ws.rs.GET
 import javax.ws.rs.Path
@@ -77,9 +76,7 @@ class PlayerGatewayServiceTest extends GroovyTestCase {
 
     void testGetFeaturesAnnotations() {
         def gameServices = PlayerGatewayService.getMethod("featuresAndDescriptions", [] as Class[])
-        assert (gameServices.annotations.size() == 3 ||
-                (gameServices.isAnnotationPresent(TypeChecked.TypeCheckingInfo) && gameServices.annotations.size() == 4)
-        )
+        assert gameServices.annotations.size() == 3
         assert gameServices.isAnnotationPresent(Path.class)
         assert gameServices.getAnnotation(Path.class).value() == "features"
         assert gameServices.isAnnotationPresent(GET.class)
@@ -95,9 +92,7 @@ class PlayerGatewayServiceTest extends GroovyTestCase {
 
     void testGetCirclesAnnotations() {
         def gameServices = PlayerGatewayService.getMethod("circleSizes", [] as Class[])
-        assert (gameServices.annotations.size() == 3 ||
-                (gameServices.isAnnotationPresent(TypeChecked.TypeCheckingInfo) && gameServices.annotations.size() == 4)
-        )
+        assert gameServices.annotations.size() == 3
         assert gameServices.isAnnotationPresent(Path.class)
         assert gameServices.getAnnotation(Path.class).value() == "circles"
         assert gameServices.isAnnotationPresent(GET.class)
@@ -121,9 +116,7 @@ class PlayerGatewayServiceTest extends GroovyTestCase {
 
     void testGetShipsAnnotations() {
         def gameServices = PlayerGatewayService.getMethod("ships", [] as Class[])
-        assert (gameServices.annotations.size() == 3 ||
-                (gameServices.isAnnotationPresent(TypeChecked.TypeCheckingInfo) && gameServices.annotations.size() == 4)
-        )
+        assert gameServices.annotations.size() == 3
         assert gameServices.isAnnotationPresent(Path.class)
         assert gameServices.getAnnotation(Path.class).value() == "ships"
         assert gameServices.isAnnotationPresent(GET.class)
@@ -139,9 +132,7 @@ class PlayerGatewayServiceTest extends GroovyTestCase {
 
     void testGetStatesAnnotations() {
         def gameServices = PlayerGatewayService.getMethod("states", [] as Class[])
-        assert (gameServices.annotations.size() == 3 ||
-                (gameServices.isAnnotationPresent(TypeChecked.TypeCheckingInfo) && gameServices.annotations.size() == 4)
-        )
+        assert gameServices.annotations.size() == 34
         assert gameServices.isAnnotationPresent(Path.class)
         assert gameServices.getAnnotation(Path.class).value() == "states"
         assert gameServices.isAnnotationPresent(GET.class)
