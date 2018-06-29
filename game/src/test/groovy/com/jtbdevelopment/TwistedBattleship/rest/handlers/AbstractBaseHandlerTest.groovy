@@ -1,14 +1,13 @@
 package com.jtbdevelopment.TwistedBattleship.rest.handlers
 
+import com.jtbdevelopment.TwistedBattleship.TBSCoreTestCase
 import com.jtbdevelopment.TwistedBattleship.factory.gameinitializers.*
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature
-import com.jtbdevelopment.TwistedBattleship.state.TBActionLogEntry
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipPlacementValidator
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState
-import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
 import com.jtbdevelopment.games.state.GamePhase
 import org.bson.types.ObjectId
 import org.junit.Before
@@ -17,11 +16,11 @@ import org.junit.Before
  * Date: 5/18/15
  * Time: 6:47 AM
  */
-abstract class AbstractBaseHandlerTest extends MongoGameCoreTestCase {
+abstract class AbstractBaseHandlerTest extends TBSCoreTestCase {
     protected TBGame game
 
     @Before
-    public void setUp() throws Exception {
+    void setUp() throws Exception {
         game = new TBGame(
                 id: new ObjectId(),
                 features: [GameFeature.Grid15x15, GameFeature.ActionsPerTurn, GameFeature.CruiseMissileEnabled, GameFeature.ECMEnabled, GameFeature.EMEnabled, GameFeature.EREnabled, GameFeature.SpyEnabled],
@@ -69,7 +68,4 @@ abstract class AbstractBaseHandlerTest extends MongoGameCoreTestCase {
         )
     }
 
-    protected TBActionLogEntry getLastEntry(final List<TBActionLogEntry> entries) {
-        return entries.get(entries.size() - 1);
-    }
 }
