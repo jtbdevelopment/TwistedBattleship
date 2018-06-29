@@ -55,7 +55,7 @@ class TBGameMasker extends AbstractMultiPlayerGameMasker<ObjectId, GameFeature, 
         masked.maskedPlayersState = createMaskedPlayerState(game.playerDetails[player.id], idMap)
         masked.maskedPlayersState.consolidatedOpponentView = consolidateGridViews.createConsolidatedView(
                 game,
-                masked.maskedPlayersState.opponentViews.values()
+                masked.maskedPlayersState.opponentViews.values().toList()
         )
         masked.currentPlayer = idMap[game.currentPlayer].md5
         int maxScore = -1;

@@ -15,21 +15,25 @@ import com.jtbdevelopment.games.players.Player
 import com.jtbdevelopment.games.state.GamePhase
 import org.bson.types.ObjectId
 import org.junit.Test
+import org.mockito.Mockito
 
 import java.time.Instant
 
 import static org.junit.Assert.assertNotNull
+import static org.mockito.Matchers.eq
 
 /**
  * Date: 4/2/15
  * Time: 6:48 PM
  */
 class TBGameMaskerTest extends MongoGameCoreTestCase {
-    TBGameMasker masker = new TBGameMasker()
+    private ConsolidateGridViews consolidateGridViews = Mockito.mock(ConsolidateGridViews.class)
+    private TBGameMasker masker = new TBGameMasker()
 
     @Test
     void testMaskingGame() {
         TBGame game = new TBGame(
+                id: new ObjectId(),
                 rematchTimestamp: Instant.now(),
                 gamePhase: GamePhase.Playing,
                 features: [GameFeature.Grid10x10],
@@ -97,14 +101,11 @@ class TBGameMaskerTest extends MongoGameCoreTestCase {
         game.playerDetails[PONE.id].opponentViews[PTHREE.id].set(5, 4, GridCellState.KnownByRehit)
 
         Grid consolidated = new Grid(1)
-        masker.consolidateGridViews = [
-                createConsolidatedView: {
-                    TBGame g, Iterable<Grid> views ->
-                        assert g.is(game)
-                        assert views.toList() == game.playerDetails[PONE.id].opponentViews.values().toList()
-                        return consolidated
-                }
-        ] as ConsolidateGridViews
+        masker.consolidateGridViews = consolidateGridViews;
+        Mockito.when(consolidateGridViews.createConsolidatedView(
+                eq(game),
+                eq(game.playerDetails[PONE.id].opponentViews.values().toList()))).thenReturn(consolidated)
+
         TBMaskedGame maskedGame = masker.maskGameForPlayer(game, PONE)
         assert maskedGame
         assert game.gridSize == maskedGame.gridSize

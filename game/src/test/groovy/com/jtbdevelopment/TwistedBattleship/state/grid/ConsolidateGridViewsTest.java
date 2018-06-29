@@ -7,6 +7,7 @@ import org.bson.types.ObjectId;
 import org.junit.Test;
 
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 
 import static groovy.util.GroovyTestCase.assertEquals;
 
@@ -42,7 +43,9 @@ public class ConsolidateGridViewsTest extends MongoGameCoreTestCase {
         game.getPlayerDetails().get(PONE.getId()).getOpponentViews().get(PTWO.getId()).set(5, 4, GridCellState.KnownByHit);
         game.getPlayerDetails().get(PONE.getId()).getOpponentViews().get(PTHREE.getId()).set(5, 4, GridCellState.KnownByRehit);
 
-        Grid consolidatedOpponentView = consolidateGridViews.createConsolidatedView(game, ((LinkedHashMap<ObjectId, Grid>) game.getPlayerDetails().get(PONE.getId()).getOpponentViews()).values());
+        Grid consolidatedOpponentView = consolidateGridViews.createConsolidatedView(
+                game,
+                new LinkedList<>(game.getPlayerDetails().get(PONE.getId()).getOpponentViews().values()));
         for (int row = 0; row < 10; row = ++row) {
             for (int col = 0; col < 10; col = ++col) {
                 GridCellState state = consolidatedOpponentView.get(row, col);
