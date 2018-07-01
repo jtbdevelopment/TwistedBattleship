@@ -80,7 +80,7 @@ class TBPushWorthyFilterTest extends MongoGameCoreTestCase {
 
     @Test
     void testSetupAndCurrentPlayerNotSetupIsTrue() {
-        TBGame game = new TBGame(gamePhase: GamePhase.Setup, playerDetails: [(PONE.id): [isSetup: {
+        TBGame game = new TBGame(gamePhase: GamePhase.Setup, playerDetails: [(PONE.id): [getSetup: {
             return false
         }] as TBPlayerState])
         assert filter.shouldPush(MongoGameCoreTestCase.PONE, game)
@@ -88,7 +88,7 @@ class TBPushWorthyFilterTest extends MongoGameCoreTestCase {
 
     @Test
     void testSetupAndCurrentPlayerIsSetupIsFalse() {
-        TBGame game = new TBGame(gamePhase: GamePhase.Setup, playerDetails: [(PONE.id): [isSetup: {
+        TBGame game = new TBGame(gamePhase: GamePhase.Setup, playerDetails: [(PONE.id): [getSetup: {
             return true
         }] as TBPlayerState])
         assertFalse filter.shouldPush(MongoGameCoreTestCase.PONE, game)
