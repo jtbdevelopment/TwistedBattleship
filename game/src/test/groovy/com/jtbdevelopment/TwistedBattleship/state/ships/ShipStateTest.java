@@ -22,7 +22,7 @@ public class ShipStateTest {
         assertEquals(Arrays.asList(false, false, false), shipState.getShipSegmentHit());
         assertEquals(new LinkedList<>(coordinates), shipState.getShipGridCells());
         assertEquals(Ship.Cruiser, shipState.getShip());
-        assertTrue(shipState.getHorizontal());
+        assertTrue(shipState.isHorizontal());
     }
 
     @Test
@@ -36,33 +36,33 @@ public class ShipStateTest {
         Collections.sort(coordinates);
         assertEquals(coordinates, shipState.getShipGridCells());
         assertEquals(Ship.Cruiser, shipState.getShip());
-        assertTrue(shipState.getHorizontal());
+        assertTrue(shipState.isHorizontal());
     }
 
     @Test
     public void testSettingGridCellsRecomputesHorizontal() {
         TreeSet<GridCoordinate> coordinates = new TreeSet<>(Arrays.asList(new GridCoordinate(0, 0), new GridCoordinate(0, 1), new GridCoordinate(0, 2)));
         ShipState shipState = new ShipState(Ship.Cruiser, coordinates);
-        assertTrue(shipState.getHorizontal());
+        assertTrue(shipState.isHorizontal());
         coordinates = new TreeSet<>(Arrays.asList(new GridCoordinate(1, 0), new GridCoordinate(2, 0), new GridCoordinate(3, 0)));
         shipState.setShipGridCells(new LinkedList<>(coordinates));
-        Assert.assertFalse(shipState.getHorizontal());
+        Assert.assertFalse(shipState.isHorizontal());
     }
 
     @Test
     public void testExplicitlySettingHorizontalIgnored() {
         TreeSet<GridCoordinate> coordinates = new TreeSet<>(Arrays.asList(new GridCoordinate(0, 0), new GridCoordinate(0, 1), new GridCoordinate(0, 2)));
         ShipState shipState = new ShipState(Ship.Cruiser, coordinates);
-        assertTrue(shipState.getHorizontal());
+        assertTrue(shipState.isHorizontal());
         shipState.setHorizontal(false);
-        assertTrue(shipState.getHorizontal());
+        assertTrue(shipState.isHorizontal());
     }
 
     @Test
     public void testSettingGridCellsToEmptyDoesntExplodeHorizontal() {
         TreeSet<GridCoordinate> coordinates = new TreeSet<>(Collections.singletonList(new GridCoordinate(0, 0)));
         ShipState shipState = new ShipState(Ship.Cruiser, coordinates);
-        Assert.assertFalse(shipState.getHorizontal());
+        Assert.assertFalse(shipState.isHorizontal());
     }
 
 }
