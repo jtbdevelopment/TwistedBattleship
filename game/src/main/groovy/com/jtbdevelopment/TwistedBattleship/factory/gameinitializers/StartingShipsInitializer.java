@@ -4,7 +4,6 @@ import com.jtbdevelopment.TwistedBattleship.state.GameFeature;
 import com.jtbdevelopment.TwistedBattleship.state.TBGame;
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship;
 import com.jtbdevelopment.games.factory.GameInitializer;
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -26,7 +25,7 @@ public class StartingShipsInitializer implements GameInitializer<TBGame> {
         Ship ship = null;
         switch (ships) {
             case StandardShips:
-                game.setStartingShips(DefaultGroovyMethods.toList(Ship.values()));
+                game.setStartingShips(Arrays.asList(Ship.values()));
                 return;
 
             case AllCruisers:

@@ -12,15 +12,14 @@ import com.jtbdevelopment.TwistedBattleship.state.ships.Ship;
 import com.jtbdevelopment.games.mongo.players.MongoPlayer;
 import com.jtbdevelopment.games.rest.services.AbstractPlayerGatewayService;
 import com.jtbdevelopment.games.rest.services.AbstractPlayerServices;
-import groovy.lang.Closure;
 import org.bson.types.ObjectId;
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -61,19 +60,14 @@ public class PlayerGatewayService extends AbstractPlayerGatewayService<ObjectId,
     @Path("ships")
     @Produces(MediaType.APPLICATION_JSON)
     public List<ShipInfo> ships() {
-        return DefaultGroovyMethods.collect(Ship.values(), new Closure<ShipInfo>(this, this) {
-            public ShipInfo doCall(Ship it) {
-                return new ShipInfo(it);
-            }
-
-        });
+        return Arrays.stream(Ship.values()).map(ShipInfo::new).collect(Collectors.toList());
     }
 
     @GET
     @Path("states")
     @Produces(MediaType.APPLICATION_JSON)
     public List<GridCellState> states() {
-        return DefaultGroovyMethods.toList(GridCellState.values());
+        return Arrays.asList(GridCellState.values());
     }
 
 }

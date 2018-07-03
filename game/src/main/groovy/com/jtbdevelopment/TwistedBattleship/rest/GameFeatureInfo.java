@@ -2,7 +2,6 @@ package com.jtbdevelopment.TwistedBattleship.rest;
 
 import com.jtbdevelopment.TwistedBattleship.state.GameFeature;
 import com.jtbdevelopment.TwistedBattleship.state.GameFeatureGroupType;
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +24,7 @@ public class GameFeatureInfo {
     }
 
     public boolean equals(final Object o) {
-        if (DefaultGroovyMethods.is(this, o)) return true;
+        if (this == o) return true;
         if (!getClass().equals(o.getClass())) return false;
 
         final GameFeatureInfo that = (GameFeatureInfo) o;
@@ -71,7 +70,7 @@ public class GameFeatureInfo {
         }
 
         public boolean equals(final Object o) {
-            if (DefaultGroovyMethods.is(this, o)) return true;
+            if (this == o) return true;
             if (!getClass().equals(o.getClass())) return false;
 
             final Detail detail = (Detail) o;

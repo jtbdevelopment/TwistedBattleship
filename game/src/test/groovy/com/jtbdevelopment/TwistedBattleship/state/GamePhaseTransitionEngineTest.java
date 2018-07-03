@@ -9,7 +9,6 @@ import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState;
 import com.jtbdevelopment.games.state.GamePhase;
 import com.jtbdevelopment.games.state.scoring.GameScorer;
 import org.bson.types.ObjectId;
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -33,7 +32,7 @@ public class GamePhaseTransitionEngineTest extends TBSCoreTestCase {
     public void testEvaluateSetupPhaseWithAllPlayersSetup() {
         final TBGame game = new TBGame();
         game.setGamePhase(GamePhase.Setup);
-        game.setStartingShips(DefaultGroovyMethods.toList(Ship.values()));
+        game.setStartingShips(Arrays.asList(Ship.values()));
         LinkedHashMap<ObjectId, TBPlayerState> map = new LinkedHashMap<>(3);
         TBPlayerState state = new TBPlayerState();
         state.setSetup(true);

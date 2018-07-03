@@ -1,6 +1,5 @@
 package com.jtbdevelopment.TwistedBattleship.state;
 
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ public class TBGameTest {
 
     @Test
     public void testInitialize() {
-        assert DefaultGroovyMethods.equals(new LinkedHashMap(), game.getPlayerDetails());
+        assertEquals(new LinkedHashMap(), game.getPlayerDetails());
         assertEquals(new ArrayList(), game.getStartingShips());
         assertNull(game.getCurrentPlayer());
         assertEquals(0, game.getGridSize());

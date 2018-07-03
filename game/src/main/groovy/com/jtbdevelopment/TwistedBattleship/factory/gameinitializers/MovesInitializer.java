@@ -4,7 +4,6 @@ import com.jtbdevelopment.TwistedBattleship.state.GameFeature;
 import com.jtbdevelopment.TwistedBattleship.state.TBGame;
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship;
 import com.jtbdevelopment.games.factory.GameInitializer;
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class MovesInitializer implements GameInitializer<TBGame> {
     @Override
     public void initializeGame(final TBGame game) {
-        game.setRemainingMoves(game.getFeatures().contains(GameFeature.Single) ? 1 : DefaultGroovyMethods.size(Ship.values()));
+        game.setRemainingMoves(game.getFeatures().contains(GameFeature.Single) ? 1 : Ship.values().length);
         game.setMovesForSpecials(game.getFeatures().contains(GameFeature.PerShip) ? 2 : 1);
     }
 

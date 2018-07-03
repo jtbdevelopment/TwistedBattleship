@@ -1,7 +1,6 @@
 package com.jtbdevelopment.TwistedBattleship.rest;
 
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship;
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 
 /**
  * Date: 7/1/15
@@ -23,7 +22,7 @@ public class ShipInfo {
     }
 
     public boolean equals(final Object o) {
-        if (DefaultGroovyMethods.is(this, o)) return true;
+        if (this == o) return true;
         if (!getClass().equals(o.getClass())) return false;
 
         final ShipInfo shipInfo = (ShipInfo) o;

@@ -12,6 +12,20 @@ public class TBActionLogEntry implements Serializable {
     private TBActionType actionType;
     private String description;
 
+    public TBActionLogEntry() {
+
+    }
+
+    public TBActionLogEntry(final TBActionType actionType, final String description) {
+        this.description = description;
+        this.actionType = actionType;
+    }
+
+    public TBActionLogEntry(final String description, final TBActionType actionType) {
+        this.description = description;
+        this.actionType = actionType;
+    }
+
     public Instant getTimestamp() {
         return timestamp;
     }

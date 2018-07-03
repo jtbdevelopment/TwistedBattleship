@@ -61,7 +61,6 @@ public class TBPlayerAttributes extends AbstractPlayerGameTrackingAttributes {
         return availableThemes;
     }
 
-    @SuppressWarnings("GroovyUnusedDeclaration")
     public void setAvailableThemes(final Set<String> availableThemes) {
         this.availableThemes.addAll(availableThemes);
     }

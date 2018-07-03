@@ -9,7 +9,8 @@ import org.junit.Test;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
-import static groovy.util.GroovyTestCase.assertEquals;
+import static org.junit.Assert.assertEquals;
+
 
 /**
  * Date: 9/29/2015
