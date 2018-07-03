@@ -29,8 +29,8 @@ class GamePhaseTransitionEngine extends AbstractMPGamePhaseTransitionEngine<Obje
             return game
         }
         TBActionLogEntry entry = new TBActionLogEntry(
-                actionType: TBActionLogEntry.TBActionType.Begin,
-                description: "Game ready to play."
+                TBActionLogEntry.TBActionType.Begin,
+                "Game ready to play."
         )
         game.playerDetails.each {
             it.value.actionLog.add(entry)
@@ -45,8 +45,8 @@ class GamePhaseTransitionEngine extends AbstractMPGamePhaseTransitionEngine<Obje
         }
         if (alivePlayers.size() == 1) {
             TBActionLogEntry entry = new TBActionLogEntry(
-                    actionType: TBActionLogEntry.TBActionType.Victory,
-                    description: game.players.find {
+                    TBActionLogEntry.TBActionType.Victory,
+                    game.players.find {
                         it.id == alivePlayers.keySet().iterator().next()
                     }.displayName + " defeated all challengers!"
             )

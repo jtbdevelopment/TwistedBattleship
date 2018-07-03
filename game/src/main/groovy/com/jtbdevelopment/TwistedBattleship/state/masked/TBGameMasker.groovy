@@ -95,9 +95,9 @@ class TBGameMasker extends AbstractMultiPlayerGameMasker<ObjectId, GameFeature, 
         maskedPlayerState.startingShips = playerState.startingShips
         maskedPlayerState.actionLog = playerState.actionLog.collect {
             new TBMaskedActionLogEntry(
-                    description: it.description,
-                    actionType: it.actionType,
-                    timestamp: convertTime(it.timestamp)
+                    convertTime(it.timestamp),
+                    it.actionType,
+                    it.description
             )
         }
 

@@ -68,7 +68,7 @@ class RepairShipHandler extends AbstractSpecialMoveHandler {
 
         String message = player.displayName + " repaired their " + state.ship.description + "."
 
-        TBActionLogEntry actionLogEntry = new TBActionLogEntry(actionType: TBActionLogEntry.TBActionType.Repaired, description: message)
+        TBActionLogEntry actionLogEntry = new TBActionLogEntry(TBActionLogEntry.TBActionType.Repaired, message)
         playerState.actionLog.add(actionLogEntry)
 
         --playerState.emergencyRepairsRemaining

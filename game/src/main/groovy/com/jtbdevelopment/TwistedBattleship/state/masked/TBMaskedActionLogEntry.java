@@ -13,6 +13,12 @@ public class TBMaskedActionLogEntry implements Serializable {
     private TBActionLogEntry.TBActionType actionType;
     private String description;
 
+    public TBMaskedActionLogEntry(long timestamp, TBActionLogEntry.TBActionType actionType, String description) {
+        this.timestamp = timestamp;
+        this.actionType = actionType;
+        this.description = description;
+    }
+
     public long getTimestamp() {
         return timestamp;
     }

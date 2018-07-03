@@ -62,28 +62,28 @@ class ECMHandlerTest extends AbstractBaseHandlerTest {
         game.playerDetails[PONE.id].opponentViews[PFOUR.id].set(2, 0, GridCellState.KnownByHit)
 
         game.playerDetails[PONE.id].actionLog.add(new TBActionLogEntry(
-                description: "You fired at " + PTWO.displayName + " " + new GridCoordinate(1, 0) + " something",
-                actionType: TBActionLogEntry.TBActionType.Fired
+                "You fired at " + PTWO.displayName + " " + new GridCoordinate(1, 0) + " something",
+                TBActionLogEntry.TBActionType.Fired
         ))
         game.playerDetails[PTWO.id].actionLog.add(new TBActionLogEntry(
-                description: "You fired at " + PONE.displayName + " " + new GridCoordinate(1, 0) + " something",
-                actionType: TBActionLogEntry.TBActionType.Fired
+                "You fired at " + PONE.displayName + " " + new GridCoordinate(1, 0) + " something",
+                TBActionLogEntry.TBActionType.Fired
         ))
         game.playerDetails[PTWO.id].actionLog.add(new TBActionLogEntry(
-                description: "You fired at " + PONE.displayName + " " + new GridCoordinate(0, 0) + " something",
-                actionType: TBActionLogEntry.TBActionType.Fired
+                "You fired at " + PONE.displayName + " " + new GridCoordinate(0, 0) + " something",
+                TBActionLogEntry.TBActionType.Fired
         ))
         game.playerDetails[PTWO.id].actionLog.add(new TBActionLogEntry(
-                description: "You fired at " + PONE.displayName + " " + new GridCoordinate(0, 0) + " something",
-                actionType: TBActionLogEntry.TBActionType.Spied     //  stupid type on purpose
+                "You fired at " + PONE.displayName + " " + new GridCoordinate(0, 0) + " something",
+                TBActionLogEntry.TBActionType.Spied     //  stupid type on purpose
         ))
         game.playerDetails[PTWO.id].actionLog.add(new TBActionLogEntry(
-                description: "You X at " + PONE.displayName + " " + new GridCoordinate(0, 0) + " something",  // silly desc on purpose
-                actionType: TBActionLogEntry.TBActionType.Fired
+                "You X at " + PONE.displayName + " " + new GridCoordinate(0, 0) + " something",  // silly desc on purpose
+                TBActionLogEntry.TBActionType.Fired
         ))
         game.playerDetails[PTWO.id].actionLog.add(new TBActionLogEntry(
-                description: "You fired at " + PONE.displayName + " " + new GridCoordinate(10, 10) + " something",
-                actionType: TBActionLogEntry.TBActionType.Fired
+                "You fired at " + PONE.displayName + " " + new GridCoordinate(10, 10) + " something",
+                TBActionLogEntry.TBActionType.Fired
         ))
 
         assert game.is(handler.playMove(PONE, game, PONE, new GridCoordinate(1, 0)))

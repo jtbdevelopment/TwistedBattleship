@@ -70,13 +70,13 @@ class SpyHandler extends AbstractSpecialMoveHandler {
             final Map<GridCoordinate, GridCellState> spyResults,
             final GridCoordinate targetCoordinate) {
         game.playerDetails[player.id].actionLog.add(new TBActionLogEntry(
-                actionType: TBActionLogEntry.TBActionType.Spied,
-                description: "You spied on " + targetedPlayer.displayName + " at " + targetCoordinate + ".",
+                TBActionLogEntry.TBActionType.Spied,
+                "You spied on " + targetedPlayer.displayName + " at " + targetCoordinate + ".",
         )
         )
         game.playerDetails[targetedPlayer.id].actionLog.add(new TBActionLogEntry(
-                actionType: TBActionLogEntry.TBActionType.Spied,
-                description: player.displayName + " spied on you at " + targetCoordinate + ".",
+                TBActionLogEntry.TBActionType.Spied,
+                player.displayName + " spied on you at " + targetCoordinate + ".",
         )
         )
         boolean sharedIntel = game.features.contains(GameFeature.SharedIntel)
@@ -92,8 +92,8 @@ class SpyHandler extends AbstractSpecialMoveHandler {
                 if (id != player.id) {
                     state.actionLog.add(0,
                             new TBActionLogEntry(
-                                    actionType: TBActionLogEntry.TBActionType.Spied,
-                                    description: messageForOthers,
+                                    TBActionLogEntry.TBActionType.Spied,
+                                    messageForOthers,
                             )
                     )
                 }
