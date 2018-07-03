@@ -8,10 +8,15 @@ import java.io.Serializable;
  * Date: 9/24/15
  * Time: 7:39 PM
  */
+@SuppressWarnings("unused")
 public class TBMaskedActionLogEntry implements Serializable {
     private long timestamp;
     private TBActionLogEntry.TBActionType actionType;
     private String description;
+
+    public TBMaskedActionLogEntry() {
+
+    }
 
     public TBMaskedActionLogEntry(long timestamp, TBActionLogEntry.TBActionType actionType, String description) {
         this.timestamp = timestamp;
