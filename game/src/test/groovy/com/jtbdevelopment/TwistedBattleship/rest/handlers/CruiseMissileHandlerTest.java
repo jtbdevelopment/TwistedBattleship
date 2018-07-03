@@ -52,7 +52,7 @@ public class CruiseMissileHandlerTest extends AbstractBaseHandlerTest {
         shipState.setHealthRemaining(3);
         shipState.setShipSegmentHit(Arrays.asList(false, true, true, false, false));
 
-        handler.setFireAtCoordinateHandler(fireAtCoordinateHandler);
+        handler.fireAtCoordinateHandler = fireAtCoordinateHandler;
         when(fireAtCoordinateHandler.playMove(any(MongoPlayer.class), any(TBGame.class), any(MongoPlayer.class), any(GridCoordinate.class))).then((Answer<TBGame>) invocation -> (TBGame) invocation.getArguments()[1]);
     }
 
