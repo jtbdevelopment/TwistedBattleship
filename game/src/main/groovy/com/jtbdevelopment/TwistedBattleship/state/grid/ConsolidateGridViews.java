@@ -3,7 +3,7 @@ package com.jtbdevelopment.TwistedBattleship.state.grid;
 import com.jtbdevelopment.TwistedBattleship.state.TBGame;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.stream.Collectors;
 
 /**
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  */
 @Component
 public class ConsolidateGridViews {
-    public Grid createConsolidatedView(final TBGame game, final List<Grid> views) {
+    public Grid createConsolidatedView(final TBGame game, final Collection<Grid> views) {
         final int size = game.getGridSize();
         final Grid consolidatedView = new Grid(size);
         for (int row = 0; row < size; ++row) {

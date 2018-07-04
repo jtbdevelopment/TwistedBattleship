@@ -41,11 +41,11 @@ public class TBGameMaskerTest extends MongoGameCoreTestCase {
         TBActionLogEntry entry1 = new TBActionLogEntry();
 
 
-        LinkedHashMap<ObjectId, Grid> map1 = new LinkedHashMap<>(2);
+        Map<ObjectId, Grid> map1 = new HashMap<>(2);
         map1.put(PTWO.getId(), new Grid(10));
         map1.put(PTHREE.getId(), new Grid(10));
 
-        LinkedHashMap<ObjectId, Grid> map2 = new LinkedHashMap<>(2);
+        Map<ObjectId, Grid> map2 = new HashMap<>(2);
         map2.put(PTWO.getId(), new Grid(10));
         map2.put(PTHREE.getId(), new Grid(10));
         state.setStartingShips(Arrays.asList(Ship.values()));
@@ -110,24 +110,24 @@ public class TBGameMaskerTest extends MongoGameCoreTestCase {
         masker.setConsolidateGridViews(consolidateGridViews);
         Mockito.when(consolidateGridViews.createConsolidatedView(
                 Matchers.eq(game),
-                Matchers.eq(new LinkedList<>(game.getPlayerDetails().get(PONE.getId()).getOpponentViews().values())))).thenReturn(consolidated);
+                Matchers.eq(new HashSet<>(game.getPlayerDetails().get(PONE.getId()).getOpponentViews().values())))).thenReturn(consolidated);
 
         final TBMaskedGame maskedGame = masker.maskGameForPlayer(game, PONE);
         assertNotNull(maskedGame);
         assertEquals(game.getGridSize(), maskedGame.getGridSize());
         assertEquals(game.getMovesForSpecials(), maskedGame.getMovesForSpecials());
         assertEquals(game.getStartingShips(), maskedGame.getStartingShips());
-        LinkedHashMap<String, Boolean> map3 = new LinkedHashMap<>(3);
+        Map<String, Boolean> map3 = new HashMap<>(3);
         map3.put(PONE.getMd5(), true);
         map3.put(PTWO.getMd5(), false);
         map3.put(PTHREE.getMd5(), false);
         assertEquals(map3, maskedGame.getPlayersAlive());
-        LinkedHashMap<String, Integer> map4 = new LinkedHashMap<>(3);
+        Map<String, Integer> map4 = new HashMap<>(3);
         map4.put(PONE.getMd5(), 70);
         map4.put(PTWO.getMd5(), 40);
         map4.put(PTHREE.getMd5(), 20);
         assertEquals(map4, maskedGame.getPlayersScore());
-        LinkedHashMap<String, Boolean> map5 = new LinkedHashMap<>(3);
+        Map<String, Boolean> map5 = new HashMap<>(3);
         map5.put(PONE.getMd5(), true);
         map5.put(PTWO.getMd5(), false);
         map5.put(PTHREE.getMd5(), false);
