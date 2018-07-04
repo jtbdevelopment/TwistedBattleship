@@ -90,7 +90,7 @@ public class PlayerGatewayServiceTest {
 
     @Test
     public void testGetCircles() {
-        assertEquals(GridCircleUtil.getCIRCLE_OFFSETS(), playerGatewayService.circleSizes());
+        assertEquals(GridCircleUtil.CIRCLE_OFFSETS, playerGatewayService.circleSizes());
     }
 
     @Test

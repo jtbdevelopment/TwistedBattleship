@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 @Path("/")
 @Component
 public class PlayerGatewayService extends AbstractPlayerGatewayService<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> {
-    public PlayerGatewayService(final AbstractPlayerServices<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> playerServices) {
+    PlayerGatewayService(final AbstractPlayerServices<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> playerServices) {
         super(playerServices);
     }
 
@@ -53,7 +53,7 @@ public class PlayerGatewayService extends AbstractPlayerGatewayService<ObjectId,
     @Path("circles")
     @Produces(MediaType.APPLICATION_JSON)
     public Map<Integer, Set<GridCoordinate>> circleSizes() {
-        return GridCircleUtil.getCIRCLE_OFFSETS();
+        return GridCircleUtil.CIRCLE_OFFSETS;
     }
 
     @GET
