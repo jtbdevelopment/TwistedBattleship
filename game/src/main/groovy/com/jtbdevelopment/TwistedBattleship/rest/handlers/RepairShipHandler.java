@@ -19,12 +19,8 @@ import com.jtbdevelopment.games.mongo.players.MongoPlayer;
 import com.jtbdevelopment.games.state.masking.GameMasker;
 import com.jtbdevelopment.games.state.transition.GameTransitionEngine;
 import com.jtbdevelopment.games.tracking.GameEligibilityTracker;
-import groovy.lang.Closure;
 import org.bson.types.ObjectId;
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
 
 /**
  * Date: 5/19/15
@@ -74,38 +70,30 @@ public class RepairShipHandler extends AbstractSpecialMoveHandler {
 
         playerState.setEmergencyRepairsRemaining(playerState.getEmergencyRepairsRemaining() - 1);
 
-
-        DefaultGroovyMethods.each(DefaultGroovyMethods.findAll(game.getPlayerDetails(), new Closure<Boolean>(this, this) {
-            public Boolean doCall(Map.Entry<ObjectId, TBPlayerState> it) {
-                return !it.getKey().equals(player.getId());
-            }
-
-            public Boolean doCall() {
-                return doCall(null);
-            }
-
-        }), new Closure<Boolean>(this, this) {
-            public Boolean doCall(ObjectId id, TBPlayerState opponent) {
-
-                final Grid opponentGrid = opponent.getOpponentGrids().get(player.getId());
-                final Grid opponentView = playerState.getOpponentViews().get(id);
-                state.getShipGridCells().forEach((shipCoordinate) -> {
-                    switch (opponentGrid.get(shipCoordinate)) {
-                        case KnownByHit:
-                        case KnownByRehit:
-                        case KnownByOtherHit:
-                            opponentGrid.set(shipCoordinate, GridCellState.KnownShip);
-                            opponentView.set(shipCoordinate, GridCellState.KnownShip);
-                            break;
-                    }
-                    if (opponentView.get(shipCoordinate).equals(GridCellState.HiddenHit)) {
-                        opponentView.set(shipCoordinate, GridCellState.Unknown);
-                    }
+        game.getPlayerDetails()
+                .entrySet()
+                .stream()
+                .filter(e -> !e.getKey().equals(player.getId()))
+                .forEach(e -> {
+                    ObjectId id = e.getKey();
+                    TBPlayerState opponent = e.getValue();
+                    final Grid opponentGrid = opponent.getOpponentGrids().get(player.getId());
+                    final Grid opponentView = playerState.getOpponentViews().get(id);
+                    state.getShipGridCells().forEach((shipCoordinate) -> {
+                        switch (opponentGrid.get(shipCoordinate)) {
+                            case KnownByHit:
+                            case KnownByRehit:
+                            case KnownByOtherHit:
+                                opponentGrid.set(shipCoordinate, GridCellState.KnownShip);
+                                opponentView.set(shipCoordinate, GridCellState.KnownShip);
+                                break;
+                        }
+                        if (opponentView.get(shipCoordinate).equals(GridCellState.HiddenHit)) {
+                            opponentView.set(shipCoordinate, GridCellState.Unknown);
+                        }
+                    });
+                    opponent.getActionLog().add(actionLogEntry);
                 });
-                return opponent.getActionLog().add(actionLogEntry);
-            }
-
-        });
         state.setHealthRemaining(state.getShip().getGridSize());
         for (int i = 0; i < state.getShipSegmentHit().size(); ++i) {
             state.getShipSegmentHit().set(i, false);
