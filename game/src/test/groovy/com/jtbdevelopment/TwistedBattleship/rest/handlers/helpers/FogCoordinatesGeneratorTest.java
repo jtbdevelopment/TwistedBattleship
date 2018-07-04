@@ -17,18 +17,17 @@ import static org.junit.Assert.assertEquals;
  * Time: 6:38 PM
  */
 public class FogCoordinatesGeneratorTest {
-    private FogCoordinatesGenerator fogCoordinatesGenerator = new FogCoordinatesGenerator();
+    private FogCoordinatesGenerator fogCoordinatesGenerator = new FogCoordinatesGenerator(new Random() {
+        public int nextInt(int max) {
+
+            assert 2 == max;
+            return 1;
+        }
+    });
     private TBGame game;
 
     @Test
     public void testNormalCase() {
-        fogCoordinatesGenerator.setGenerator(new Random() {
-            public int nextInt(int max) {
-
-                assert 2 == max;
-                return 1;
-            }
-        });
         Set<GridCoordinate> fogged = fogCoordinatesGenerator.generateFogCoordinates(game,
                 Arrays.asList(new GridCoordinate(5, 5), new GridCoordinate(6, 5), new GridCoordinate(7, 5)),
                 Arrays.asList(new GridCoordinate(7, 5), new GridCoordinate(8, 5), new GridCoordinate(9, 5)));
@@ -71,13 +70,6 @@ public class FogCoordinatesGeneratorTest {
 
     @Test
     public void testOffEdgeCase() {
-        fogCoordinatesGenerator.setGenerator(new Random() {
-            public int nextInt(int max) {
-
-                assert 2 == max;
-                return 1;
-            }
-        });
         Set<GridCoordinate> fogged = fogCoordinatesGenerator.generateFogCoordinates(game,
                 Arrays.asList(new GridCoordinate(5, 5), new GridCoordinate(6, 5), new GridCoordinate(7, 5)),
                 Arrays.asList(new GridCoordinate(13, 5), new GridCoordinate(14, 5), new GridCoordinate(15, 5)));
