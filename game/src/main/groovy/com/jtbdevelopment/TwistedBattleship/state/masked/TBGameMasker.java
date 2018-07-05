@@ -56,9 +56,9 @@ public class TBGameMasker extends AbstractMultiPlayerGameMasker<ObjectId, GameFe
         masked.setCurrentPlayer(idMap.get(game.getCurrentPlayer()).getMd5());
         game.getPlayerDetails().forEach((playerId, state) -> {
             String md5 = idMap.get(playerId).getMd5();
-            masked.getPlayersAlive().put(md5, state.getAlive());
+            masked.getPlayersAlive().put(md5, state.isAlive());
             masked.getPlayersScore().put(md5, state.getTotalScore());
-            masked.getPlayersSetup().put(md5, state.getSetup());
+            masked.getPlayersSetup().put(md5, state.isSetup());
         });
         masked.setWinningPlayer(idMap.get(game.getPlayerDetails().entrySet()
                 .stream().max(Comparator.comparingInt(a -> a.getValue().getTotalScore()))
@@ -73,8 +73,8 @@ public class TBGameMasker extends AbstractMultiPlayerGameMasker<ObjectId, GameFe
         maskedPlayerState.setActiveShipsRemaining(playerState.getActiveShipsRemaining());
 
         maskedPlayerState.setTotalScore(playerState.getTotalScore());
-        maskedPlayerState.setAlive(playerState.getAlive());
-        maskedPlayerState.setSetup(playerState.getSetup());
+        maskedPlayerState.setAlive(playerState.isAlive());
+        maskedPlayerState.setSetup(playerState.isSetup());
         maskedPlayerState.setTotalScore(playerState.getTotalScore());
         maskedPlayerState.setEcmsRemaining(playerState.getEcmsRemaining());
         maskedPlayerState.setEmergencyRepairsRemaining(playerState.getEmergencyRepairsRemaining());

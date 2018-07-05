@@ -3,7 +3,6 @@ package com.jtbdevelopment.TwistedBattleship.ai.common;
 import com.jtbdevelopment.TwistedBattleship.ai.AI;
 import com.jtbdevelopment.games.dao.AbstractPlayerRepository;
 import com.jtbdevelopment.games.mongo.players.MongoPlayer;
-import com.jtbdevelopment.games.players.Player;
 import com.jtbdevelopment.games.players.PlayerFactory;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
@@ -19,7 +18,7 @@ import java.util.List;
  */
 public class AbstractAIPlayerCreator {
     private static Logger logger = LoggerFactory.getLogger(AbstractAIPlayerCreator.class);
-    private List<Player> players;
+    private List<MongoPlayer> players;
     @Autowired
     private AbstractPlayerRepository<ObjectId, MongoPlayer> playerRepository;
     @Autowired
@@ -44,11 +43,11 @@ public class AbstractAIPlayerCreator {
         logger.info("Completed");
     }
 
-    public List<Player> getPlayers() {
+    public List<MongoPlayer> getPlayers() {
         return players;
     }
 
-    public void setPlayers(List<Player> players) {
+    public void setPlayers(List<MongoPlayer> players) {
         this.players = players;
     }
 

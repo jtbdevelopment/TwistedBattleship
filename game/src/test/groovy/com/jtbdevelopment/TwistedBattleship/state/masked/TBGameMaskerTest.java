@@ -136,8 +136,8 @@ public class TBGameMaskerTest extends MongoGameCoreTestCase {
         TBPlayerState playerState = game.getPlayerDetails().get(PONE.getId());
         assertEquals(playerState.getShipStates(), maskedGame.getMaskedPlayersState().getShipStates());
         assertEquals(playerState.getStartingShips(), maskedGame.getMaskedPlayersState().getStartingShips());
-        assertEquals(playerState.getAlive(), maskedGame.getMaskedPlayersState().isAlive());
-        assertEquals(playerState.getSetup(), maskedGame.getMaskedPlayersState().isSetup());
+        assertEquals(playerState.isAlive(), maskedGame.getMaskedPlayersState().isAlive());
+        assertEquals(playerState.isSetup(), maskedGame.getMaskedPlayersState().isSetup());
         assertEquals(playerState.getTotalScore(), maskedGame.getMaskedPlayersState().getTotalScore());
         assertEquals(playerState.getActiveShipsRemaining(), maskedGame.getMaskedPlayersState().getActiveShipsRemaining());
         assertEquals(playerState.getSpysRemaining(), maskedGame.getMaskedPlayersState().getSpysRemaining());

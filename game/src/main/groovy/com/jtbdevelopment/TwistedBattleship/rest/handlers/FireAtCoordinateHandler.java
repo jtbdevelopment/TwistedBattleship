@@ -98,7 +98,7 @@ public class FireAtCoordinateHandler extends AbstractPlayerMoveHandler {
             }
 
             playerState.setScoreFromSinks(playerState.getScoreFromSinks() + TBGameScorer.SCORE_FOR_SINK);
-            if (!targetedState.getAlive()) {
+            if (!targetedState.isAlive()) {
                 final TBActionLogEntry logEntry = new TBActionLogEntry(TBActionLogEntry.TBActionType.Defeated, targetedPlayer.getDisplayName() + " has been defeated!");
                 game.getPlayerDetails().forEach((id, state) -> state.getActionLog().add(logEntry));
             }

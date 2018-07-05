@@ -34,8 +34,8 @@ public class TBPlayerStateTest {
         assertEquals(new ArrayList(), state.getStartingShips());
         assertEquals(new ArrayList(), state.getActionLog());
         assertEquals(new LinkedHashMap(), state.getCoordinateShipMap());
-        assertFalse(state.getSetup());
-        assertFalse(state.getAlive());
+        assertFalse(state.isSetup());
+        assertFalse(state.isAlive());
     }
 
     @Test
@@ -61,19 +61,19 @@ public class TBPlayerStateTest {
     @Test
     public void testShipsRemainingAndAlive() {
         state.setShipStates(Arrays.asList(new ShipState(Ship.Cruiser, new TreeSet<>()), new ShipState(Ship.Carrier, new TreeSet<>())));
-        assertTrue(state.getAlive());
+        assertTrue(state.isAlive());
         assertEquals(2, state.getActiveShipsRemaining());
 
         state.getShipStates().stream().filter(ss -> Ship.Carrier.equals(ss.getShip())).findFirst().ifPresent(ss -> ss.setHealthRemaining(1));
-        assertTrue(state.getAlive());
+        assertTrue(state.isAlive());
         assertEquals(2, state.getActiveShipsRemaining());
 
         state.getShipStates().stream().filter(ss -> Ship.Carrier.equals(ss.getShip())).findFirst().ifPresent(ss -> ss.setHealthRemaining(0));
-        assertTrue(state.getAlive());
+        assertTrue(state.isAlive());
         assertEquals(1, state.getActiveShipsRemaining());
 
         state.getShipStates().stream().filter(ss -> Ship.Cruiser.equals(ss.getShip())).findFirst().ifPresent(ss -> ss.setHealthRemaining(0));
-        assertFalse(state.getAlive());
+        assertFalse(state.isAlive());
         assertEquals(0, state.getActiveShipsRemaining());
     }
 
@@ -81,23 +81,23 @@ public class TBPlayerStateTest {
     public void testIgnoresSetAliveAndActiveShips() {
         state.setAlive(true);
         state.setActiveShipsRemaining(10);
-        assertFalse(state.getAlive());
+        assertFalse(state.isAlive());
         assert state.getActiveShipsRemaining() == 0;
     }
 
     @Test
     public void testIsSetupIsExplicit() {
-        assertFalse(state.getSetup());
+        assertFalse(state.isSetup());
 
         state.setStartingShips(Arrays.asList(Ship.values()));
-        assertFalse(state.getSetup());
+        assertFalse(state.isSetup());
 
         state.getShipStates().forEach(ss -> {
             ss.setShipGridCells(new LinkedList<>());
         });
-        assertFalse(state.getSetup());
+        assertFalse(state.isSetup());
         state.setSetup(true);
-        assertTrue(state.getSetup());
+        assertTrue(state.isSetup());
     }
 
     @Test

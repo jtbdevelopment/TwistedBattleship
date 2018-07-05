@@ -132,7 +132,7 @@ public abstract class AbstractPlayerMoveHandler extends AbstractGameActionHandle
         }
 
 
-        if (!game.getPlayerDetails().get(targetPlayer.getId()).getAlive()) {
+        if (!game.getPlayerDetails().get(targetPlayer.getId()).isAlive()) {
             throw new CannotTargetInactivePlayerException();
         }
 

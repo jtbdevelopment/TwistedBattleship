@@ -42,10 +42,6 @@ public class TBPlayerState implements Serializable {
         //  ignore
     }
 
-    public boolean getAlive() {
-        return isAlive();
-    }
-
     public boolean isAlive() {
         return getActiveShipsRemaining() > 0;
     }
@@ -165,10 +161,6 @@ public class TBPlayerState implements Serializable {
 
     public void setScoreFromLiving(int scoreFromLiving) {
         this.scoreFromLiving = scoreFromLiving;
-    }
-
-    public boolean getSetup() {
-        return setup;
     }
 
     public boolean isSetup() {

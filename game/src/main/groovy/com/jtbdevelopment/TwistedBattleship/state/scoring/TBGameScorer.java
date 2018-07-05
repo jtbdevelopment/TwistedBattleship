@@ -40,7 +40,7 @@ public class TBGameScorer implements GameScorer<TBGame> {
                 .peek(player -> {
                     TBPlayerAttributes attributes = player.getGameSpecificPlayerAttributes();
                     TBPlayerState state = game.getPlayerDetails().get(player.getId());
-                    if (state.getAlive()) {
+                    if (state.isAlive()) {
                         attributes.setWins(attributes.getWins() + 1);
                         attributes.setCurrentWinStreak(attributes.getCurrentWinStreak() + 1);
 

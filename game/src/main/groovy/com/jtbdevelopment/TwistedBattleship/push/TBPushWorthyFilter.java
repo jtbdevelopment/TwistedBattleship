@@ -20,7 +20,7 @@ public class TBPushWorthyFilter implements PushWorthyFilter<ObjectId, GameFeatur
             case Playing:
                 return (mpGame.getCurrentPlayer().equals(player.getId()));
             case Setup:
-                return !mpGame.getPlayerDetails().get(player.getId()).getSetup();
+                return !mpGame.getPlayerDetails().get(player.getId()).isSetup();
             case Challenged:
                 return mpGame.getPlayerStates().get(player.getId()).equals(PlayerState.Pending);
             case RoundOver:
