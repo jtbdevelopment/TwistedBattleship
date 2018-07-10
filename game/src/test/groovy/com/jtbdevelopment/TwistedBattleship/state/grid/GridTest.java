@@ -2,6 +2,9 @@ package com.jtbdevelopment.TwistedBattleship.state.grid;
 
 import org.junit.Test;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import static org.junit.Assert.*;
 
 /**
@@ -19,6 +22,22 @@ public class GridTest {
 
             }
         }
+    }
+
+    @Test
+    public void testStream() {
+        Grid grid = new Grid(3);
+        Set<GridCoordinate> streamCoordinates = grid.stream().collect(Collectors.toSet());
+        assertEquals(9, streamCoordinates.size());
+        assertTrue(streamCoordinates.contains(new GridCoordinate(0, 0)));
+        assertTrue(streamCoordinates.contains(new GridCoordinate(0, 1)));
+        assertTrue(streamCoordinates.contains(new GridCoordinate(0, 2)));
+        assertTrue(streamCoordinates.contains(new GridCoordinate(1, 0)));
+        assertTrue(streamCoordinates.contains(new GridCoordinate(1, 1)));
+        assertTrue(streamCoordinates.contains(new GridCoordinate(1, 2)));
+        assertTrue(streamCoordinates.contains(new GridCoordinate(2, 0)));
+        assertTrue(streamCoordinates.contains(new GridCoordinate(2, 1)));
+        assertTrue(streamCoordinates.contains(new GridCoordinate(2, 2)));
     }
 
     @Test

@@ -76,8 +76,8 @@ public class Grid implements Serializable {
     }
 
     public Stream<GridCoordinate> stream() {
-        return IntStream.range(0, size - 1)
+        return IntStream.range(0, size)
                 .boxed()
-                .flatMap(row -> IntStream.range(0, size - 1).mapToObj(col -> new GridCoordinate(row, col)));
+                .flatMap(row -> IntStream.range(0, size).mapToObj(col -> new GridCoordinate(row, col)));
     }
 }
