@@ -1,6 +1,8 @@
 package com.jtbdevelopment.TwistedBattleship.state.grid;
 
 import java.io.Serializable;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * Date: 4/2/15
@@ -71,5 +73,11 @@ public class Grid implements Serializable {
 
     public final int getSize() {
         return size;
+    }
+
+    public Stream<GridCoordinate> stream() {
+        return IntStream.range(0, size - 1)
+                .boxed()
+                .flatMap(row -> IntStream.range(0, size - 1).mapToObj(col -> new GridCoordinate(row, col)));
     }
 }
