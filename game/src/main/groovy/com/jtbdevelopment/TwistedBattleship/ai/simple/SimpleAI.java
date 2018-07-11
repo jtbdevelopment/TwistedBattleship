@@ -204,12 +204,6 @@ public class SimpleAI implements AI {
         return false;
     }
 
-    private WeightedTarget getRandomBestTarget(final List<WeightedTarget> weightedTargets) {
-        weightedTargets.sort((a, b) -> b.getWeight() - a.getWeight());
-        List<WeightedTarget> bestTargets = weightedTargets.stream().filter(t -> t.getWeight() == weightedTargets.get(0).getWeight()).collect(Collectors.toList());
-        return bestTargets.get(random.nextInt(bestTargets.size()));
-    }
-
     private boolean didECM(final TBGame game, final MongoPlayer player, final TBPlayerState myState) {
         if (game.getMovesForSpecials() <= game.getRemainingMoves() && myState.getEcmsRemaining() > 0) {
             List<WeightedTarget> weightedTargets = game.getPlayerDetails().entrySet().stream()
@@ -298,6 +292,12 @@ public class SimpleAI implements AI {
         }
 
         return false;
+    }
+
+    private WeightedTarget getRandomBestTarget(final List<WeightedTarget> weightedTargets) {
+        weightedTargets.sort((a, b) -> b.getWeight() - a.getWeight());
+        List<WeightedTarget> bestTargets = weightedTargets.stream().filter(t -> t.getWeight() == weightedTargets.get(0).getWeight()).collect(Collectors.toList());
+        return bestTargets.get(random.nextInt(bestTargets.size()));
     }
 
     private String getMD5ForObjectId(TBGame game, ObjectId id) {
