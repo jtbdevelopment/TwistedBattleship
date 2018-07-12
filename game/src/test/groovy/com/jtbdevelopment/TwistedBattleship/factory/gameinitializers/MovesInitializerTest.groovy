@@ -4,6 +4,7 @@ import com.jtbdevelopment.TwistedBattleship.state.GameFeature
 import com.jtbdevelopment.TwistedBattleship.state.TBGame
 import com.jtbdevelopment.games.factory.GameInitializer
 import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase
+import org.junit.Assert
 import org.junit.Test
 
 /**
@@ -11,11 +12,11 @@ import org.junit.Test
  * Time: 6:34 PM
  */
 class MovesInitializerTest extends MongoGameCoreTestCase {
-    MovesInitializer initializer = new MovesInitializer()
+    private MovesInitializer initializer = new MovesInitializer()
 
     @Test
     void testGetOrder() {
-        assert GameInitializer.DEFAULT_ORDER == initializer.order
+        Assert.assertEquals GameInitializer.DEFAULT_ORDER, initializer.order
     }
 
     @Test
@@ -27,8 +28,8 @@ class MovesInitializerTest extends MongoGameCoreTestCase {
 
         initializer.initializeGame(game)
 
-        assert 1 == game.remainingMoves
-        assert 1 == game.movesForSpecials
+        Assert.assertEquals 1, game.remainingMoves
+        Assert.assertEquals 1, game.movesForSpecials
     }
 
     @Test
@@ -40,7 +41,7 @@ class MovesInitializerTest extends MongoGameCoreTestCase {
 
         initializer.initializeGame(game)
 
-        assert 5 == game.remainingMoves
-        assert 2 == game.movesForSpecials
+        Assert.assertEquals 5, game.remainingMoves
+        Assert.assertEquals 2, game.movesForSpecials
     }
 }
