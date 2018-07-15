@@ -24,11 +24,11 @@ public class ShipRelocator {
                     Arrays.asList(0, -1, 1, -2, 2),
                     Arrays.asList(2, -1, -2, 1, 0),
                     Arrays.asList(0, 1, -2, -1, 2));
-    private Random generator = new Random();
+    protected Random generator = new Random();
     @Autowired
-    private ShipRelocatorCalculator calculator;
+    protected ShipRelocatorCalculator calculator;
     @Autowired
-    private ShipRotater rotater;
+    protected ShipRotater rotater;
 
     public List<GridCoordinate> relocateShip(final TBGame game, final TBPlayerState playerState, final ShipState ship) {
         Set<GridCoordinate> otherShipCoordinates = new HashSet<>(playerState.getCoordinateShipMap().keySet());
