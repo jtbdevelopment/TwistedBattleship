@@ -27,6 +27,7 @@ public class RepairShipHandlerTest extends AbstractBaseHandlerTest {
         Assert.assertTrue(handler.targetSelf());
     }
 
+    @SuppressWarnings("Duplicates")
     @Test
     public void testMovesRequired() {
         TBGame game = new TBGame();
