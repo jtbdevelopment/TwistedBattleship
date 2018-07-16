@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 @Component
 public class SpyHandler extends AbstractSpecialMoveHandler {
     @Autowired
-    private GridCircleUtil gridCircleUtil;
+    protected GridCircleUtil gridCircleUtil;
 
     public SpyHandler(AbstractPlayerRepository<ObjectId, MongoPlayer> playerRepository, AbstractGameRepository<ObjectId, GameFeature, TBGame> gameRepository, GameTransitionEngine<TBGame> transitionEngine, GamePublisher<TBGame, MongoPlayer> gamePublisher, GameEligibilityTracker gameTracker, GameMasker<ObjectId, TBGame, TBMaskedGame> gameMasker) {
         super(playerRepository, gameRepository, transitionEngine, gamePublisher, gameTracker, gameMasker);
