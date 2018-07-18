@@ -30,7 +30,7 @@ import java.util.Set;
 @Component
 public class ECMHandler extends AbstractSpecialMoveHandler {
     @Autowired
-    private GridCircleUtil gridCircleUtil;
+    protected GridCircleUtil gridCircleUtil;
 
     public ECMHandler(final AbstractPlayerRepository<ObjectId, MongoPlayer> playerRepository, final AbstractGameRepository<ObjectId, GameFeature, TBGame> gameRepository, final GameTransitionEngine<TBGame> transitionEngine, final GamePublisher<TBGame, MongoPlayer> gamePublisher, final GameEligibilityTracker gameTracker, final GameMasker<ObjectId, TBGame, TBMaskedGame> gameMasker) {
         super(playerRepository, gameRepository, transitionEngine, gamePublisher, gameTracker, gameMasker);
