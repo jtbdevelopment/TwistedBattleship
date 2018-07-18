@@ -25,6 +25,7 @@ import com.jtbdevelopment.games.players.Player
 import com.jtbdevelopment.games.state.GamePhase
 import com.jtbdevelopment.games.state.PlayerState
 import org.bson.types.ObjectId
+import org.junit.Assert
 import org.junit.BeforeClass
 import org.junit.Test
 
@@ -35,14 +36,16 @@ import javax.ws.rs.core.GenericType
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
+import static org.junit.Assert.assertNotNull
+
 /**
  * Date: 4/26/15
  * Time: 10:36 AM
  */
 class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMaskedGame> {
 
-    static HazelcastCacheManager cacheManager
-    static GameRepository gameRepository
+    private static HazelcastCacheManager cacheManager
+    private static GameRepository gameRepository
 
     @BeforeClass
     static void setup() {
@@ -52,13 +55,13 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMas
 
     @Test
     void testPlayerTheme() {
-        ((TBPlayerAttributes) TEST_PLAYER2.gameSpecificPlayerAttributes).availableThemes = ['default', 'new-theme']
+        ((TBPlayerAttributes) TEST_PLAYER2.gameSpecificPlayerAttributes).setAvailableThemes(new HashSet<String>(['default', 'new-theme']))
         playerRepository.save(TEST_PLAYER2)
         Client client = createConnection(TEST_PLAYER2)
         def p = client.target(PLAYER_API).request(MediaType.APPLICATION_JSON).get(MongoManualPlayer.class);
-        assert 'default-theme' == ((TBPlayerAttributes) p.gameSpecificPlayerAttributes).theme
+        Assert.assertEquals 'default-theme', ((TBPlayerAttributes) p.gameSpecificPlayerAttributes).theme
         MongoPlayer updated = client.target(PLAYER_API).path('changeTheme').path('new-theme').request(MediaType.APPLICATION_JSON).put(EMPTY_PUT_POST, MongoManualPlayer.class)
-        assert 'new-theme' == ((TBPlayerAttributes) updated.gameSpecificPlayerAttributes).theme
+        Assert.assertEquals 'new-theme', ((TBPlayerAttributes) updated.gameSpecificPlayerAttributes).theme
     }
 
     @Test
@@ -67,7 +70,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMas
         def sizes = client.path("circles").request(MediaType.APPLICATION_JSON_TYPE).get(
                 new GenericType<Map<Integer, Set<GridCoordinate>>>() {
                 })
-        assert GridCircleUtil.CIRCLE_OFFSETS == sizes
+        Assert.assertEquals GridCircleUtil.CIRCLE_OFFSETS, sizes
     }
 
     @Test
@@ -76,7 +79,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMas
         def sizes = client.path("states").request(MediaType.APPLICATION_JSON_TYPE).get(
                 new GenericType<List<GridCellState>>() {
                 })
-        assert GridCellState.values().toList() == sizes
+        Assert.assertEquals GridCellState.values().toList(), sizes
     }
 
     @Test
@@ -85,7 +88,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMas
         def ships = client.path("ships").request(MediaType.APPLICATION_JSON_TYPE).get(
                 new GenericType<List<ShipInfo>>() {
                 })
-        assert Ship.values().collect { Ship it -> new ShipInfo(it) } == ships
+        Assert.assertEquals(Ship.values().collect { Ship it -> new ShipInfo(it) }, ships)
     }
 
     @Test
@@ -94,7 +97,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMas
         def features = client.path("features").request(MediaType.APPLICATION_JSON_TYPE).get(
                 new GenericType<List<GameFeatureInfo>>() {
                 })
-        assert features == [
+        Assert.assertEquals features, [
                 new GameFeatureInfo(GameFeature.GridSize,
                         [
                                 new GameFeatureInfo.Detail(GameFeature.Grid10x10),
@@ -165,43 +168,43 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMas
                         ] as Set,
                         players: [TEST_PLAYER2.md5, TEST_PLAYER3.md5, TEST_PLAYER1.md5],
                 ))
-        assert game
-        assert 20 == game.gridSize
-        assert 2 == game.movesForSpecials
-        assert [
+        assertNotNull game
+        Assert.assertEquals 20, game.gridSize
+        Assert.assertEquals 2, game.movesForSpecials
+        Assert.assertEquals([
                 (TEST_PLAYER1.md5): PlayerState.Pending,
                 (TEST_PLAYER2.md5): PlayerState.Pending,
                 (TEST_PLAYER3.md5): PlayerState.Accepted
-        ] == game.playerStates
-        assert [
+        ], game.playerStates)
+        Assert.assertEquals([
                 (TEST_PLAYER1.md5): true,
                 (TEST_PLAYER2.md5): true,
                 (TEST_PLAYER3.md5): true
-        ] == game.playersAlive
-        assert [
+        ], game.playersAlive)
+        Assert.assertEquals([
                 (TEST_PLAYER1.md5): false,
                 (TEST_PLAYER2.md5): false,
                 (TEST_PLAYER3.md5): false
-        ] == game.playersSetup
-        assert [
+        ], game.playersSetup)
+        Assert.assertEquals([
                 (TEST_PLAYER1.md5): 0,
                 (TEST_PLAYER2.md5): 0,
                 (TEST_PLAYER3.md5): 0
-        ] == game.playersScore
-        assert 5 == game.maskedPlayersState.activeShipsRemaining
-        assert [
+        ], game.playersScore)
+        Assert.assertEquals 5, game.maskedPlayersState.activeShipsRemaining
+        Assert.assertEquals([
                 (TEST_PLAYER1.md5): new Grid(20),
                 (TEST_PLAYER2.md5): new Grid(20)
-        ] == game.maskedPlayersState.opponentGrids
-        assert [
+        ], game.maskedPlayersState.opponentGrids)
+        Assert.assertEquals([
                 (TEST_PLAYER1.md5): new Grid(20),
                 (TEST_PLAYER2.md5): new Grid(20)
-        ] == game.maskedPlayersState.opponentViews
-        assert 0 == game.maskedPlayersState.spysRemaining
-        assert 2 == game.maskedPlayersState.ecmsRemaining
-        assert 2 == game.maskedPlayersState.emergencyRepairsRemaining
-        assert 0 == game.maskedPlayersState.evasiveManeuversRemaining
-        assert GamePhase.Challenged == game.gamePhase
+        ], game.maskedPlayersState.opponentViews)
+        Assert.assertEquals 0, game.maskedPlayersState.spysRemaining
+        Assert.assertEquals 2, game.maskedPlayersState.ecmsRemaining
+        Assert.assertEquals 2, game.maskedPlayersState.emergencyRepairsRemaining
+        Assert.assertEquals 0, game.maskedPlayersState.evasiveManeuversRemaining
+        Assert.assertEquals GamePhase.Challenged, game.gamePhase
 
         //  Clear cache and force a load from db to confirm full round trip
         cacheManager.cacheNames.each {
@@ -209,25 +212,25 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMas
         }
 
         game = getGame(createGameTarget(P3, game))
-        assert [
+        Assert.assertEquals([
                 (TEST_PLAYER1.md5): 0,
                 (TEST_PLAYER2.md5): 0,
                 (TEST_PLAYER3.md5): 0
-        ] == game.playersScore
-        assert 5 == game.maskedPlayersState.activeShipsRemaining
-        assert [
+        ], game.playersScore)
+        Assert.assertEquals 5, game.maskedPlayersState.activeShipsRemaining
+        Assert.assertEquals([
                 (TEST_PLAYER1.md5): new Grid(20),
                 (TEST_PLAYER2.md5): new Grid(20)
-        ] == game.maskedPlayersState.opponentGrids
-        assert [
+        ], game.maskedPlayersState.opponentGrids)
+        Assert.assertEquals([
                 (TEST_PLAYER1.md5): new Grid(20),
                 (TEST_PLAYER2.md5): new Grid(20)
-        ] == game.maskedPlayersState.opponentViews
-        assert 0 == game.maskedPlayersState.spysRemaining
-        assert 2 == game.maskedPlayersState.ecmsRemaining
-        assert 2 == game.maskedPlayersState.emergencyRepairsRemaining
-        assert 0 == game.maskedPlayersState.evasiveManeuversRemaining
-        assert GamePhase.Challenged == game.gamePhase
+        ], game.maskedPlayersState.opponentViews)
+        Assert.assertEquals 0, game.maskedPlayersState.spysRemaining
+        Assert.assertEquals 2, game.maskedPlayersState.ecmsRemaining
+        Assert.assertEquals 2, game.maskedPlayersState.emergencyRepairsRemaining
+        Assert.assertEquals 0, game.maskedPlayersState.evasiveManeuversRemaining
+        Assert.assertEquals GamePhase.Challenged, game.gamePhase
     }
 
     @Test
@@ -235,21 +238,21 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMas
         def P3 = createPlayerAPITarget(TEST_PLAYER3)
         TBMaskedGame game = newGame(P3, STANDARD_PLAYERS_AND_FEATURES)
         def P1G = createGameTarget(createPlayerAPITarget(TEST_PLAYER1), game)
-        assert game
-        assert [
+        Assert.assertNotNull game
+        Assert.assertEquals([
                 (TEST_PLAYER1.md5): PlayerState.Pending,
                 (TEST_PLAYER2.md5): PlayerState.Pending,
                 (TEST_PLAYER3.md5): PlayerState.Accepted
-        ] == game.playerStates
-        assert GamePhase.Challenged == game.gamePhase
+        ], game.playerStates)
+        Assert.assertEquals GamePhase.Challenged, game.gamePhase
 
         game = rejectGame(P1G)
-        assert [
+        Assert.assertEquals([
                 (TEST_PLAYER1.md5): PlayerState.Rejected,
                 (TEST_PLAYER2.md5): PlayerState.Pending,
                 (TEST_PLAYER3.md5): PlayerState.Accepted
-        ] == game.playerStates
-        assert GamePhase.Declined == game.gamePhase
+        ], game.playerStates)
+        Assert.assertEquals GamePhase.Declined, game.gamePhase
     }
 
     @Test
@@ -261,81 +264,81 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMas
         acceptGame(P1G)
         acceptGame(P2G)
         game = quitGame(P1G)
-        assert [
+        Assert.assertEquals([
                 (TEST_PLAYER1.md5): PlayerState.Quit,
                 (TEST_PLAYER2.md5): PlayerState.Accepted,
                 (TEST_PLAYER3.md5): PlayerState.Accepted
-        ] == game.playerStates
+        ], game.playerStates)
     }
 
     @Test
     void testSetupGame() {
         def P3 = createPlayerAPITarget(TEST_PLAYER3)
         TBMaskedGame game = newGame(P3, STANDARD_PLAYERS_AND_FEATURES)
-        assert game
+        Assert.assertNotNull game
         def P3G = createGameTarget(P3, game)
         def P1G = createGameTarget(createPlayerAPITarget(TEST_PLAYER1), game)
         def P2G = createGameTarget(createPlayerAPITarget(TEST_PLAYER2), game)
 
 
         game = acceptGame(P1G)
-        assert game
-        assert [
+        Assert.assertNotNull game
+        Assert.assertEquals([
                 (TEST_PLAYER1.md5): PlayerState.Accepted,
                 (TEST_PLAYER2.md5): PlayerState.Pending,
                 (TEST_PLAYER3.md5): PlayerState.Accepted
-        ] == game.playerStates
-        assert GamePhase.Challenged == game.gamePhase
+        ], game.playerStates)
+        Assert.assertEquals GamePhase.Challenged, game.gamePhase
 
         game = acceptGame(P2G)
-        assert game
-        assert [
+        Assert.assertNotNull game
+        Assert.assertEquals([
                 (TEST_PLAYER1.md5): PlayerState.Accepted,
                 (TEST_PLAYER2.md5): PlayerState.Accepted,
                 (TEST_PLAYER3.md5): PlayerState.Accepted
-        ] == game.playerStates
-        assert [
+        ], game.playerStates)
+        Assert.assertEquals([
                 (TEST_PLAYER1.md5): false,
                 (TEST_PLAYER2.md5): false,
                 (TEST_PLAYER3.md5): false
-        ] == game.playersSetup
-        assert GamePhase.Setup == game.gamePhase
+        ], game.playersSetup)
+        Assert.assertEquals GamePhase.Setup, game.gamePhase
 
         game = setup(P3G, P3POSITIONS)
-        assert [
+        Assert.assertEquals([
                 (TEST_PLAYER1.md5): false,
                 (TEST_PLAYER2.md5): false,
                 (TEST_PLAYER3.md5): true
-        ] == game.playersSetup
-        assert GamePhase.Setup == game.gamePhase
+        ], game.playersSetup)
+        Assert.assertEquals GamePhase.Setup, game.gamePhase
 
         game = setup(P1G, P1POSITIONS)
-        assert [
+        Assert.assertEquals([
                 (TEST_PLAYER1.md5): true,
                 (TEST_PLAYER2.md5): false,
                 (TEST_PLAYER3.md5): true
-        ] == game.playersSetup
-        assert GamePhase.Setup == game.gamePhase
+        ], game.playersSetup)
+        Assert.assertEquals GamePhase.Setup, game.gamePhase
 
         game = setup(P2G, P2POSITIONS)
-        assert [
+        Assert.assertEquals([
                 (TEST_PLAYER1.md5): true,
                 (TEST_PLAYER2.md5): true,
                 (TEST_PLAYER3.md5): true
-        ] == game.playersSetup
-        assert GamePhase.Playing == game.gamePhase
-        assert 5 == game.remainingMoves
-        assert [TEST_PLAYER2.md5, TEST_PLAYER1.md5, TEST_PLAYER3.md5].contains(game.currentPlayer)
-        assert TBActionLogEntry.TBActionType.Begin == game.maskedPlayersState.actionLog[0].actionType
-        assert "Game ready to play." == game.maskedPlayersState.actionLog[0].description
-        assert 0 != game.maskedPlayersState.actionLog[0].timestamp
+        ], game.playersSetup)
+        Assert.assertEquals GamePhase.Playing, game.gamePhase
+        Assert.assertEquals 5, game.remainingMoves
+        Assert.assertTrue([TEST_PLAYER2.md5, TEST_PLAYER1.md5, TEST_PLAYER3.md5].contains(game.currentPlayer))
+        Assert.assertEquals TBActionLogEntry.TBActionType.Begin, game.maskedPlayersState.actionLog[0].actionType
+        Assert.assertEquals "Game ready to play.", game.maskedPlayersState.actionLog[0].description
+        Assert.assertNotEquals(0, game.maskedPlayersState.actionLog[0].timestamp)
     }
 
     @Test
     void testFireForTurnInGame() {
         def P3 = createPlayerAPITarget(TEST_PLAYER3)
         TBMaskedGame game = newGame(P3, STANDARD_PLAYERS_AND_FEATURES)
-        assert game
+        Assert.assertNotNull game
         def P3G = createGameTarget(P3, game)
         def P1G = createGameTarget(createPlayerAPITarget(TEST_PLAYER1), game)
         def P2G = createGameTarget(createPlayerAPITarget(TEST_PLAYER2), game)
@@ -355,31 +358,31 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMas
         }
 
         game = fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 7))
-        assert GamePhase.Playing == game.gamePhase
-        assert "You fired at TEST PLAYER1 (7,7) and hit!" == game.maskedPlayersState.actionLog[-1].description
-        assert TBActionLogEntry.TBActionType.Fired == game.maskedPlayersState.actionLog[-1].actionType
-        assert 1 == game.playersScore[TEST_PLAYER2.md5]
-        assert 4 == game.remainingMoves
-        assert TEST_PLAYER2.md5 == game.currentPlayer
+        Assert.assertEquals GamePhase.Playing, game.gamePhase
+        Assert.assertEquals "You fired at TEST PLAYER1 (7,7) and hit!", game.maskedPlayersState.actionLog[-1].description
+        Assert.assertEquals TBActionLogEntry.TBActionType.Fired, game.maskedPlayersState.actionLog[-1].actionType
+        Assert.assertEquals 1, game.playersScore[TEST_PLAYER2.md5]
+        Assert.assertEquals 4, game.remainingMoves
+        Assert.assertEquals TEST_PLAYER2.md5, game.currentPlayer
         game = fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 8))
-        assert "You fired at TEST PLAYER1 (7,8) and missed." == game.maskedPlayersState.actionLog[-1].description
+        Assert.assertEquals "You fired at TEST PLAYER1 (7,8) and missed.", game.maskedPlayersState.actionLog[-1].description
         game = fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 6))
-        assert "You fired at TEST PLAYER1 (7,6) and missed." == game.maskedPlayersState.actionLog[-1].description
+        Assert.assertEquals "You fired at TEST PLAYER1 (7,6) and missed.", game.maskedPlayersState.actionLog[-1].description
         game = fire(P2G, TEST_PLAYER1, new GridCoordinate(8, 7))
-        assert "You fired at TEST PLAYER1 (8,7) and hit!" == game.maskedPlayersState.actionLog[-1].description
-        assert 1 == game.remainingMoves
+        Assert.assertEquals "You fired at TEST PLAYER1 (8,7) and hit!", game.maskedPlayersState.actionLog[-1].description
+        Assert.assertEquals 1, game.remainingMoves
         game = fire(P2G, TEST_PLAYER1, new GridCoordinate(9, 7))
-        assert "You fired at TEST PLAYER1 (9,7) and hit!" == game.maskedPlayersState.actionLog[-1].description
-        assert 3 == game.playersScore[TEST_PLAYER2.md5]
-        assert 5 == game.remainingMoves
-        assert TEST_PLAYER2.md5 != game.currentPlayer
+        Assert.assertEquals "You fired at TEST PLAYER1 (9,7) and hit!", game.maskedPlayersState.actionLog[-1].description
+        Assert.assertEquals 3, game.playersScore[TEST_PLAYER2.md5]
+        Assert.assertEquals 5, game.remainingMoves
+        Assert.assertNotEquals TEST_PLAYER2.md5, game.currentPlayer
     }
 
     @Test
     void testCruiseMissileForTurnInGame() {
         def P3 = createPlayerAPITarget(TEST_PLAYER3)
         TBMaskedGame game = newGame(P3, STANDARD_PLAYERS_AND_FEATURES)
-        assert game
+        Assert.assertNotNull game
         def P3G = createGameTarget(P3, game)
         def P1G = createGameTarget(createPlayerAPITarget(TEST_PLAYER1), game)
         def P2G = createGameTarget(createPlayerAPITarget(TEST_PLAYER2), game)
@@ -400,34 +403,34 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMas
 
         fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 7))
         game = cruiseMissile(P2G, TEST_PLAYER1, new GridCoordinate(7, 7))
-        assert GamePhase.Playing == game.gamePhase
-        assert "You fired a cruise missile at TEST PLAYER1 (7,7) and hit!" == game.maskedPlayersState.actionLog[-7].description
-        assert "You fired at TEST PLAYER1 (5,7) and hit!" == game.maskedPlayersState.actionLog[-6].description
-        assert "You fired at TEST PLAYER1 (6,7) and hit!" == game.maskedPlayersState.actionLog[-5].description
-        assert "You fired at TEST PLAYER1 (7,7) and hit an already damaged area!" == game.maskedPlayersState.actionLog[-4].description
-        assert "You fired at TEST PLAYER1 (8,7) and hit!" == game.maskedPlayersState.actionLog[-3].description
-        assert "You fired at TEST PLAYER1 (9,7) and hit!" == game.maskedPlayersState.actionLog[-2].description
-        assert "You sunk a Aircraft Carrier for TEST PLAYER1!" == game.maskedPlayersState.actionLog[-1].description
-        assert TBActionLogEntry.TBActionType.CruiseMissile == game.maskedPlayersState.actionLog[-7].actionType
-        assert 10 == game.playersScore[TEST_PLAYER2.md5]
-        assert 2 == game.remainingMoves
-        assert 0 == game.maskedPlayersState.cruiseMissilesRemaining
-        assert TEST_PLAYER2.md5 == game.currentPlayer
+        Assert.assertEquals GamePhase.Playing, game.gamePhase
+        Assert.assertEquals "You fired a cruise missile at TEST PLAYER1 (7,7) and hit!", game.maskedPlayersState.actionLog[-7].description
+        Assert.assertEquals "You fired at TEST PLAYER1 (5,7) and hit!", game.maskedPlayersState.actionLog[-6].description
+        Assert.assertEquals "You fired at TEST PLAYER1 (6,7) and hit!", game.maskedPlayersState.actionLog[-5].description
+        Assert.assertEquals "You fired at TEST PLAYER1 (7,7) and hit an already damaged area!", game.maskedPlayersState.actionLog[-4].description
+        Assert.assertEquals "You fired at TEST PLAYER1 (8,7) and hit!", game.maskedPlayersState.actionLog[-3].description
+        Assert.assertEquals "You fired at TEST PLAYER1 (9,7) and hit!", game.maskedPlayersState.actionLog[-2].description
+        Assert.assertEquals "You sunk a Aircraft Carrier for TEST PLAYER1!", game.maskedPlayersState.actionLog[-1].description
+        Assert.assertEquals TBActionLogEntry.TBActionType.CruiseMissile, game.maskedPlayersState.actionLog[-7].actionType
+        Assert.assertEquals 10, game.playersScore[TEST_PLAYER2.md5]
+        Assert.assertEquals 2, game.remainingMoves
+        Assert.assertEquals 0, game.maskedPlayersState.cruiseMissilesRemaining
+        Assert.assertEquals TEST_PLAYER2.md5, game.currentPlayer
         game = fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 8))
-        assert "You fired at TEST PLAYER1 (7,8) and missed." == game.maskedPlayersState.actionLog[-1].description
-        assert 1 == game.remainingMoves
+        Assert.assertEquals "You fired at TEST PLAYER1 (7,8) and missed.", game.maskedPlayersState.actionLog[-1].description
+        Assert.assertEquals 1, game.remainingMoves
         game = fire(P2G, TEST_PLAYER1, new GridCoordinate(9, 7))
-        assert "You fired at TEST PLAYER1 (9,7) and hit an already damaged area!" == game.maskedPlayersState.actionLog[-1].description
-        assert 10 == game.playersScore[TEST_PLAYER2.md5]
-        assert 5 == game.remainingMoves
-        assert TEST_PLAYER2.md5 != game.currentPlayer
+        Assert.assertEquals "You fired at TEST PLAYER1 (9,7) and hit an already damaged area!", game.maskedPlayersState.actionLog[-1].description
+        Assert.assertEquals 10, game.playersScore[TEST_PLAYER2.md5]
+        Assert.assertEquals 5, game.remainingMoves
+        Assert.assertNotEquals TEST_PLAYER2.md5, game.currentPlayer
     }
 
     @Test
     void testSpyForTurnInGame() {
         def P3 = createPlayerAPITarget(TEST_PLAYER3)
         TBMaskedGame game = newGame(P3, STANDARD_PLAYERS_AND_FEATURES)
-        assert game != null
+        Assert.assertNotNull game
         def P3G = createGameTarget(P3, game)
         def P1G = createGameTarget(createPlayerAPITarget(TEST_PLAYER1), game)
         def P2G = createGameTarget(createPlayerAPITarget(TEST_PLAYER2), game)
@@ -449,38 +452,38 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMas
         fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 7))
 
         game = spy(P2G, TEST_PLAYER1, new GridCoordinate(7, 8))
-        assert GamePhase.Playing == game.gamePhase
-        assert "You spied on TEST PLAYER1 at (7,8)." == game.maskedPlayersState.actionLog[-1].description
-        assert 2 == game.remainingMoves
-        assert 1 == game.maskedPlayersState.spysRemaining
-        assert TEST_PLAYER2.md5 == game.currentPlayer
+        Assert.assertEquals GamePhase.Playing, game.gamePhase
+        Assert.assertEquals "You spied on TEST PLAYER1 at (7,8).", game.maskedPlayersState.actionLog[-1].description
+        Assert.assertEquals 2, game.remainingMoves
+        Assert.assertEquals 1, game.maskedPlayersState.spysRemaining
+        Assert.assertEquals TEST_PLAYER2.md5, game.currentPlayer
         game = spy(P2G, TEST_PLAYER1, new GridCoordinate(2, 6))
-        assert "You spied on TEST PLAYER1 at (2,6)." == game.maskedPlayersState.actionLog[-1].description
-        assert 1 == game.playersScore[TEST_PLAYER2.md5]
-        assert 0 == game.maskedPlayersState.spysRemaining
-        assert TEST_PLAYER2.md5 != game.currentPlayer
+        Assert.assertEquals "You spied on TEST PLAYER1 at (2,6).", game.maskedPlayersState.actionLog[-1].description
+        Assert.assertEquals 1, game.playersScore[TEST_PLAYER2.md5]
+        Assert.assertEquals 0, game.maskedPlayersState.spysRemaining
+        Assert.assertNotEquals TEST_PLAYER2.md5, game.currentPlayer
 
         //Sample checks, not full
-        assert GridCellState.KnownByHit == game.maskedPlayersState.opponentGrids[TEST_PLAYER1.md5].get(7, 7)
-        assert GridCellState.KnownShip == game.maskedPlayersState.opponentGrids[TEST_PLAYER1.md5].get(8, 7)
-        assert GridCellState.KnownShip == game.maskedPlayersState.opponentGrids[TEST_PLAYER1.md5].get(0, 6)
-        assert GridCellState.KnownEmpty == game.maskedPlayersState.opponentGrids[TEST_PLAYER1.md5].get(7, 8)
+        Assert.assertEquals GridCellState.KnownByHit, game.maskedPlayersState.opponentGrids[TEST_PLAYER1.md5].get(7, 7)
+        Assert.assertEquals GridCellState.KnownShip, game.maskedPlayersState.opponentGrids[TEST_PLAYER1.md5].get(8, 7)
+        Assert.assertEquals GridCellState.KnownShip, game.maskedPlayersState.opponentGrids[TEST_PLAYER1.md5].get(0, 6)
+        Assert.assertEquals GridCellState.KnownEmpty, game.maskedPlayersState.opponentGrids[TEST_PLAYER1.md5].get(7, 8)
         game = getGame(P1G)
-        assert GridCellState.KnownByHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 7)
-        assert GridCellState.KnownShip == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(8, 7)
-        assert GridCellState.KnownShip == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(0, 6)
-        assert GridCellState.KnownEmpty == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 8)
-        assert GridCellState.KnownByHit == game.maskedPlayersState.consolidatedOpponentView.get(7, 7)
-        assert GridCellState.KnownShip == game.maskedPlayersState.consolidatedOpponentView.get(8, 7)
-        assert GridCellState.KnownShip == game.maskedPlayersState.consolidatedOpponentView.get(0, 6)
-        assert GridCellState.KnownEmpty == game.maskedPlayersState.consolidatedOpponentView.get(7, 8)
+        Assert.assertEquals GridCellState.KnownByHit, game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 7)
+        Assert.assertEquals GridCellState.KnownShip, game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(8, 7)
+        Assert.assertEquals GridCellState.KnownShip, game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(0, 6)
+        Assert.assertEquals GridCellState.KnownEmpty, game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 8)
+        Assert.assertEquals GridCellState.KnownByHit, game.maskedPlayersState.consolidatedOpponentView.get(7, 7)
+        Assert.assertEquals GridCellState.KnownShip, game.maskedPlayersState.consolidatedOpponentView.get(8, 7)
+        Assert.assertEquals GridCellState.KnownShip, game.maskedPlayersState.consolidatedOpponentView.get(0, 6)
+        Assert.assertEquals GridCellState.KnownEmpty, game.maskedPlayersState.consolidatedOpponentView.get(7, 8)
     }
 
     @Test
     void testRepairForTurnInGame() {
         def P3 = createPlayerAPITarget(TEST_PLAYER3)
         TBMaskedGame game = newGame(P3, STANDARD_PLAYERS_AND_FEATURES)
-        assert game != null
+        Assert.assertNotNull game
         def P3G = createGameTarget(P3, game)
         def P1G = createGameTarget(createPlayerAPITarget(TEST_PLAYER1), game)
         def P2G = createGameTarget(createPlayerAPITarget(TEST_PLAYER2), game)
@@ -513,35 +516,35 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMas
 
         fire(P1G, TEST_PLAYER2, new GridCoordinate(7, 0))
         game = repair(P1G, TEST_PLAYER1, new GridCoordinate(8, 7))
-        assert 2 == game.remainingMoves
-        assert "TEST PLAYER1 repaired their Aircraft Carrier." == game.maskedPlayersState.actionLog[-1].description
-        assert 5 == game.maskedPlayersState.shipStates.find { it.ship == Ship.Carrier }.healthRemaining
-        assert [false, false, false, false, false] == game.maskedPlayersState.shipStates.find {
+        Assert.assertEquals 2, game.remainingMoves
+        Assert.assertEquals "TEST PLAYER1 repaired their Aircraft Carrier.", game.maskedPlayersState.actionLog[-1].description
+        Assert.assertEquals 5, game.maskedPlayersState.shipStates.find { it.ship == Ship.Carrier }.healthRemaining
+        Assert.assertEquals([false, false, false, false, false], game.maskedPlayersState.shipStates.find {
             it.ship == Ship.Carrier
-        }.shipSegmentHit
-        assert GridCellState.KnownShip == game.maskedPlayersState.consolidatedOpponentView.get(7, 7)
-        assert 1 == game.maskedPlayersState.emergencyRepairsRemaining
-        assert 2 == game.remainingMoves
+        }.shipSegmentHit)
+        Assert.assertEquals GridCellState.KnownShip, game.maskedPlayersState.consolidatedOpponentView.get(7, 7)
+        Assert.assertEquals 1, game.maskedPlayersState.emergencyRepairsRemaining
+        Assert.assertEquals 2, game.remainingMoves
 
 
         game = repair(P1G, TEST_PLAYER1, new GridCoordinate(8, 0))
-        assert "TEST PLAYER1 repaired their Cruiser." == game.maskedPlayersState.actionLog[-1].description
-        assert 3 == game.maskedPlayersState.shipStates.find { it.ship == Ship.Cruiser }.healthRemaining
-        assert [false, false, false] == game.maskedPlayersState.shipStates.find {
+        Assert.assertEquals "TEST PLAYER1 repaired their Cruiser.", game.maskedPlayersState.actionLog[-1].description
+        Assert.assertEquals 3, game.maskedPlayersState.shipStates.find { it.ship == Ship.Cruiser }.healthRemaining
+        Assert.assertEquals([false, false, false], game.maskedPlayersState.shipStates.find {
             it.ship == Ship.Cruiser
-        }.shipSegmentHit
-        assert GridCellState.KnownShip == game.maskedPlayersState.consolidatedOpponentView.get(7, 0)
-        assert GamePhase.Playing == game.gamePhase
-        assert 0 == game.playersScore[TEST_PLAYER1.md5]
-        assert 0 == game.maskedPlayersState.emergencyRepairsRemaining
-        assert TEST_PLAYER1.md5 != game.currentPlayer
+        }.shipSegmentHit)
+        Assert.assertEquals GridCellState.KnownShip, game.maskedPlayersState.consolidatedOpponentView.get(7, 0)
+        Assert.assertEquals GamePhase.Playing, game.gamePhase
+        Assert.assertEquals 0, game.playersScore[TEST_PLAYER1.md5]
+        Assert.assertEquals 0, game.maskedPlayersState.emergencyRepairsRemaining
+        Assert.assertNotEquals TEST_PLAYER1.md5, game.currentPlayer
     }
 
     @Test
     void testECMForTurnInGame() {
         def P3 = createPlayerAPITarget(TEST_PLAYER3)
         TBMaskedGame game = newGame(P3, STANDARD_PLAYERS_AND_FEATURES)
-        assert game != null
+        Assert.assertNotNull game
         def P3G = createGameTarget(P3, game)
         def P1G = createGameTarget(createPlayerAPITarget(TEST_PLAYER1), game)
         def P2G = createGameTarget(createPlayerAPITarget(TEST_PLAYER2), game)
@@ -573,24 +576,24 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMas
         }
 
         game = fire(P1G, TEST_PLAYER2, new GridCoordinate(7, 0))
-        assert GridCellState.KnownByHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 7)
-        assert GridCellState.KnownByHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 0)
+        Assert.assertEquals GridCellState.KnownByHit, game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 7)
+        Assert.assertEquals GridCellState.KnownByHit, game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 0)
         game = ecm(P1G, TEST_PLAYER1, new GridCoordinate(8, 7))
-        assert 2 == game.remainingMoves
-        assert "TEST PLAYER1 deployed an ECM." == game.maskedPlayersState.actionLog[-1].description
-        assert 1 == game.maskedPlayersState.ecmsRemaining
-        assert GridCellState.HiddenHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 7)
-        assert GridCellState.KnownByHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 0)
+        Assert.assertEquals 2, game.remainingMoves
+        Assert.assertEquals "TEST PLAYER1 deployed an ECM.", game.maskedPlayersState.actionLog[-1].description
+        Assert.assertEquals 1, game.maskedPlayersState.ecmsRemaining
+        Assert.assertEquals GridCellState.HiddenHit, game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 7)
+        Assert.assertEquals GridCellState.KnownByHit, game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 0)
 
 
         game = ecm(P1G, TEST_PLAYER1, new GridCoordinate(6, 0))
-        assert "TEST PLAYER1 deployed an ECM." == game.maskedPlayersState.actionLog[-1].description
-        assert GamePhase.Playing == game.gamePhase
-        assert GridCellState.HiddenHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 7)
-        assert GridCellState.HiddenHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 0)
-        assert 0 == game.playersScore[TEST_PLAYER1.md5]
-        assert 0 == game.maskedPlayersState.ecmsRemaining
-        assert TEST_PLAYER1.md5 != game.currentPlayer
+        Assert.assertEquals "TEST PLAYER1 deployed an ECM.", game.maskedPlayersState.actionLog[-1].description
+        Assert.assertEquals GamePhase.Playing, game.gamePhase
+        Assert.assertEquals GridCellState.HiddenHit, game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 7)
+        Assert.assertEquals GridCellState.HiddenHit, game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 0)
+        Assert.assertEquals 0, game.playersScore[TEST_PLAYER1.md5]
+        Assert.assertEquals 0, game.maskedPlayersState.ecmsRemaining
+        Assert.assertNotEquals TEST_PLAYER1.md5, game.currentPlayer
     }
 
     //  TODO - Unfortunately, for the possibility of random == ship remaining in place this test can fail randomly
@@ -598,7 +601,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMas
     void testMoveForTurnInGame() {
         def P3 = createPlayerAPITarget(TEST_PLAYER3)
         TBMaskedGame game = newGame(P3, STANDARD_PLAYERS_AND_FEATURES)
-        assert game != null
+        Assert.assertNotNull game
         def P3G = createGameTarget(P3, game)
         def P1G = createGameTarget(createPlayerAPITarget(TEST_PLAYER1), game)
         def P2G = createGameTarget(createPlayerAPITarget(TEST_PLAYER2), game)
@@ -630,49 +633,49 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMas
         }
 
         game = fire(P1G, TEST_PLAYER2, new GridCoordinate(7, 0))
-        assert GridCellState.KnownByHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 7)
-        assert GridCellState.KnownByHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 0)
-        assert [new GridCoordinate(5, 7),
-                new GridCoordinate(6, 7),
-                new GridCoordinate(7, 7),
-                new GridCoordinate(8, 7),
-                new GridCoordinate(9, 7),] == game.maskedPlayersState.shipStates.find {
-            it.ship == Ship.Carrier
-        }.shipGridCells
+        Assert.assertEquals GridCellState.KnownByHit, game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 7)
+        Assert.assertEquals GridCellState.KnownByHit, game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 0)
+        Assert.assertEquals([new GridCoordinate(5, 7),
+                             new GridCoordinate(6, 7),
+                             new GridCoordinate(7, 7),
+                             new GridCoordinate(8, 7),
+                             new GridCoordinate(9, 7)],
+                game.maskedPlayersState.shipStates.find { it.ship == Ship.Carrier }.shipGridCells
+        )
         game = move(P1G, TEST_PLAYER1, new GridCoordinate(8, 7))
-        assert 2 == game.remainingMoves
-        assert "TEST PLAYER1 performed evasive maneuvers." == game.maskedPlayersState.actionLog[-1].description
-        assert 1 == game.maskedPlayersState.evasiveManeuversRemaining
-        assert GridCellState.ObscuredHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 7)
-        assert GridCellState.KnownByHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 0)
-        assert [new GridCoordinate(5, 7),
-                new GridCoordinate(6, 7),
-                new GridCoordinate(7, 7),
-                new GridCoordinate(8, 7),
-                new GridCoordinate(9, 7),] != game.maskedPlayersState.shipStates.find {
+        Assert.assertEquals 2, game.remainingMoves
+        Assert.assertEquals "TEST PLAYER1 performed evasive maneuvers.", game.maskedPlayersState.actionLog[-1].description
+        Assert.assertEquals 1, game.maskedPlayersState.evasiveManeuversRemaining
+        Assert.assertEquals GridCellState.ObscuredHit, game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 7)
+        Assert.assertEquals GridCellState.KnownByHit, game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 0)
+        Assert.assertNotEquals([new GridCoordinate(5, 7),
+                                new GridCoordinate(6, 7),
+                                new GridCoordinate(7, 7),
+                                new GridCoordinate(8, 7),
+                                new GridCoordinate(9, 7),], game.maskedPlayersState.shipStates.find {
             it.ship == Ship.Carrier
-        }.shipGridCells
+        }.shipGridCells)
 
 
-        assert [new GridCoordinate(7, 0),
-                new GridCoordinate(8, 0),
-                new GridCoordinate(9, 0),] == game.maskedPlayersState.shipStates.find {
-            it.ship == Ship.Cruiser
-        }.shipGridCells
+        Assert.assertEquals([new GridCoordinate(7, 0),
+                             new GridCoordinate(8, 0),
+                             new GridCoordinate(9, 0)],
+                game.maskedPlayersState.shipStates.find { it.ship == Ship.Cruiser }.shipGridCells
+        )
         game = move(P1G, TEST_PLAYER1, new GridCoordinate(7, 0))
-        assert "TEST PLAYER1 performed evasive maneuvers."
-        assert [new GridCoordinate(7, 0),
-                new GridCoordinate(8, 0),
-                new GridCoordinate(9, 0),] != game.maskedPlayersState.shipStates.find {
+        //Assert.assertEquals "TEST PLAYER1 performed evasive maneuvers."
+        Assert.assertNotEquals([new GridCoordinate(7, 0),
+                                new GridCoordinate(8, 0),
+                                new GridCoordinate(9, 0),], game.maskedPlayersState.shipStates.find {
             it.ship == Ship.Cruiser
-        }.shipGridCells
-        assert GamePhase.Playing == game.gamePhase
-        assert GridCellState.ObscuredHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 7)
-        assert GridCellState.ObscuredHit == game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 0)
+        }.shipGridCells)
+        Assert.assertEquals GamePhase.Playing, game.gamePhase
+        Assert.assertEquals GridCellState.ObscuredHit, game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 7)
+        Assert.assertEquals GridCellState.ObscuredHit, game.maskedPlayersState.opponentViews[TEST_PLAYER2.md5].get(7, 0)
 
-        assert 0 == game.playersScore[TEST_PLAYER1.md5]
-        assert 0 == game.maskedPlayersState.evasiveManeuversRemaining
-        assert TEST_PLAYER1.md5 != game.currentPlayer
+        Assert.assertEquals 0, game.playersScore[TEST_PLAYER1.md5]
+        Assert.assertEquals 0, game.maskedPlayersState.evasiveManeuversRemaining
+        Assert.assertNotEquals TEST_PLAYER1.md5, game.currentPlayer
     }
 
     @Test
@@ -691,7 +694,7 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMas
                 ] as Set,
                 players: [TEST_PLAYER2.md5, TEST_PLAYER3.md5, TEST_PLAYER1.md5]
         ))
-        assert game != null
+        Assert.assertNotNull game
         def P3G = createGameTarget(P3, game)
         def P1G = createGameTarget(createPlayerAPITarget(TEST_PLAYER1), game)
         def P2G = createGameTarget(createPlayerAPITarget(TEST_PLAYER2), game)
@@ -716,100 +719,100 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMas
         fire(P1G, TEST_PLAYER3, new GridCoordinate(0, 2))
         fire(P1G, TEST_PLAYER3, new GridCoordinate(0, 3))
         game = fire(P1G, TEST_PLAYER3, new GridCoordinate(0, 4))
-        assert 10 == game.playersScore[TEST_PLAYER1.md5]
+        Assert.assertEquals 10, game.playersScore[TEST_PLAYER1.md5]
 
         fire(P2G, TEST_PLAYER3, new GridCoordinate(1, 14))
         fire(P2G, TEST_PLAYER3, new GridCoordinate(0, 14))
         fire(P2G, TEST_PLAYER3, new GridCoordinate(2, 14))
         fire(P2G, TEST_PLAYER3, new GridCoordinate(3, 14))
         game = fire(P2G, TEST_PLAYER3, new GridCoordinate(4, 14))
-        assert 7 == game.playersScore[TEST_PLAYER2.md5]
+        Assert.assertEquals 7, game.playersScore[TEST_PLAYER2.md5]
 
         fire(P3G, TEST_PLAYER1, new GridCoordinate(12, 12))
         fire(P3G, TEST_PLAYER2, new GridCoordinate(7, 8))
         game = fire(P3G, TEST_PLAYER2, new GridCoordinate(7, 7))
-        assert 1 == game.playersScore[TEST_PLAYER3.md5]
+        Assert.assertEquals 1, game.playersScore[TEST_PLAYER3.md5]
 
         fire(P1G, TEST_PLAYER3, new GridCoordinate(1, 0))
         fire(P1G, TEST_PLAYER3, new GridCoordinate(1, 1))
         fire(P1G, TEST_PLAYER3, new GridCoordinate(1, 2))
         fire(P1G, TEST_PLAYER3, new GridCoordinate(1, 3))
         game = fire(P1G, TEST_PLAYER3, new GridCoordinate(1, 5))
-        assert 19 == game.playersScore[TEST_PLAYER1.md5]
+        Assert.assertEquals 19, game.playersScore[TEST_PLAYER1.md5]
 
         fire(P2G, TEST_PLAYER3, new GridCoordinate(2, 0))
         fire(P2G, TEST_PLAYER3, new GridCoordinate(2, 1))
         fire(P2G, TEST_PLAYER3, new GridCoordinate(2, 2))
         fire(P2G, TEST_PLAYER3, new GridCoordinate(2, 3))
         game = fire(P2G, TEST_PLAYER3, new GridCoordinate(2, 4))
-        assert 15 == game.playersScore[TEST_PLAYER2.md5]
+        Assert.assertEquals 15, game.playersScore[TEST_PLAYER2.md5]
 
         game = fire(P3G, TEST_PLAYER2, new GridCoordinate(7, 9))
-        assert 7 == game.playersScore[TEST_PLAYER3.md5]
+        Assert.assertEquals 7, game.playersScore[TEST_PLAYER3.md5]
 
         fire(P1G, TEST_PLAYER3, new GridCoordinate(3, 2))
         fire(P1G, TEST_PLAYER3, new GridCoordinate(3, 3))
         game = fire(P1G, TEST_PLAYER3, new GridCoordinate(3, 4))
-        assert 27 == game.playersScore[TEST_PLAYER1.md5]
-        assert !game.playersAlive[TEST_PLAYER3.md5]
-        assert game.playersAlive[TEST_PLAYER2.md5]
-        assert game.playersAlive[TEST_PLAYER1.md5]
+        Assert.assertEquals 27, game.playersScore[TEST_PLAYER1.md5]
+        Assert.assertFalse game.playersAlive[TEST_PLAYER3.md5]
+        Assert.assertTrue game.playersAlive[TEST_PLAYER2.md5]
+        Assert.assertTrue game.playersAlive[TEST_PLAYER1.md5]
         spy(P1G, TEST_PLAYER2, new GridCoordinate(2, 2))
 
         fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 7))
         fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 8))
         fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 6))
         game = fire(P2G, TEST_PLAYER1, new GridCoordinate(6, 7))
-        assert 17 == game.playersScore[TEST_PLAYER2.md5]
+        Assert.assertEquals 17, game.playersScore[TEST_PLAYER2.md5]
 
         fire(P1G, TEST_PLAYER2, new GridCoordinate(14, 14))
         fire(P1G, TEST_PLAYER2, new GridCoordinate(14, 13))
         game = fire(P1G, TEST_PLAYER2, new GridCoordinate(14, 12))
-        assert 35 == game.playersScore[TEST_PLAYER1.md5]
+        Assert.assertEquals 35, game.playersScore[TEST_PLAYER1.md5]
         repair(P1G, TEST_PLAYER1, new GridCoordinate(7, 7))
 
         fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 7))
         fire(P2G, TEST_PLAYER1, new GridCoordinate(6, 7))
         game = fire(P2G, TEST_PLAYER1, new GridCoordinate(5, 7))
-        assert 20 == game.playersScore[TEST_PLAYER2.md5]
+        Assert.assertEquals 20, game.playersScore[TEST_PLAYER2.md5]
 
         fire(P1G, TEST_PLAYER2, new GridCoordinate(0, 0))
         fire(P1G, TEST_PLAYER2, new GridCoordinate(0, 1))
         fire(P1G, TEST_PLAYER2, new GridCoordinate(0, 2))
         fire(P1G, TEST_PLAYER2, new GridCoordinate(0, 3))
         game = fire(P1G, TEST_PLAYER2, new GridCoordinate(0, 4))
-        assert 45 == game.playersScore[TEST_PLAYER1.md5]
+        Assert.assertEquals 45, game.playersScore[TEST_PLAYER1.md5]
 
         fire(P2G, TEST_PLAYER1, new GridCoordinate(8, 7))
         game = fire(P2G, TEST_PLAYER1, new GridCoordinate(9, 7))
-        assert 27 == game.playersScore[TEST_PLAYER2.md5]
+        Assert.assertEquals 27, game.playersScore[TEST_PLAYER2.md5]
 
         fire(P1G, TEST_PLAYER2, new GridCoordinate(1, 13))
         fire(P1G, TEST_PLAYER2, new GridCoordinate(0, 14))
         fire(P1G, TEST_PLAYER2, new GridCoordinate(0, 13))
         game = fire(P1G, TEST_PLAYER2, new GridCoordinate(0, 12))
-        assert 53 == game.playersScore[TEST_PLAYER1.md5]
+        Assert.assertEquals 53, game.playersScore[TEST_PLAYER1.md5]
 
         game = fire(P2G, TEST_PLAYER1, new GridCoordinate(10, 7))
-        assert 27 == game.playersScore[TEST_PLAYER2.md5]
+        Assert.assertEquals 27, game.playersScore[TEST_PLAYER2.md5]
 
         fire(P1G, TEST_PLAYER2, new GridCoordinate(14, 0))
         fire(P1G, TEST_PLAYER2, new GridCoordinate(14, 1))
         fire(P1G, TEST_PLAYER2, new GridCoordinate(14, 2))
         game = fire(P1G, TEST_PLAYER2, new GridCoordinate(14, 3))
-        assert GamePhase.RoundOver == game.gamePhase
-        assert !game.playersAlive[TEST_PLAYER2.md5]
-        assert game.playersAlive[TEST_PLAYER1.md5]
-        assert 72 == game.playersScore[TEST_PLAYER1.md5]
-        assert "TEST PLAYER1 defeated all challengers!" == game.maskedPlayersState.actionLog[-1].description
-        assert TEST_PLAYER1.md5 == game.winningPlayer
+        Assert.assertEquals GamePhase.RoundOver, game.gamePhase
+        Assert.assertFalse game.playersAlive[TEST_PLAYER2.md5]
+        Assert.assertTrue game.playersAlive[TEST_PLAYER1.md5]
+        Assert.assertEquals 72, game.playersScore[TEST_PLAYER1.md5]
+        Assert.assertEquals "TEST PLAYER1 defeated all challengers!", game.maskedPlayersState.actionLog[-1].description
+        Assert.assertEquals TEST_PLAYER1.md5, game.winningPlayer
 
         TBMaskedGame newGame = rematchGame(P1G)
-        assert GamePhase.Challenged == newGame.gamePhase
-        assert game.id != newGame.id
+        Assert.assertEquals GamePhase.Challenged, newGame.gamePhase
+        Assert.assertNotEquals game.id, newGame.id
         P2G = createGameTarget(createPlayerAPITarget(TEST_PLAYER2), newGame)
         newGame = rejectGame(P2G)
-        assert GamePhase.Declined == newGame.gamePhase
+        Assert.assertEquals GamePhase.Declined, newGame.gamePhase
     }
 
     @Test
@@ -832,8 +835,8 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMas
         Response response = P3.path("new")
                 .request(MediaType.APPLICATION_JSON)
                 .post(entity)
-        assert response != null
-        assert 409 == response.statusInfo.statusCode
+        Assert.assertNotNull response
+        Assert.assertEquals 409, response.statusInfo.statusCode
 
         entity = Entity.entity(
                 new FeaturesAndPlayers(
@@ -856,8 +859,8 @@ class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMas
         response = P3.path("new")
                 .request(MediaType.APPLICATION_JSON)
                 .post(entity)
-        assert response != null
-        assert 409 == response.statusInfo.statusCode
+        Assert.assertNotNull response
+        Assert.assertEquals 409, response.statusInfo.statusCode
     }
 
     protected TBMaskedGame newGame(WebTarget target, FeaturesAndPlayers featuresAndPlayers) {
