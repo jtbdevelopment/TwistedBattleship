@@ -35,9 +35,9 @@ import java.util.Set;
 @Component
 public class EvasiveManeuverHandler extends AbstractSpecialMoveHandler {
     @Autowired
-    private ShipRelocator shipRelocator;
+    protected ShipRelocator shipRelocator;
     @Autowired
-    private FogCoordinatesGenerator fogCoordinatesGenerator;
+    protected FogCoordinatesGenerator fogCoordinatesGenerator;
 
     public EvasiveManeuverHandler(AbstractPlayerRepository<ObjectId, MongoPlayer> playerRepository, AbstractGameRepository<ObjectId, GameFeature, TBGame> gameRepository, GameTransitionEngine<TBGame> transitionEngine, GamePublisher<TBGame, MongoPlayer> gamePublisher, GameEligibilityTracker gameTracker, GameMasker<ObjectId, TBGame, TBMaskedGame> gameMasker) {
         super(playerRepository, gameRepository, transitionEngine, gamePublisher, gameTracker, gameMasker);
