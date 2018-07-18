@@ -17,7 +17,7 @@ public class TBSCoreTestCase extends MongoGameCoreTestCase {
     return entries.get(entries.size() - 1);
   }
 
-  protected TBActionLogEntry getLastEntry(final TBGame game, final ObjectId player) {
+    private TBActionLogEntry getLastEntry(final TBGame game, final ObjectId player) {
     return getLastEntry(game.getPlayerDetails().get(player).getActionLog());
   }
 
