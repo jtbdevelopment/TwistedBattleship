@@ -13,7 +13,6 @@ import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState;
 import com.jtbdevelopment.games.mongo.MongoGameCoreTestCase;
 import com.jtbdevelopment.games.state.GamePhase;
 import org.bson.types.ObjectId;
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,7 +58,7 @@ public class SetupShipsHandlerTest extends MongoGameCoreTestCase {
         game.setPlayers(Arrays.asList(PONE, PTWO));
         game.setGamePhase(GamePhase.Setup);
         game.setPlayerDetails(map);
-        game.setStartingShips(DefaultGroovyMethods.toList(Ship.values()));
+        game.setStartingShips(Arrays.asList(Ship.values()));
         game.getPlayerDetails().values().forEach(ss -> ss.setStartingShips(game.getStartingShips()));
         TBGame returned = setupShipsHandler.handleActionInternal(PONE, game, VALID_PLACEMENTS);
         Assert.assertEquals(returned, game);
