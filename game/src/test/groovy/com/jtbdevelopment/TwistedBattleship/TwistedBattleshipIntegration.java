@@ -17,7 +17,6 @@ import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate;
 import com.jtbdevelopment.TwistedBattleship.state.masked.TBMaskedActionLogEntry;
 import com.jtbdevelopment.TwistedBattleship.state.masked.TBMaskedGame;
 import com.jtbdevelopment.TwistedBattleship.state.ships.Ship;
-import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState;
 import com.jtbdevelopment.core.hazelcast.caching.HazelcastCacheManager;
 import com.jtbdevelopment.games.dao.AbstractGameRepository;
 import com.jtbdevelopment.games.dev.utilities.integrationtesting.AbstractGameIntegration;
@@ -26,9 +25,7 @@ import com.jtbdevelopment.games.mongo.players.MongoPlayer;
 import com.jtbdevelopment.games.players.Player;
 import com.jtbdevelopment.games.state.GamePhase;
 import com.jtbdevelopment.games.state.PlayerState;
-import groovy.lang.Closure;
 import org.bson.types.ObjectId;
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -40,14 +37,15 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.*;
+import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * Date: 4/26/15
  * Time: 10:36 AM
  */
+@SuppressWarnings("ConstantConditions")
 public class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame, TBMaskedGame> {
     private static final List<ShipAndCoordinates> P1POSITIONS;
     private static final List<ShipAndCoordinates> P2POSITIONS;
@@ -167,7 +165,7 @@ public class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame
         WebTarget client = AbstractGameIntegration.createAPITarget(TEST_PLAYER2);
         List<GridCellState> sizes = client.path("states").request(MediaType.APPLICATION_JSON_TYPE).get(new GenericType<List<GridCellState>>() {
         });
-        assertEquals(DefaultGroovyMethods.toList(GridCellState.values()), sizes);
+        assertEquals(Arrays.asList(GridCellState.values()), sizes);
     }
 
     @Test
@@ -175,12 +173,7 @@ public class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame
         WebTarget client = AbstractGameIntegration.createAPITarget(TEST_PLAYER3);
         List<ShipInfo> ships = client.path("ships").request(MediaType.APPLICATION_JSON_TYPE).get(new GenericType<List<ShipInfo>>() {
         });
-        assertEquals(DefaultGroovyMethods.collect(Ship.values(), new Closure<ShipInfo>(this, this) {
-            public ShipInfo doCall(Ship it) {
-                return new ShipInfo(it);
-            }
-
-        }), ships);
+        assertEquals(Arrays.stream(Ship.values()).map(ShipInfo::new).collect(Collectors.toList()), ships);
     }
 
     @Test
@@ -188,7 +181,25 @@ public class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame
         WebTarget client = AbstractGameIntegration.createAPITarget(TEST_PLAYER2);
         List<GameFeatureInfo> features = client.path("features").request(MediaType.APPLICATION_JSON_TYPE).get(new GenericType<List<GameFeatureInfo>>() {
         });
-        assertEquals(features, Arrays.asList(new GameFeatureInfo(GameFeature.GridSize, new ArrayList<GameFeatureInfo.Detail>(Arrays.asList(new GameFeatureInfo.Detail(GameFeature.Grid10x10), new GameFeatureInfo.Detail(GameFeature.Grid15x15), new GameFeatureInfo.Detail(GameFeature.Grid20x20)))), new GameFeatureInfo(GameFeature.ActionsPerTurn, new ArrayList<GameFeatureInfo.Detail>(Arrays.asList(new GameFeatureInfo.Detail(GameFeature.PerShip), new GameFeatureInfo.Detail(GameFeature.Single)))), new GameFeatureInfo(GameFeature.FogOfWar, new ArrayList<GameFeatureInfo.Detail>(Arrays.asList(new GameFeatureInfo.Detail(GameFeature.SharedIntel), new GameFeatureInfo.Detail(GameFeature.IsolatedIntel)))), new GameFeatureInfo(GameFeature.StartingShips, new ArrayList<GameFeatureInfo.Detail>(Arrays.asList(new GameFeatureInfo.Detail(GameFeature.StandardShips), new GameFeatureInfo.Detail(GameFeature.AllCarriers), new GameFeatureInfo.Detail(GameFeature.AllDestroyers), new GameFeatureInfo.Detail(GameFeature.AllSubmarines), new GameFeatureInfo.Detail(GameFeature.AllCruisers), new GameFeatureInfo.Detail(GameFeature.AllBattleships)))), new GameFeatureInfo(GameFeature.ECM, new ArrayList<GameFeatureInfo.Detail>(Arrays.asList(new GameFeatureInfo.Detail(GameFeature.ECMEnabled), new GameFeatureInfo.Detail(GameFeature.ECMDisabled)))), new GameFeatureInfo(GameFeature.EvasiveManeuvers, new ArrayList<GameFeatureInfo.Detail>(Arrays.asList(new GameFeatureInfo.Detail(GameFeature.EMEnabled), new GameFeatureInfo.Detail(GameFeature.EMDisabled)))), new GameFeatureInfo(GameFeature.EmergencyRepairs, new ArrayList<GameFeatureInfo.Detail>(Arrays.asList(new GameFeatureInfo.Detail(GameFeature.EREnabled), new GameFeatureInfo.Detail(GameFeature.ERDisabled)))), new GameFeatureInfo(GameFeature.Spy, new ArrayList<GameFeatureInfo.Detail>(Arrays.asList(new GameFeatureInfo.Detail(GameFeature.SpyEnabled), new GameFeatureInfo.Detail(GameFeature.SpyDisabled)))), new GameFeatureInfo(GameFeature.CruiseMissile, new ArrayList<GameFeatureInfo.Detail>(Arrays.asList(new GameFeatureInfo.Detail(GameFeature.CruiseMissileEnabled), new GameFeatureInfo.Detail(GameFeature.CruiseMissileDisabled))))));
+        assertEquals(features, Arrays.asList(
+                new GameFeatureInfo(GameFeature.GridSize,
+                        Arrays.asList(new GameFeatureInfo.Detail(GameFeature.Grid10x10), new GameFeatureInfo.Detail(GameFeature.Grid15x15), new GameFeatureInfo.Detail(GameFeature.Grid20x20))),
+                new GameFeatureInfo(GameFeature.ActionsPerTurn,
+                        Arrays.asList(new GameFeatureInfo.Detail(GameFeature.PerShip), new GameFeatureInfo.Detail(GameFeature.Single))),
+                new GameFeatureInfo(GameFeature.FogOfWar,
+                        Arrays.asList(new GameFeatureInfo.Detail(GameFeature.SharedIntel), new GameFeatureInfo.Detail(GameFeature.IsolatedIntel))),
+                new GameFeatureInfo(GameFeature.StartingShips,
+                        Arrays.asList(new GameFeatureInfo.Detail(GameFeature.StandardShips), new GameFeatureInfo.Detail(GameFeature.AllCarriers), new GameFeatureInfo.Detail(GameFeature.AllDestroyers), new GameFeatureInfo.Detail(GameFeature.AllSubmarines), new GameFeatureInfo.Detail(GameFeature.AllCruisers), new GameFeatureInfo.Detail(GameFeature.AllBattleships))),
+                new GameFeatureInfo(GameFeature.ECM,
+                        Arrays.asList(new GameFeatureInfo.Detail(GameFeature.ECMEnabled), new GameFeatureInfo.Detail(GameFeature.ECMDisabled))),
+                new GameFeatureInfo(GameFeature.EvasiveManeuvers,
+                        Arrays.asList(new GameFeatureInfo.Detail(GameFeature.EMEnabled), new GameFeatureInfo.Detail(GameFeature.EMDisabled))),
+                new GameFeatureInfo(GameFeature.EmergencyRepairs,
+                        Arrays.asList(new GameFeatureInfo.Detail(GameFeature.EREnabled), new GameFeatureInfo.Detail(GameFeature.ERDisabled))),
+                new GameFeatureInfo(GameFeature.Spy,
+                        Arrays.asList(new GameFeatureInfo.Detail(GameFeature.SpyEnabled), new GameFeatureInfo.Detail(GameFeature.SpyDisabled))),
+                new GameFeatureInfo(GameFeature.CruiseMissile,
+                        Arrays.asList(new GameFeatureInfo.Detail(GameFeature.CruiseMissileEnabled), new GameFeatureInfo.Detail(GameFeature.CruiseMissileDisabled)))));
     }
 
     @Test
@@ -201,32 +212,32 @@ public class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame
         assertNotNull(game);
         assertEquals(20, game.getGridSize());
         assertEquals(2, game.getMovesForSpecials());
-        LinkedHashMap<String, PlayerState> map = new LinkedHashMap<String, PlayerState>(3);
+        Map<String, PlayerState> map = new HashMap<>();
         map.put(TEST_PLAYER1.getMd5(), PlayerState.Pending);
         map.put(TEST_PLAYER2.getMd5(), PlayerState.Pending);
         map.put(TEST_PLAYER3.getMd5(), PlayerState.Accepted);
         assertEquals(map, game.getPlayerStates());
-        LinkedHashMap<String, Boolean> map1 = new LinkedHashMap<String, Boolean>(3);
+        Map<String, Boolean> map1 = new HashMap<>();
         map1.put(TEST_PLAYER1.getMd5(), true);
         map1.put(TEST_PLAYER2.getMd5(), true);
         map1.put(TEST_PLAYER3.getMd5(), true);
         assertEquals(map1, game.getPlayersAlive());
-        LinkedHashMap<String, Boolean> map2 = new LinkedHashMap<String, Boolean>(3);
+        Map<String, Boolean> map2 = new HashMap<>();
         map2.put(TEST_PLAYER1.getMd5(), false);
         map2.put(TEST_PLAYER2.getMd5(), false);
         map2.put(TEST_PLAYER3.getMd5(), false);
         assertEquals(map2, game.getPlayersSetup());
-        LinkedHashMap<String, Integer> map3 = new LinkedHashMap<String, Integer>(3);
+        Map<String, Integer> map3 = new HashMap<>();
         map3.put(TEST_PLAYER1.getMd5(), 0);
         map3.put(TEST_PLAYER2.getMd5(), 0);
         map3.put(TEST_PLAYER3.getMd5(), 0);
         assertEquals(map3, game.getPlayersScore());
         assertEquals(5, game.getMaskedPlayersState().getActiveShipsRemaining());
-        LinkedHashMap<String, Grid> map4 = new LinkedHashMap<String, Grid>(2);
+        Map<String, Grid> map4 = new HashMap<>();
         map4.put(TEST_PLAYER1.getMd5(), new Grid(20));
         map4.put(TEST_PLAYER2.getMd5(), new Grid(20));
         assertEquals(map4, game.getMaskedPlayersState().getOpponentGrids());
-        LinkedHashMap<String, Grid> map5 = new LinkedHashMap<String, Grid>(2);
+        Map<String, Grid> map5 = new HashMap<>();
         map5.put(TEST_PLAYER1.getMd5(), new Grid(20));
         map5.put(TEST_PLAYER2.getMd5(), new Grid(20));
         assertEquals(map5, game.getMaskedPlayersState().getOpponentViews());
@@ -237,29 +248,20 @@ public class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame
         assertEquals(GamePhase.Challenged, game.getGamePhase());
 
         //  Clear cache and force a load from db to confirm full round trip
-        DefaultGroovyMethods.each(cacheManager.getCacheNames(), new Closure<Object>(this, this) {
-            void doCall(String it) {
-                cacheManager.getCache(it).clear();
-            }
-
-            public void doCall() {
-                doCall(null);
-            }
-
-        });
+        cacheManager.getCacheNames().forEach(name -> cacheManager.getCache(name).clear());
 
         game = getGame(AbstractGameIntegration.createGameTarget(P3, game));
-        LinkedHashMap<String, Integer> map6 = new LinkedHashMap<String, Integer>(3);
+        Map<String, Integer> map6 = new HashMap<>();
         map6.put(TEST_PLAYER1.getMd5(), 0);
         map6.put(TEST_PLAYER2.getMd5(), 0);
         map6.put(TEST_PLAYER3.getMd5(), 0);
         assertEquals(map6, game.getPlayersScore());
         assertEquals(5, game.getMaskedPlayersState().getActiveShipsRemaining());
-        LinkedHashMap<String, Grid> map7 = new LinkedHashMap<String, Grid>(2);
+        Map<String, Grid> map7 = new HashMap<>();
         map7.put(TEST_PLAYER1.getMd5(), new Grid(20));
         map7.put(TEST_PLAYER2.getMd5(), new Grid(20));
         assertEquals(map7, game.getMaskedPlayersState().getOpponentGrids());
-        LinkedHashMap<String, Grid> map8 = new LinkedHashMap<String, Grid>(2);
+        Map<String, Grid> map8 = new HashMap<>();
         map8.put(TEST_PLAYER1.getMd5(), new Grid(20));
         map8.put(TEST_PLAYER2.getMd5(), new Grid(20));
         assertEquals(map8, game.getMaskedPlayersState().getOpponentViews());
@@ -276,7 +278,7 @@ public class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame
         TBMaskedGame game = newGame(P3, STANDARD_PLAYERS_AND_FEATURES);
         WebTarget P1G = AbstractGameIntegration.createGameTarget(AbstractGameIntegration.createPlayerAPITarget(TEST_PLAYER1), game);
         assertNotNull(game);
-        LinkedHashMap<String, PlayerState> map = new LinkedHashMap<String, PlayerState>(3);
+        Map<String, PlayerState> map = new HashMap<>();
         map.put(TEST_PLAYER1.getMd5(), PlayerState.Pending);
         map.put(TEST_PLAYER2.getMd5(), PlayerState.Pending);
         map.put(TEST_PLAYER3.getMd5(), PlayerState.Accepted);
@@ -284,7 +286,7 @@ public class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame
         assertEquals(GamePhase.Challenged, game.getGamePhase());
 
         game = rejectGame(P1G);
-        LinkedHashMap<String, PlayerState> map1 = new LinkedHashMap<String, PlayerState>(3);
+        Map<String, PlayerState> map1 = new HashMap<>();
         map1.put(TEST_PLAYER1.getMd5(), PlayerState.Rejected);
         map1.put(TEST_PLAYER2.getMd5(), PlayerState.Pending);
         map1.put(TEST_PLAYER3.getMd5(), PlayerState.Accepted);
@@ -301,7 +303,7 @@ public class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame
         acceptGame(P1G);
         acceptGame(P2G);
         game = quitGame(P1G);
-        LinkedHashMap<String, PlayerState> map = new LinkedHashMap<String, PlayerState>(3);
+        Map<String, PlayerState> map = new HashMap<>();
         map.put(TEST_PLAYER1.getMd5(), PlayerState.Quit);
         map.put(TEST_PLAYER2.getMd5(), PlayerState.Accepted);
         map.put(TEST_PLAYER3.getMd5(), PlayerState.Accepted);
@@ -320,7 +322,7 @@ public class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame
 
         game = acceptGame(P1G);
         assertNotNull(game);
-        LinkedHashMap<String, PlayerState> map = new LinkedHashMap<String, PlayerState>(3);
+        Map<String, PlayerState> map = new HashMap<>();
         map.put(TEST_PLAYER1.getMd5(), PlayerState.Accepted);
         map.put(TEST_PLAYER2.getMd5(), PlayerState.Pending);
         map.put(TEST_PLAYER3.getMd5(), PlayerState.Accepted);
@@ -329,12 +331,12 @@ public class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame
 
         game = acceptGame(P2G);
         assertNotNull(game);
-        LinkedHashMap<String, PlayerState> map1 = new LinkedHashMap<String, PlayerState>(3);
+        Map<String, PlayerState> map1 = new HashMap<>();
         map1.put(TEST_PLAYER1.getMd5(), PlayerState.Accepted);
         map1.put(TEST_PLAYER2.getMd5(), PlayerState.Accepted);
         map1.put(TEST_PLAYER3.getMd5(), PlayerState.Accepted);
         assertEquals(map1, game.getPlayerStates());
-        LinkedHashMap<String, Boolean> map2 = new LinkedHashMap<String, Boolean>(3);
+        Map<String, Boolean> map2 = new HashMap<>();
         map2.put(TEST_PLAYER1.getMd5(), false);
         map2.put(TEST_PLAYER2.getMd5(), false);
         map2.put(TEST_PLAYER3.getMd5(), false);
@@ -342,7 +344,7 @@ public class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame
         assertEquals(GamePhase.Setup, game.getGamePhase());
 
         game = setup(P3G, P3POSITIONS);
-        LinkedHashMap<String, Boolean> map3 = new LinkedHashMap<String, Boolean>(3);
+        Map<String, Boolean> map3 = new HashMap<>();
         map3.put(TEST_PLAYER1.getMd5(), false);
         map3.put(TEST_PLAYER2.getMd5(), false);
         map3.put(TEST_PLAYER3.getMd5(), true);
@@ -350,7 +352,7 @@ public class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame
         assertEquals(GamePhase.Setup, game.getGamePhase());
 
         game = setup(P1G, P1POSITIONS);
-        LinkedHashMap<String, Boolean> map4 = new LinkedHashMap<String, Boolean>(3);
+        Map<String, Boolean> map4 = new HashMap<>();
         map4.put(TEST_PLAYER1.getMd5(), true);
         map4.put(TEST_PLAYER2.getMd5(), false);
         map4.put(TEST_PLAYER3.getMd5(), true);
@@ -358,17 +360,17 @@ public class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame
         assertEquals(GamePhase.Setup, game.getGamePhase());
 
         game = setup(P2G, P2POSITIONS);
-        LinkedHashMap<String, Boolean> map5 = new LinkedHashMap<String, Boolean>(3);
+        Map<String, Boolean> map5 = new HashMap<>();
         map5.put(TEST_PLAYER1.getMd5(), true);
         map5.put(TEST_PLAYER2.getMd5(), true);
         map5.put(TEST_PLAYER3.getMd5(), true);
         assertEquals(map5, game.getPlayersSetup());
         assertEquals(GamePhase.Playing, game.getGamePhase());
         assertEquals(5, game.getRemainingMoves());
-        Assert.assertTrue(new ArrayList<String>(Arrays.asList(TEST_PLAYER2.getMd5(), TEST_PLAYER1.getMd5(), TEST_PLAYER3.getMd5())).contains(game.getCurrentPlayer()));
+        Assert.assertTrue(Arrays.asList(TEST_PLAYER2.getMd5(), TEST_PLAYER1.getMd5(), TEST_PLAYER3.getMd5()).contains(game.getCurrentPlayer()));
         assertEquals(TBActionLogEntry.TBActionType.Begin, game.getMaskedPlayersState().getActionLog().get(0).getActionType());
         assertEquals("Game ready to play.", game.getMaskedPlayersState().getActionLog().get(0).getDescription());
-        Assert.assertNotEquals(0, game.getMaskedPlayersState().getActionLog().get(0).getTimestamp());
+        assertNotEquals(0, game.getMaskedPlayersState().getActionLog().get(0).getTimestamp());
     }
 
     @Test
@@ -390,16 +392,7 @@ public class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame
         TBGame dbGame = gameRepository.findById(new ObjectId(game.getId())).get();
         dbGame.setCurrentPlayer(TEST_PLAYER2.getId());
         gameRepository.save(dbGame);
-        DefaultGroovyMethods.each(cacheManager.getCacheNames(), new Closure<Object>(this, this) {
-            void doCall(String it) {
-                cacheManager.getCache(it).clear();
-            }
-
-            public void doCall() {
-                doCall(null);
-            }
-
-        });
+        cacheManager.getCacheNames().forEach(name -> cacheManager.getCache(name).clear());
 
         game = fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 7));
         assertEquals(GamePhase.Playing, game.getGamePhase());
@@ -419,7 +412,7 @@ public class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame
         assertEquals("You fired at TEST PLAYER1 (9,7) and hit!", getLastEntry(game.getMaskedPlayersState().getActionLog()).getDescription());
         assertEquals(3, (int) game.getPlayersScore().get(TEST_PLAYER2.getMd5()));
         assertEquals(5, game.getRemainingMoves());
-        Assert.assertNotEquals(TEST_PLAYER2.getMd5(), game.getCurrentPlayer());
+        assertNotEquals(TEST_PLAYER2.getMd5(), game.getCurrentPlayer());
     }
 
     @Test
@@ -441,16 +434,7 @@ public class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame
         TBGame dbGame = gameRepository.findById(new ObjectId(game.getId())).get();
         dbGame.setCurrentPlayer(TEST_PLAYER2.getId());
         gameRepository.save(dbGame);
-        DefaultGroovyMethods.each(cacheManager.getCacheNames(), new Closure<Object>(this, this) {
-            void doCall(String it) {
-                cacheManager.getCache(it).clear();
-            }
-
-            public void doCall() {
-                doCall(null);
-            }
-
-        });
+        cacheManager.getCacheNames().forEach(name -> cacheManager.getCache(name).clear());
 
         fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 7));
         game = cruiseMissile(P2G, TEST_PLAYER1, new GridCoordinate(7, 7));
@@ -474,7 +458,7 @@ public class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame
         assertEquals("You fired at TEST PLAYER1 (9,7) and hit an already damaged area!", getLastEntry(game.getMaskedPlayersState().getActionLog()).getDescription());
         assertEquals(10, (int) game.getPlayersScore().get(TEST_PLAYER2.getMd5()));
         assertEquals(5, game.getRemainingMoves());
-        Assert.assertNotEquals(TEST_PLAYER2.getMd5(), game.getCurrentPlayer());
+        assertNotEquals(TEST_PLAYER2.getMd5(), game.getCurrentPlayer());
     }
 
     @Test
@@ -496,16 +480,7 @@ public class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame
         TBGame dbGame = gameRepository.findById(new ObjectId(game.getId())).get();
         dbGame.setCurrentPlayer(TEST_PLAYER2.getId());
         gameRepository.save(dbGame);
-        DefaultGroovyMethods.each(cacheManager.getCacheNames(), new Closure<Object>(this, this) {
-            void doCall(String it) {
-                cacheManager.getCache(it).clear();
-            }
-
-            public void doCall() {
-                doCall(null);
-            }
-
-        });
+        cacheManager.getCacheNames().forEach(name -> cacheManager.getCache(name).clear());
 
         fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 7));
 
@@ -519,7 +494,7 @@ public class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame
         assertEquals("You spied on TEST PLAYER1 at (2,6).", getLastEntry(game.getMaskedPlayersState().getActionLog()).getDescription());
         assertEquals(1, (int) game.getPlayersScore().get(TEST_PLAYER2.getMd5()));
         assertEquals(0, game.getMaskedPlayersState().getSpysRemaining());
-        Assert.assertNotEquals(TEST_PLAYER2.getMd5(), game.getCurrentPlayer());
+        assertNotEquals(TEST_PLAYER2.getMd5(), game.getCurrentPlayer());
 
         //Sample checks, not full
         assertEquals(GridCellState.KnownByHit, game.getMaskedPlayersState().getOpponentGrids().get(TEST_PLAYER1.getMd5()).get(7, 7));
@@ -556,16 +531,7 @@ public class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame
         TBGame dbGame = gameRepository.findById(new ObjectId(game.getId())).get();
         dbGame.setCurrentPlayer(TEST_PLAYER2.getId());
         gameRepository.save(dbGame);
-        DefaultGroovyMethods.each(cacheManager.getCacheNames(), new Closure<Object>(this, this) {
-            void doCall(String it) {
-                cacheManager.getCache(it).clear();
-            }
-
-            public void doCall() {
-                doCall(null);
-            }
-
-        });
+        cacheManager.getCacheNames().forEach(name -> cacheManager.getCache(name).clear());
 
         fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 7));
         game = fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 0));
@@ -575,41 +541,24 @@ public class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame
         dbGame.setCurrentPlayer(TEST_PLAYER1.getId());
         dbGame.setRemainingMoves(5);
         gameRepository.save(dbGame);
-        DefaultGroovyMethods.each(cacheManager.getCacheNames(), new Closure<Object>(this, this) {
-            void doCall(String it) {
-                cacheManager.getCache(it).clear();
-            }
-
-            public void doCall() {
-                doCall(null);
-            }
-
-        });
+        cacheManager.getCacheNames().forEach(name -> cacheManager.getCache(name).clear());
 
         fire(P1G, TEST_PLAYER2, new GridCoordinate(7, 0));
         game = repair(P1G, TEST_PLAYER1, new GridCoordinate(8, 7));
         assertEquals(2, game.getRemainingMoves());
         assertEquals("TEST PLAYER1 repaired their Aircraft Carrier.", getLastEntry(game.getMaskedPlayersState().getActionLog()).getDescription());
-        assertEquals(5, DefaultGroovyMethods.find(game.getMaskedPlayersState().getShipStates(), new Closure<Boolean>(this, this) {
-            Boolean doCall(ShipState it) {
-                return it.getShip().equals(Ship.Carrier);
-            }
-
-            public Boolean doCall() {
-                return doCall(null);
-            }
-
-        }).getHealthRemaining());
-        assertEquals(new ArrayList<Boolean>(Arrays.asList(false, false, false, false, false)), DefaultGroovyMethods.find(game.getMaskedPlayersState().getShipStates(), new Closure<Boolean>(this, this) {
-            Boolean doCall(ShipState it) {
-                return it.getShip().equals(Ship.Carrier);
-            }
-
-            public Boolean doCall() {
-                return doCall(null);
-            }
-
-        }).getShipSegmentHit());
+        assertEquals(5,
+                game.getMaskedPlayersState().getShipStates().stream()
+                        .filter(ss -> Ship.Carrier.equals(ss.getShip()))
+                        .findFirst()
+                        .get()
+                        .getHealthRemaining());
+        assertEquals(Arrays.asList(false, false, false, false, false),
+                game.getMaskedPlayersState().getShipStates().stream()
+                        .filter(ss -> Ship.Carrier.equals(ss.getShip()))
+                        .findFirst()
+                        .get()
+                        .getShipSegmentHit());
         assertEquals(GridCellState.KnownShip, game.getMaskedPlayersState().getConsolidatedOpponentView().get(7, 7));
         assertEquals(1, game.getMaskedPlayersState().getEmergencyRepairsRemaining());
         assertEquals(2, game.getRemainingMoves());
@@ -617,31 +566,22 @@ public class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame
 
         game = repair(P1G, TEST_PLAYER1, new GridCoordinate(8, 0));
         assertEquals("TEST PLAYER1 repaired their Cruiser.", getLastEntry(game.getMaskedPlayersState().getActionLog()).getDescription());
-        assertEquals(3, DefaultGroovyMethods.find(game.getMaskedPlayersState().getShipStates(), new Closure<Boolean>(this, this) {
-            Boolean doCall(ShipState it) {
-                return it.getShip().equals(Ship.Cruiser);
-            }
-
-            public Boolean doCall() {
-                return doCall(null);
-            }
-
-        }).getHealthRemaining());
-        assertEquals(new ArrayList<Boolean>(Arrays.asList(false, false, false)), DefaultGroovyMethods.find(game.getMaskedPlayersState().getShipStates(), new Closure<Boolean>(this, this) {
-            Boolean doCall(ShipState it) {
-                return it.getShip().equals(Ship.Cruiser);
-            }
-
-            public Boolean doCall() {
-                return doCall(null);
-            }
-
-        }).getShipSegmentHit());
+        assertEquals(3,
+                game.getMaskedPlayersState().getShipStates().stream()
+                        .filter(ss -> Ship.Cruiser.equals(ss.getShip()))
+                        .findFirst()
+                        .get()
+                        .getHealthRemaining());
+        assertEquals(Arrays.asList(false, false, false), game.getMaskedPlayersState().getShipStates().stream()
+                .filter(ss -> Ship.Cruiser.equals(ss.getShip()))
+                .findFirst()
+                .get()
+                .getShipSegmentHit());
         assertEquals(GridCellState.KnownShip, game.getMaskedPlayersState().getConsolidatedOpponentView().get(7, 0));
         assertEquals(GamePhase.Playing, game.getGamePhase());
         assertEquals(0, (int) game.getPlayersScore().get(TEST_PLAYER1.getMd5()));
         assertEquals(0, game.getMaskedPlayersState().getEmergencyRepairsRemaining());
-        Assert.assertNotEquals(TEST_PLAYER1.getMd5(), game.getCurrentPlayer());
+        assertNotEquals(TEST_PLAYER1.getMd5(), game.getCurrentPlayer());
     }
 
     @Test
@@ -663,16 +603,7 @@ public class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame
         TBGame dbGame = gameRepository.findById(new ObjectId(game.getId())).get();
         dbGame.setCurrentPlayer(TEST_PLAYER2.getId());
         gameRepository.save(dbGame);
-        DefaultGroovyMethods.each(cacheManager.getCacheNames(), new Closure<Object>(this, this) {
-            void doCall(String it) {
-                cacheManager.getCache(it).clear();
-            }
-
-            public void doCall() {
-                doCall(null);
-            }
-
-        });
+        cacheManager.getCacheNames().forEach(name -> cacheManager.getCache(name).clear());
 
         fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 7));
         game = fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 0));
@@ -682,16 +613,7 @@ public class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame
         dbGame.setCurrentPlayer(TEST_PLAYER1.getId());
         dbGame.setRemainingMoves(5);
         gameRepository.save(dbGame);
-        DefaultGroovyMethods.each(cacheManager.getCacheNames(), new Closure<Object>(this, this) {
-            void doCall(String it) {
-                cacheManager.getCache(it).clear();
-            }
-
-            public void doCall() {
-                doCall(null);
-            }
-
-        });
+        cacheManager.getCacheNames().forEach(name -> cacheManager.getCache(name).clear());
 
         game = fire(P1G, TEST_PLAYER2, new GridCoordinate(7, 0));
         assertEquals(GridCellState.KnownByHit, game.getMaskedPlayersState().getOpponentViews().get(TEST_PLAYER2.getMd5()).get(7, 7));
@@ -711,7 +633,7 @@ public class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame
         assertEquals(GridCellState.HiddenHit, game.getMaskedPlayersState().getOpponentViews().get(TEST_PLAYER2.getMd5()).get(7, 0));
         assertEquals(0, (int) game.getPlayersScore().get(TEST_PLAYER1.getMd5()));
         assertEquals(0, game.getMaskedPlayersState().getEcmsRemaining());
-        Assert.assertNotEquals(TEST_PLAYER1.getMd5(), game.getCurrentPlayer());
+        assertNotEquals(TEST_PLAYER1.getMd5(), game.getCurrentPlayer());
     }
 
     @Test
@@ -733,16 +655,7 @@ public class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame
         TBGame dbGame = gameRepository.findById(new ObjectId(game.getId())).get();
         dbGame.setCurrentPlayer(TEST_PLAYER2.getId());
         gameRepository.save(dbGame);
-        DefaultGroovyMethods.each(cacheManager.getCacheNames(), new Closure<Object>(this, this) {
-            void doCall(String it) {
-                cacheManager.getCache(it).clear();
-            }
-
-            public void doCall() {
-                doCall(null);
-            }
-
-        });
+        cacheManager.getCacheNames().forEach(name -> cacheManager.getCache(name).clear());
 
         fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 7));
         game = fire(P2G, TEST_PLAYER1, new GridCoordinate(7, 0));
@@ -752,77 +665,52 @@ public class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame
         dbGame.setCurrentPlayer(TEST_PLAYER1.getId());
         dbGame.setRemainingMoves(5);
         gameRepository.save(dbGame);
-        DefaultGroovyMethods.each(cacheManager.getCacheNames(), new Closure<Object>(this, this) {
-            void doCall(String it) {
-                cacheManager.getCache(it).clear();
-            }
-
-            public void doCall() {
-                doCall(null);
-            }
-
-        });
+        cacheManager.getCacheNames().forEach(name -> cacheManager.getCache(name).clear());
 
         game = fire(P1G, TEST_PLAYER2, new GridCoordinate(7, 0));
         assertEquals(GridCellState.KnownByHit, game.getMaskedPlayersState().getOpponentViews().get(TEST_PLAYER2.getMd5()).get(7, 7));
         assertEquals(GridCellState.KnownByHit, game.getMaskedPlayersState().getOpponentViews().get(TEST_PLAYER2.getMd5()).get(7, 0));
-        assertEquals(new ArrayList<GridCoordinate>(Arrays.asList(new GridCoordinate(5, 7), new GridCoordinate(6, 7), new GridCoordinate(7, 7), new GridCoordinate(8, 7), new GridCoordinate(9, 7))), DefaultGroovyMethods.find(game.getMaskedPlayersState().getShipStates(), new Closure<Boolean>(this, this) {
-            Boolean doCall(ShipState it) {
-                return it.getShip().equals(Ship.Carrier);
-            }
-
-            public Boolean doCall() {
-                return doCall(null);
-            }
-
-        }).getShipGridCells());
+        assertEquals(Arrays.asList(new GridCoordinate(5, 7), new GridCoordinate(6, 7), new GridCoordinate(7, 7), new GridCoordinate(8, 7), new GridCoordinate(9, 7)),
+                game.getMaskedPlayersState().getShipStates().stream()
+                        .filter(ss -> Ship.Carrier.equals(ss.getShip()))
+                        .findFirst()
+                        .get()
+                        .getShipGridCells());
         game = move(P1G, TEST_PLAYER1, new GridCoordinate(8, 7));
         assertEquals(2, game.getRemainingMoves());
         assertEquals("TEST PLAYER1 performed evasive maneuvers.", getLastEntry(game.getMaskedPlayersState().getActionLog()).getDescription());
         assertEquals(1, game.getMaskedPlayersState().getEvasiveManeuversRemaining());
         assertEquals(GridCellState.ObscuredHit, game.getMaskedPlayersState().getOpponentViews().get(TEST_PLAYER2.getMd5()).get(7, 7));
         assertEquals(GridCellState.KnownByHit, game.getMaskedPlayersState().getOpponentViews().get(TEST_PLAYER2.getMd5()).get(7, 0));
-        Assert.assertNotEquals(new ArrayList<GridCoordinate>(Arrays.asList(new GridCoordinate(5, 7), new GridCoordinate(6, 7), new GridCoordinate(7, 7), new GridCoordinate(8, 7), new GridCoordinate(9, 7))), DefaultGroovyMethods.find(game.getMaskedPlayersState().getShipStates(), new Closure<Boolean>(this, this) {
-            Boolean doCall(ShipState it) {
-                return it.getShip().equals(Ship.Carrier);
-            }
-
-            public Boolean doCall() {
-                return doCall(null);
-            }
-
-        }).getShipGridCells());
+        assertNotEquals(Arrays.asList(new GridCoordinate(5, 7), new GridCoordinate(6, 7), new GridCoordinate(7, 7), new GridCoordinate(8, 7), new GridCoordinate(9, 7)),
+                game.getMaskedPlayersState().getShipStates().stream()
+                        .filter(ss -> Ship.Carrier.equals(ss.getShip()))
+                        .findFirst()
+                        .get()
+                        .getShipGridCells());
 
 
-        assertEquals(new ArrayList<GridCoordinate>(Arrays.asList(new GridCoordinate(7, 0), new GridCoordinate(8, 0), new GridCoordinate(9, 0))), DefaultGroovyMethods.find(game.getMaskedPlayersState().getShipStates(), new Closure<Boolean>(this, this) {
-            Boolean doCall(ShipState it) {
-                return it.getShip().equals(Ship.Cruiser);
-            }
-
-            public Boolean doCall() {
-                return doCall(null);
-            }
-
-        }).getShipGridCells());
+        assertEquals(Arrays.asList(new GridCoordinate(7, 0), new GridCoordinate(8, 0), new GridCoordinate(9, 0)),
+                game.getMaskedPlayersState().getShipStates().stream()
+                        .filter(ss -> Ship.Cruiser.equals(ss.getShip()))
+                        .findFirst()
+                        .get()
+                        .getShipGridCells());
         game = move(P1G, TEST_PLAYER1, new GridCoordinate(7, 0));
         //Assert.assertEquals "TEST PLAYER1 performed evasive maneuvers."
-        Assert.assertNotEquals(new ArrayList<GridCoordinate>(Arrays.asList(new GridCoordinate(7, 0), new GridCoordinate(8, 0), new GridCoordinate(9, 0))), DefaultGroovyMethods.find(game.getMaskedPlayersState().getShipStates(), new Closure<Boolean>(this, this) {
-            Boolean doCall(ShipState it) {
-                return it.getShip().equals(Ship.Cruiser);
-            }
-
-            public Boolean doCall() {
-                return doCall(null);
-            }
-
-        }).getShipGridCells());
+        assertNotEquals(Arrays.asList(new GridCoordinate(7, 0), new GridCoordinate(8, 0), new GridCoordinate(9, 0)),
+                game.getMaskedPlayersState().getShipStates().stream()
+                        .filter(ss -> Ship.Cruiser.equals(ss.getShip()))
+                        .findFirst()
+                        .get()
+                        .getShipGridCells());
         assertEquals(GamePhase.Playing, game.getGamePhase());
         assertEquals(GridCellState.ObscuredHit, game.getMaskedPlayersState().getOpponentViews().get(TEST_PLAYER2.getMd5()).get(7, 7));
         assertEquals(GridCellState.ObscuredHit, game.getMaskedPlayersState().getOpponentViews().get(TEST_PLAYER2.getMd5()).get(7, 0));
 
         assertEquals(0, (int) game.getPlayersScore().get(TEST_PLAYER1.getMd5()));
         assertEquals(0, game.getMaskedPlayersState().getEvasiveManeuversRemaining());
-        Assert.assertNotEquals(TEST_PLAYER1.getMd5(), game.getCurrentPlayer());
+        assertNotEquals(TEST_PLAYER1.getMd5(), game.getCurrentPlayer());
     }
 
     @Test
@@ -848,16 +736,7 @@ public class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame
         dbGame.setCurrentPlayer(TEST_PLAYER1.getId());
         dbGame.setPlayers(Arrays.asList(TEST_PLAYER1, TEST_PLAYER2, TEST_PLAYER3));
         gameRepository.save(dbGame);
-        DefaultGroovyMethods.each(cacheManager.getCacheNames(), new Closure<Object>(this, this) {
-            void doCall(String it) {
-                cacheManager.getCache(it).clear();
-            }
-
-            public void doCall() {
-                doCall(null);
-            }
-
-        });
+        cacheManager.getCacheNames().forEach(name -> cacheManager.getCache(name).clear());
 
         fire(P1G, TEST_PLAYER3, new GridCoordinate(0, 0));
         fire(P1G, TEST_PLAYER3, new GridCoordinate(0, 1));
@@ -954,7 +833,7 @@ public class TwistedBattleshipIntegration extends AbstractGameIntegration<TBGame
 
         TBMaskedGame newGame = rematchGame(P1G);
         assertEquals(GamePhase.Challenged, newGame.getGamePhase());
-        Assert.assertNotEquals(game.getId(), newGame.getId());
+        assertNotEquals(game.getId(), newGame.getId());
         P2G = AbstractGameIntegration.createGameTarget(AbstractGameIntegration.createPlayerAPITarget(TEST_PLAYER2), newGame);
         newGame = rejectGame(P2G);
         assertEquals(GamePhase.Declined, newGame.getGamePhase());
