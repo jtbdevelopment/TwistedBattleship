@@ -11,7 +11,6 @@ import com.jtbdevelopment.TwistedBattleship.state.grid.*;
 import com.jtbdevelopment.games.mongo.players.MongoPlayer;
 import com.jtbdevelopment.games.players.Player;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -27,16 +26,11 @@ import static com.jtbdevelopment.TwistedBattleship.state.grid.GridCellState.*;
 @Component
 public class RegularAI implements AI {
     private Set<GridCellState> includeInFireValue = new HashSet<>(Arrays.asList(KnownShip, KnownByHit, KnownByOtherHit, KnownByRehit));
-    @Autowired
-    private RegularAIPlayerCreator playerCreator;
-    @Autowired
-    private AIActionHandlers aiActionHandler;
-    @Autowired
-    private GridCircleUtil gridCircleUtil;
-    @Autowired
-    private RandomizedSetup randomizedSetup;
-    @Autowired
-    private ConsolidateGridViews consolidateGridViews;
+    private final RegularAIPlayerCreator playerCreator;
+    private final AIActionHandlers aiActionHandler;
+    private final GridCircleUtil gridCircleUtil;
+    private final RandomizedSetup randomizedSetup;
+    private final ConsolidateGridViews consolidateGridViews;
     private Random random = new Random();
     private int spyPerUnknown = 3;
     private int spyPerObscured = 1;
@@ -54,6 +48,19 @@ public class RegularAI implements AI {
     private int fireKnownAdjacentShip = 25;
     private int fireKnownDoubleAdjacentShip = 25;
     private int cruiseKnownHitOrShip = 200;
+
+    public RegularAI(
+            final RegularAIPlayerCreator playerCreator,
+            final AIActionHandlers aiActionHandler,
+            final GridCircleUtil gridCircleUtil,
+            final RandomizedSetup randomizedSetup,
+            final ConsolidateGridViews consolidateGridViews) {
+        this.playerCreator = playerCreator;
+        this.aiActionHandler = aiActionHandler;
+        this.gridCircleUtil = gridCircleUtil;
+        this.randomizedSetup = randomizedSetup;
+        this.consolidateGridViews = consolidateGridViews;
+    }
 
     @Override
     public List<MongoPlayer> getPlayers() {

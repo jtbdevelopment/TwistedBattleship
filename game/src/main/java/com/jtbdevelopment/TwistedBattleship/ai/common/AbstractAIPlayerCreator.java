@@ -7,7 +7,6 @@ import com.jtbdevelopment.games.players.PlayerFactory;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -19,10 +18,15 @@ import java.util.List;
 public class AbstractAIPlayerCreator {
     private static Logger logger = LoggerFactory.getLogger(AbstractAIPlayerCreator.class);
     private List<MongoPlayer> players;
-    @Autowired
-    private AbstractPlayerRepository<ObjectId, MongoPlayer> playerRepository;
-    @Autowired
-    private PlayerFactory<ObjectId, MongoPlayer> playerFactory;
+    private final AbstractPlayerRepository<ObjectId, MongoPlayer> playerRepository;
+    private final PlayerFactory<ObjectId, MongoPlayer> playerFactory;
+
+    public AbstractAIPlayerCreator(
+            final AbstractPlayerRepository<ObjectId, MongoPlayer> playerRepository,
+            final PlayerFactory<ObjectId, MongoPlayer> playerFactory) {
+        this.playerRepository = playerRepository;
+        this.playerFactory = playerFactory;
+    }
 
     protected void loadOrCreateAIPlayers(final String baseName, final String icon) {
         logger.info("Checking for " + baseName + " system players.");
@@ -47,11 +51,4 @@ public class AbstractAIPlayerCreator {
         return players;
     }
 
-    public void setPlayers(List<MongoPlayer> players) {
-        this.players = players;
-    }
-
-    public void setPlayerRepository(AbstractPlayerRepository<ObjectId, MongoPlayer> playerRepository) {
-        this.playerRepository = playerRepository;
-    }
 }

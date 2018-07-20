@@ -14,7 +14,6 @@ import com.jtbdevelopment.TwistedBattleship.state.ships.Ship;
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState;
 import com.jtbdevelopment.games.mongo.players.MongoPlayer;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -27,15 +26,22 @@ import java.util.stream.Collectors;
 @SuppressWarnings("unused")
 @Component
 public class SimpleAI implements AI {
-    @Autowired
-    private SimpleAIPlayerCreator playerCreator;
-    @Autowired
-    private AIActionHandlers aiActionHandler;
-    @Autowired
-    private GridCircleUtil gridCircleUtil;
-    @Autowired
-    private RandomizedSetup randomizedSetup;
+    private final SimpleAIPlayerCreator playerCreator;
+    private final AIActionHandlers aiActionHandler;
+    private final GridCircleUtil gridCircleUtil;
+    private final RandomizedSetup randomizedSetup;
     private Random random = new Random();
+
+    public SimpleAI(
+            final SimpleAIPlayerCreator playerCreator,
+            final AIActionHandlers aiActionHandler,
+            final GridCircleUtil gridCircleUtil,
+            final RandomizedSetup randomizedSetup) {
+        this.playerCreator = playerCreator;
+        this.aiActionHandler = aiActionHandler;
+        this.gridCircleUtil = gridCircleUtil;
+        this.randomizedSetup = randomizedSetup;
+    }
 
     @Override
     public List<MongoPlayer> getPlayers() {

@@ -5,7 +5,6 @@ import com.jtbdevelopment.TwistedBattleship.state.TBGame;
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate;
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState;
 import com.jtbdevelopment.games.mongo.players.MongoPlayer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -17,9 +16,12 @@ import java.util.stream.Collectors;
  */
 @Component
 public class RandomizedSetup {
-    @Autowired
-    private SetupShipsHandler setupShipsHandler;
+    private final SetupShipsHandler setupShipsHandler;
     private Random random = new Random();
+
+    public RandomizedSetup(final SetupShipsHandler setupShipsHandler) {
+        this.setupShipsHandler = setupShipsHandler;
+    }
 
     public void setup(final TBGame game, final MongoPlayer player) {
         final Set<GridCoordinate> used = new HashSet<>();
