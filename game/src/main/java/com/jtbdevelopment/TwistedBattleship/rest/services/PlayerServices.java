@@ -18,7 +18,6 @@ import com.jtbdevelopment.games.rest.services.AbstractAdminServices;
 import com.jtbdevelopment.games.rest.services.AbstractGameServices;
 import com.jtbdevelopment.games.state.masking.MaskedMultiPlayerGame;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -33,12 +32,11 @@ import java.util.*;
  */
 @Component
 public class PlayerServices extends AbstractMultiPlayerServices<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> {
-    @Autowired
     private final NewGameHandler newGameHandler;
     private final Set<Map<String, String>> aiPlayers = new HashSet<>();
     private final AbstractPlayerRepository<ObjectId, MongoPlayer> playerRepository;
 
-    public PlayerServices(final AbstractGameServices<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> gamePlayServices, final AbstractPlayerRepository<ObjectId, MongoPlayer> playerRepository, final AbstractAdminServices<ObjectId, GameFeature, TBGame, MongoPlayer> adminServices, final StringToIDConverter<ObjectId> stringToIDConverter, final PlayerGamesFinderHandler<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> playerGamesFinderHandler, final NewGameHandler<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> newGameHandler, final List<AI> aiList) {
+    PlayerServices(final AbstractGameServices<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> gamePlayServices, final AbstractPlayerRepository<ObjectId, MongoPlayer> playerRepository, final AbstractAdminServices<ObjectId, GameFeature, TBGame, MongoPlayer> adminServices, final StringToIDConverter<ObjectId> stringToIDConverter, final PlayerGamesFinderHandler<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> playerGamesFinderHandler, final NewGameHandler<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> newGameHandler, final List<AI> aiList) {
         super(gamePlayServices, playerRepository, adminServices, stringToIDConverter, playerGamesFinderHandler);
         aiList.forEach(ai -> {
             ai.getPlayers().forEach(aiPlayer -> {

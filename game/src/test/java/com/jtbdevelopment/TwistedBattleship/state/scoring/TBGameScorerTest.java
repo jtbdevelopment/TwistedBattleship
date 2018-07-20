@@ -57,9 +57,7 @@ public class TBGameScorerTest extends MongoGameCoreTestCase {
         Mockito.when(mockRepository.save(PTWO)).thenReturn(saved2);
         loaded1.setGameSpecificPlayerAttributes(new TBPlayerAttributes());
         loaded2.setGameSpecificPlayerAttributes(new TBPlayerAttributes());
-        scorer = new TBGameScorer();
-        scorer.setPlayerPublisher(mockPublisher);
-        scorer.setPlayerRepository(mockRepository);
+        scorer = new TBGameScorer(mockRepository, mockPublisher);
     }
 
     @Test

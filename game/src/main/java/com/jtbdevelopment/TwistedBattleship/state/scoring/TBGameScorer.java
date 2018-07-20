@@ -9,7 +9,6 @@ import com.jtbdevelopment.games.players.SystemPlayer;
 import com.jtbdevelopment.games.publish.PlayerPublisher;
 import com.jtbdevelopment.games.state.scoring.GameScorer;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -21,10 +20,15 @@ public class TBGameScorer implements GameScorer<TBGame> {
     public static final int SCORE_FOR_HIT = 1;
     public static final int SCORE_FOR_SINK = 5;
     private static final int SCORE_FOR_VICTORY = 10;
-    @Autowired
-    private AbstractPlayerRepository<ObjectId, MongoPlayer> playerRepository;
-    @Autowired
-    private PlayerPublisher playerPublisher;
+    private final AbstractPlayerRepository<ObjectId, MongoPlayer> playerRepository;
+    private final PlayerPublisher playerPublisher;
+
+    TBGameScorer(
+            final AbstractPlayerRepository<ObjectId, MongoPlayer> playerRepository,
+            final PlayerPublisher playerPublisher) {
+        this.playerRepository = playerRepository;
+        this.playerPublisher = playerPublisher;
+    }
 
     @Override
     public TBGame scoreGame(final TBGame game) {
@@ -57,11 +61,4 @@ public class TBGameScorer implements GameScorer<TBGame> {
         return game;
     }
 
-    public void setPlayerRepository(AbstractPlayerRepository<ObjectId, MongoPlayer> playerRepository) {
-        this.playerRepository = playerRepository;
-    }
-
-    public void setPlayerPublisher(PlayerPublisher playerPublisher) {
-        this.playerPublisher = playerPublisher;
-    }
 }

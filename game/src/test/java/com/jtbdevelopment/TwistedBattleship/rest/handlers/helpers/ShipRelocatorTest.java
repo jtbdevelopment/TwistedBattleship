@@ -15,18 +15,22 @@ import org.mockito.Mockito;
 
 import java.util.*;
 
+import static org.mockito.Mockito.mock;
+
 /**
  * Date: 5/27/15
  * Time: 6:43 AM
  */
 public class ShipRelocatorTest {
-    private ShipRelocator relocator = new ShipRelocator();
+    private ShipRotater rotater = mock(ShipRotater.class);
+    private ShipRelocatorCalculator calculator = mock(ShipRelocatorCalculator.class);
+    private ShipRelocator relocator = new ShipRelocator(calculator, rotater);
     private Set<GridCoordinate> otherCoords = new HashSet<>(Arrays.asList(new GridCoordinate(5, 5), new GridCoordinate(6, 6), new GridCoordinate(7, 7)));
     private ShipState shipState = new ShipState(Ship.Battleship, new TreeSet<>(Arrays.asList(new GridCoordinate(1, 1), new GridCoordinate(2, 2), new GridCoordinate(3, 3))));
     private int randomToReturn;
     private Boolean booleanToReturn = true;
     private TBGame game;
-    private TBPlayerState playerState = Mockito.mock(TBPlayerState.class);
+    private TBPlayerState playerState = mock(TBPlayerState.class);
 
     @Before
     public void setup() {
@@ -49,16 +53,14 @@ public class ShipRelocatorTest {
             }
 
         };
-        relocator.rotater = Mockito.mock(ShipRotater.class);
-        relocator.calculator = Mockito.mock(ShipRelocatorCalculator.class);
     }
 
     @Test
     public void testSimpleCaseOnFirstAttemptWithRotateAndMoveByRows() {
         List<GridCoordinate> newcoords = Arrays.asList(new GridCoordinate(-1, -1), new GridCoordinate(-15, 15));
         List<GridCoordinate> rotated = Arrays.asList(new GridCoordinate(4, 4), new GridCoordinate(3, 3));
-        Mockito.when(relocator.rotater.rotateShip(shipState)).thenReturn(rotated);
-        Mockito.when(relocator.calculator.relocateShip(Matchers.eq(game), Matchers.eq(shipState), Matchers.eq(rotated), Matchers.eq(otherCoords), Matchers.eq(true), Matchers.eq(Arrays.asList(2, -2, 1, -1, 0)))).thenReturn(newcoords);
+        Mockito.when(rotater.rotateShip(shipState)).thenReturn(rotated);
+        Mockito.when(calculator.relocateShip(Matchers.eq(game), Matchers.eq(shipState), Matchers.eq(rotated), Matchers.eq(otherCoords), Matchers.eq(true), Matchers.eq(Arrays.asList(2, -2, 1, -1, 0)))).thenReturn(newcoords);
         randomToReturn = 2;
 
         Assert.assertSame(newcoords, relocator.relocateShip(game, playerState, shipState));
@@ -69,7 +71,7 @@ public class ShipRelocatorTest {
         List<GridCoordinate> newcoords = Arrays.asList(new GridCoordinate(-1, -1), new GridCoordinate(-15, 15));
         randomToReturn = 4;
         booleanToReturn = false;
-        Mockito.when(relocator.calculator.relocateShip(Matchers.eq(game), Matchers.eq(shipState), Matchers.eq(shipState.getShipGridCells()), Matchers.eq(otherCoords), Matchers.eq(false), Matchers.eq(Arrays.asList(2, -1, -2, 1, 0)))).thenReturn(newcoords);
+        Mockito.when(calculator.relocateShip(Matchers.eq(game), Matchers.eq(shipState), Matchers.eq(shipState.getShipGridCells()), Matchers.eq(otherCoords), Matchers.eq(false), Matchers.eq(Arrays.asList(2, -1, -2, 1, 0)))).thenReturn(newcoords);
 
         Assert.assertSame(newcoords, relocator.relocateShip(game, playerState, shipState));
     }
@@ -78,12 +80,12 @@ public class ShipRelocatorTest {
     public void testTrysAllVariantsWithInitiallySetToRotateAndMoveByRows() {
         List<GridCoordinate> rotated = Arrays.asList(new GridCoordinate(4, 4), new GridCoordinate(3, 3));
         randomToReturn = 5;
-        Mockito.when(relocator.rotater.rotateShip(shipState)).thenReturn(rotated);
+        Mockito.when(rotater.rotateShip(shipState)).thenReturn(rotated);
         List<Integer> expectedSequence = Arrays.asList(0, 1, -2, -1, 2);
-        Mockito.when(relocator.calculator.relocateShip(Matchers.eq(game), Matchers.eq(shipState), Matchers.eq(rotated), Matchers.eq(otherCoords), Matchers.eq(true), Matchers.eq(expectedSequence))).thenReturn(null);
-        Mockito.when(relocator.calculator.relocateShip(Matchers.eq(game), Matchers.eq(shipState), Matchers.eq(rotated), Matchers.eq(otherCoords), Matchers.eq(false), Matchers.eq(expectedSequence))).thenReturn(null);
-        Mockito.when(relocator.calculator.relocateShip(Matchers.eq(game), Matchers.eq(shipState), Matchers.eq(shipState.getShipGridCells()), Matchers.eq(otherCoords), Matchers.eq(true), Matchers.eq(expectedSequence))).thenReturn(null);
-        Mockito.when(relocator.calculator.relocateShip(Matchers.eq(game), Matchers.eq(shipState), Matchers.eq(shipState.getShipGridCells()), Matchers.eq(otherCoords), Matchers.eq(false), Matchers.eq(expectedSequence))).thenReturn(null);
+        Mockito.when(calculator.relocateShip(Matchers.eq(game), Matchers.eq(shipState), Matchers.eq(rotated), Matchers.eq(otherCoords), Matchers.eq(true), Matchers.eq(expectedSequence))).thenReturn(null);
+        Mockito.when(calculator.relocateShip(Matchers.eq(game), Matchers.eq(shipState), Matchers.eq(rotated), Matchers.eq(otherCoords), Matchers.eq(false), Matchers.eq(expectedSequence))).thenReturn(null);
+        Mockito.when(calculator.relocateShip(Matchers.eq(game), Matchers.eq(shipState), Matchers.eq(shipState.getShipGridCells()), Matchers.eq(otherCoords), Matchers.eq(true), Matchers.eq(expectedSequence))).thenReturn(null);
+        Mockito.when(calculator.relocateShip(Matchers.eq(game), Matchers.eq(shipState), Matchers.eq(shipState.getShipGridCells()), Matchers.eq(otherCoords), Matchers.eq(false), Matchers.eq(expectedSequence))).thenReturn(null);
 
         relocator.relocateShip(game, playerState, shipState);
     }
@@ -93,11 +95,11 @@ public class ShipRelocatorTest {
         List<GridCoordinate> rotated = Arrays.asList(new GridCoordinate(4, 4), new GridCoordinate(3, 3));
         randomToReturn = 5;
         List<Integer> expectedSequence = Arrays.asList(0, 1, -2, -1, 2);
-        Mockito.when(relocator.rotater.rotateShip(shipState)).thenReturn(rotated);
-        Mockito.when(relocator.calculator.relocateShip(Matchers.eq(game), Matchers.eq(shipState), Matchers.eq(rotated), Matchers.eq(otherCoords), Matchers.eq(true), Matchers.eq(expectedSequence))).thenReturn(null);
-        Mockito.when(relocator.calculator.relocateShip(Matchers.eq(game), Matchers.eq(shipState), Matchers.eq(rotated), Matchers.eq(otherCoords), Matchers.eq(false), Matchers.eq(expectedSequence))).thenReturn(null);
-        Mockito.when(relocator.calculator.relocateShip(Matchers.eq(game), Matchers.eq(shipState), Matchers.eq(shipState.getShipGridCells()), Matchers.eq(otherCoords), Matchers.eq(true), Matchers.eq(expectedSequence))).thenReturn(null);
-        Mockito.when(relocator.calculator.relocateShip(Matchers.eq(game), Matchers.eq(shipState), Matchers.eq(shipState.getShipGridCells()), Matchers.eq(otherCoords), Matchers.eq(false), Matchers.eq(expectedSequence))).thenReturn(null);
+        Mockito.when(rotater.rotateShip(shipState)).thenReturn(rotated);
+        Mockito.when(calculator.relocateShip(Matchers.eq(game), Matchers.eq(shipState), Matchers.eq(rotated), Matchers.eq(otherCoords), Matchers.eq(true), Matchers.eq(expectedSequence))).thenReturn(null);
+        Mockito.when(calculator.relocateShip(Matchers.eq(game), Matchers.eq(shipState), Matchers.eq(rotated), Matchers.eq(otherCoords), Matchers.eq(false), Matchers.eq(expectedSequence))).thenReturn(null);
+        Mockito.when(calculator.relocateShip(Matchers.eq(game), Matchers.eq(shipState), Matchers.eq(shipState.getShipGridCells()), Matchers.eq(otherCoords), Matchers.eq(true), Matchers.eq(expectedSequence))).thenReturn(null);
+        Mockito.when(calculator.relocateShip(Matchers.eq(game), Matchers.eq(shipState), Matchers.eq(shipState.getShipGridCells()), Matchers.eq(otherCoords), Matchers.eq(false), Matchers.eq(expectedSequence))).thenReturn(null);
 
         relocator.relocateShip(game, playerState, shipState);
     }

@@ -28,7 +28,7 @@ import static org.junit.Assert.*;
  */
 public class TBGameMaskerTest extends MongoGameCoreTestCase {
     private ConsolidateGridViews consolidateGridViews = Mockito.mock(ConsolidateGridViews.class);
-    private TBGameMasker masker = new TBGameMasker();
+    private TBGameMasker masker = new TBGameMasker(consolidateGridViews);
 
     @Test
     public void testMaskingGame() {
@@ -107,7 +107,6 @@ public class TBGameMaskerTest extends MongoGameCoreTestCase {
         game.getPlayerDetails().get(PONE.getId()).getOpponentViews().get(PTHREE.getId()).set(5, 4, GridCellState.KnownByRehit);
 
         Grid consolidated = new Grid(1);
-        masker.setConsolidateGridViews(consolidateGridViews);
         Mockito.when(consolidateGridViews.createConsolidatedView(
                 Matchers.eq(game),
                 Matchers.eq(new HashSet<>(game.getPlayerDetails().get(PONE.getId()).getOpponentViews().values())))).thenReturn(consolidated);

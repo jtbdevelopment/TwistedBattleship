@@ -11,7 +11,6 @@ import com.jtbdevelopment.games.mongo.players.MongoPlayer;
 import com.jtbdevelopment.games.rest.AbstractMultiPlayerGameServices;
 import com.jtbdevelopment.games.rest.handlers.*;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.Consumes;
@@ -29,23 +28,35 @@ import java.util.stream.Collectors;
  */
 @Component
 public class GameServices extends AbstractMultiPlayerGameServices<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> {
-    @Autowired
-    protected SetupShipsHandler setupShipsHandler;
-    @Autowired
-    protected FireAtCoordinateHandler fireAtCoordinateHandler;
-    @Autowired
-    protected SpyHandler spyHandler;
-    @Autowired
-    protected RepairShipHandler repairShipHandler;
-    @Autowired
-    protected ECMHandler ecmHandler;
-    @Autowired
-    protected EvasiveManeuverHandler evasiveManeuverHandler;
-    @Autowired
-    protected CruiseMissileHandler cruiseMissileHandler;
+    private final SetupShipsHandler setupShipsHandler;
+    private final FireAtCoordinateHandler fireAtCoordinateHandler;
+    private final SpyHandler spyHandler;
+    private final RepairShipHandler repairShipHandler;
+    private final ECMHandler ecmHandler;
+    private final EvasiveManeuverHandler evasiveManeuverHandler;
+    private final CruiseMissileHandler cruiseMissileHandler;
 
-    public GameServices(final GameGetterHandler<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> gameGetterHandler, final DeclineRematchOptionHandler<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> declineRematchOptionHandler, final ChallengeResponseHandler<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> responseHandler, final ChallengeToRematchHandler<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> rematchHandler, final QuitHandler<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> quitHandler) {
+    public GameServices(
+            final GameGetterHandler<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> gameGetterHandler,
+            final DeclineRematchOptionHandler<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> declineRematchOptionHandler,
+            final ChallengeResponseHandler<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> responseHandler,
+            final ChallengeToRematchHandler<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> rematchHandler,
+            final QuitHandler<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> quitHandler,
+            final SetupShipsHandler setupShipsHandler,
+            final FireAtCoordinateHandler fireAtCoordinateHandler,
+            final SpyHandler spyHandler,
+            final RepairShipHandler repairShipHandler,
+            final ECMHandler ecmHandler,
+            final EvasiveManeuverHandler evasiveManeuverHandler,
+            final CruiseMissileHandler cruiseMissileHandler) {
         super(gameGetterHandler, declineRematchOptionHandler, responseHandler, rematchHandler, quitHandler);
+        this.setupShipsHandler = setupShipsHandler;
+        this.fireAtCoordinateHandler = fireAtCoordinateHandler;
+        this.spyHandler = spyHandler;
+        this.repairShipHandler = repairShipHandler;
+        this.ecmHandler = ecmHandler;
+        this.evasiveManeuverHandler = evasiveManeuverHandler;
+        this.cruiseMissileHandler = cruiseMissileHandler;
     }
 
     @PUT

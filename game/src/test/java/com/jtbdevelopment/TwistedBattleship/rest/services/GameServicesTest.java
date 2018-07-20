@@ -38,7 +38,8 @@ public class GameServicesTest extends MongoGameCoreTestCase {
     private EvasiveManeuverHandler evasiveManeuverHandler = Mockito.mock(EvasiveManeuverHandler.class);
     private SetupShipsHandler setupShipsHandler = Mockito.mock(SetupShipsHandler.class);
     private ECMHandler ecmHandler = Mockito.mock(ECMHandler.class);
-    private GameServices services = new GameServices(null, null, null, null, null);
+    private GameServices services = new GameServices(null, null, null, null, null,
+            setupShipsHandler, fireAtCoordinateHandler, spyHandler, repairShipHandler, ecmHandler, evasiveManeuverHandler, cruiseMissileHandler);
 
     @Test
     public void testActionAnnotations() {
@@ -85,7 +86,6 @@ public class GameServicesTest extends MongoGameCoreTestCase {
         ObjectId gameId = new ObjectId();
         services.getPlayerID().set(PONE.getId());
         services.getGameID().set(gameId);
-        services.setupShipsHandler = setupShipsHandler;
 
         Mockito.when(setupShipsHandler.handleAction(Matchers.eq(PONE.getId()), Matchers.eq(gameId), Matchers.isA(List.class))).then(new Answer<TBMaskedGame>() {
             @Override
@@ -121,7 +121,6 @@ public class GameServicesTest extends MongoGameCoreTestCase {
         ObjectId gameId = new ObjectId();
         services.getPlayerID().set(PONE.getId());
         services.getGameID().set(gameId);
-        services.fireAtCoordinateHandler = fireAtCoordinateHandler;
         Mockito.when(fireAtCoordinateHandler.handleAction(PONE.getId(), gameId, target)).thenReturn(maskedGame);
         assertSame(maskedGame, services.fire(target));
     }
@@ -135,7 +134,6 @@ public class GameServicesTest extends MongoGameCoreTestCase {
         ObjectId gameId = new ObjectId();
         services.getPlayerID().set(PONE.getId());
         services.getGameID().set(gameId);
-        services.cruiseMissileHandler = cruiseMissileHandler;
         Mockito.when(cruiseMissileHandler.handleAction(PONE.getId(), gameId, target)).thenReturn(maskedGame);
         assertSame(maskedGame, services.cruiseMissile(target));
     }
@@ -149,7 +147,6 @@ public class GameServicesTest extends MongoGameCoreTestCase {
         ObjectId gameId = new ObjectId();
         services.getPlayerID().set(PONE.getId());
         services.getGameID().set(gameId);
-        services.spyHandler = spyHandler;
         Mockito.when(spyHandler.handleAction(PONE.getId(), gameId, target)).thenReturn(maskedGame);
         assertSame(maskedGame, services.spy(target));
     }
@@ -163,7 +160,6 @@ public class GameServicesTest extends MongoGameCoreTestCase {
         ObjectId gameId = new ObjectId();
         services.getPlayerID().set(PONE.getId());
         services.getGameID().set(gameId);
-        services.repairShipHandler = repairShipHandler;
         Mockito.when(repairShipHandler.handleAction(PONE.getId(), gameId, target)).thenReturn(maskedGame);
         assertSame(maskedGame, services.repair(target));
     }
@@ -178,7 +174,6 @@ public class GameServicesTest extends MongoGameCoreTestCase {
         ObjectId gameId = new ObjectId();
         services.getPlayerID().set(PONE.getId());
         services.getGameID().set(gameId);
-        services.ecmHandler = ecmHandler;
         Mockito.when(ecmHandler.handleAction(PONE.getId(), gameId, target)).thenReturn(maskedGame);
         assertSame(maskedGame, services.ecm(target));
     }
@@ -192,7 +187,6 @@ public class GameServicesTest extends MongoGameCoreTestCase {
         ObjectId gameId = new ObjectId();
         services.getPlayerID().set(PONE.getId());
         services.getGameID().set(gameId);
-        services.evasiveManeuverHandler = evasiveManeuverHandler;
         Mockito.when(evasiveManeuverHandler.handleAction(Matchers.eq(PONE.getId()), Matchers.eq(gameId), Matchers.eq(target))).thenReturn(maskedGame);
         assertSame(maskedGame, services.move(target));
     }

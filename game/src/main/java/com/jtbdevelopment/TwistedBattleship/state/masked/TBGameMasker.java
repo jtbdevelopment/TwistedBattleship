@@ -8,7 +8,6 @@ import com.jtbdevelopment.TwistedBattleship.state.grid.Grid;
 import com.jtbdevelopment.games.players.Player;
 import com.jtbdevelopment.games.state.masking.AbstractMultiPlayerGameMasker;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
@@ -22,8 +21,11 @@ import java.util.stream.Collectors;
  */
 @Component
 public class TBGameMasker extends AbstractMultiPlayerGameMasker<ObjectId, GameFeature, TBGame, TBMaskedGame> {
-    @Autowired
-    private ConsolidateGridViews consolidateGridViews;
+    private final ConsolidateGridViews consolidateGridViews;
+
+    TBGameMasker(final ConsolidateGridViews consolidateGridViews) {
+        this.consolidateGridViews = consolidateGridViews;
+    }
 
     @Override
     protected TBMaskedGame newMaskedGame() {
@@ -104,7 +106,4 @@ public class TBGameMasker extends AbstractMultiPlayerGameMasker<ObjectId, GameFe
         return maskedPlayerState;
     }
 
-    void setConsolidateGridViews(ConsolidateGridViews consolidateGridViews) {
-        this.consolidateGridViews = consolidateGridViews;
-    }
 }

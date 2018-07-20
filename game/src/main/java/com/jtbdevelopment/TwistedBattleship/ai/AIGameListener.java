@@ -12,6 +12,7 @@ import com.jtbdevelopment.games.state.PlayerState;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -40,7 +41,11 @@ public class AIGameListener implements GameListener<TBGame, MongoPlayer> {
     private Set<ObjectId> aiIDs = new HashSet<>();
     private int maxAttempts = 10;
 
-    public AIGameListener(ChallengeResponseHandler<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> challengeResponseHandler, QuitHandler quitHandler, AbstractMultiPlayerGameRepository<ObjectId, GameFeature, TBGame> gameRepository, List<AI> aiList) {
+    public AIGameListener(
+            @Lazy final ChallengeResponseHandler<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> challengeResponseHandler,
+            @Lazy final QuitHandler quitHandler,
+            @Lazy final AbstractMultiPlayerGameRepository<ObjectId, GameFeature, TBGame> gameRepository,
+            @Lazy final List<AI> aiList) {
         this.challengeResponseHandler = challengeResponseHandler;
         this.gameRepository = gameRepository;
         this.aiList = aiList;

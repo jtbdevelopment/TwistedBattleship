@@ -5,7 +5,6 @@ import com.jtbdevelopment.TwistedBattleship.state.TBGame;
 import com.jtbdevelopment.TwistedBattleship.state.TBPlayerState;
 import com.jtbdevelopment.TwistedBattleship.state.grid.GridCoordinate;
 import com.jtbdevelopment.TwistedBattleship.state.ships.ShipState;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -24,11 +23,16 @@ public class ShipRelocator {
                     Arrays.asList(0, -1, 1, -2, 2),
                     Arrays.asList(2, -1, -2, 1, 0),
                     Arrays.asList(0, 1, -2, -1, 2));
-    protected Random generator = new Random();
-    @Autowired
-    protected ShipRelocatorCalculator calculator;
-    @Autowired
-    protected ShipRotater rotater;
+    private final ShipRelocatorCalculator calculator;
+    private final ShipRotater rotater;
+    Random generator = new Random();
+
+    ShipRelocator(
+            final ShipRelocatorCalculator calculator,
+            final ShipRotater rotater) {
+        this.calculator = calculator;
+        this.rotater = rotater;
+    }
 
     public List<GridCoordinate> relocateShip(final TBGame game, final TBPlayerState playerState, final ShipState ship) {
         Set<GridCoordinate> otherShipCoordinates = new HashSet<>(playerState.getCoordinateShipMap().keySet());
