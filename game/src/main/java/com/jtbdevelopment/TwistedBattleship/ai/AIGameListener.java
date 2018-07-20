@@ -12,7 +12,6 @@ import com.jtbdevelopment.games.state.PlayerState;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -32,19 +31,20 @@ public class AIGameListener implements GameListener<TBGame, MongoPlayer> {
     private static Logger logger = LoggerFactory.getLogger(AIGameListener.class);
     private final Map<ObjectId, Integer> problemGames = new HashMap<>();
     private final ThreadPoolExecutor executor = new ThreadPoolExecutor(3, 25, 60, TimeUnit.SECONDS, new LinkedBlockingDeque<>());
-    @Autowired
-    private ChallengeResponseHandler<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> challengeResponseHandler;
-    @Autowired
-    private QuitHandler quitHandler;
-    @Autowired
-    private AbstractMultiPlayerGameRepository<ObjectId, GameFeature, TBGame> gameRepository;
-    @Autowired
-    private List<AI> aiList;
+    private final ChallengeResponseHandler<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> challengeResponseHandler;
+    private final AbstractMultiPlayerGameRepository<ObjectId, GameFeature, TBGame> gameRepository;
+    private final List<AI> aiList;
     private Map<ObjectId, AI> playerIDAIMap = new HashMap<>();
     private Map<ObjectId, MongoPlayer> playerIDPlayerMap = new HashMap<>();
     private List<MongoPlayer> aiPlayers = new ArrayList<>();
     private Set<ObjectId> aiIDs = new HashSet<>();
     private int maxAttempts = 10;
+
+    public AIGameListener(ChallengeResponseHandler<ObjectId, GameFeature, TBGame, TBMaskedGame, MongoPlayer> challengeResponseHandler, QuitHandler quitHandler, AbstractMultiPlayerGameRepository<ObjectId, GameFeature, TBGame> gameRepository, List<AI> aiList) {
+        this.challengeResponseHandler = challengeResponseHandler;
+        this.gameRepository = gameRepository;
+        this.aiList = aiList;
+    }
 
     @PostConstruct
     public void setup() {

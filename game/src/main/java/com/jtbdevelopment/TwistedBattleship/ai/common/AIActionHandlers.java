@@ -1,7 +1,6 @@
 package com.jtbdevelopment.TwistedBattleship.ai.common;
 
 import com.jtbdevelopment.TwistedBattleship.rest.handlers.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,18 +9,27 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class AIActionHandlers {
-    @Autowired
-    private RepairShipHandler repairShipHandler;
-    @Autowired
-    private EvasiveManeuverHandler evasiveManeuverHandler;
-    @Autowired
-    private FireAtCoordinateHandler fireAtCoordinateHandler;
-    @Autowired
-    private SpyHandler spyHandler;
-    @Autowired
-    private ECMHandler ecmHandler;
-    @Autowired
-    private CruiseMissileHandler cruiseMissileHandler;
+    private final RepairShipHandler repairShipHandler;
+    private final EvasiveManeuverHandler evasiveManeuverHandler;
+    private final FireAtCoordinateHandler fireAtCoordinateHandler;
+    private final SpyHandler spyHandler;
+    private final ECMHandler ecmHandler;
+    private final CruiseMissileHandler cruiseMissileHandler;
+
+    public AIActionHandlers(
+            final RepairShipHandler repairShipHandler,
+            final EvasiveManeuverHandler evasiveManeuverHandler,
+            final FireAtCoordinateHandler fireAtCoordinateHandler,
+            final SpyHandler spyHandler,
+            final ECMHandler ecmHandler,
+            final CruiseMissileHandler cruiseMissileHandler) {
+        this.repairShipHandler = repairShipHandler;
+        this.evasiveManeuverHandler = evasiveManeuverHandler;
+        this.fireAtCoordinateHandler = fireAtCoordinateHandler;
+        this.spyHandler = spyHandler;
+        this.ecmHandler = ecmHandler;
+        this.cruiseMissileHandler = cruiseMissileHandler;
+    }
 
     public RepairShipHandler getRepairShipHandler() {
         return repairShipHandler;

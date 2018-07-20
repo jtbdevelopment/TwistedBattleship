@@ -18,7 +18,6 @@ import com.jtbdevelopment.games.state.masking.GameMasker;
 import com.jtbdevelopment.games.state.transition.GameTransitionEngine;
 import com.jtbdevelopment.games.tracking.GameEligibilityTracker;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
@@ -29,11 +28,17 @@ import java.util.Set;
  */
 @Component
 public class ECMHandler extends AbstractSpecialMoveHandler {
-    @Autowired
-    protected GridCircleUtil gridCircleUtil;
+    private final GridCircleUtil gridCircleUtil;
 
-    public ECMHandler(final AbstractPlayerRepository<ObjectId, MongoPlayer> playerRepository, final AbstractGameRepository<ObjectId, GameFeature, TBGame> gameRepository, final GameTransitionEngine<TBGame> transitionEngine, final GamePublisher<TBGame, MongoPlayer> gamePublisher, final GameEligibilityTracker gameTracker, final GameMasker<ObjectId, TBGame, TBMaskedGame> gameMasker) {
+    ECMHandler(final AbstractPlayerRepository<ObjectId, MongoPlayer> playerRepository,
+               final AbstractGameRepository<ObjectId, GameFeature, TBGame> gameRepository,
+               final GameTransitionEngine<TBGame> transitionEngine,
+               final GamePublisher<TBGame, MongoPlayer> gamePublisher,
+               final GameEligibilityTracker gameTracker,
+               final GameMasker<ObjectId, TBGame, TBMaskedGame> gameMasker,
+               final GridCircleUtil gridCircleUtil) {
         super(playerRepository, gameRepository, transitionEngine, gamePublisher, gameTracker, gameMasker);
+        this.gridCircleUtil = gridCircleUtil;
     }
 
     @Override

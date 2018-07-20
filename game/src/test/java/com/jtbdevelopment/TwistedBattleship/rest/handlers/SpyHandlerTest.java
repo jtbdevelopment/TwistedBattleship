@@ -26,12 +26,11 @@ import static org.junit.Assert.assertEquals;
  * Time: 6:56 AM
  */
 public class SpyHandlerTest extends AbstractBaseHandlerTest {
-    private SpyHandler handler = new SpyHandler(null, null, null, null, null, null);
+    private SpyHandler handler = new SpyHandler(null, null, null, null, null, null, new GridCircleUtil());
 
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        handler.gridCircleUtil = new GridCircleUtil();
         game.getPlayerDetails().get(PTWO.getId()).getOpponentGrids().get(PONE.getId()).set(1, 0, GridCellState.KnownByHit);
         game.getPlayerDetails().get(PTWO.getId()).getOpponentGrids().get(PONE.getId()).set(2, 0, GridCellState.KnownByOtherHit);
         game.getPlayerDetails().get(PTWO.getId()).getOpponentGrids().get(PONE.getId()).set(1, 1, GridCellState.KnownByMiss);

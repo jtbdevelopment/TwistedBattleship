@@ -17,7 +17,8 @@ import static org.junit.Assert.*;
  * Time: 6:38 PM
  */
 public class ECMHandlerTest extends AbstractBaseHandlerTest {
-    private ECMHandler handler = new ECMHandler(null, null, null, null, null, null);
+    private GridCircleUtil gridCircleUtil = new GridCircleUtil();
+    private ECMHandler handler = new ECMHandler(null, null, null, null, null, null, gridCircleUtil);
 
     @Test
     public void testTargetSelf() {
@@ -45,7 +46,6 @@ public class ECMHandlerTest extends AbstractBaseHandlerTest {
 
     @Test
     public void testAnECM() {
-        handler.gridCircleUtil = new GridCircleUtil();
         game.getPlayerDetails().get(PTWO.getId()).getOpponentGrids().get(PONE.getId()).set(1, 0, GridCellState.KnownByHit);
         game.getPlayerDetails().get(PTWO.getId()).getOpponentGrids().get(PONE.getId()).set(2, 0, GridCellState.KnownByOtherHit);
         game.getPlayerDetails().get(PTWO.getId()).getOpponentGrids().get(PONE.getId()).set(1, 1, GridCellState.KnownByMiss);

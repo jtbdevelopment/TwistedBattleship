@@ -18,12 +18,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.mockito.Mockito.mock;
+
 /**
  * Date: 5/21/15
  * Time: 6:41 AM
  */
 public class EvasiveManeuverHandlerTest extends AbstractBaseHandlerTest {
-    private EvasiveManeuverHandler handler = new EvasiveManeuverHandler(null, null, null, null, null, null);
+    private ShipRelocator shipRelocator = mock(ShipRelocator.class);
+    private FogCoordinatesGenerator fogCoordinatesGenerator = mock(FogCoordinatesGenerator.class);
+
+    private EvasiveManeuverHandler handler = new EvasiveManeuverHandler(null, null, null, null, null, null, shipRelocator, fogCoordinatesGenerator);
 
     @Test
     public void testTargetSelf() {
@@ -87,17 +92,15 @@ public class EvasiveManeuverHandlerTest extends AbstractBaseHandlerTest {
                 .flatMap(ss -> ss.getShipGridCells().stream())
                 .collect(Collectors.toList());
         List<GridCoordinate> newCoordinates = Arrays.asList(new GridCoordinate(5, 5), new GridCoordinate(5, 6), new GridCoordinate(5, 7), new GridCoordinate(5, 8), new GridCoordinate(5, 9));
-        handler.setShipRelocator(Mockito.mock(ShipRelocator.class));
-        Mockito.when(handler.shipRelocator.relocateShip(
+        Mockito.when(shipRelocator.relocateShip(
                 game,
                 game.getPlayerDetails().get(PONE.getId()),
                 game.getPlayerDetails().get(PONE.getId()).getShipStates().stream()
                         .filter(ss -> Ship.Carrier.equals(ss.getShip())).findFirst().get()))
                 .thenReturn(newCoordinates);
-        handler.setFogCoordinatesGenerator(Mockito.mock(FogCoordinatesGenerator.class));
         HashSet<GridCoordinate> fog = new HashSet<>(initialCoordinates);
         fog.addAll(newCoordinates);
-        Mockito.when(handler.fogCoordinatesGenerator.generateFogCoordinates(game, initialCoordinates, newCoordinates)).thenReturn(fog);
+        Mockito.when(fogCoordinatesGenerator.generateFogCoordinates(game, initialCoordinates, newCoordinates)).thenReturn(fog);
         handler.playMove(PONE, game, PONE, new GridCoordinate(1, 0));
 
         Assert.assertEquals(GridCellState.ObscuredShip, game.getPlayerDetails().get(PTWO.getId()).getOpponentGrids().get(PONE.getId()).get(0, 0));

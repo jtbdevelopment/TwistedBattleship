@@ -33,7 +33,7 @@ import static org.mockito.Mockito.when;
  */
 public class CruiseMissileHandlerTest extends AbstractBaseHandlerTest {
     private FireAtCoordinateHandler fireAtCoordinateHandler = Mockito.mock(FireAtCoordinateHandler.class);
-    private CruiseMissileHandler handler = new CruiseMissileHandler(null, null, null, null, null, null);
+    private CruiseMissileHandler handler = new CruiseMissileHandler(null, null, null, null, null, null, fireAtCoordinateHandler);
 
     @Before
     public void setUp() throws Exception {
@@ -52,7 +52,6 @@ public class CruiseMissileHandlerTest extends AbstractBaseHandlerTest {
         shipState.setHealthRemaining(3);
         shipState.setShipSegmentHit(Arrays.asList(false, true, true, false, false));
 
-        handler.fireAtCoordinateHandler = fireAtCoordinateHandler;
         when(fireAtCoordinateHandler.playMove(any(MongoPlayer.class), any(TBGame.class), any(MongoPlayer.class), any(GridCoordinate.class))).then((Answer<TBGame>) invocation -> (TBGame) invocation.getArguments()[1]);
     }
 

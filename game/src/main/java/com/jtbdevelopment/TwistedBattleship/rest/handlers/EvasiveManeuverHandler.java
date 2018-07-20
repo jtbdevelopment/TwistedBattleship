@@ -22,7 +22,6 @@ import com.jtbdevelopment.games.state.masking.GameMasker;
 import com.jtbdevelopment.games.state.transition.GameTransitionEngine;
 import com.jtbdevelopment.games.tracking.GameEligibilityTracker;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -34,13 +33,19 @@ import java.util.Set;
  */
 @Component
 public class EvasiveManeuverHandler extends AbstractSpecialMoveHandler {
-    @Autowired
-    protected ShipRelocator shipRelocator;
-    @Autowired
-    protected FogCoordinatesGenerator fogCoordinatesGenerator;
+    private final ShipRelocator shipRelocator;
+    private final FogCoordinatesGenerator fogCoordinatesGenerator;
 
-    public EvasiveManeuverHandler(AbstractPlayerRepository<ObjectId, MongoPlayer> playerRepository, AbstractGameRepository<ObjectId, GameFeature, TBGame> gameRepository, GameTransitionEngine<TBGame> transitionEngine, GamePublisher<TBGame, MongoPlayer> gamePublisher, GameEligibilityTracker gameTracker, GameMasker<ObjectId, TBGame, TBMaskedGame> gameMasker) {
+    EvasiveManeuverHandler(
+            final AbstractPlayerRepository<ObjectId, MongoPlayer> playerRepository,
+            final AbstractGameRepository<ObjectId, GameFeature, TBGame> gameRepository,
+            final GameTransitionEngine<TBGame> transitionEngine, GamePublisher<TBGame, MongoPlayer> gamePublisher,
+            final GameEligibilityTracker gameTracker, GameMasker<ObjectId, TBGame, TBMaskedGame> gameMasker,
+            final ShipRelocator shipRelocator,
+            final FogCoordinatesGenerator fogCoordinatesGenerator) {
         super(playerRepository, gameRepository, transitionEngine, gamePublisher, gameTracker, gameMasker);
+        this.shipRelocator = shipRelocator;
+        this.fogCoordinatesGenerator = fogCoordinatesGenerator;
     }
 
     @Override
@@ -124,11 +129,4 @@ public class EvasiveManeuverHandler extends AbstractSpecialMoveHandler {
                 });
     }
 
-    public void setShipRelocator(ShipRelocator shipRelocator) {
-        this.shipRelocator = shipRelocator;
-    }
-
-    public void setFogCoordinatesGenerator(FogCoordinatesGenerator fogCoordinatesGenerator) {
-        this.fogCoordinatesGenerator = fogCoordinatesGenerator;
-    }
 }

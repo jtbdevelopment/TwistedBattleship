@@ -19,7 +19,6 @@ import com.jtbdevelopment.games.state.masking.GameMasker;
 import com.jtbdevelopment.games.state.transition.GameTransitionEngine;
 import com.jtbdevelopment.games.tracking.GameEligibilityTracker;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -32,11 +31,17 @@ import java.util.stream.Collectors;
  */
 @Component
 public class SpyHandler extends AbstractSpecialMoveHandler {
-    @Autowired
-    protected GridCircleUtil gridCircleUtil;
+    private final GridCircleUtil gridCircleUtil;
 
-    public SpyHandler(AbstractPlayerRepository<ObjectId, MongoPlayer> playerRepository, AbstractGameRepository<ObjectId, GameFeature, TBGame> gameRepository, GameTransitionEngine<TBGame> transitionEngine, GamePublisher<TBGame, MongoPlayer> gamePublisher, GameEligibilityTracker gameTracker, GameMasker<ObjectId, TBGame, TBMaskedGame> gameMasker) {
+    SpyHandler(
+            final AbstractPlayerRepository<ObjectId, MongoPlayer> playerRepository,
+            final AbstractGameRepository<ObjectId, GameFeature, TBGame> gameRepository,
+            final GameTransitionEngine<TBGame> transitionEngine,
+            final GamePublisher<TBGame, MongoPlayer> gamePublisher,
+            final GameEligibilityTracker gameTracker, GameMasker<ObjectId, TBGame, TBMaskedGame> gameMasker,
+            final GridCircleUtil gridCircleUtil) {
         super(playerRepository, gameRepository, transitionEngine, gamePublisher, gameTracker, gameMasker);
+        this.gridCircleUtil = gridCircleUtil;
     }
 
     @Override

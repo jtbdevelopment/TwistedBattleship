@@ -17,7 +17,6 @@ import com.jtbdevelopment.games.state.masking.GameMasker;
 import com.jtbdevelopment.games.state.transition.GameTransitionEngine;
 import com.jtbdevelopment.games.tracking.GameEligibilityTracker;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,11 +25,18 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class CruiseMissileHandler extends AbstractSpecialMoveHandler {
-    @Autowired
-    protected FireAtCoordinateHandler fireAtCoordinateHandler;
+    private final FireAtCoordinateHandler fireAtCoordinateHandler;
 
-    CruiseMissileHandler(final AbstractPlayerRepository<ObjectId, MongoPlayer> playerRepository, final AbstractGameRepository<ObjectId, GameFeature, TBGame> gameRepository, final GameTransitionEngine<TBGame> transitionEngine, final GamePublisher<TBGame, MongoPlayer> gamePublisher, final GameEligibilityTracker gameTracker, final GameMasker<ObjectId, TBGame, TBMaskedGame> gameMasker) {
+    CruiseMissileHandler(
+            final AbstractPlayerRepository<ObjectId, MongoPlayer> playerRepository,
+            final AbstractGameRepository<ObjectId, GameFeature, TBGame> gameRepository,
+            final GameTransitionEngine<TBGame> transitionEngine,
+            final GamePublisher<TBGame, MongoPlayer> gamePublisher,
+            final GameEligibilityTracker gameTracker,
+            final GameMasker<ObjectId, TBGame, TBMaskedGame> gameMasker,
+            final FireAtCoordinateHandler fireAtCoordinateHandler) {
         super(playerRepository, gameRepository, transitionEngine, gamePublisher, gameTracker, gameMasker);
+        this.fireAtCoordinateHandler = fireAtCoordinateHandler;
     }
 
     @Override
